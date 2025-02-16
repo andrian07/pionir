@@ -66,221 +66,62 @@
         <div class="sidebar-content">
           <ul class="nav nav-secondary">
             <li class="nav-item">
-              <a
-              data-bs-toggle="collapse"
-              href="#dashboard"
-              class="collapsed"
-              aria-expanded="false"
-              >
+              <a data-bs-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false">
               <i class="fas fa-home"></i>
               <p>Dashboard</p>
-              <span class="caret"></span>
             </a>
-            <div class="collapse" id="dashboard">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="../demo1/index.html">
-                    <span class="sub-item">Dashboard 1</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
           </li>
           <li class="nav-item">
             <a data-bs-toggle="collapse" href="#base">
               <i class="fas fa-layer-group"></i>
-              <p>Base</p>
+              <p>Master Data</p>
               <span class="caret"></span>
             </a>
             <div class="collapse" id="base">
               <ul class="nav nav-collapse">
                 <li>
-                  <a href="components/avatars.html">
-                    <span class="sub-item">Avatars</span>
+                  <a href="<?php echo base_url(); ?>Masterdata/brand">
+                    <span class="sub-item">Brand</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/buttons.html">
-                    <span class="sub-item">Buttons</span>
+                    <span class="sub-item">Customer</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/gridsystem.html">
-                    <span class="sub-item">Grid System</span>
+                    <span class="sub-item">Expedisi</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/panels.html">
-                    <span class="sub-item">Panels</span>
+                    <span class="sub-item">Gudang</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/notifications.html">
-                    <span class="sub-item">Notifications</span>
+                    <span class="sub-item">Kategori</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/sweetalert.html">
-                    <span class="sub-item">Sweet Alert</span>
+                    <span class="sub-item">Produk</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/font-awesome-icons.html">
-                    <span class="sub-item">Font Awesome Icons</span>
+                    <span class="sub-item">Salesman</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/simple-line-icons.html">
-                    <span class="sub-item">Simple Line Icons</span>
+                    <span class="sub-item">Satuan</span>
                   </a>
                 </li>
                 <li>
                   <a href="components/typography.html">
-                    <span class="sub-item">Typography</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#forms">
-              <i class="fas fa-pen-square"></i>
-              <p>Forms</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="forms">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="forms/forms.html">
-                    <span class="sub-item">Basic Form</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#tables">
-              <i class="fas fa-table"></i>
-              <p>Tables</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="tables">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="tables/tables.html">
-                    <span class="sub-item">Basic Table</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="tables/datatables.html">
-                    <span class="sub-item">Datatables</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#maps">
-              <i class="fas fa-map-marker-alt"></i>
-              <p>Maps</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="maps">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="maps/googlemaps.html">
-                    <span class="sub-item">Google Maps</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="maps/jsvectormap.html">
-                    <span class="sub-item">Jsvectormap</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#charts">
-              <i class="far fa-chart-bar"></i>
-              <p>Charts</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="charts/charts.html">
-                    <span class="sub-item">Chart Js</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="charts/sparkline.html">
-                    <span class="sub-item">Sparkline</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a href="widgets.html">
-              <i class="fas fa-desktop"></i>
-              <p>Widgets</p>
-              <span class="badge badge-success">4</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="../../documentation/index.html">
-              <i class="fas fa-file"></i>
-              <p>Documentation</p>
-              <span class="badge badge-secondary">1</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#submenu">
-              <i class="fas fa-bars"></i>
-              <p>Menu Levels</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="submenu">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a data-bs-toggle="collapse" href="#subnav1">
-                    <span class="sub-item">Level 1</span>
-                    <span class="caret"></span>
-                  </a>
-                  <div class="collapse" id="subnav1">
-                    <ul class="nav nav-collapse subnav">
-                      <li>
-                        <a href="#">
-                          <span class="sub-item">Level 2</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <span class="sub-item">Level 2</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li>
-                  <a data-bs-toggle="collapse" href="#subnav2">
-                    <span class="sub-item">Level 1</span>
-                    <span class="caret"></span>
-                  </a>
-                  <div class="collapse" id="subnav2">
-                    <ul class="nav nav-collapse subnav">
-                      <li>
-                        <a href="#">
-                          <span class="sub-item">Level 2</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li>
-                  <a href="#">
-                    <span class="sub-item">Level 1</span>
+                    <span class="sub-item">Supplier</span>
                   </a>
                 </li>
               </ul>
@@ -324,23 +165,6 @@
       class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
       >
       <div class="container-fluid">
-        <nav
-        class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
-        >
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <button type="submit" class="btn btn-search pe-1">
-              <i class="fa fa-search search-icon"></i>
-            </button>
-          </div>
-          <input
-          type="text"
-          placeholder="Search ..."
-          class="form-control"
-          />
-        </div>
-      </nav>
-
       <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
         <li
         class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
@@ -631,7 +455,7 @@ aria-labelledby="notifDropdown"
   </div>
   <span class="profile-username">
     <span class="op-7">Hi,</span>
-    <span class="fw-bold">Hizrian</span>
+    <span class="fw-bold">Admin Joko</span>
   </span>
 </a>
 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -639,28 +463,15 @@ aria-labelledby="notifDropdown"
     <li>
       <div class="user-box">
         <div class="avatar-lg">
-          <img
-          src="<?php echo base_url(); ?>dist//img/profile.jpg"
-          alt="image profile"
-          class="avatar-img rounded"
-          />
+          <img src="<?php echo base_url(); ?>dist//img/profile.jpg" alt="image profile" class="avatar-img rounded"/>
         </div>
         <div class="u-text">
-          <h4>Hizrian</h4>
-          <p class="text-muted">hello@example.com</p>
-          <a
-          href="profile.html"
-          class="btn btn-xs btn-secondary btn-sm"
-          >View Profile</a
-          >
+          <h4>Admin Joko</h4>
+          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">Admin</a>
         </div>
       </div>
     </li>
     <li>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">My Profile</a>
-      <a class="dropdown-item" href="#">My Balance</a>
-      <a class="dropdown-item" href="#">Inbox</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="#">Account Setting</a>
       <div class="dropdown-divider"></div>
@@ -684,19 +495,18 @@ aria-labelledby="notifDropdown"
       <h3 class="fw-bold mb-3">Dashboard</h3>
     </div>
     <div class="ms-md-auto py-2 py-md-0">
-      <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-      <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+      <a href="#" class="btn btn-primary btn-round">Pionir Pusat</a>
     </div>
   </div>
   <div class="row row-card-no-pd">
-    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-md-6 col-xl-4">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
               <h6><b>Penjualan Hari Ini</b></h6>
             </div>
-            <h4 class="text-info fw-bold" style="margin-top:-5px;">Rp. 4.500.000</h4>
+            <h4 class="text-info fw-bold" style="margin-top:-5px;">4.500.000</h4>
           </div>
           <div class="d-flex justify-content-between mt-2">
             <p class="text-muted mb-0">Jumlah Transaksi</p>
@@ -709,14 +519,14 @@ aria-labelledby="notifDropdown"
         </div>
       </div>
     </div>
-    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-md-6 col-xl-4">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
               <h6><b>Penjualan Bulan Ini</b></h6>
             </div>
-            <h4 class="text-success fw-bold" style="margin-top:-5px;">Rp. 65.500.000</h4>
+            <h4 class="text-success fw-bold" style="margin-top:-5px;">65.500.000</h4>
           </div>
           <div class="d-flex justify-content-between mt-2">
             <p class="text-muted mb-0">Jumlah Transaksi</p>
@@ -729,34 +539,18 @@ aria-labelledby="notifDropdown"
         </div>
       </div>
     </div>
-    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+    <div class="col-12 col-sm-6 col-md-6 col-xl-4">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
               <h6><b>Total Aset</b></h6>
             </div>
-            <h4 class="text-danger fw-bold" style="margin-top:-5px;">Rp. 165.500.000</h4>
+            <h4 class="text-danger fw-bold" style="margin-top:-5px;">165.500.000</h4>
           </div>
           <div class="d-flex justify-content-between mt-2">
             <p class="text-muted mb-0">Jumlah Item</p>
             <p class="text-muted mb-0">150 Item</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h6><b>Faktur Terlewat</b></h6>
-            </div>
-            <h4 class="text-secondary fw-bold">12 Faktur</h4>
-          </div>
-          <div class="d-flex justify-content-between mt-2">
-            <p class="text-muted mb-0"></p>
-            <p class="text-muted mb-0"><a href="#" class="btn btn-label-info btn-round me-2">Cek Faktur</a></p>
           </div>
         </div>
       </div>
