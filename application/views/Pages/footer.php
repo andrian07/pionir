@@ -43,19 +43,25 @@
 <script src="<?php echo base_url(); ?>dist/js/plugin/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/kaiadmin.min.js"></script>
 <script>
+  var myModal = document.getElementById('myModal')
+  var myInput = document.getElementById('myInput')
+
+  myModal.addEventListener('shown.bs.modal', function () {
+    myInput.focus()
+  })
   $("#basic-datatables").DataTable({});
-  
+
   var pieChart = document.getElementById("pieChart").getContext("2d");
 
   var myPieChart = new Chart(pieChart, {
     type: "pie",
     data: {
       datasets: [
-      {
-        data: [50, 35, 15],
-        backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
-        borderWidth: 0,
-      },
+        {
+          data: [50, 35, 15],
+          backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
+          borderWidth: 0,
+        },
       ],
       labels: ["Pendapatan", "Pengeluaran", "Hpp"],
     },

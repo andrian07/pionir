@@ -30,8 +30,14 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/plugins.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/kaiadmin.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/style.css" />
-
-
+  <style type="text/css">
+    .table{
+      border: 1px solid #ebecec  !important;
+    }
+    .table tr th{
+      border: 1px solid #ebecec  !important;
+    }
+  </style>
 </head>
 <body>
   <div class="wrapper">
@@ -68,220 +74,220 @@
 
             <li class="nav-item">
               <a href="<?php echo base_url(); ?>Dashboard">
-              <i class="fas fa-home"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a data-bs-toggle="collapse" href="#base">
-              <i class="fas fa-layer-group"></i>
-              <p>Master Data</p>
-              <span class="caret"></span>
-            </a>
-            <div class="collapse" id="base">
-              <ul class="nav nav-collapse">
-                <li>
-                  <a href="<?php echo base_url(); ?>Masterdata/brand">
-                    <span class="sub-item">Brand</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/buttons.html">
-                    <span class="sub-item">Customer</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/gridsystem.html">
-                    <span class="sub-item">Expedisi</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/panels.html">
-                    <span class="sub-item">Gudang</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/notifications.html">
-                    <span class="sub-item">Kategori</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/sweetalert.html">
-                    <span class="sub-item">Produk</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/font-awesome-icons.html">
-                    <span class="sub-item">Salesman</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/simple-line-icons.html">
-                    <span class="sub-item">Satuan</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="components/typography.html">
-                    <span class="sub-item">Supplier</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <!-- End Sidebar -->
-
-  <div class="main-panel">
-    <div class="main-header">
-      <div class="main-header-logo">
-        <!-- Logo Header -->
-        <div class="logo-header" data-background-color="dark">
-          <a href="index.html" class="logo">
-            <img
-            src="<?php echo base_url(); ?>dist//img/kaiadmin/logo_light.svg"
-            alt="navbar brand"
-            class="navbar-brand"
-            height="20"
-            />
-          </a>
-          <div class="nav-toggle">
-            <button class="btn btn-toggle toggle-sidebar">
-              <i class="gg-menu-right"></i>
-            </button>
-            <button class="btn btn-toggle sidenav-toggler">
-              <i class="gg-menu-left"></i>
-            </button>
-          </div>
-          <button class="topbar-toggler more">
-            <i class="gg-more-vertical-alt"></i>
-          </button>
+                <i class="fas fa-home"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#base">
+                <i class="fas fa-layer-group"></i>
+                <p>Master Data</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="base">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                      <span class="sub-item">Brand</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/buttons.html">
+                      <span class="sub-item">Customer</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/gridsystem.html">
+                      <span class="sub-item">Expedisi</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/panels.html">
+                      <span class="sub-item">Gudang</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/notifications.html">
+                      <span class="sub-item">Kategori</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/sweetalert.html">
+                      <span class="sub-item">Produk</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/font-awesome-icons.html">
+                      <span class="sub-item">Salesman</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/simple-line-icons.html">
+                      <span class="sub-item">Satuan</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="components/typography.html">
+                      <span class="sub-item">Supplier</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
         </div>
-        <!-- End Logo Header -->
       </div>
-      <!-- Navbar Header -->
-      <nav
-      class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
-      >
-      <div class="container-fluid">
-      <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-        <li
-        class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
+    </div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="main-header">
+        <div class="main-header-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="index.html" class="logo">
+              <img
+              src="<?php echo base_url(); ?>dist//img/kaiadmin/logo_light.svg"
+              alt="navbar brand"
+              class="navbar-brand"
+              height="20"
+              />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <!-- Navbar Header -->
+        <nav
+        class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
         >
-        <a
-        class="nav-link dropdown-toggle"
-        data-bs-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-expanded="false"
-        aria-haspopup="true"
+        <div class="container-fluid">
+          <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+            <li
+            class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none"
+            >
+            <a
+            class="nav-link dropdown-toggle"
+            data-bs-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-expanded="false"
+            aria-haspopup="true"
+            >
+            <i class="fa fa-search"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-search animated fadeIn">
+            <form class="navbar-left navbar-form nav-search">
+              <div class="input-group">
+                <input
+                type="text"
+                placeholder="Search ..."
+                class="form-control"
+                />
+              </div>
+            </form>
+          </ul>
+        </li>
+        <li class="nav-item topbar-icon dropdown hidden-caret">
+          <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="messageDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          >
+          <i class="fa fa-envelope"></i>
+        </a>
+        <ul
+        class="dropdown-menu messages-notif-box animated fadeIn"
+        aria-labelledby="messageDropdown"
         >
-        <i class="fa fa-search"></i>
+        <li>
+          <div
+          class="dropdown-title d-flex justify-content-between align-items-center"
+          >
+          Messages
+          <a href="#" class="small">Mark all as read</a>
+        </div>
+      </li>
+      <li>
+        <div class="message-notif-scroll scrollbar-outer">
+          <div class="notif-center">
+            <a href="#">
+              <div class="notif-img">
+                <img
+                src="<?php echo base_url(); ?>dist//img/jm_denis.jpg"
+                alt="Img Profile"
+                />
+              </div>
+              <div class="notif-content">
+                <span class="subject">Jimmy Denis</span>
+                <span class="block"> How are you ? </span>
+                <span class="time">5 minutes ago</span>
+              </div>
+            </a>
+            <a href="#">
+              <div class="notif-img">
+                <img
+                src="<?php echo base_url(); ?>dist//img/chadengle.jpg"
+                alt="Img Profile"
+                />
+              </div>
+              <div class="notif-content">
+                <span class="subject">Chad</span>
+                <span class="block"> Ok, Thanks ! </span>
+                <span class="time">12 minutes ago</span>
+              </div>
+            </a>
+            <a href="#">
+              <div class="notif-img">
+                <img
+                src="<?php echo base_url(); ?>dist//img/mlane.jpg"
+                alt="Img Profile"
+                />
+              </div>
+              <div class="notif-content">
+                <span class="subject">Jhon Doe</span>
+                <span class="block">
+                  Ready for the meeting today...
+                </span>
+                <span class="time">12 minutes ago</span>
+              </div>
+            </a>
+            <a href="#">
+              <div class="notif-img">
+                <img
+                src="<?php echo base_url(); ?>dist//img/talha.jpg"
+                alt="Img Profile"
+                />
+              </div>
+              <div class="notif-content">
+                <span class="subject">Talha</span>
+                <span class="block"> Hi, Apa Kabar ? </span>
+                <span class="time">17 minutes ago</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a class="see-all" href="javascript:void(0);"
+        >See all messages<i class="fa fa-angle-right"></i>
       </a>
-      <ul class="dropdown-menu dropdown-search animated fadeIn">
-        <form class="navbar-left navbar-form nav-search">
-          <div class="input-group">
-            <input
-            type="text"
-            placeholder="Search ..."
-            class="form-control"
-            />
-          </div>
-        </form>
-      </ul>
     </li>
-    <li class="nav-item topbar-icon dropdown hidden-caret">
-      <a
-      class="nav-link dropdown-toggle"
-      href="#"
-      id="messageDropdown"
-      role="button"
-      data-bs-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-      >
-      <i class="fa fa-envelope"></i>
-    </a>
-    <ul
-    class="dropdown-menu messages-notif-box animated fadeIn"
-    aria-labelledby="messageDropdown"
-    >
-    <li>
-      <div
-      class="dropdown-title d-flex justify-content-between align-items-center"
-      >
-      Messages
-      <a href="#" class="small">Mark all as read</a>
-    </div>
-  </li>
-  <li>
-    <div class="message-notif-scroll scrollbar-outer">
-      <div class="notif-center">
-        <a href="#">
-          <div class="notif-img">
-            <img
-            src="<?php echo base_url(); ?>dist//img/jm_denis.jpg"
-            alt="Img Profile"
-            />
-          </div>
-          <div class="notif-content">
-            <span class="subject">Jimmy Denis</span>
-            <span class="block"> How are you ? </span>
-            <span class="time">5 minutes ago</span>
-          </div>
-        </a>
-        <a href="#">
-          <div class="notif-img">
-            <img
-            src="<?php echo base_url(); ?>dist//img/chadengle.jpg"
-            alt="Img Profile"
-            />
-          </div>
-          <div class="notif-content">
-            <span class="subject">Chad</span>
-            <span class="block"> Ok, Thanks ! </span>
-            <span class="time">12 minutes ago</span>
-          </div>
-        </a>
-        <a href="#">
-          <div class="notif-img">
-            <img
-            src="<?php echo base_url(); ?>dist//img/mlane.jpg"
-            alt="Img Profile"
-            />
-          </div>
-          <div class="notif-content">
-            <span class="subject">Jhon Doe</span>
-            <span class="block">
-              Ready for the meeting today...
-            </span>
-            <span class="time">12 minutes ago</span>
-          </div>
-        </a>
-        <a href="#">
-          <div class="notif-img">
-            <img
-            src="<?php echo base_url(); ?>dist//img/talha.jpg"
-            alt="Img Profile"
-            />
-          </div>
-          <div class="notif-content">
-            <span class="subject">Talha</span>
-            <span class="block"> Hi, Apa Kabar ? </span>
-            <span class="time">17 minutes ago</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </li>
-  <li>
-    <a class="see-all" href="javascript:void(0);"
-    >See all messages<i class="fa fa-angle-right"></i>
-  </a>
-</li>
-</ul>
+  </ul>
 </li>
 <li class="nav-item topbar-icon dropdown hidden-caret">
   <a

@@ -15,11 +15,28 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Brand</h3>
+                <h3 class="fw-bold mb-3">Daftar Brand</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+                <button class="btn btn-info btn-sm"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
+                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        ...
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -40,12 +57,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <tr>
                   <td>Acero</td>
                   <td></td>
-                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-icon btn-round btn-danger delete" ><i class="fas fa-trash-alt"></i></button>
+
+                    <button type="button" class="btn btn-icon btn-round btn-info"><i class="far fa-edit"></i></button>
+                  </td>
                 </tr>
                 <tr>
                   <td>Acr</td>
                   <td></td>
-                  <td></td>
+                  <td>
+                    <button type="button" class="btn btn-icon btn-round btn-danger delete"><i class="fas fa-trash-alt"></i></button>
+                    <button type="button" class="btn btn-icon btn-round btn-info"><i class="far fa-edit"></i></button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -61,3 +85,43 @@ require DOC_ROOT_PATH . $this->config->item('header');
 <?php 
 require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
+
+<script>
+ $(".delete").click(function (e) {
+  swal({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    type: "warning",
+    buttons: {
+      cancel: {
+        visible: true,
+        text: "No, cancel!",
+        className: "btn btn-danger",
+      },
+      confirm: {
+        text: "Yes, delete it!",
+        className: "btn btn-success",
+      },
+    },
+  }).then((willDelete) => {
+    if (willDelete) {
+      swal("Poof! Your imaginary file has been deleted!", {
+        icon: "success",
+        buttons: {
+          confirm: {
+            className: "btn btn-success",
+          },
+        },
+      });
+    } else {
+      swal("Your imaginary file is safe!", {
+        buttons: {
+          confirm: {
+            className: "btn btn-success",
+          },
+        },
+      });
+    }
+  });
+});
+</script>
