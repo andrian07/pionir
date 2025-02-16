@@ -1,0 +1,9 @@
+/* dashboard */
+
+.activity::-webkit-scrollbar {
+    display: none;
+}
+
+.activity{
+    height: 320px; overflow-y: scroll;
+}
