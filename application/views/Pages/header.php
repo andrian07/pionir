@@ -30,14 +30,7 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/plugins.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/kaiadmin.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/style.css" />
-  <style type="text/css">
-    .table{
-      border: 1px solid #ebecec  !important;
-    }
-    .table tr th{
-      border: 1px solid #ebecec  !important;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 </head>
 <body>
   <div class="wrapper">
@@ -92,42 +85,42 @@
                     </a>
                   </li>
                   <li>
-                    <a href="components/buttons.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/customer">
                       <span class="sub-item">Customer</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/gridsystem.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
                       <span class="sub-item">Expedisi</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/panels.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/warehouse">
                       <span class="sub-item">Gudang</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/notifications.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/category">
                       <span class="sub-item">Kategori</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/sweetalert.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/product">
                       <span class="sub-item">Produk</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/font-awesome-icons.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/salesman">
                       <span class="sub-item">Salesman</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/simple-line-icons.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/unit">
                       <span class="sub-item">Satuan</span>
                     </a>
                   </li>
                   <li>
-                    <a href="components/typography.html">
+                    <a href="<?php echo base_url(); ?>Masterdata/supplier">
                       <span class="sub-item">Supplier</span>
                     </a>
                   </li>

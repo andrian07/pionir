@@ -20,6 +20,10 @@ class Masterdata extends CI_Controller {
 		$this->load->view('Pages/Masterdata/brand');
 	}
 
+	public function customer(){
+		$this->load->view('Pages/Masterdata/customer');
+	}
+
 }
 
 ?>

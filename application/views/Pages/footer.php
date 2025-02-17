@@ -29,6 +29,8 @@
 </div>
 
 
+</script>
+
 <script src="<?php echo base_url(); ?>dist/js/core/jquery-3.7.1.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/core/popper.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/core/bootstrap.min.js"></script>
@@ -42,17 +44,16 @@
 <script src="<?php echo base_url(); ?>dist/js/plugin/jsvectormap/world.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/plugin/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/kaiadmin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script>
-  var myModal = document.getElementById('myModal')
-  var myInput = document.getElementById('myInput')
+  Fancybox.bind("[data-fancybox]", {
+        //
+  }) 
+</script>
+<script>
 
-  myModal.addEventListener('shown.bs.modal', function () {
-    myInput.focus()
-  })
   $("#basic-datatables").DataTable({});
-
   var pieChart = document.getElementById("pieChart").getContext("2d");
-
   var myPieChart = new Chart(pieChart, {
     type: "pie",
     data: {
@@ -93,6 +94,9 @@
       },
     },
   });
+
+  
+
 </script>
 </body>
 </html>

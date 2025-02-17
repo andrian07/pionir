@@ -18,21 +18,33 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Brand</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <button class="btn btn-info btn-sm"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Brand</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        ...
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <div class="col-md-12 p-0">
+                            <input type="text" class="form-control input-full" id="inlineinput" placeholder="Nama Brand">
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
+                          <div class="col-md-12 p-0">
+                            <textarea class="form-control" id="comment" rows="5"></textarea>
+                          </div>
+                        </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
@@ -48,7 +60,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Name Brand</th>
+                  <th>Nama Brand</th>
                   <th>Deskripsi</th>
                   <th>Aksi</th>
                 </tr>
@@ -58,17 +70,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <td>Acero</td>
                   <td></td>
                   <td>
-                    <button type="button" class="btn btn-icon btn-round btn-danger delete" ><i class="fas fa-trash-alt"></i></button>
+                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
 
-                    <button type="button" class="btn btn-icon btn-round btn-info"><i class="far fa-edit"></i></button>
+                    <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                   </td>
                 </tr>
                 <tr>
                   <td>Acr</td>
                   <td></td>
                   <td>
-                    <button type="button" class="btn btn-icon btn-round btn-danger delete"><i class="fas fa-trash-alt"></i></button>
-                    <button type="button" class="btn btn-icon btn-round btn-info"><i class="far fa-edit"></i></button>
+                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"><i class="fas fa-trash-alt sizing-fa"></i></button>
+                    <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                   </td>
                 </tr>
               </tbody>
