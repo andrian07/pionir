@@ -15,7 +15,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Customer</h3>
+                <h3 class="fw-bold mb-3">Daftar Produk</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <div class="btn-group dropdown">
@@ -184,24 +184,24 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Kode</th>
-                  <th>Rate</th>
-                  <th>Nama</th>
-                  <th>Alamat</th>
-                  <th>Telp</th>
-                  <th>Expedisi</th>
-                  <th>Poin</th>
+                  <th>Nama Produk</th>
+                  <th>Brand</th>
+                  <th>Kategori</th>
+                  <th>Supplier</th>
+                  <th>Paket</th>
+                  <th>PPN</th>
+                  <th>Gambar</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>C122400001</td>
+                  <td>00020018 <br /> Spk ACR 15" 15600 Black TES 1 2 3</td>
                   <td><span class="badge badge-primary">Normal</span></td>
                   <td>ABAN DONI</td>
                   <td>JALAN ADISUCIPTO KM 8 DESA PARIT BARU RT.003 RW.006 SUNGAI RAYA, SUNGAI RAYA KAB. KUBU RAYA KALIMANTAN BARAT</td>
                   <td>0800000000</td>
-                  <td><span class="badge badge-primary multi-badge">JNE</span><span class="badge badge-primary multi-badge">Lion Parcel</span></td>
+                  <td><span class="badge badge-primary">JNE</span><span class="badge badge-primary">Lion Parcel</span></td>
                   <td>0</td>
                   <td>
                     <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
@@ -215,7 +215,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <td>Beni</td>
                   <td>KOMP PERMATA PURNAMA NO A-19</td>
                   <td>0852323123</td>
-                  <td><span class="badge badge-primary multi-badge">JNE</span></td>
+                  <td><span class="badge badge-primary">JNE</span></td>
                   <td>0</td>
                   <td>
                     <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>

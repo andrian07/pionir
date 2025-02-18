@@ -19,7 +19,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">

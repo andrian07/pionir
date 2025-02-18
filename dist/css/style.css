@@ -38,6 +38,11 @@
 .table{
   border: 1px solid #ebecec  !important;
 }
+
 .table tr th{
   border: 1px solid #ebecec  !important;
+}
+
+.multi-badge{
+    margin-left: 2px;
 }
