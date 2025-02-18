@@ -15,7 +15,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Brand</h3>
+                <h3 class="fw-bold mb-3">Daftar Ekspedisi</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
@@ -24,21 +24,42 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Brand</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Ekspedisi</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Kode Ekspedisi</label>
                           <div class="col-md-12 p-0">
-                            <input type="text" class="form-control input-full" id="inlineinput" placeholder="Nama Brand">
+                            <input type="text" class="form-control input-full" id="expedisi_code" value="AUTO">
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Ekspedisi</label>
+                          <div class="col-md-12 p-0">
+                            <input type="text" class="form-control input-full" id="expedisi_name" placeholder="Nama Ekspedisi">
+                          </div>
+                        </div>
+
+                         <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Alamat</label>
+                          <div class="col-md-12 p-0">
+                            <textarea class="form-control" id="expedisi_address" rows="5"></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Telp</label>
+                          <div class="col-md-12 p-0">
+                            <input type="text" class="form-control input-full" id="expedisi_phone" placeholder="Telp">
                           </div>
                         </div>
 
                         <div class="form-group form-inline">
                           <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
                           <div class="col-md-12 p-0">
-                            <textarea class="form-control" id="comment" rows="5"></textarea>
+                            <textarea class="form-control" id="expedisi_desc" rows="5"></textarea>
                           </div>
                         </div>
                       </div>
@@ -60,24 +81,32 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Nama Brand</th>
+                  <th>Kode Ekspedisi</th>
+                  <th>Nama Ekspedisi</th>
+                  <th>Alamat</th>
+                  <th>Telp</th>
                   <th>Deskripsi</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Acero</td>
-                  <td></td>
+                  <td>EX-01</td>
+                  <td>JNE</td>
+                  <td>Jl. Gajahmada No 03</td>
+                  <td>0812323231123</td>
+                  <td>Keterangan.. </td>
                   <td>
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-
                     <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                   </td>
                 </tr>
                 <tr>
-                  <td>Acr</td>
-                  <td></td>
+                  <td>EX-02</td>
+                  <td>Lion Parcel</td>
+                  <td>Jl. Imam Bonjol (Samping Pom Bensin)</td>
+                  <td>0812323231123</td>
+                  <td>Keterangan.. </td>
                   <td>
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"><i class="fas fa-trash-alt sizing-fa"></i></button>
                     <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>

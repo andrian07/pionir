@@ -15,7 +15,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Brand</h3>
+                <h3 class="fw-bold mb-3">Daftar Kategori</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
@@ -24,21 +24,21 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Brand</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Kategori</label>
                           <div class="col-md-12 p-0">
-                            <input type="text" class="form-control input-full" id="inlineinput" placeholder="Nama Brand">
+                            <input type="text" class="form-control input-full" id="category_name" placeholder="Nama Kategori">
                           </div>
                         </div>
 
                         <div class="form-group form-inline">
                           <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
                           <div class="col-md-12 p-0">
-                            <textarea class="form-control" id="comment" rows="5"></textarea>
+                            <textarea class="form-control" id="category_desc" rows="5"></textarea>
                           </div>
                         </div>
                       </div>
@@ -60,14 +60,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Nama Brand</th>
+                  <th>Nama Kategori</th>
                   <th>Deskripsi</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Acero</td>
+                  <td>Lampu</td>
                   <td></td>
                   <td>
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
@@ -76,7 +76,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </td>
                 </tr>
                 <tr>
-                  <td>Acr</td>
+                  <td>Speaker</td>
                   <td></td>
                   <td>
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"><i class="fas fa-trash-alt sizing-fa"></i></button>
