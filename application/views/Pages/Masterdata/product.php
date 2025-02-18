@@ -33,105 +33,66 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Customer</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Produk</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
 
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-6 border-right">
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Customer</label>
-                              <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_code" value="Auto">
-                              </div>
-                            </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Nama Customer</label>
-                              <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_name" placeholder="Nama Customer">
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Tgl. Lahir</label>
-                              <div class="col-md-12 p-0">
-                                <input type="date" class="form-control input-full" id="customer_dob" >
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Kelamin</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="customer_gender">
-                                  <option value="L">Laki - Laki</option>
-                                  <option value="P">Perempuan</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Alamat</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="customer_address" rows="4"></textarea>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Blok & No Rumah</label>
-                              <div class="row" style="padding-left: 15px;">
-                                <div class="col-md-5 p-0" style="margin-right:15px;">
-                                  <input type="text" class="form-control input-full" id="customer_address_block" placeholder="Blok">
+                              <div class="proof">
+                                <div class="imgArea" data-title="">
+                                  <input type="file" name="screenshoot" id="screenshoot" hidden accept="image/*" />
+                                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                                  <h4>upload screenshoot</h4>
+                                  <p>image size must be less than <span>2MB</span></p>
                                 </div>
-                                <div class="col-md-5 p-0">
-                                  <input type="text" class="form-control input-full" id="customer_address_no" placeholder="No">
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">RT/RW</label>
-                              <div class="row" style="padding-left: 15px;">
-                                <div class="col-md-5 p-0" style="margin-right:15px;">
-                                  <input type="text" class="form-control input-full" id="customer_address_rt" placeholder="RT">
-                                </div>
-                                <div class="col-md-5 p-0">
-                                  <input type="text" class="form-control input-full" id="customer_address_rw" placeholder="RW">
-                                </div>
+                                <button class="selectImage" type="button">Select Image</button>
                               </div>
                             </div>
                           </div>
 
                           <div class="col-md-6">
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">No Telp</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_code" value="Auto" readonly>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
                               <div class="col-md-12 p-0">
                                 <input type="text" class="form-control input-full" id="customer_address_phone" placeholder="No Telp">
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Email</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
                               <div class="col-md-12 p-0">
                                 <input type="text" class="form-control input-full" id="customer_address_email" placeholder="Email">
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Alamat Pengiriman</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="customer_address_delivery" rows="4"></textarea>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Expedisi</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
                               <div class="col-md-12 p-0">
                                 <select class=" form-control input-full js-example-basic-multiple js-states" name="states[]" id="customer_expedisi" multiple="multiple">
                                   <option value="PJ">Prima Jasa</option>
                                   <option value="LP">Lion Parcel</option>
                                   <option value="JNE">JNE</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="customer_group_price">
+                                  <option value="Y">Barang Kena Pajak</option>
+                                  <option value="N">Barang Tidak Kena Pajak</option>
                                 </select>
                               </div>
                             </div>
@@ -184,45 +145,59 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Nama Produk</th>
+                  <th width="30%">Nama Produk</th>
                   <th>Brand</th>
                   <th>Kategori</th>
                   <th>Supplier</th>
                   <th>Paket</th>
                   <th>PPN</th>
-                  <th>Gambar</th>
-                  <th>Aksi</th>
+                  <th width="20%;">Gambar</th>
+                  <th width="10%;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>00020018 <br /> Spk ACR 15" 15600 Black TES 1 2 3</td>
-                  <td><span class="badge badge-primary">Normal</span></td>
-                  <td>ABAN DONI</td>
-                  <td>JALAN ADISUCIPTO KM 8 DESA PARIT BARU RT.003 RW.006 SUNGAI RAYA, SUNGAI RAYA KAB. KUBU RAYA KALIMANTAN BARAT</td>
-                  <td>0800000000</td>
-                  <td><span class="badge badge-primary">JNE</span><span class="badge badge-primary">Lion Parcel</span></td>
-                  <td>0</td>
+                  <td>00020018 <br /> Adaptor 12v 1A HK (Pipih)</td>
+                  <td>ACR</td>
+                  <td>Speaker</td>
+                  <td><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
+                  <td><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
+                  <td><span class="badge badge-success multi-badge"><i class="fas fa-check-circle"></i></span></td>
                   <td>
+                    <a data-fancybox data-src="<?php echo base_url();?>assets/default.png" data-caption="Adaptor 12v 1A HK (Pipih)">
+                      <img src="<?php echo base_url();?>assets/default.png"class="img-thumbnail" width="80%" />
+                    </a>
+                  </td>
+                  <td>
+                    <a href="<?php echo base_url();?>Masterdata/settingproduct">
+                      <button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-cog"></i></button>
+                    </a>
                     <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
                     <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                   </td>
                 </tr>
+
                 <tr>
-                  <td>C102300002</td>
-                  <td><span class="badge badge-warning">Khusus</span></td>
-                  <td>Beni</td>
-                  <td>KOMP PERMATA PURNAMA NO A-19</td>
-                  <td>0852323123</td>
-                  <td><span class="badge badge-primary">JNE</span></td>
-                  <td>0</td>
+                  <td>00020018 <br /> Mic Hardwell Superstar 1S</td>
+                  <td>ACR</td>
+                  <td>Speaker</td>
+                  <td><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
+                  <td><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
+                  <td><span class="badge badge-success multi-badge"><i class="fas fa-check-circle"></i></span></td>
+                  <td><img src="<?php echo base_url();?>assets/default.png" class="img-thumbnail" width="80%"/></td>
                   <td>
+                    <a href="<?php echo base_url();?>Masterdata/settingproduct">
+                      <button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-cog"></i></button>
+                    </a>
                     <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
+
                     <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
+
                     <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                   </td>
                 </tr>
+
               </tbody>
             </table>
           </div>
@@ -285,4 +260,59 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   });
+
+
+  /* image uplaod */
+  const fileTypes = [
+  "image/apng",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/pjpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "image/x-icon",
+  "image/avif",
+  ];
+  function validFileType(file) {
+    return fileTypes.includes(file.type);
+  }
+
+  let inputHidden = document.querySelector("#screenshoot");
+  let triggerInput = document.querySelector(".selectImage");
+  let imgArea = document.querySelector(".imgArea");
+
+  triggerInput.addEventListener("click",function(){
+    inputHidden.click();
+  })
+
+  inputHidden.addEventListener("change",function(e){
+    let image = e.target.files[0];
+    if(!validFileType(image)){
+      alert("invalid file type");
+      return;
+    }
+    if(image.size > 2097152){
+      alert("image size must be less than 2MB");
+      return;
+    }else{
+      const reader = new FileReader();
+      reader.addEventListener("load",function(){
+        const allImgs = document.querySelectorAll(".imgArea img");
+        allImgs.forEach((img) => {
+          img.remove();
+        })
+        const imgUrl = reader.result;
+        const img = document.createElement("img");
+        img.src = imgUrl;
+        imgArea.appendChild(img);
+        imgArea.classList.add("active");
+        imgArea.dataset.title = image.name;
+      })
+      reader.readAsDataURL(image);
+    }
+  })
+
 </script>

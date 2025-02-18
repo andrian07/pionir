@@ -5,17 +5,27 @@
   <title>Pionir Backoffice</title>
   <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
   <link rel="icon" href="<?php echo base_url(); ?>assets/logo.png" type="image/x-icon"/>
-
+  <style type="text/css">
+    .img-thumbnail {
+      padding: .25rem;
+      background-color: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: .25rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
   <script src="<?php echo base_url(); ?>dist/js/plugin/webfont/webfont.min.js"></script>
   <script>
     WebFont.load({
       google: { families: ["Public Sans:300,400,500,600,700"] },
       custom: {
         families: [
-          "Font Awesome 5 Solid",
-          "Font Awesome 5 Regular",
-          "Font Awesome 5 Brands",
-          "simple-line-icons",
+        "Font Awesome 5 Solid",
+        "Font Awesome 5 Regular",
+        "Font Awesome 5 Brands",
+        "simple-line-icons",
         ],
         urls: ["<?php echo base_url(); ?>dist/css/fonts.min.css"],
       },
@@ -32,7 +42,7 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/style.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/fancy.css" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  
+
 </head>
 <body>
   <div class="wrapper sidebar_minimize">
@@ -193,248 +203,128 @@
             </form>
           </ul>
         </li>
+
         <li class="nav-item topbar-icon dropdown hidden-caret">
           <a
           class="nav-link dropdown-toggle"
           href="#"
-          id="messageDropdown"
+          id="notifDropdown"
           role="button"
           data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
           >
-          <i class="fa fa-envelope"></i>
+          <i class="fa fa-bell"></i>
+          <span class="notification">2</span>
         </a>
         <ul
-        class="dropdown-menu messages-notif-box animated fadeIn"
-        aria-labelledby="messageDropdown"
+        class="dropdown-menu notif-box animated fadeIn"
+        aria-labelledby="notifDropdown"
         >
         <li>
-          <div
-          class="dropdown-title d-flex justify-content-between align-items-center"
-          >
-          Messages
-          <a href="#" class="small">Mark all as read</a>
-        </div>
-      </li>
-      <li>
-        <div class="message-notif-scroll scrollbar-outer">
-          <div class="notif-center">
-            <a href="#">
-              <div class="notif-img">
-                <img
-                src="<?php echo base_url(); ?>dist//img/jm_denis.jpg"
-                alt="Img Profile"
-                />
-              </div>
-              <div class="notif-content">
-                <span class="subject">Jimmy Denis</span>
-                <span class="block"> How are you ? </span>
-                <span class="time">5 minutes ago</span>
-              </div>
-            </a>
-            <a href="#">
-              <div class="notif-img">
-                <img
-                src="<?php echo base_url(); ?>dist//img/chadengle.jpg"
-                alt="Img Profile"
-                />
-              </div>
-              <div class="notif-content">
-                <span class="subject">Chad</span>
-                <span class="block"> Ok, Thanks ! </span>
-                <span class="time">12 minutes ago</span>
-              </div>
-            </a>
-            <a href="#">
-              <div class="notif-img">
-                <img
-                src="<?php echo base_url(); ?>dist//img/mlane.jpg"
-                alt="Img Profile"
-                />
-              </div>
-              <div class="notif-content">
-                <span class="subject">Jhon Doe</span>
-                <span class="block">
-                  Ready for the meeting today...
-                </span>
-                <span class="time">12 minutes ago</span>
-              </div>
-            </a>
-            <a href="#">
-              <div class="notif-img">
-                <img
-                src="<?php echo base_url(); ?>dist//img/talha.jpg"
-                alt="Img Profile"
-                />
-              </div>
-              <div class="notif-content">
-                <span class="subject">Talha</span>
-                <span class="block"> Hi, Apa Kabar ? </span>
-                <span class="time">17 minutes ago</span>
-              </div>
-            </a>
+          <div class="dropdown-title">
+            Ada 2 Notiifikasi Terbaru
           </div>
-        </div>
-      </li>
-      <li>
-        <a class="see-all" href="javascript:void(0);"
-        >See all messages<i class="fa fa-angle-right"></i>
-      </a>
-    </li>
-  </ul>
-</li>
-<li class="nav-item topbar-icon dropdown hidden-caret">
-  <a
-  class="nav-link dropdown-toggle"
-  href="#"
-  id="notifDropdown"
-  role="button"
-  data-bs-toggle="dropdown"
-  aria-haspopup="true"
-  aria-expanded="false"
-  >
-  <i class="fa fa-bell"></i>
-  <span class="notification">4</span>
-</a>
-<ul
-class="dropdown-menu notif-box animated fadeIn"
-aria-labelledby="notifDropdown"
->
-<li>
-  <div class="dropdown-title">
-    You have 4 new notification
-  </div>
-</li>
-<li>
-  <div class="notif-scroll scrollbar-outer">
-    <div class="notif-center">
-      <a href="#">
-        <div class="notif-icon notif-primary">
-          <i class="fa fa-user-plus"></i>
-        </div>
-        <div class="notif-content">
-          <span class="block"> New user registered </span>
-          <span class="time">5 minutes ago</span>
-        </div>
-      </a>
-      <a href="#">
-        <div class="notif-icon notif-success">
-          <i class="fa fa-comment"></i>
-        </div>
-        <div class="notif-content">
-          <span class="block">
-            Rahmad commented on Admin
-          </span>
-          <span class="time">12 minutes ago</span>
-        </div>
-      </a>
-      <a href="#">
-        <div class="notif-img">
-          <img
-          src="<?php echo base_url(); ?>dist//img/profile2.jpg"
-          alt="Img Profile"
-          />
-        </div>
-        <div class="notif-content">
-          <span class="block">
-            Reza send messages to you
-          </span>
-          <span class="time">12 minutes ago</span>
-        </div>
-      </a>
-      <a href="#">
-        <div class="notif-icon notif-danger">
-          <i class="fa fa-heart"></i>
-        </div>
-        <div class="notif-content">
-          <span class="block"> Farrah liked Admin </span>
-          <span class="time">17 minutes ago</span>
-        </div>
-      </a>
+        </li>
+        <li>
+          <div class="notif-scroll scrollbar-outer">
+            <div class="notif-center">
+              <a href="#">
+                <div class="notif-icon notif-primary">
+                  <i class="fas fa-coins"></i>
+                </div>
+                <div class="notif-content">
+                  <span class="block">Item Di Bawah Stock </span>
+                  <span class="time">4 Item</span>
+                </div>
+              </a>
+              <a href="#">
+                <div class="notif-icon notif-success">
+                  <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="notif-content">
+                  <span class="block">Tagihan Jatuh Tempo Hari Ini</span>
+                  <span class="time">5 Tagihan</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </li>
+    </ul>
+  </li>
+  <li class="nav-item topbar-icon dropdown hidden-caret">
+    <a
+    class="nav-link"
+    data-bs-toggle="dropdown"
+    href="#"
+    aria-expanded="false"
+    >
+    <i class="fas fa-layer-group"></i>
+  </a>
+  <div class="dropdown-menu quick-actions animated fadeIn">
+    <div class="quick-actions-header">
+      <span class="title mb-1">Quick Actions</span>
+      <span class="subtitle op-7">Shortcuts</span>
     </div>
-  </div>
-</li>
-<li>
-  <a class="see-all" href="javascript:void(0);"
-  >See all notifications<i class="fa fa-angle-right"></i>
-</a>
-</li>
-</ul>
-</li>
-<li class="nav-item topbar-icon dropdown hidden-caret">
-  <a
-  class="nav-link"
-  data-bs-toggle="dropdown"
-  href="#"
-  aria-expanded="false"
-  >
-  <i class="fas fa-layer-group"></i>
-</a>
-<div class="dropdown-menu quick-actions animated fadeIn">
-  <div class="quick-actions-header">
-    <span class="title mb-1">Quick Actions</span>
-    <span class="subtitle op-7">Shortcuts</span>
-  </div>
-  <div class="quick-actions-scroll scrollbar-outer">
-    <div class="quick-actions-items">
-      <div class="row m-0">
+    <div class="quick-actions-scroll scrollbar-outer">
+      <div class="quick-actions-items">
+        <div class="row m-0">
+          <a class="col-6 col-md-4 p-0" href="#">
+            <div class="quick-actions-item">
+              <div class="avatar-item bg-danger rounded-circle">
+                <i class="far fa-calendar-alt"></i>
+              </div>
+              <span class="text">Calendar</span>
+            </div>
+          </a>
+          <a class="col-6 col-md-4 p-0" href="#">
+            <div class="quick-actions-item">
+              <div
+              class="avatar-item bg-warning rounded-circle"
+              >
+              <i class="fas fa-map"></i>
+            </div>
+            <span class="text">Maps</span>
+          </div>
+        </a>
         <a class="col-6 col-md-4 p-0" href="#">
           <div class="quick-actions-item">
-            <div class="avatar-item bg-danger rounded-circle">
-              <i class="far fa-calendar-alt"></i>
+            <div class="avatar-item bg-info rounded-circle">
+              <i class="fas fa-file-excel"></i>
             </div>
-            <span class="text">Calendar</span>
+            <span class="text">Reports</span>
           </div>
         </a>
         <a class="col-6 col-md-4 p-0" href="#">
           <div class="quick-actions-item">
             <div
-            class="avatar-item bg-warning rounded-circle"
+            class="avatar-item bg-success rounded-circle"
             >
-            <i class="fas fa-map"></i>
+            <i class="fas fa-envelope"></i>
           </div>
-          <span class="text">Maps</span>
-        </div>
-      </a>
-      <a class="col-6 col-md-4 p-0" href="#">
-        <div class="quick-actions-item">
-          <div class="avatar-item bg-info rounded-circle">
-            <i class="fas fa-file-excel"></i>
-          </div>
-          <span class="text">Reports</span>
+          <span class="text">Emails</span>
         </div>
       </a>
       <a class="col-6 col-md-4 p-0" href="#">
         <div class="quick-actions-item">
           <div
-          class="avatar-item bg-success rounded-circle"
+          class="avatar-item bg-primary rounded-circle"
           >
-          <i class="fas fa-envelope"></i>
+          <i class="fas fa-file-invoice-dollar"></i>
         </div>
-        <span class="text">Emails</span>
+        <span class="text">Invoice</span>
       </div>
     </a>
     <a class="col-6 col-md-4 p-0" href="#">
       <div class="quick-actions-item">
         <div
-        class="avatar-item bg-primary rounded-circle"
+        class="avatar-item bg-secondary rounded-circle"
         >
-        <i class="fas fa-file-invoice-dollar"></i>
+        <i class="fas fa-credit-card"></i>
       </div>
-      <span class="text">Invoice</span>
+      <span class="text">Payments</span>
     </div>
   </a>
-  <a class="col-6 col-md-4 p-0" href="#">
-    <div class="quick-actions-item">
-      <div
-      class="avatar-item bg-secondary rounded-circle"
-      >
-      <i class="fas fa-credit-card"></i>
-    </div>
-    <span class="text">Payments</span>
-  </div>
-</a>
 </div>
 </div>
 </div>
