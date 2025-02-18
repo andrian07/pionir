@@ -18,6 +18,15 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Customer</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
+                <div class="btn-group dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"><span class="btn-label"><i class="fas fa-file-excel"></i></span> Excell</button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a class="dropdown-item" href="#">Download Template</a>
+                      <a class="dropdown-item" href="#">Import Excell</a>
+                    </li>
+                  </ul>
+                </div>
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
@@ -27,7 +36,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Customer</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      
+
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-6 border-right">
@@ -156,7 +165,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </div>
                         </div>
                       </div>
-                      
+
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
@@ -239,7 +248,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-      });
+    });
     });
   });
 

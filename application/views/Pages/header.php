@@ -35,7 +35,7 @@
   
 </head>
 <body>
-  <div class="wrapper">
+  <div class="wrapper sidebar_minimize">
     <!-- Sidebar -->
     <div class="sidebar sidebar-style-2" data-background-color="dark">
       <div class="sidebar-logo">
