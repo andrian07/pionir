@@ -145,7 +145,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                               <div class="modal-body">
                                 <div class="row">
-                                  <div class="col-md-6 border-right">
+                                  <div class="col-md-4 border-right">
+                                    <h4 style="text-align:center;">Detail Item</h4>
                                     <div class="form-group form-inline">
                                       <label for="inlineinput" class="col-md-3 col-form-label">Kode Item / Barcode</label>
                                       <div class="col-md-12 p-0">
@@ -157,7 +158,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                       <label for="inlineinput" class="col-md-3 col-form-label">Satuan</label>
                                       <div class="col-md-12 p-0">
                                         <select class="form-control input-full js-example-basic-single" id="item_unit" name="product_unit">
-                                          <option>-- Pilih Satuan Dasar --</option>
+                                          <option>-- Pilih Satuan --</option>
                                           <option>Pcs</option>
                                           <option>Kotak</option>
                                           <option>Lusin</option>
@@ -168,22 +169,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                     <div class="form-group form-inline">
                                       <label for="inlineinput" class="col-md-3 col-form-label">Isi</label>
                                       <div class="col-md-12 p-0">
-                                        <input type="text" class="form-control input-full" id="item_containt">
+                                        <input type="text" class="form-control input-full" id="item_containt" value="0">
                                       </div>
                                     </div>
-
                                   </div>
 
-                                  <div class="col-md-6">
+                                  <div class="col-md-4 border-right">
+                                    <h4 style="text-align:center;">Margin & Harga Jual</h4>
                                     <div class="form-group form-inline">
                                       <label for="inlineinput" class="col-md-3 col-form-label">Harga Jual Normal</label>
                                       <div class="row">
                                         <div class="col-sm-4">
-                                          <input id="margin_rate_G1" name="margin_rate_G1" type="text" class="form-control text-right" placeholder="0%">
+                                          <input id="item_price_1_percentage" name="item_price_1_percentage" type="text" class="form-control text-right" value="0">
                                         </div>
 
                                         <div class="col-sm-8">
-                                          <input id="sales_price_G1" name="sales_price_G1" type="text" class="form-control text-right"  placeholder="RP. 1.000.000">
+                                          <input id="item_price_1" name="item_price_1" type="text" class="form-control text-right"  value="0">
                                         </div>
                                       </div>
                                     </div>
@@ -192,11 +193,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                       <label for="inlineinput" class="col-md-3 col-form-label">Harga Jual Toko</label>
                                       <div class="row">
                                         <div class="col-sm-4">
-                                          <input id="margin_rate_G1" name="margin_rate_G1" type="text" class="form-control text-right" value="0">
+                                          <input id="item_price_2_percentage" name="item_price_2_percentage" type="text" class="form-control text-right" value="0">
                                         </div>
 
                                         <div class="col-sm-8">
-                                          <input id="sales_price_G1" name="sales_price_G1" type="text" class="form-control text-right" data-parsley-vsalespriceg1="" value="0">
+                                          <input id="item_price_2" name="item_price_2" type="text" class="form-control text-right" value="0">
                                         </div>
                                       </div>
                                     </div>
@@ -205,35 +206,94 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                       <label for="inlineinput" class="col-md-3 col-form-label">Harga Sales</label>
                                       <div class="row">
                                         <div class="col-sm-4">
-                                          <input id="margin_rate_G1" name="margin_rate_G1" type="text" class="form-control text-right" value="0">
+                                          <input id="item_price_3_percentage" name="item_price_3_percentage" type="text" class="form-control text-right" value="0">
                                         </div>
 
                                         <div class="col-sm-8">
-                                          <input id="sales_price_G1" name="sales_price_G1" type="text" class="form-control text-right" data-parsley-vsalespriceg1="" value="0">
+                                          <input id="item_price_3" name="item_price_3" type="text" class="form-control text-right" value="0">
                                         </div>
                                       </div>
                                     </div>
+
 
                                     <div class="form-group form-inline">
                                       <label for="inlineinput" class="col-md-3 col-form-label">Harga Khusus</label>
                                       <div class="row">
                                         <div class="col-sm-4">
-                                          <input id="margin_rate_G1" name="margin_rate_G1" type="text" class="form-control text-right" value="0">
+                                          <input id="item_price_4_percentage" name="item_price_4_percentage" type="text" class="form-control text-right" value="0">
                                         </div>
 
                                         <div class="col-sm-8">
-                                          <input id="sales_price_G1" name="sales_price_G1" type="text" class="form-control text-right" data-parsley-vsalespriceg1="" value="0">
+                                          <input id="item_price_4" name="item_price_4" type="text" class="form-control text-right" value="0">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-4 border-right">
+                                    <h4 style="text-align:center;">Disc</h4>
+                                    
+                                    <div class="form-group form-inline">
+                                      <label for="inlineinput" class="col-md-3 col-form-label">Disc Normal</label>
+                                      <div class="row">
+                                        <div class="col-sm-4">
+                                          <input id="item_disc_1_percentage" name="item_disc_1_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                        </div>
+
+                                        <div class="col-sm-8">
+                                          <input id="item_disc_1" name="item_disc_1" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group form-inline">
+                                      <label for="inlineinput" class="col-md-3 col-form-label">Disc Toko</label>
+                                      <div class="row">
+                                        <div class="col-sm-4">
+                                          <input id="item_disc_2_percentage" name="item_disc_2_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                        </div>
+
+                                        <div class="col-sm-8">
+                                          <input id="item_disc_2" name="item_disc_2" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group form-inline">
+                                      <label for="inlineinput" class="col-md-3 col-form-label">Disc Sales</label>
+                                      <div class="row">
+                                        <div class="col-sm-4">
+                                          <input id="item_disc_3_percentage" name="item_disc_3_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                        </div>
+
+                                        <div class="col-sm-8">
+                                          <input id="item_disc_3" name="item_disc_3" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-group form-inline">
+                                      <label for="inlineinput" class="col-md-3 col-form-label">Disc Khusus</label>
+                                      <div class="row">
+                                        <div class="col-sm-4">
+                                          <input id="item_disc_4_percentage" name="item_disc_4_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                        </div>
+
+                                        <div class="col-sm-8">
+                                          <input id="item_disc_4" name="item_disc_4" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
                                         </div>
                                       </div>
                                     </div>
 
                                   </div>
+
                                 </div>
+                                
                               </div>
 
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                                <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                               </div>
                             </div>
                           </div>
@@ -259,6 +319,60 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
   <script>
 
+
+    let containt = new AutoNumeric('#item_containt', {
+      decimalPlaces: 0
+    });
+
+    let item_price_1 = new AutoNumeric('#item_price_1', {
+      currencySymbol : 'Rp. ',
+      decimalCharacter : ',',
+      decimalPlaces: 0,
+      decimalPlacesShownOnFocus: 0,
+      digitGroupSeparator : '.',
+    });
+    let item_price_2 = new AutoNumeric('#item_price_2', {
+      currencySymbol : 'Rp. ',
+      decimalCharacter : ',',
+      decimalPlaces: 0,
+      decimalPlacesShownOnFocus: 0,
+      digitGroupSeparator : '.',
+    });
+    let item_price_3 = new AutoNumeric('#item_price_3', {
+      currencySymbol : 'Rp. ',
+      decimalCharacter : ',',
+      decimalPlaces: 0,
+      decimalPlacesShownOnFocus: 0,
+      digitGroupSeparator : '.',
+    });
+    let item_price_4 = new AutoNumeric('#item_price_4', {
+      currencySymbol : 'Rp. ',
+      decimalCharacter : ',',
+      decimalPlaces: 0,
+      decimalPlacesShownOnFocus: 0,
+      digitGroupSeparator : '.',
+    });
+
+    let item_price_1_percentage = new AutoNumeric('#item_price_1_percentage', {
+      suffixText: "%",
+      decimalPlaces: 0,
+    });
+
+    let item_price_2_percentage = new AutoNumeric('#item_price_2_percentage', {
+      suffixText: "%",
+      decimalPlaces: 0,
+    });
+
+    let item_price_3_percentage = new AutoNumeric('#item_price_3_percentage', {
+      suffixText: "%",
+      decimalPlaces: 0,
+    });
+
+    let item_price_4_percentage = new AutoNumeric('#item_price_4_percentage', {
+      suffixText: "%",
+      decimalPlaces: 0,
+    });
+
     $('body').on('shown.bs.modal', '.modal', function() {
       $(this).find('.js-example-basic-multiple').each(function() {
         var dropdownParent = $(document.body);
@@ -267,7 +381,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
         $(this).select2({
           dropdownParent: $("#myModal")
       // ...
-        });
+    });
       });
     });
 

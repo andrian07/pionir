@@ -167,8 +167,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </div>
 
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                      </div>
                       </div>
                     </div>
                   </div>

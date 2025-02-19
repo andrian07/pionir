@@ -66,7 +66,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
                               <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="product_category" name="product_brand">
+                                <select class="form-control input-full js-example-basic-single" id="product_category" name="product_category">
                                   <option>-- Pilih Kategori --</option>
                                   <option>Headset</option>
                                   <option>Monitor</option>
@@ -187,8 +187,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </div>
 
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
@@ -197,6 +197,53 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
           </div>
           <div class="card-body">
+
+            <div class="row" style="margin-bottom:30px; padding-left: 8px;">
+
+              <div class="col-md-3">
+                <div class="form-group form-inline">
+                  <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
+                  <div class="col-md-12 p-0">
+                    <select class="form-control input-full js-example-basic-single" id="product_category_filter" name="product_category_filter">
+                      <option>-- Pilih Kategori --</option>
+                      <option>Headset</option>
+                      <option>Monitor</option>
+                      <option>Speaker</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group form-inline">
+                  <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
+                  <div class="col-md-12 p-0">
+                    <select class="form-control input-full js-example-basic-single" id="product_brand_filter" name="product_brand_filter">
+                      <option>-- Pilih Brand --</option>
+                      <option>ACR</option>
+                      <option>ACA</option>
+                      <option>ACTIV</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group form-inline">
+                  <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
+                  <div class="col-md-12 p-0">
+                    <select class="form-control input-full js-example-basic-single" id="product_supplier_filter" name="product_supplier_filter">
+                      <option>-- Pilih Supplier --</option>
+                      <option value="PJ">Prima Jasa</option>
+                      <option value="LP">Lion Parcel</option>
+                      <option value="JNE">JNE</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
             <div class="table-responsive">
               <table
               id="basic-datatables"
@@ -237,7 +284,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </td>
                 </tr>
 
-            
+
 
               </tbody>
             </table>
@@ -289,17 +336,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon",
-    "image/avif",
+  "image/apng",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/pjpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "image/x-icon",
+  "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

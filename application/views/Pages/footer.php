@@ -45,7 +45,8 @@
 <script src="<?php echo base_url(); ?>dist/js/plugin/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/kaiadmin.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/fancybox.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="<?php echo base_url(); ?>dist/js/select2.js"></script>
+<script src="<?php echo base_url(); ?>dist/js/autonumeric.js"></script>
 <script>
 
   $('body').on('shown.bs.modal', '.modal', function() {
@@ -56,7 +57,7 @@
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-      });
+    });
     });
   });
 
@@ -72,7 +73,7 @@
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-      });
+    });
     });
   });
   
@@ -89,11 +90,11 @@
     type: "pie",
     data: {
       datasets: [
-        {
-          data: [50, 35, 15],
-          backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
-          borderWidth: 0,
-        },
+      {
+        data: [50, 35, 15],
+        backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
+        borderWidth: 0,
+      },
       ],
       labels: ["Pendapatan", "Pengeluaran", "Hpp"],
     },
