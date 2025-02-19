@@ -240,22 +240,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  $('body').on('shown.bs.modal', '.modal', function() {
-    $(this).find('.js-example-basic-multiple').each(function() {
-      var dropdownParent = $(document.body);
-      if ($(this).parents('#myModal').length !== 0)
-        dropdownParent = $("#myModal");
-      $(this).select2({
-        dropdownParent: $("#myModal")
-      // ...
-    });
-    });
-  });
-
-  $(document).ready(function() {
-    $('.js-example-basic-multiple').select2();
-  });
-
   $(".delete").click(function (e) {
     swal({
       title: "Hapus !!",

@@ -48,9 +48,38 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 
+  $('body').on('shown.bs.modal', '.modal', function() {
+    $(this).find('.js-example-basic-multiple').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#myModal').length !== 0)
+        dropdownParent = $("#myModal");
+      $(this).select2({
+        dropdownParent: $("#myModal")
+      // ...
+      });
+    });
+  });
 
+  $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+  });
 
+  $('body').on('shown.bs.modal', '.modal', function() {
+    $(this).find('.js-example-basic-single').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#myModal').length !== 0)
+        dropdownParent = $("#myModal");
+      $(this).select2({
+        dropdownParent: $("#myModal")
+      // ...
+      });
+    });
+  });
   
+  $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+  });
+
   Fancybox.bind("[data-fancybox]", {
   }) 
 

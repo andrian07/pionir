@@ -28,9 +28,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </ul>
                 </div>
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
-                <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-                  <div class="modal-dialog modal-lg">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-xl"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <div class="modal fade bd-example-modal-xl" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+                  <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Produk</h5>
@@ -39,7 +39,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                       <div class="modal-body">
                         <div class="row">
-                          <div class="col-md-6 border-right">
+                          <div class="col-md-4 border-right">
 
                             <div class="form-group form-inline">
                               <div class="proof">
@@ -54,25 +54,36 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
                           </div>
 
-                          <div class="col-md-6">
+                          <div class="col-md-4">
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_code" value="Auto" readonly>
+                                <input type="text" class="form-control input-full" id="product_code" value="Auto" readonly>
                               </div>
                             </div>
+
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_address_phone" placeholder="No Telp">
+                                <select class="form-control input-full js-example-basic-single" id="product_category" name="product_brand">
+                                  <option>-- Pilih Kategori --</option>
+                                  <option>Headset</option>
+                                  <option>Monitor</option>
+                                  <option>Speaker</option>
+                                </select>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_address_email" placeholder="Email">
+                                <select class="form-control input-full js-example-basic-single" id="product_brand" name="product_brand">
+                                  <option>-- Pilih Brand --</option>
+                                  <option>ACR</option>
+                                  <option>ACA</option>
+                                  <option>ACTIV</option>
+                                </select>
                               </div>
                             </div>
 
@@ -80,6 +91,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
                               <div class="col-md-12 p-0">
                                 <select class=" form-control input-full js-example-basic-multiple js-states" name="states[]" id="customer_expedisi" multiple="multiple">
+                                  <option>-- Pilih Supplier --</option>
                                   <option value="PJ">Prima Jasa</option>
                                   <option value="LP">Lion Parcel</option>
                                   <option value="JNE">JNE</option>
@@ -88,9 +100,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Item Supplier</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="product_item_supplier" placeholder="Item Supplier">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
                               <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="customer_group_price">
+                                <select class="form-select form-control" id="product_tax">
                                   <option value="Y">Barang Kena Pajak</option>
                                   <option value="N">Barang Tidak Kena Pajak</option>
                                 </select>
@@ -98,28 +117,68 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">NPWP</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Satuan Dasar</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_npwp" placeholder="NPWP">
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">NIK</label>
-                              <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_nik" placeholder="NIK">
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Rate Customer</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="customer_group_price">
-                                  <option value="Normal">Normal</option>
-                                  <option value="Toko">Toko</option>
-                                  <option value="Sales">Sales</option>
-                                  <option value="Khusus">Khusus</option>
+                                <select class="form-control input-full js-example-basic-single" id="product_unit" name="product_unit">
+                                  <option>-- Pilih Satuan Dasar --</option>
+                                  <option>Pcs</option>
+                                  <option>Kotak</option>
+                                  <option>Lusin</option>
                                 </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="product_type">
+                                  <option value="Produk">Produk</option>
+                                  <option value="Paket">Paket</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="product_min_stock" placeholder="Min Stok">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4">
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="product_weight" placeholder="Berat">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="product_location" rows="4"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">HPP</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="product_hpp" placeholder="HPP">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="product_description" rows="4"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="product_search_key" rows="4"></textarea>
                               </div>
                             </div>
 
@@ -157,9 +216,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </thead>
               <tbody>
                 <tr>
-                  <td>00020018 <br /> Adaptor 12v 1A HK (Pipih)</td>
+                  <td>BAT00075 <br /> Baterai Dynamax A2</td>
                   <td>ACR</td>
-                  <td>Speaker</td>
+                  <td>Baterai</td>
                   <td><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
                   <td><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
                   <td><span class="badge badge-success multi-badge"><i class="fas fa-check-circle"></i></span></td>
@@ -178,25 +237,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </td>
                 </tr>
 
-                <tr>
-                  <td>00020018 <br /> Mic Hardwell Superstar 1S</td>
-                  <td>ACR</td>
-                  <td>Speaker</td>
-                  <td><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
-                  <td><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
-                  <td><span class="badge badge-success multi-badge"><i class="fas fa-check-circle"></i></span></td>
-                  <td><img src="<?php echo base_url();?>assets/default.png" class="img-thumbnail" width="80%"/></td>
-                  <td>
-                    <a href="<?php echo base_url();?>Masterdata/settingproduct">
-                      <button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-cog"></i></button>
-                    </a>
-                    <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
-
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-
-                    <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
+            
 
               </tbody>
             </table>
@@ -214,22 +255,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
-
-  $('body').on('shown.bs.modal', '.modal', function() {
-    $(this).find('.js-example-basic-multiple').each(function() {
-      var dropdownParent = $(document.body);
-      if ($(this).parents('#myModal').length !== 0)
-        dropdownParent = $("#myModal");
-      $(this).select2({
-        dropdownParent: $("#myModal")
-      // ...
-    });
-    });
-  });
-
-  $(document).ready(function() {
-    $('.js-example-basic-multiple').select2();
-  });
 
   $(".delete").click(function (e) {
     swal({
@@ -264,17 +289,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-  "image/avif",
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+    "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

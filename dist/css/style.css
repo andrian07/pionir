@@ -1,38 +1,38 @@
 /* dashboard */
 
 .activity::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .activity{
-    height: 320px; overflow-y: scroll;
+  height: 320px; overflow-y: scroll;
 }
 
 .sizing-fa{
-    font-size: 14px !important;
+  font-size: 14px !important;
 }
 
 .col-form-label{
-    font-weight: 700; font-size: 15px !important;
+  font-weight: 700; font-size: 15px !important;
 }
 
 .form-group {
-    margin-bottom: 0;
-    padding: 0 !important;
+  margin-bottom: 0;
+  padding: 0 !important;
 }
 
 .mb-2-btn {
-    margin-bottom: .5rem !important;
+  margin-bottom: .5rem !important;
 }
 
 .border-right {
-    border-right: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .p-0 {
-    padding: 0 !important;
-    margin-top: -5px;
-    margin-bottom: 7px;
+  padding: 0 !important;
+  margin-top: -5px;
+  margin-bottom: 7px;
 }
 
 .table{
@@ -44,7 +44,7 @@
 }
 
 .multi-badge{
-    margin-left: 2px;
+  margin-left: 2px;
 }
 
 .proof, .proof2 {
@@ -181,4 +181,8 @@
 
 .ui-autocomplete-input {
   z-index: 9999;
+}
+
+.select2-container .select2-selection--single {
+  height: 35px !important;
 }
