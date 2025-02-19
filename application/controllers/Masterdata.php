@@ -47,12 +47,6 @@ class Masterdata extends CI_Controller {
 	public function settingproduct(){
 		$this->load->view('Pages/Masterdata/product_setting');
 	}
-
-	public function detailproduct()
-	{
-
-		$this->load->view('Pages/Masterdata/product_detail');
-	}
 }
 
 ?>
