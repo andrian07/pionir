@@ -139,6 +139,12 @@
                 </ul>
               </div>
             </li>
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Search">
+                <i class="fas fa-search"></i>
+                <p>Cari Produk</p>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
