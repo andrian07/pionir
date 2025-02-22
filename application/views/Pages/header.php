@@ -83,13 +83,14 @@
                 <p>Dashboard</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a data-bs-toggle="collapse" href="#base">
+              <a data-bs-toggle="collapse" href="#master">
                 <i class="fas fa-layer-group"></i>
                 <p>Master Data</p>
                 <span class="caret"></span>
               </a>
-              <div class="collapse" id="base">
+              <div class="collapse" id="master">
                 <ul class="nav nav-collapse">
                   <li>
                     <a href="<?php echo base_url(); ?>Masterdata/brand">
@@ -139,6 +140,141 @@
                 </ul>
               </div>
             </li>
+
+             <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Search">
+                <i class="fas fa-search"></i>
+                <p>Cari Produk</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#purchase">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Pembelian</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="purchase">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                      <span class="sub-item">Pengajuan</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                      <span class="sub-item">PO</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
+                      <span class="sub-item">Penginputan Gudang</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/warehouse">
+                      <span class="sub-item">Pembelian</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/category">
+                      <span class="sub-item">Revisi Pembelian</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/product">
+                      <span class="sub-item">Retur Pembelian</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#sales">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Penjualan</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="sales">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                      <span class="sub-item">Sales Order</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                      <span class="sub-item">Penjualan</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
+                      <span class="sub-item">Revisi Penjualan</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#payment">
+                <i class="fas fa-money-bill"></i>
+                <p>Pelunasan</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="payment">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                      <span class="sub-item">Pelunasan Hutang</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                      <span class="sub-item">Pelunasan Piutang</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Dashboard">
+                <i class="fas fa-box"></i>
+                <p>Stock Opname</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Dashboard">
+                <i class="fas fa-exchange-alt"></i>
+                <p>Transfer Stock</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a data-bs-toggle="collapse" href="#user">
+                <i class="fas fa-user"></i>
+                <p>Admin</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="user">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                      <span class="sub-item">Grup Pengguna</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                      <span class="sub-item">Akun Pengguna</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
           </ul>
         </div>
       </div>
