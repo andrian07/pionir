@@ -141,13 +141,13 @@
               </div>
             </li>
 
-             <li class="nav-item">
+            <li class="nav-item">
               <a href="<?php echo base_url(); ?>Search">
                 <i class="fas fa-search"></i>
                 <p>Cari Produk</p>
               </a>
             </li>
-
+            
             <li class="nav-item">
               <a data-bs-toggle="collapse" href="#purchase">
                 <i class="fas fa-shopping-cart"></i>
@@ -275,6 +275,8 @@
               </div>
             </li>
 
+=======
+>>>>>>> 948c9f63717ce996474e0075a01238978c6868c9
           </ul>
         </div>
       </div>

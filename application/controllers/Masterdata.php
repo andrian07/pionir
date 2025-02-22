@@ -56,6 +56,14 @@ class Masterdata extends CI_Controller {
 		$this->load->view('Pages/Masterdata/salesman_detail');
 	}
 
+	public function unit(){
+		$this->load->view('Pages/Masterdata/unit');
+	}
+
+	public function supplier(){
+		$this->load->view('Pages/Masterdata/supplier');
+	}
+
 }
 
 ?>
