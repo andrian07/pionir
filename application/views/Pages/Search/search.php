@@ -122,33 +122,42 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   function searchproduct() {
- 
+
 
   // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("SearchTable");
-    tr = table.getElementsByTagName("tr");
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("SearchTable");
+  tr = table.getElementsByTagName("tr");
 
   // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      td1 = tr[i].getElementsByTagName("td")[1];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        txtValue2 = td1.textContent || td1.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    td1 = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      txtValue2 = td1.textContent || td1.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
       }
     }
   }
+}
 
-  function popupOpen(id) {
-    Fancybox.show([{ src: "#dialog-content", type: "inline" }]);
-  }
+function popupOpen(id) {
+  let link = window.location.origin + window.location.pathname + '/detailsearch';
+  console.log(link);
+  Fancybox.show([
+  {
+    src: link,
+    type: "iframe",
+    preload: false,
+    top:0,
+  },
+  ]);
+}
 
 </script>

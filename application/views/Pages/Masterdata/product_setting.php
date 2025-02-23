@@ -241,7 +241,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </tr>
                       <tr>
                         <th scope="col" class="productinfo-text-right">Harga Beli</th>
-                          <td colspan="4">2.000.000</td>
+                        <td colspan="4">2.000.000</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Lokasi Stok</th>
+                        <td colspan="4">Di Bawah</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Spesifikasi</th>
+                        <td colspan="4">Middle Ada corong / Frequenzy 52Hz - 10.6</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Item Supplier</th>
+                        <td colspan="4">Jaya Anugrah Elektronik: ACR 1225 Mk1</td>
                       </tr>
                       <tr>
                         <th scope="col" rowspan="2">Umum</th>
@@ -468,7 +480,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-      });
+    });
     });
   });
 

@@ -16,6 +16,10 @@ class Search extends CI_Controller {
 		$this->load->view('Pages/Search/search');
 	}
 
+	public function detailsearch(){
+		$this->load->view('Pages/Search/detailsearch');
+	}
+
 }
 
 ?>
