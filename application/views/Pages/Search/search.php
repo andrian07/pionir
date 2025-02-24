@@ -40,7 +40,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <td>60 Pcs</td>
                   </tr>
                   <tr onclick="popupOpen(3)">
-                    <td>Tr MD2000 <br /> <span class="badge badge-success">CoRp. 165.000mpleted</span></td>
+                    <td>Tr MD2000 <br /> <span class="badge badge-success">Rp. 165.000</span></td>
                     <td>20 Box</td>
                   </tr>
                   <tr onclick="popupOpen(4)">

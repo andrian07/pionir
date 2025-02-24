@@ -62,6 +62,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               </div>
                             </div>
 
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Nama Produk</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="product_name" placeholder="Nama Produk">
+                              </div>
+                            </div>
+
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
@@ -137,16 +144,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 </select>
                               </div>
                             </div>
+                          </div>
 
+                          <div class="col-md-4">
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
                               <div class="col-md-12 p-0">
                                 <input type="text" class="form-control input-full" id="product_min_stock" placeholder="Min Stok">
                               </div>
                             </div>
-                          </div>
 
-                          <div class="col-md-4">
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
                               <div class="col-md-12 p-0">
@@ -158,13 +165,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
                               <div class="col-md-12 p-0">
                                 <textarea class="form-control" id="product_location" rows="4"></textarea>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">HPP</label>
-                              <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="product_hpp" placeholder="HPP">
                               </div>
                             </div>
 
@@ -335,17 +335,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-  "image/avif",
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+    "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

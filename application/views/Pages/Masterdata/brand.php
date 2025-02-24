@@ -18,8 +18,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Brand</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
+                <button class="btn btn-info" id="btnreload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+
+                <!-- Tambah Brand -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
@@ -31,24 +33,59 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <div class="form-group form-inline">
                           <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
                           <div class="col-md-12 p-0">
-                            <input type="text" class="form-control input-full" id="inlineinput" placeholder="Nama Brand">
+                            <input type="text" class="form-control input-full" id="brand_name" placeholder="Nama Brand">
                           </div>
                         </div>
 
                         <div class="form-group form-inline">
                           <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
                           <div class="col-md-12 p-0">
-                            <textarea class="form-control" id="comment" rows="5"></textarea>
+                            <textarea class="form-control" id="brand_desc" rows="5"></textarea>
                           </div>
                         </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- End Tambah Brand -->
+
+                <!-- Edit Brand -->
+                <div class="modal fade" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="exampleModaleditLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Brand</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <div class="col-md-12 p-0">
+                            <input type="hidden" class="form-control input-full" id="brand_id">
+                            <input type="text" class="form-control input-full" id="brand_name_edit">
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
+                          <div class="col-md-12 p-0">
+                            <textarea class="form-control" id="brand_desc_edit" rows="5"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" id="btnedit" class="btn btn-primary"><i class="fas fa-save"></i> Edit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Edit Brand -->
+
               </div>
             </div>
           </div>
@@ -66,23 +103,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Acero</td>
-                  <td></td>
-                  <td>
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-
-                    <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Acr</td>
-                  <td></td>
-                  <td>
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"><i class="fas fa-trash-alt sizing-fa"></i></button>
-                    <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
+                <?php foreach ($brand_list as $row) { ?>
+                  <tr>
+                    <td><?php echo $row->brand_name; ?></td>
+                    <td><?php echo $row->brand_desc; ?></td>
+                    <td>
+                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
+                      <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                    </td>
+                  </tr>
+                <?php } ?>
               </tbody>
             </table>
           </div>
@@ -99,33 +129,108 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
+
   $(".delete").click(function (e) {
-    swal({
-      title: "Hapus !!",
-      text: "Hapus Data!",
-      type: "warning",
-      buttons: {
-        cancel: {
-          visible: true,
-          text: "Tidak, Batal!",
-          className: "btn btn-danger",
-        },
-        confirm: {
-          text: "Ya, Hapus!",
-          className: "btn btn-success",
-        },
-      },
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Sukses Hapus Data!", {
-          icon: "success",
-          buttons: {
-            confirm: {
-              className: "btn btn-success",
-            },
-          },
+    var id = $(this).attr("data-id");
+    var name = $(this).attr("data-name");
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus '"+name+"' ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Masterdata/delete_brand",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              location.reload();
+              Swal.fire('Saved!', '', 'success'); 
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.msg,
+              })
+            }
+          }
         });
+      }
+    })
+  });
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var brand_name  = $("#brand_name").val();
+    var brand_desc  = $("#brand_desc").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/save_brand",
+      dataType: "json",
+      data: {brand_name:brand_name, brand_desc:brand_desc},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
       }
     });
   });
+
+  $('#btnedit').click(function(e){
+    e.preventDefault();
+    var brand_id    = $("#brand_id").val();
+    var brand_name_edit  = $("#brand_name_edit").val();
+    var brand_desc_edit  = $("#brand_desc_edit").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/edit_brand",
+      dataType: "json",
+      data: {brand_id:brand_id, brand_name_edit:brand_name_edit, brand_desc_edit:brand_desc_edit},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
+
+  $('#btnreload').click(function(e){
+    e.preventDefault();
+    location.reload();
+  });
+
+
+
+  $('#exampleModaledit').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id   = button.data('id')
+    var brand_name_edit   = button.data('name')
+    var brand_desc_edit   = button.data('desc')
+    var modal = $(this)
+    modal.find('.modal-title').text('Edit ' + brand_name_edit)
+    modal.find('#brand_id').val(id)
+    modal.find('#brand_name_edit').val(brand_name_edit)
+    modal.find('#brand_desc_edit').val(brand_desc_edit)
+  })
+
 </script>

@@ -49,83 +49,88 @@
 <script src="<?php echo base_url(); ?>dist/js/autonumeric.js"></script>
 <script>
 
-  $('body').on('shown.bs.modal', '.modal', function() {
-    $(this).find('.js-example-basic-multiple').each(function() {
-      var dropdownParent = $(document.body);
-      if ($(this).parents('#myModal').length !== 0)
-        dropdownParent = $("#myModal");
-      $(this).select2({
-        dropdownParent: $("#myModal")
+
+
+$('#basic-datatables').DataTable({
+  order: [[0, 'asc']],
+})
+
+$('body').on('shown.bs.modal', '.modal', function() {
+  $(this).find('.js-example-basic-multiple').each(function() {
+    var dropdownParent = $(document.body);
+    if ($(this).parents('#myModal').length !== 0)
+      dropdownParent = $("#myModal");
+    $(this).select2({
+      dropdownParent: $("#myModal")
       // ...
     });
-    });
   });
+});
 
-  $(document).ready(function() {
-    $('.js-example-basic-multiple').select2();
-  });
+ $(document).ready(function() {
+  $('.js-example-basic-multiple').select2();
+});
 
-  $('body').on('shown.bs.modal', '.modal', function() {
-    $(this).find('.js-example-basic-single').each(function() {
-      var dropdownParent = $(document.body);
-      if ($(this).parents('#myModal').length !== 0)
-        dropdownParent = $("#myModal");
-      $(this).select2({
-        dropdownParent: $("#myModal")
+ $('body').on('shown.bs.modal', '.modal', function() {
+  $(this).find('.js-example-basic-single').each(function() {
+    var dropdownParent = $(document.body);
+    if ($(this).parents('#myModal').length !== 0)
+      dropdownParent = $("#myModal");
+    $(this).select2({
+      dropdownParent: $("#myModal")
       // ...
     });
-    });
   });
-  
-  $(document).ready(function() {
-    $('.js-example-basic-single').select2();
-  });
+});
 
-  Fancybox.bind("[data-fancybox]", {
-  }) 
+ $(document).ready(function() {
+  $('.js-example-basic-single').select2();
+});
 
-  $("#basic-datatables").DataTable({});
-  var pieChart = document.getElementById("pieChart").getContext("2d");
-  var myPieChart = new Chart(pieChart, {
-    type: "pie",
-    data: {
-      datasets: [
+ Fancybox.bind("[data-fancybox]", {
+ }) 
+
+ var pieChart = document.getElementById("pieChart").getContext("2d");
+ var myPieChart = new Chart(pieChart, {
+  type: "pie",
+  data: {
+    datasets: [
       {
         data: [50, 35, 15],
         backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
         borderWidth: 0,
       },
-      ],
-      labels: ["Pendapatan", "Pengeluaran", "Hpp"],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      legend: {
-        position: "bottom",
-        labels: {
-          fontColor: "rgb(154, 154, 154)",
-          fontSize: 11,
-          usePointStyle: true,
-          padding: 20,
-        },
-      },
-      pieceLabel: {
-        render: "percentage",
-        fontColor: "white",
-        fontSize: 14,
-      },
-      tooltips: false,
-      layout: {
-        padding: {
-          left: 20,
-          right: 20,
-          top: 20,
-          bottom: 20,
-        },
+    ],
+    labels: ["Pendapatan", "Pengeluaran", "Hpp"],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      position: "bottom",
+      labels: {
+        fontColor: "rgb(154, 154, 154)",
+        fontSize: 11,
+        usePointStyle: true,
+        padding: 20,
       },
     },
-  });
+    pieceLabel: {
+      render: "percentage",
+      fontColor: "white",
+      fontSize: 14,
+    },
+    tooltips: false,
+    layout: {
+      padding: {
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20,
+      },
+    },
+  },
+});
 
 
 

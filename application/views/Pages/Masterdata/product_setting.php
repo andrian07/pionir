@@ -15,12 +15,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Pengaturan Satuan & Harga Produk</h3>
+                <h3 class="fw-bold mb-3">Pengaturan Harga Produk</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <div class="btn-group dropdown">
                  <a href="<?php echo base_url(); ?>Masterdata/product"><button class="btn btn-danger"><i class="fas fa-arrow-circle-left"></i> Kembali</button></a>
-                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-xl"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target=".bd-example-modal-xl"><span class="btn-label"><i class="far fa-edit sizing-fa"></i></span> Edit</button>
                  <div class="modal fade bd-example-modal-xl" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                   <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -36,29 +36,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Item / Barcode</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="item_code" value="Auto">
+                                <input type="text" class="form-control input-full" id="item_code" value="BAT00075" readonly>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Satuan</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Harga Beli</label>
                               <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="item_unit" name="product_unit">
-                                  <option>-- Pilih Satuan --</option>
-                                  <option>Pcs</option>
-                                  <option>Kotak</option>
-                                  <option>Lusin</option>
-                                </select>
+                                <input type="text" class="form-control input-full" id="item_purchase_price" value="0">
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Isi</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">HPP</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="item_containt" value="0">
+                                <input type="text" class="form-control input-full" id="item_hpp" value="0">
                               </div>
                             </div>
+
                           </div>
+
+
 
                           <div class="col-md-4 border-right">
                             <h4 style="text-align:center;">Margin & Harga Jual</h4>
@@ -200,11 +198,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <td>:</td>
                   <td id="setup_product_name">Baterai Dynamax A2</td>
                 </tr>
-                <tr>
-                  <th>Satuan Dasar</th>
-                  <td>:</td>
-                  <td id="setup_base_unit">Pcs</td>
-                </tr>
               </tbody>
             </table>
 
@@ -214,47 +207,73 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <table class="table table-bordered">
                     <tbody>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Aksi</th>
-                        <td colspan="4">
-                          <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Kode</th>
+                        <th scope="col" class="productinfo-text-right">Kode:</th>
                         <td colspan="4">BAT00075</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Satuan</th>
+                        <th scope="col" class="productinfo-text-right">Nama Produk:</th>
+                        <td colspan="4">Baterai Dynamax A2</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Kategori:</th>
+                        <td colspan="4">Baterai</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Brand:</th>
+                        <td colspan="4">ACR</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Supplier:</th>
+                        <td colspan="4"><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Item Supplier:</th>
+                        <td colspan="4">Jaya Anugrah Elektronik: ACR 1225 Mk1</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Paket:</th>
+                        <td colspan="4"><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">PPN:</th>
+                        <td colspan="4"><span class="badge badge-success"><i class="fas fa-check-circle"></i></span></td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">Satuan:</th>
                         <td colspan="4">PCS</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Isi</th>
-                        <td colspan="4">1</td>
+                        <th scope="col" class="productinfo-text-right">Min Stock:</th>
+                        <td colspan="4">10</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">DPP</th>
+                        <th scope="col" class="productinfo-text-right">Berat:</th>
+                        <td colspan="4">1 kg</td>
+                      </tr>
+                      <tr>
+                        <th scope="col" class="productinfo-text-right">HPP:</th>
                         <td colspan="4">180.000</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">PPN</th>
-                        <td colspan="4">20.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Harga Beli</th>
+                        <th scope="col" class="productinfo-text-right">Harga Beli:</th>
                         <td colspan="4">2.000.000</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Lokasi Stok</th>
+                        <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
                         <td colspan="4">Di Bawah</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Spesifikasi</th>
+                        <th scope="col" class="productinfo-text-right">Catatan:</th>
                         <td colspan="4">Middle Ada corong / Frequenzy 52Hz - 10.6</td>
                       </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Item Supplier</th>
-                        <td colspan="4">Jaya Anugrah Elektronik: ACR 1225 Mk1</td>
-                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <tbody>
                       <tr>
                         <th scope="col" rowspan="2">Umum</th>
                         <td>Margin</td>
@@ -309,106 +328,43 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
 
-              <div class="col-md-6">
-                <div class="table-responsive">
-                  <table class="table table-bordered">
+                  <table class="table table-head-bg-info">
+                    <thead>
+                      <tr>
+                        <th>Stock</th>
+                        <th>Qty</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Aksi</th>
-                        <td colspan="4">
-                          <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                        </td>
+                        <td>Cabang Kobar</td>
+                        <td>15 Pcs</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Kode</th>
-                        <td colspan="4">BAT00076</td>
+                        <td>Cabang Serdam</td>
+                        <td>2 Pcs</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Satuan</th>
-                        <td colspan="4">KTK</td>
+                        <td>Gudang Bongkar</td>
+                        <td>2 Pcs</td>
                       </tr>
                       <tr>
-                        <th scope="col" class="productinfo-text-right">Isi</th>
-                        <td colspan="4">12</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">DPP</th>
-                        <td colspan="4">1.800.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">PPN</th>
-                        <td colspan="4">200.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Harga Beli</th>
-                        <td colspan="4">2.000.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Umum</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Toko</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Sales</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Khusus</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
+                        <td>Gudang Retur</td>
+                        <td>1 Pcs</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 
@@ -418,9 +374,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+  let item_purchase_price = new AutoNumeric('#item_purchase_price', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
 
-  let containt = new AutoNumeric('#item_containt', {
-    decimalPlaces: 0
+  let item_hpp = new AutoNumeric('#item_hpp', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
   });
 
   let item_price_1 = new AutoNumeric('#item_price_1', {
@@ -430,6 +397,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     decimalPlacesShownOnFocus: 0,
     digitGroupSeparator : '.',
   });
+
   let item_price_2 = new AutoNumeric('#item_price_2', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
@@ -480,7 +448,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-    });
+      });
     });
   });
 
