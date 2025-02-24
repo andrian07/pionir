@@ -157,27 +157,27 @@
               <div class="collapse" id="purchase">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                    <a href="<?php echo base_url(); ?>Purchase/submission">
                       <span class="sub-item">Pengajuan</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                    <a href="<?php echo base_url(); ?>Purchase/po">
                       <span class="sub-item">PO</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
+                    <a href="<?php echo base_url(); ?>Purchase/warehouseinput">
                       <span class="sub-item">Penginputan Gudang</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/warehouse">
+                    <a href="<?php echo base_url(); ?>Purchase">
                       <span class="sub-item">Pembelian</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/category">
+                    <a href="<?php echo base_url(); ?>Purchase/purchaserevisi">
                       <span class="sub-item">Revisi Pembelian</span>
                     </a>
                   </li>
