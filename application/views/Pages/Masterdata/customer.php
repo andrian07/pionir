@@ -128,7 +128,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Expedisi</label>
                               <div class="col-md-12 p-0">
-                                <select class=" form-control input-full js-example-basic-multiple js-states" name="states[]" id="customer_expedisi" multiple="multiple">
+                                <select class=" form-control input-full js-example-basic-multiple js-states" name="customer_expedisi" id="customer_expedisi" multiple="multiple">
                                   <option value="PJ">Prima Jasa</option>
                                   <option value="LP">Lion Parcel</option>
                                   <option value="JNE">JNE</option>
@@ -169,7 +169,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
@@ -262,31 +262,32 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var customer_name  = $("#customer_name").val();
-    var customer_dob  = $("#customer_dob").val();
-    var customer_gender  = $("#customer_gender").val();
-    var customer_address  = $("#customer_address").val();
+    var customer_name           = $("#customer_name").val();
+    var customer_dob            = $("#customer_dob").val();
+    var customer_gender         = $("#customer_gender").val();
+    var customer_address        = $("#customer_address").val();
     var customer_address_block  = $("#customer_address_block").val();
-    var customer_address_no  = $("#customer_address_no").val();
-    var customer_address_rt  = $("#customer_address_rt").val();
-    var customer_address_rw  = $("#customer_address_rw").val();
+    var customer_address_no     = $("#customer_address_no").val();
+    var customer_address_rt     = $("#customer_address_rt").val();
+    var customer_address_rw     = $("#customer_address_rw").val();
     var customer_address_phone  = $("#customer_address_phone").val();
     var customer_address_email  = $("#customer_address_email").val();
-    var customer_dob  = $("#customer_dob").val();
-    var customer_gender  = $("#customer_gender").val();
-    var customer_name  = $("#customer_name").val();
-    var customer_dob  = $("#customer_dob").val();
-    var customer_gender  = $("#customer_gender").val();
+    var customer_dob            = $("#customer_dob").val();
+    var customer_gender         = $("#customer_gender").val();
+    var customer_expedisi       = $("#customer_expedisi").val();
+    var customer_npwp           = $("#customer_npwp").val();
+    var customer_nik            = $("#customer_nik").val();
+    var customer_group_price    = $("#customer_group_price").val();
 
-    
+
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/save_brand",
+      url: "<?php echo base_url(); ?>Masterdata/save_customer",
       dataType: "json",
-      data: {brand_name:brand_name, brand_desc:brand_desc},
+      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_block:customer_address_block, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_group_price:customer_group_price},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          window.location.href = "<?php echo base_url(); ?>Masterdata/customer";
           Swal.fire('Saved!', '', 'success');
         } else {
           Swal.fire({

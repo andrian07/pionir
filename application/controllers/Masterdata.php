@@ -87,6 +87,26 @@ class Masterdata extends CI_Controller {
 	// end brand //
 
 	// customer //
+
+	public function save_customer()
+	{	
+		print_r($_POST);die();
+		$brand_name = $this->input->post('brand_name');
+		$brand_desc = $this->input->post('brand_desc');
+		if($brand_name == null){
+			$msg = "Nama Brand Harus Di isi";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+		$insert = array(
+			'brand_name'	       => $brand_name,
+			'brand_desc'	       => $brand_desc,
+		);
+		$this->masterdata_model->save_brand($insert);
+		$msg = "Succes Input";
+		echo json_encode(['code'=>200, 'result'=>$msg]);
+		die();
+	}
+
 	public function customer(){
 		$customer_list['customer_list'] = $this->masterdata_model->customer_list();
 		$this->load->view('Pages/Masterdata/customer', $customer_list);
