@@ -90,18 +90,73 @@ class Masterdata extends CI_Controller {
 
 	public function save_customer()
 	{	
-		print_r($_POST);die();
-		$brand_name = $this->input->post('brand_name');
-		$brand_desc = $this->input->post('brand_desc');
-		if($brand_name == null){
-			$msg = "Nama Brand Harus Di isi";
+		
+		$customer_name 				= $this->input->post('customer_name');
+		$customer_dob 				= $this->input->post('customer_dob');
+		$customer_gender	 		= $this->input->post('customer_gender');
+		$customer_address 			= $this->input->post('customer_address');
+		$customer_address_blok 		= $this->input->post('customer_address_blok');
+		$customer_address_no 		= $this->input->post('customer_address_no');
+		$customer_address_rt 		= $this->input->post('customer_address_rt');
+		$customer_address_rw 		= $this->input->post('customer_address_rw');
+		$customer_address_phone 	= $this->input->post('customer_address_phone');
+		$customer_address_email 	= $this->input->post('customer_address_email');
+		$customer_send_address 		= $this->input->post('customer_send_address');
+		$customer_expedisi 			= $this->input->post('customer_expedisi');
+		$customer_npwp 				= $this->input->post('customer_npwp');
+		$customer_nik 				= $this->input->post('customer_nik');
+		$customer_rate 				= $this->input->post('customer_rate');
+
+		if($customer_name == null){
+			$msg = "Nama Customer Harus Di isi";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
-		$insert = array(
-			'brand_name'	       => $brand_name,
-			'brand_desc'	       => $brand_desc,
+
+		if($customer_address_phone == null){
+			$msg = "No Hp Harus Di isi";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+
+		$customer_code = substr($customer_name, 0, 3);
+		$maxCode = $this->masterdata_model->last_customer_code($customer_code);
+		if ($maxCode == NULL) {
+			$last_code = $customer_code.'001';
+		} else {
+			$maxCode = $maxCode[0]->customer_code;
+			$last_code = substr($maxCode, -3);
+			$last_code = $maxCode.substr('00' . strval(floatval($last_code) + 1), -3);
+			print_r($last_code);die();
+			
+		}
+
+		$data_insert = array(
+			'customer_code'	       	=> $last_code,
+			'customer_name'	       	=> $customer_name,
+			'customer_dob'	       	=> $customer_dob,
+			'customer_gender'	    => $customer_gender,
+			'customer_address'	    => $customer_address,
+			'customer_address_blok'	=> $customer_address_blok,
+			'customer_address_no'	=> $customer_address_no,
+			'customer_rt'	       	=> $customer_address_rt,
+			'customer_rw'	       	=> $customer_address_rw,
+			'customer_phone'	   	=> $customer_address_phone,
+			'customer_email'	    => $customer_address_email,
+			'customer_send_address'	=> $customer_send_address,
+			'customer_npwp'	       	=> $customer_npwp,
+			'customer_nik'	       	=> $customer_nik,
+			'customer_rate'	       	=> $customer_rate,
+
 		);
-		$this->masterdata_model->save_brand($insert);
+		$this->masterdata_model->save_customer($data_insert);
+
+		foreach($customer_expedisi as $row){
+			$insert_exp = array(
+				'customer_code'	       	=> $last_code,
+				'expedisi_id'	       	=> $row,
+			);
+			$this->masterdata_model->save_customer_ekspedisi($insert_exp);
+		}
+
 		$msg = "Succes Input";
 		echo json_encode(['code'=>200, 'result'=>$msg]);
 		die();
@@ -109,19 +164,25 @@ class Masterdata extends CI_Controller {
 
 	public function customer(){
 		$customer_list['customer_list'] = $this->masterdata_model->customer_list();
-		$this->load->view('Pages/Masterdata/customer', $customer_list);
+		$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+		$data['data'] = array_merge($customer_list, $ekspedisi_list);
+		$this->load->view('Pages/Masterdata/customer', $data);
 	}
-
-	// end customer //
 
 	public function detailcustomer(){
 		$this->load->view('Pages/Masterdata/customer_detail');
 	}
 
-	public function expedisi(){
-		$this->load->view('Pages/Masterdata/expedisi');
+	// end customer //
+
+	// ekspedisi //
+	public function ekspedisi(){
+		$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+		$this->load->view('Pages/Masterdata/expedisi', $ekspedisi_list);
 	}
 
+
+	// end ekspedisi //
 	public function warehouse(){
 		$this->load->view('Pages/Masterdata/warehouse');
 	}

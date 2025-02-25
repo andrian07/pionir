@@ -103,7 +103,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
+                    <a href="<?php echo base_url(); ?>Masterdata/ekspedisi">
                       <span class="sub-item">Expedisi</span>
                     </a>
                   </li>

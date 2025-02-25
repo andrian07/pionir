@@ -82,7 +82,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Blok & No Rumah</label>
                               <div class="row" style="padding-left: 15px;">
                                 <div class="col-md-5 p-0" style="margin-right:15px;">
-                                  <input type="text" class="form-control input-full" id="customer_address_block" placeholder="Blok">
+                                  <input type="text" class="form-control input-full" id="customer_address_blok" placeholder="Blok">
                                 </div>
                                 <div class="col-md-5 p-0">
                                   <input type="text" class="form-control input-full" id="customer_address_no" placeholder="No">
@@ -121,7 +121,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Alamat Pengiriman</label>
                               <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="customer_address_delivery" rows="4"></textarea>
+                                <textarea class="form-control" id="customer_send_address" rows="4"></textarea>
                               </div>
                             </div>
 
@@ -129,9 +129,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Expedisi</label>
                               <div class="col-md-12 p-0">
                                 <select class=" form-control input-full js-example-basic-multiple js-states" name="customer_expedisi" id="customer_expedisi" multiple="multiple">
-                                  <option value="PJ">Prima Jasa</option>
-                                  <option value="LP">Lion Parcel</option>
-                                  <option value="JNE">JNE</option>
+                                  <?php foreach($data['ekspedisi_list'] as $row){ ?>
+                                    <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>
+                                  <?php } ?>
                                 </select>
                               </div>
                             </div>
@@ -153,7 +153,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Rate Customer</label>
                               <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="customer_group_price">
+                                <select class="form-select form-control" id="customer_rate">
                                   <option value="Normal">Normal</option>
                                   <option value="Toko">Toko</option>
                                   <option value="Sales">Sales</option>
@@ -196,7 +196,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <?php foreach($customer_list as $row){ ?>
+                <?php foreach($data['customer_list'] as $row){ ?>
                   <tr>
                     <td><?php echo $row->customer_code; ?></td>
                     <td><span class="badge badge-primary"><?php echo $row->customer_rate; ?></span></td>
@@ -262,29 +262,28 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var customer_name           = $("#customer_name").val();
-    var customer_dob            = $("#customer_dob").val();
-    var customer_gender         = $("#customer_gender").val();
-    var customer_address        = $("#customer_address").val();
-    var customer_address_block  = $("#customer_address_block").val();
-    var customer_address_no     = $("#customer_address_no").val();
-    var customer_address_rt     = $("#customer_address_rt").val();
-    var customer_address_rw     = $("#customer_address_rw").val();
-    var customer_address_phone  = $("#customer_address_phone").val();
-    var customer_address_email  = $("#customer_address_email").val();
-    var customer_dob            = $("#customer_dob").val();
-    var customer_gender         = $("#customer_gender").val();
-    var customer_expedisi       = $("#customer_expedisi").val();
-    var customer_npwp           = $("#customer_npwp").val();
-    var customer_nik            = $("#customer_nik").val();
-    var customer_group_price    = $("#customer_group_price").val();
+    var customer_name             = $("#customer_name").val();
+    var customer_dob              = $("#customer_dob").val();
+    var customer_gender           = $("#customer_gender").val();
+    var customer_address          = $("#customer_address").val();
+    var customer_address_blok     = $("#customer_address_blok").val();
+    var customer_address_no       = $("#customer_address_no").val();
+    var customer_address_rt       = $("#customer_address_rt").val();
+    var customer_address_rw       = $("#customer_address_rw").val();
+    var customer_address_phone    = $("#customer_address_phone").val();
+    var customer_address_email    = $("#customer_address_email").val();
+    var customer_send_address     = $("#customer_send_address").val();
+    var customer_expedisi         = $("#customer_expedisi").val();
+    var customer_npwp             = $("#customer_npwp").val();
+    var customer_nik              = $("#customer_nik").val();
+    var customer_rate             = $("#customer_rate").val();
 
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Masterdata/save_customer",
       dataType: "json",
-      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_block:customer_address_block, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_group_price:customer_group_price},
+      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>Masterdata/customer";
