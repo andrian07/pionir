@@ -82,12 +82,17 @@ class Masterdata extends CI_Controller {
 		$data['data'] = $this->masterdata_model->brand_list();
 		$data = array_merge($draw, $recordsTotal, $recordsFiltered, $data);
 		echo json_encode($data);
-	}*/
+	}*/	
 
 	// end brand //
+
+	// customer //
 	public function customer(){
-		$this->load->view('Pages/Masterdata/customer');
+		$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+		$this->load->view('Pages/Masterdata/customer', $customer_list);
 	}
+
+	// end customer //
 
 	public function detailcustomer(){
 		$this->load->view('Pages/Masterdata/customer_detail');

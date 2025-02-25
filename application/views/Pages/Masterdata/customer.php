@@ -43,7 +43,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Customer</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" id="customer_code" value="Auto">
+                                <input type="text" class="form-control input-full" id="customer_code" value="Auto" readonly>
                               </div>
                             </div>
 
@@ -196,34 +196,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>C122400001</td>
-                  <td><span class="badge badge-primary">Normal</span></td>
-                  <td>ABAN DONI</td>
-                  <td>JALAN ADISUCIPTO KM 8 DESA PARIT BARU RT.003 RW.006 SUNGAI RAYA, SUNGAI RAYA KAB. KUBU RAYA KALIMANTAN BARAT</td>
-                  <td>0800000000</td>
-                  <td><span class="badge badge-primary multi-badge">JNE</span><span class="badge badge-primary multi-badge">Lion Parcel</span></td>
-                  <td>0</td>
-                  <td>
-                    <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-                    <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>C102300002</td>
-                  <td><span class="badge badge-warning">Khusus</span></td>
-                  <td>Beni</td>
-                  <td>KOMP PERMATA PURNAMA NO A-19</td>
-                  <td>0852323123</td>
-                  <td><span class="badge badge-primary multi-badge">JNE</span></td>
-                  <td>0</td>
-                  <td>
-                    <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-                    <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
+                <?php foreach($customer_list as $row){ ?>
+                  <tr>
+                    <td><?php echo $row->customer_code; ?></td>
+                    <td><span class="badge badge-primary"><?php echo $row->customer_rate; ?></span></td>
+                    <td><?php echo $row->customer_name; ?></td>
+                    <td><?php echo $row->customer_address; ?></td>
+                    <td><?php echo $row->customer_phone; ?></td>
+                    <td><span class="badge badge-primary multi-badge">JNE</span><span class="badge badge-primary multi-badge">Lion Parcel</span></td>
+                    <td><?php echo $row->customer_poin; ?></td>
+                    <td>
+                      <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
+                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
+                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
+                    </td>
+                  </tr>
+                <?php } ?>
               </tbody>
             </table>
           </div>
@@ -267,6 +255,46 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             },
           },
         });
+      }
+    });
+  });
+
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var customer_name  = $("#customer_name").val();
+    var customer_dob  = $("#customer_dob").val();
+    var customer_gender  = $("#customer_gender").val();
+    var customer_address  = $("#customer_address").val();
+    var customer_address_block  = $("#customer_address_block").val();
+    var customer_address_no  = $("#customer_address_no").val();
+    var customer_address_rt  = $("#customer_address_rt").val();
+    var customer_address_rw  = $("#customer_address_rw").val();
+    var customer_address_phone  = $("#customer_address_phone").val();
+    var customer_address_email  = $("#customer_address_email").val();
+    var customer_dob  = $("#customer_dob").val();
+    var customer_gender  = $("#customer_gender").val();
+    var customer_name  = $("#customer_name").val();
+    var customer_dob  = $("#customer_dob").val();
+    var customer_gender  = $("#customer_gender").val();
+
+    
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/save_brand",
+      dataType: "json",
+      data: {brand_name:brand_name, brand_desc:brand_desc},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
       }
     });
   });

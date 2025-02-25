@@ -31,6 +31,16 @@ class masterdata_model extends CI_Model {
     }
     //end brand
 
+    //customer
+    public function customer_list()
+    {
+        $query = $this->db->query("select * from ms_customer where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+
+
+
 }
 
 ?>
