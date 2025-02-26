@@ -124,9 +124,7 @@ class Masterdata extends CI_Controller {
 		} else {
 			$maxCode = $maxCode[0]->customer_code;
 			$last_code = substr($maxCode, -3);
-			$last_code = $maxCode.substr('00' . strval(floatval($last_code) + 1), -3);
-			print_r($last_code);die();
-			
+			$last_code = $customer_code.substr('000' . strval(floatval($last_code) + 1), -3);
 		}
 
 		$data_insert = array(
