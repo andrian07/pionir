@@ -278,7 +278,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var customer_nik              = $("#customer_nik").val();
     var customer_rate             = $("#customer_rate").val();
 
-
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Masterdata/save_customer",

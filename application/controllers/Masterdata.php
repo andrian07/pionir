@@ -107,6 +107,7 @@ class Masterdata extends CI_Controller {
 		$customer_nik 				= $this->input->post('customer_nik');
 		$customer_rate 				= $this->input->post('customer_rate');
 
+		print_r($customer_expedisi);die();
 		if($customer_name == null){
 			$msg = "Nama Customer Harus Di isi";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
