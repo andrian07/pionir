@@ -10,6 +10,7 @@ class Masterdata extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->library('session');
 		$this->load->model('masterdata_model');
+		$this->load->model('global_model');
 		$this->load->helper(array('url', 'html'));
 	}
 
@@ -38,6 +39,12 @@ class Masterdata extends CI_Controller {
 			'brand_desc'	       => $brand_desc,
 		);
 		$this->masterdata_model->save_brand($insert);
+
+		$data_insert_act = array(
+			'activity_table_desc'	       => 'Tambah Brand Baru',
+			'activity_table_user'	       => 1,
+		);
+		$this->global_model->save($data_insert_act);
 		$msg = "Succes Input";
 		echo json_encode(['code'=>200, 'result'=>$msg]);
 		die();
@@ -106,8 +113,7 @@ class Masterdata extends CI_Controller {
 		$customer_npwp 				= $this->input->post('customer_npwp');
 		$customer_nik 				= $this->input->post('customer_nik');
 		$customer_rate 				= $this->input->post('customer_rate');
-
-		print_r($customer_expedisi);die();
+		
 		if($customer_name == null){
 			$msg = "Nama Customer Harus Di isi";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
