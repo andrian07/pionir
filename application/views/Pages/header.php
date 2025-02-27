@@ -262,12 +262,12 @@
               <div class="collapse" id="user">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                    <a href="<?php echo base_url(); ?>User/group">
                       <span class="sub-item">Grup Pengguna</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                    <a href="<?php echo base_url(); ?>User/account">
                       <span class="sub-item">Akun Pengguna</span>
                     </a>
                   </li>
@@ -482,7 +482,7 @@
   </div>
   <span class="profile-username">
     <span class="op-7">Hi,</span>
-    <span class="fw-bold">Admin Joko</span>
+    <span class="fw-bold"><?php echo $_SESSION['user_name']; ?></span>
   </span>
 </a>
 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -493,8 +493,8 @@
           <img src="<?php echo base_url(); ?>dist//img/profile.jpg" alt="image profile" class="avatar-img rounded"/>
         </div>
         <div class="u-text">
-          <h4>Admin Joko</h4>
-          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">Admin</a>
+          <h4><?php echo $_SESSION['user_name']; ?></h4>
+          <a href="profile.html" class="btn btn-xs btn-secondary btn-sm"><?php echo $_SESSION['user_role']; ?></a>
         </div>
       </div>
     </li>
@@ -502,7 +502,7 @@
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="#">Account Setting</a>
       <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#">Logout</a>
+      <a class="dropdown-item" href="<?php echo base_url(); ?>Auth/logout">Logout</a>
     </li>
   </div>
 </ul>

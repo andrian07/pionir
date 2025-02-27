@@ -3,6 +3,15 @@
 class masterdata_model extends CI_Model {
 
 
+    //group
+    public function group_list()
+    {
+        $query = $this->db->query("select * from ms_role where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+    //end group
+    
     //brand
     public function save_brand($data_insert)
     {

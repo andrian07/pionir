@@ -13,7 +13,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
       <h3 class="fw-bold mb-3">Dashboard</h3>
     </div>
     <div class="ms-md-auto py-2 py-md-0">
-      <a href="#" class="btn btn-primary btn-round">Pionir Pusat</a>
+      <a href="#" class="btn btn-primary btn-round">Pionir <?php echo $_SESSION['user_branch']; ?></a>
     </div>
   </div>
   <div class="row row-card-no-pd">

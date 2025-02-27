@@ -11,6 +11,7 @@ class Auth extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->library('session');
 		$this->load->model('auth_model');
+		$this->load->model('global_model');
 		$this->load->helper(array('url', 'html'));
 	}
 
@@ -35,15 +36,19 @@ class Auth extends CI_Controller {
 		
 		$login = $this->auth_model->get_login_data($username, $password);
 		if($login != null){
-			$user_name = $login[0]->user_name;
-			$user_id  = $login[0]->user_id ;
-			$user_role  = $login[0]->user_role ;
+			$user_name 		= $login[0]->user_name;
+			$user_id  		= $login[0]->user_id;
+			$user_role_id  	= $login[0]->role_id;
+			$user_role  	= $login[0]->role_name;
+			$user_branch  	= $login[0]->branch_name;
 
 			$newdata = [
-				'user_name'  => $user_name,
-				'user_id' => $user_id,
-				'user_role' => $user_role,
-				'logged_in' => TRUE,
+				'user_name'  	=> $user_name,
+				'user_id' 		=> $user_id,
+				'user_role' 	=> $user_role,
+				'user_role_id'  => $user_role_id,
+				'user_branch' 	=> $user_branch,
+				'logged_in' 	=> TRUE,
 			];
 			$this->session->set_userdata($newdata);
 			$msg = 'Sukses login';
@@ -54,9 +59,15 @@ class Auth extends CI_Controller {
 		}	
 	}
 
-	public function processlogout(){
+	public function logout(){
 		$this->session->sess_destroy();
 		redirect('Auth', 'refresh');
+	}
+
+	public function role_permission(){
+		$user_role_id = $_SESSION['user_role_id'];
+		$check_access = $this->global_model->check_access($user_role_id);
+		echo json_encode(['code'=>200, 'result'=>$check_access]);
 	}
 
 }

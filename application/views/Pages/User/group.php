@@ -15,7 +15,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Brand</h3>
+                <h3 class="fw-bold mb-3">Daftar Group Pengguna</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="btnreload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
@@ -31,16 +31,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </div>
                       <div class="modal-body">
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Group</label>
                           <div class="col-md-12 p-0">
-                            <input type="text" class="form-control input-full" id="brand_name" placeholder="Nama Brand">
-                          </div>
-                        </div>
-
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
-                          <div class="col-md-12 p-0">
-                            <textarea class="form-control" id="brand_desc" rows="5"></textarea>
+                            <input type="text" class="form-control input-full" id="role_name" placeholder="Nama Group">
                           </div>
                         </div>
                       </div>
@@ -97,37 +90,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Nama Brand</th>
-                  <th>Deskripsi</th>
+                  <th>Nama Group</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($data['brand_list'] as $row) { ?>
+                <?php foreach ($group_list as $row) { ?>
                   <tr>
-                    <td><?php echo $row->brand_name; ?></td>
-                    <td><?php echo $row->brand_desc; ?></td>
+                    <td><?php echo $row->role_name; ?></td>
                     <td>
-                      <?php if($data['check_auth'][0]->brand_delete == 'N'){ ?>
-                        <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button>
-                      <?php }else{ ?>
-                        <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
-                      <?php } ?>
-                      <?php if($data['check_auth'][0]->brand_edit == 'N'){ ?>
-                        <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
-                      <?php }else{ ?>
-                       <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
-                      <?php } ?>
-                   </td>
-                 </tr>
-               <?php } ?>
-             </tbody>
-           </table>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
+                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->role_id; ?>" data-name="<?php echo $row->role_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
+                      <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-id="<?php echo $row->role_id; ?>" data-name="<?php echo $row->role_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                    </td>
+                  </tr>
+                <?php } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -137,7 +120,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
-
 
   $(".delete").click(function (e) {
     var id = $(this).attr("data-id");

@@ -15,15 +15,40 @@ class Masterdata extends CI_Controller {
 	}
 
 	public function index(){
-		$this->load->view('Pages/dashboard');
+		if(isset($_SESSION['user_name']) != null){
+			redirect('Dashboard/Admin', 'refresh');
+		}else{
+			$this->load->view('Pages/login');
+		}
 	}
 
+
+	private function check_auth(){
+		if(isset($_SESSION['user_name']) == null){
+			redirect('Masterdata', 'refresh');
+		}else{
+			$user_role_id = $_SESSION['user_role_id'];
+			$check_access = $this->global_model->check_access($user_role_id);
+			return($check_access);
+		}
+		/*$access =  $this->uri->segment(2);
+		$permissions = $access.'_'.$permission;
+		print_r($permissions);die();*/
+		
+	}
 
 	// brand //
 	public function brand()
 	{
-		$brand_list['brand_list'] = $this->masterdata_model->brand_list();
-		$this->load->view('Pages/Masterdata/brand', $brand_list);
+		$check_auth = $this->check_auth();
+		if($check_auth[0]->brand_view == 'Y'){
+			$brand_list['brand_list'] = $this->masterdata_model->brand_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $brand_list);
+			$this->load->view('Pages/Masterdata/brand', $data);
+		}else{
+			print_r('asd');die();
+		}
 	}
 
 	public function save_brand()
