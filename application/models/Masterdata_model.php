@@ -9,6 +9,11 @@ class masterdata_model extends CI_Model {
         $this->db->insert('ms_role', $data_insert);
     }
 
+    public function save_permision($data_insert_permision)
+    {
+        $this->db->insert('ms_role_permision', $data_insert_permision);
+    }
+    
     public function group_role()
     {
         $query = $this->db->query("select * from ms_role where is_active = 'Y'");

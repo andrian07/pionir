@@ -52,10 +52,17 @@
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
+
 			$insert = array(
 				'role_name'	       => $role_name
 			);
 			$this->masterdata_model->save_role($insert);
+			$role_id = $this->db->insert_id();
+
+			$data_insert_permision = array(
+				'role_id'	       => $role_id
+			);
+			$this->masterdata_model->save_permision($data_insert_permision);
 
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Group Baru '. $role_name,

@@ -81,7 +81,20 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                      
+                        <table class="table mt-3" style="text-align:cen">
+                          <thead>
+                            <tr>
+                              <th scope="col">Module</th>
+                              <th scope="col">Hak Akses</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Brand</td>
+                              <td>Lihat</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
