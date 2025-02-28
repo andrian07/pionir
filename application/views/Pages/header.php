@@ -262,7 +262,7 @@
               <div class="collapse" id="user">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="<?php echo base_url(); ?>User/group">
+                    <a href="<?php echo base_url(); ?>User/role">
                       <span class="sub-item">Grup Pengguna</span>
                     </a>
                   </li>

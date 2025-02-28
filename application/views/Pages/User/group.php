@@ -21,12 +21,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <button class="btn btn-info" id="btnreload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
 
-                <!-- Tambah Brand -->
+                <!-- Tambah Role -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Brand</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Group</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -44,29 +44,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </div>
                   </div>
                 </div>
-                <!-- End Tambah Brand -->
+                <!-- End Tambah Role -->
 
-                <!-- Edit Brand -->
+                <!-- Edit Role -->
                 <div class="modal fade" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="exampleModaleditLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Brand</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Group</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Brand</label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Nama Group</label>
                           <div class="col-md-12 p-0">
-                            <input type="hidden" class="form-control input-full" id="brand_id">
-                            <input type="text" class="form-control input-full" id="brand_name_edit">
-                          </div>
-                        </div>
-
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
-                          <div class="col-md-12 p-0">
-                            <textarea class="form-control" id="brand_desc_edit" rows="5"></textarea>
+                            <input type="hidden" class="form-control input-full" id="role_id">
+                            <input type="text" class="form-control input-full" id="role_name_edit">
                           </div>
                         </div>
                       </div>
@@ -77,7 +70,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </div>
                   </div>
                 </div>
-                <!-- End Edit Brand -->
+                <!-- End Edit Role -->
+
+                <!-- Seting Permision -->
+                <div class="modal fade bd-example-modal-lg" id="exampleModalsetting" tabindex="-1" role="dialog" aria-labelledby="exampleModalsettingLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Setting Permission</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                      
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" id="btnedit" class="btn btn-primary"><i class="fas fa-save"></i> Edit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Seting Permision -->
 
               </div>
             </div>
@@ -95,12 +108,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($group_list as $row) { ?>
+                <?php foreach ($group_role as $row) { ?>
                   <tr>
                     <td><?php echo $row->role_name; ?></td>
                     <td>
                       <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->role_id; ?>" data-name="<?php echo $row->role_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-id="<?php echo $row->role_id; ?>" data-name="<?php echo $row->role_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                      <button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="<?php echo $row->role_id; ?>" data-name="<?php echo $row->role_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModalsetting"><i class="fas fa-cog sizing-fa"></i></button>
                     </td>
                   </tr>
                 <?php } ?>
@@ -136,9 +150,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Masterdata/delete_brand",
+          url: "<?php echo base_url(); ?>User/delete_role",
           dataType: "json",
-          data: {id:id},
+          data: {id:id, role_name:name},
           success : function(data){
             if (data.code == "200"){
               location.reload();
@@ -158,16 +172,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var brand_name  = $("#brand_name").val();
-    var brand_desc  = $("#brand_desc").val();
+    var role_name   = $("#role_name").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/save_brand",
+      url: "<?php echo base_url(); ?>User/save_role",
       dataType: "json",
-      data: {brand_name:brand_name, brand_desc:brand_desc},
+      data: {role_name:role_name},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          window.location.href = "<?php echo base_url(); ?>User/role";
           Swal.fire('Saved!', '', 'success');
         } else {
           Swal.fire({
@@ -182,17 +195,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnedit').click(function(e){
     e.preventDefault();
-    var brand_id    = $("#brand_id").val();
-    var brand_name_edit  = $("#brand_name_edit").val();
-    var brand_desc_edit  = $("#brand_desc_edit").val();
+    var role_id    = $("#role_id").val();
+    var role_name_edit  = $("#role_name_edit").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/edit_brand",
+      url: "<?php echo base_url(); ?>User/edit_role",
       dataType: "json",
-      data: {brand_id:brand_id, brand_name_edit:brand_name_edit, brand_desc_edit:brand_desc_edit},
+      data: {role_id:role_id, role_name_edit:role_name_edit},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          window.location.href = "<?php echo base_url(); ?>User/role";
           Swal.fire('Saved!', '', 'success');
         } else {
           Swal.fire({
@@ -215,13 +227,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#exampleModaledit').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var id   = button.data('id')
-    var brand_name_edit   = button.data('name')
-    var brand_desc_edit   = button.data('desc')
+    var role_name_edit   = button.data('name')
     var modal = $(this)
-    modal.find('.modal-title').text('Edit ' + brand_name_edit)
-    modal.find('#brand_id').val(id)
-    modal.find('#brand_name_edit').val(brand_name_edit)
-    modal.find('#brand_desc_edit').val(brand_desc_edit)
+    modal.find('.modal-title').text('Edit ' + role_name_edit)
+    modal.find('#role_id').val(id)
+    modal.find('#role_name_edit').val(role_name_edit)
   })
 
 </script>

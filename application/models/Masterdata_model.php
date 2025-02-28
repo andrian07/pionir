@@ -4,9 +4,35 @@ class masterdata_model extends CI_Model {
 
 
     //group
-    public function group_list()
+    public function save_role($data_insert)
+    {
+        $this->db->insert('ms_role', $data_insert);
+    }
+
+    public function group_role()
     {
         $query = $this->db->query("select * from ms_role where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function update_role($data_update, $role_id)
+    {
+        $this->db->set($data_update);
+        $this->db->where('role_id ', $role_id);
+        $this->db->update('ms_role');
+    }
+
+    public function delete_role($role_id)
+    {
+        $this->db->set('is_active', 'N');
+        $this->db->where('role_id ', $role_id);
+        $this->db->update('ms_role');
+    }
+
+    public function check_role($role_name)
+    {
+        $query = $this->db->query("select * from ms_role where role_name = '".$role_name."' and is_active = 'Y'");
         $result = $query->result();
         return $result;
     }
