@@ -85,14 +85,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <thead>
                             <tr>
                               <th scope="col">Module</th>
-                              <th scope="col">Hak Akses</th>
+                              <th scope="col" colspan="2">Hak Akses</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>Brand</td>
-                              <td>Lihat</td>
-                            </tr>
+                          <tbody id="temp">
                           </tbody>
                         </table>
                       </div>
@@ -246,5 +242,62 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     modal.find('#role_id').val(id)
     modal.find('#role_name_edit').val(role_name_edit)
   })
+
+
+  $('#exampleModalsetting').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id   = button.data('id')
+    var role_name   = 'Ubah Aksess';
+    var modal = $(this)
+    modal.find('.modal-title').text(role_name)
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>User/get_setting_permission",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+
+
+        let text_temp = "";
+        for (let i = 0; i < data.length; i++) {
+
+          if(data[i].view == 'Y'){var view = 'Lihat, ';}else{var view = 'No Access';}
+          if(data[i].add == 'Y'){var add = 'Tambah, ';}else{var add = '';}
+          if(data[i].edit == 'Y'){var edit = 'Edit, ';}else{var edit = '';}
+          if(data[i].delete == 'Y'){var deletes = 'Hapus';}else{var deletes = '';}
+
+          text_temp += 
+          '<tr><td>'+data[i].module_name+'</td><td class="'+data[i].module_name+'" onclick="tdclick(this)"><a href="#" id="'+data[i].module_name+'title" class"'+data[i].module_name+'-title">'+view+''+add+''+edit+''+deletes+'</a><div id="'+data[i].module_name+'" class="hide-permission">'+
+          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />'+
+          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />'+
+          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />'+
+          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />'+
+          '</div></td>'+
+          '<td><a href="#" class="'+data[i].module_name+'" id="'+data[i].module_name+'cancel" onclick="hide(this)" style="display:none;">Batal</a></td>'+
+          '</tr>'
+        }
+        document.getElementById("temp").innerHTML = text_temp;
+      }
+    });
+  })
+
+
+  function tdclick(id){
+    var name = id.className;
+    var title = name+'title';
+    var cancel = name+'cancel';
+    document.getElementById(name).style.display = "block";
+    document.getElementById(title).style.display = "none";
+    document.getElementById(cancel).style.display = "block";
+  };
+
+  function hide(id){
+    var name = id.className;
+    var title = name+'title';
+    var cancel = name+'cancel';
+    document.getElementById(title).style.display = "block";
+    document.getElementById(name).style.display = "none";
+    document.getElementById(cancel).style.display = "none";
+  };
 
 </script>

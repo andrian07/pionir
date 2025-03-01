@@ -36,6 +36,13 @@
 			$this->load->view('Pages/User/group', $group_role);
 		}
 
+		public function get_setting_permission()
+		{
+			$this->check_auth();
+			$id = $this->input->post('id');
+			$get_setting_permission = $this->masterdata_model->get_setting_permission($id);
+			echo json_encode($get_setting_permission);
+		}
 
 		public function save_role(){
 			$role_name = $this->input->post('role_name');
