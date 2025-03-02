@@ -23,12 +23,12 @@ class Masterdata extends CI_Controller {
 	}
 
 
-	private function check_auth(){
+	private function check_auth($modul){
 		if(isset($_SESSION['user_name']) == null){
 			redirect('Masterdata', 'refresh');
 		}else{
 			$user_role_id = $_SESSION['user_role_id'];
-			$check_access = $this->global_model->check_access($user_role_id);
+			$check_access = $this->global_model->check_access($user_role_id, $modul);
 			return($check_access);
 		}
 		/*$access =  $this->uri->segment(2);
@@ -37,17 +37,19 @@ class Masterdata extends CI_Controller {
 		
 	}
 
+
 	// brand //
 	public function brand()
 	{
-		$check_auth = $this->check_auth();
-		if($check_auth[0]->brand_view == 'Y'){
+		$modul = 'Brand';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
 			$brand_list['brand_list'] = $this->masterdata_model->brand_list();
 			$check_auth['check_auth'] = $check_auth;
 			$data['data'] = array_merge($check_auth, $brand_list);
 			$this->load->view('Pages/Masterdata/brand', $data);
 		}else{
-			print_r('asd');die();
+			print_r('Tidak Ada Akses');die();
 		}
 	}
 
@@ -138,6 +140,7 @@ class Masterdata extends CI_Controller {
 		$customer_npwp 				= $this->input->post('customer_npwp');
 		$customer_nik 				= $this->input->post('customer_nik');
 		$customer_rate 				= $this->input->post('customer_rate');
+		$customer_expedisi_text     = $this->input->post('customer_expedisi_text');
 		
 		if($customer_name == null){
 			$msg = "Nama Customer Harus Di isi";
@@ -149,7 +152,7 @@ class Masterdata extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 
-		$customer_code = substr($customer_name, 0, 3);
+		$customer_code = strtoupper(substr($customer_name, 0, 3));
 		$maxCode = $this->masterdata_model->last_customer_code($customer_code);
 		if ($maxCode == NULL) {
 			$last_code = $customer_code.'001';
@@ -175,6 +178,7 @@ class Masterdata extends CI_Controller {
 			'customer_npwp'	       	=> $customer_npwp,
 			'customer_nik'	       	=> $customer_nik,
 			'customer_rate'	       	=> $customer_rate,
+			'customer_expedisi_tag' => $customer_expedisi_text
 
 		);
 		$this->masterdata_model->save_customer($data_insert);
@@ -200,7 +204,9 @@ class Masterdata extends CI_Controller {
 	}
 
 	public function detailcustomer(){
-		$this->load->view('Pages/Masterdata/customer_detail');
+		$id = $this->input->get('id');
+		$get_customer_by_id['get_customer_by_id'] = $this->masterdata_model->get_customer_by_id($id);
+		$this->load->view('Pages/Masterdata/customer_detail', $get_customer_by_id);
 	}
 
 	// end customer //

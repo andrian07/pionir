@@ -30,9 +30,10 @@
     <div class="col-md-12">
       <table class="table table-bordered">
         <tbody>
+          <?php foreach($get_customer_by_id as $row){ ?>
           <tr>
             <td class="title-detail">Kode Customer: </td>
-            <td>C122400001</td>
+            <td><?php echo $row->customer_code; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Status:  </td>
@@ -40,47 +41,54 @@
           </tr>
           <tr>
             <td class="title-detail">Nama Customer : </td>
-            <td>ABAN DONI</td>
+            <td><?php echo $row->customer_name; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Tgl.Lahir :</td>
-            <td>04 Juni 1985</td>
+            <td><?php $date = date_create($row->customer_dob); echo date_format($date,"d M Y"); ?></td>
           </tr>
           <tr>
             <td class="title-detail">Rate Customer:  </td>
-            <td><span class="badge badge-primary">Normal</span></td>
+            <td>
+              <?php if($row->customer_rate == 'Normal'){ ?>
+              <span class="badge badge-primary">
+              <?php }else if($row->customer_rate == 'Toko'){ ?>
+              <span class="badge badge-warning">
+              <?php }else if($row->customer_rate == 'Sales'){ ?>
+              <span class="badge badge-info">
+              <?php }else{ ?>
+              <span class="badge badge-success">
+              <?php } ?>
+              <?php echo $row->customer_rate; ?></span>
+            </td>
           </tr>
           <tr>
             <td class="title-detail">Jenis Kelamin :  </td>
-            <td>Laki - Laki</td>
-          </tr>
-          <tr>
-            <td class="title-detail">Pekerjaan :  </td>
-            <td>Guru</td>
+            <td><?php if($row->customer_gender == 'L'){ echo 'Laki-Laki'; }else { echo 'Perempuan'; } ?></td>
           </tr>
           <tr>
             <td class="title-detail">Alamat :  </td>
-            <td width="70%">JALAN ADISUCIPTO KM 8 DESA PARIT BARU RT.003 RW.006 SUNGAI RAYA, SUNGAI RAYA KAB. KUBU RAYA KALIMANTAN BARAT</td>
+            <td width="70%"><?php echo $row->customer_address; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Blok  :  </td>
-            <td>C</td>
+            <td><?php echo $row->customer_address_blok; ?></td>
           </tr>
           <tr>
             <td class="title-detail">No Rumah  :  </td>
-            <td>2</td>
+            <td><?php echo $row->customer_address_no; ?></td>
           </tr>
           <tr>
             <td class="title-detail">RT/RW :  </td>
-            <td>01 /05</td>
+            <td><?php echo $row->customer_rt; ?> / <?php echo $row->customer_rw; ?></td>
           </tr>
           <tr>
             <td class="title-detail">No Telp :   </td>
-            <td>080000000</td>
+            <td><?php echo $row->customer_phone; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Expedisi :   </td>
-            <td><span class="badge badge-primary" style="margin-right:5px;">JNE</span> <span class="badge badge-primary">Lion Parcel</span></td>
+            <td><span class="badge badge-primary"><?php print_r(explode(",",$row->customer_expedisi_tag)) ?></span></td>
           </tr>
           <tr>
             <td class="title-detail">Email :   </td>
@@ -98,6 +106,7 @@
             <td class="title-detail">NIK :</td>
             <td>1231231231231231</td>
           </tr>
+        <?php } ?>
         </tbody>
       </table>
     </div>

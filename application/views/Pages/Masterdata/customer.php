@@ -199,14 +199,24 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <?php foreach($data['customer_list'] as $row){ ?>
                   <tr>
                     <td><?php echo $row->customer_code; ?></td>
-                    <td><span class="badge badge-primary"><?php echo $row->customer_rate; ?></span></td>
+                    <td>
+                      <?php if($row->customer_rate == 'Normal'){ ?>
+                      <span class="badge badge-primary">
+                      <?php }else if($row->customer_rate == 'Toko'){ ?>
+                      <span class="badge badge-warning">
+                      <?php }else if($row->customer_rate == 'Sales'){ ?>
+                      <span class="badge badge-info">
+                      <?php }else{ ?>
+                      <span class="badge badge-success">
+                      <?php } ?>
+                    <?php echo $row->customer_rate; ?></span></td>
                     <td><?php echo $row->customer_name; ?></td>
                     <td><?php echo $row->customer_address; ?></td>
                     <td><?php echo $row->customer_phone; ?></td>
                     <td><span class="badge badge-primary multi-badge">JNE</span><span class="badge badge-primary multi-badge">Lion Parcel</span></td>
                     <td><?php echo $row->customer_poin; ?></td>
                     <td>
-                      <a href="<?php echo base_url();?>Masterdata/detailcustomer" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
+                      <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
                       <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
                     </td>
@@ -274,6 +284,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var customer_address_email    = $("#customer_address_email").val();
     var customer_send_address     = $("#customer_send_address").val();
     var customer_expedisi         = $("#customer_expedisi").val();
+    var customer_expedisi_text    = $('#customer_expedisi option:selected').toArray().map(item => item.text).join();
     var customer_npwp             = $("#customer_npwp").val();
     var customer_nik              = $("#customer_nik").val();
     var customer_rate             = $("#customer_rate").val();
@@ -282,7 +293,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Masterdata/save_customer",
       dataType: "json",
-      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate},
+      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate, customer_expedisi_text:customer_expedisi_text},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>Masterdata/customer";

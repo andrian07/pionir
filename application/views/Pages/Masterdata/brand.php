@@ -19,7 +19,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="btnreload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php if($data['check_auth'][0]->add == 'N'){ ?>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled="disabled"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php }else{ ?>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php } ?>
 
                 <!-- Tambah Brand -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -108,16 +112,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <td><?php echo $row->brand_name; ?></td>
                     <td><?php echo $row->brand_desc; ?></td>
                     <td>
-                      <?php if($data['check_auth'][0]->brand_delete == 'N'){ ?>
+                      <?php if($data['check_auth'][0]->edit == 'N'){ ?>
                         <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <?php }else{ ?>
                         <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <?php } ?>
-                      <?php if($data['check_auth'][0]->brand_edit == 'N'){ ?>
+                      <?php if($data['check_auth'][0]->delete == 'N'){ ?>
                         <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
                       <?php }else{ ?>
                        <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
-                      <?php } ?>
+                     <?php } ?>
                    </td>
                  </tr>
                <?php } ?>
@@ -137,6 +141,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
+
 
 
   $(".delete").click(function (e) {

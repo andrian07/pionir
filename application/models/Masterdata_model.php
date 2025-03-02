@@ -85,6 +85,12 @@ class masterdata_model extends CI_Model {
         return $result;
     }
 
+    public function get_customer_by_id($id)
+    {
+        $query = $this->db->query("select * from ms_customer where is_active = 'Y' and customer_id='".$id."'");
+        $result = $query->result();
+        return $result;
+    }
     //end customer
 
 
