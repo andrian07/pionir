@@ -67,6 +67,10 @@
             <td><?php if($row->customer_gender == 'L'){ echo 'Laki-Laki'; }else { echo 'Perempuan'; } ?></td>
           </tr>
           <tr>
+            <td class="title-detail">Poin :  </td>
+            <td width="70%"><?php echo $row->customer_poin; ?></td>
+          </tr>
+          <tr>
             <td class="title-detail">Alamat :  </td>
             <td width="70%"><?php echo $row->customer_address; ?></td>
           </tr>
@@ -88,23 +92,23 @@
           </tr>
           <tr>
             <td class="title-detail">Expedisi :   </td>
-            <td><span class="badge badge-primary"><?php print_r(explode(",",$row->customer_expedisi_tag)) ?></span></td>
+            <td><?php foreach(explode(",",$row->customer_expedisi_tag) as $rows){ echo '<span class="badge badge-primary" style="margin-right:5px;">'.$rows.'</span>';} ?></td>
           </tr>
           <tr>
             <td class="title-detail">Email :   </td>
-            <td>test@gmail.com</td>
+            <td><?php echo $row->customer_email; ?></td>
           </tr>
            <tr>
             <td class="title-detail">Alamat Pengiriman: </td>
-            <td>KOMP PERMATA PURNAMA NO A-19</td>
+            <td><?php echo $row->customer_send_address; ?></td>
           </tr>
           <tr>
             <td class="title-detail">NPWP : </td>
-            <td>2323123123123123</td>
+            <td><?php echo $row->customer_npwp; ?></td>
           </tr>
           <tr>
             <td class="title-detail">NIK :</td>
-            <td>1231231231231231</td>
+            <td><?php echo $row->customer_nik; ?></td>
           </tr>
         <?php } ?>
         </tbody>

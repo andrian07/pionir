@@ -28,7 +28,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </ul>
                 </div>
                 <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php if($data['check_auth'][0]->add == 'N'){ ?>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg" disabled="disabled"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php }else{ ?>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                <?php } ?>
+                <!-- pop up add customer -->
                 <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                   <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -174,6 +179,155 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </div>
                   </div>
                 </div>
+                <!-- end popup add customer -->
+
+                <!-- pop up edit customer -->
+                <div class="modal fade bd-example-modal-lg editmodal" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="exampleModaleditLabel" >
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Customer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6 border-right">
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Customer</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_code_edit" value="Auto" readonly>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Nama Customer</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_name_edit" placeholder="Nama Customer">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Tgl. Lahir</label>
+                              <div class="col-md-12 p-0">
+                                <input type="date" class="form-control input-full" id="customer_dob_edit" >
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Kelamin</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="customer_gender_edit">
+                                  <option value="L">Laki - Laki</option>
+                                  <option value="P">Perempuan</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Alamat</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="customer_address_edit" rows="4"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Blok & No Rumah</label>
+                              <div class="row" style="padding-left: 15px;">
+                                <div class="col-md-5 p-0" style="margin-right:15px;">
+                                  <input type="text" class="form-control input-full" id="customer_address_blok_edit" placeholder="Blok">
+                                </div>
+                                <div class="col-md-5 p-0">
+                                  <input type="text" class="form-control input-full" id="customer_address_no_edit" placeholder="No">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">RT/RW</label>
+                              <div class="row" style="padding-left: 15px;">
+                                <div class="col-md-5 p-0" style="margin-right:15px;">
+                                  <input type="text" class="form-control input-full" id="customer_address_rt_edit" placeholder="RT">
+                                </div>
+                                <div class="col-md-5 p-0">
+                                  <input type="text" class="form-control input-full" id="customer_address_rw_edit" placeholder="RW">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">No Telp</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_address_phone_edit" placeholder="No Telp">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Email</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_address_email_edit" placeholder="Email">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Alamat Pengiriman</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="customer_send_address_edit" rows="4"></textarea>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Expedisi</label>
+                              <div class="col-md-12 p-0">
+                                <select class=" form-control input-full js-example-basic-multiple js-states" name="customer_expedisi_edit" id="customer_expedisi_edit" multiple="multiple">
+                                  <?php foreach($data['ekspedisi_list'] as $row){ ?>
+                                    <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>
+                                  <?php } ?>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">NPWP</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_npwp_edit" placeholder="NPWP">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">NIK</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="customer_nik_edit" placeholder="NIK">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Rate Customer</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="customer_rate_edit">
+                                  <option value="Normal">Normal</option>
+                                  <option value="Toko">Toko</option>
+                                  <option value="Sales">Sales</option>
+                                  <option value="Khusus">Khusus</option>
+                                </select>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- end popup edit customer -->
               </div>
             </div>
           </div>
@@ -196,6 +350,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
+
                 <?php foreach($data['customer_list'] as $row){ ?>
                   <tr>
                     <td><?php echo $row->customer_code; ?></td>
@@ -213,12 +368,24 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <td><?php echo $row->customer_name; ?></td>
                     <td><?php echo $row->customer_address; ?></td>
                     <td><?php echo $row->customer_phone; ?></td>
-                    <td><span class="badge badge-primary multi-badge">JNE</span><span class="badge badge-primary multi-badge">Lion Parcel</span></td>
+                    <td><?php foreach(explode(",",$row->customer_expedisi_tag) as $rows){ echo '<span class="badge badge-primary" style="margin-right:1px;">'.$rows.'</span>';} ?></td>
                     <td><?php echo $row->customer_poin; ?></td>
                     <td>
+                      <?php if($data['check_auth'][0]->view == 'N'){ ?>
+                      <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa" disabled="disabled"></i></button></a>
+                      <?php }else{ ?> 
                       <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
-                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
+                      <?php } ?>
+                      <?php if($data['check_auth'][0]->delete == 'N'){ ?>
+                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa" disabled="disabled"></i></button>
+                      <?php }else{ ?> 
+                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
+                      <?php } ?>
+                      <?php if($data['check_auth'][0]->edit == 'N'){ ?>
+                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
+                      <?php }else{ ?> 
+                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                      <?php } ?>
                     </td>
                   </tr>
                 <?php } ?>
@@ -239,36 +406,65 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  $(".delete").click(function (e) {
-    swal({
-      title: "Hapus !!",
-      text: "Hapus Data!",
-      type: "warning",
-      buttons: {
-        cancel: {
-          visible: true,
-          text: "Tidak, Batal!",
-          className: "btn btn-danger",
-        },
-        confirm: {
-          text: "Ya, Hapus!",
-          className: "btn btn-success",
-        },
-      },
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Sukses Hapus Data!", {
-          icon: "success",
-          buttons: {
-            confirm: {
-              className: "btn btn-success",
-            },
-          },
+   $(".delete").click(function (e) {
+    var id = $(this).attr("data-id");
+    var name = $(this).attr("data-name");
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus '"+name+"' ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Masterdata/delete_customer",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              location.reload();
+              Swal.fire('Saved!', '', 'success'); 
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.msg,
+              })
+            }
+          }
         });
+      }
+    })
+  });
+
+  $('#btnedit').click(function(e){
+    e.preventDefault();
+    var brand_id    = $("#brand_id").val();
+    var brand_name_edit  = $("#brand_name_edit").val();
+    var brand_desc_edit  = $("#brand_desc_edit").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/edit_brand",
+      dataType: "json",
+      data: {brand_id:brand_id, brand_name_edit:brand_name_edit, brand_desc_edit:brand_desc_edit},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
       }
     });
   });
-
 
   $('#btnsave').click(function(e){
     e.preventDefault();
@@ -308,4 +504,40 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   });
+
+  $('#exampleModaledit').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id   = button.data('id')
+    var name = button.data('name')
+    var modal = $(this)
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/get_customer_id",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          let customer_data = data.result.get_customer_by_id;
+          for (let i = 0; i < customer_data.length; i++) {
+            modal.find('.modal-title').text('Edit ' + customer_data[i].customer_name)
+            modal.find('#customer_code_edit').val(customer_data[i].customer_code)
+            modal.find('#customer_name_edit').val(customer_data[i].customer_name)
+            modal.find('#customer_dob_edit').val(customer_data[i].customer_dob)
+            modal.find('#customer_gender_edit').val(customer_data[i].customer_gender)
+            modal.find('#customer_address_edit').val(customer_data[i].customer_address)
+            modal.find('#customer_address_blok_edit').val(customer_data[i].customer_address_blok)
+            modal.find('#customer_address_no_edit').val(customer_data[i].customer_address_no)
+            modal.find('#customer_address_rt_edit').val(customer_data[i].customer_rt)
+            modal.find('#customer_address_rw_edit').val(customer_data[i].customer_rw)
+          }
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  })
 </script>

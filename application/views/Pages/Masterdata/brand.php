@@ -112,12 +112,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <td><?php echo $row->brand_name; ?></td>
                     <td><?php echo $row->brand_desc; ?></td>
                     <td>
-                      <?php if($data['check_auth'][0]->edit == 'N'){ ?>
+                      <?php if($data['check_auth'][0]->delete == 'N'){ ?>
                         <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <?php }else{ ?>
                         <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <?php } ?>
-                      <?php if($data['check_auth'][0]->delete == 'N'){ ?>
+                      <?php if($data['check_auth'][0]->edit == 'N'){ ?>
                         <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
                       <?php }else{ ?>
                        <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->brand_id; ?>" data-name="<?php echo $row->brand_name; ?>" data-desc="<?php echo $row->brand_desc; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>

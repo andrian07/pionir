@@ -67,6 +67,19 @@ $('body').on('shown.bs.modal', '.modal', function() {
   });
 });
 
+
+ $('body').on('shown.bs.modal', '.editmodal', function() {
+  $(this).find('.js-example-basic-multiple').each(function() {
+    var dropdownParent = $(document.body);
+    if ($(this).parents('#exampleModaledit').length !== 0)
+      dropdownParent = $("#exampleModaledit");
+    $(this).select2({
+      dropdownParent: $("#exampleModaledit")
+      // ...
+    });
+  });
+});
+
  $(document).ready(function() {
   $('.js-example-basic-multiple').select2();
 });

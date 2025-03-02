@@ -55,57 +55,91 @@ class Masterdata extends CI_Controller {
 
 	public function save_brand()
 	{
-		$brand_name = $this->input->post('brand_name');
-		$brand_desc = $this->input->post('brand_desc');
-		if($brand_name == null){
-			$msg = "Nama Brand Harus Di isi";
-			echo json_encode(['code'=>0, 'result'=>$msg]);die();
-		}
-		$insert = array(
-			'brand_name'	       => $brand_name,
-			'brand_desc'	       => $brand_desc,
-		);
-		$this->masterdata_model->save_brand($insert);
+		$modul = 'Brand';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$brand_name = $this->input->post('brand_name');
+			$brand_desc = $this->input->post('brand_desc');
+			$user_id 	= $_SESSION['user_id'];
+			if($brand_name == null){
+				$msg = "Nama Brand Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'brand_name'	       => $brand_name,
+				'brand_desc'	       => $brand_desc,
+			);
+			$this->masterdata_model->save_brand($insert);
 
-		$data_insert_act = array(
-			'activity_table_desc'	       => 'Tambah Brand Baru',
-			'activity_table_user'	       => 1,
-		);
-		$this->global_model->save($data_insert_act);
-		$msg = "Succes Input";
-		echo json_encode(['code'=>200, 'result'=>$msg]);
-		die();
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Master Brand Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
 	public function delete_brand()
 	{
-		$brand_id  = $this->input->post('id');
-		$this->masterdata_model->delete_brand($brand_id);
-		$msg = "Succes Delete";
-		echo json_encode(['code'=>200, 'result'=>$msg]);
-		die();
+		$modul = 'Brand';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$brand_id  	= $this->input->post('id');
+			$user_id 	= $_SESSION['user_id'];
+			$this->masterdata_model->delete_brand($brand_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Brand',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
 	}
 
 	public function edit_brand()
 	{
-		$brand_id   	   = $this->input->post('brand_id');
-		$brand_name   	   = $this->input->post('brand_name_edit');
-		$brand_desc        = $this->input->post('brand_desc_edit');
+		$modul = 'Brand';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$brand_id   	   = $this->input->post('brand_id');
+			$brand_name   	   = $this->input->post('brand_name_edit');
+			$brand_desc        = $this->input->post('brand_desc_edit');
+			$user_id 		   = $_SESSION['user_id'];
 
-		if($brand_name == null){
-			$msg = "Nama Brand Harus Di isi";
-			echo json_encode(['code'=>0, 'result'=>$msg]);die();
-		}
+			if($brand_name == null){
+				$msg = "Nama Brand Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
 
-		$update = array(
-			'brand_name'	       => $brand_name,
-			'brand_desc'	       => $brand_desc,
-		);
+			$update = array(
+				'brand_name'	       => $brand_name,
+				'brand_desc'	       => $brand_desc,
+			);
 
-		$this->masterdata_model->update_brand($update, $brand_id);
-		$msg = "Succes Update";
-		echo json_encode(['code'=>200, 'result'=>$msg]);
-		die();
+			$this->masterdata_model->update_brand($update, $brand_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Brand',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Update";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
 	}
 
 	/*public function brand_server()
@@ -124,91 +158,147 @@ class Masterdata extends CI_Controller {
 
 	public function save_customer()
 	{	
-		
-		$customer_name 				= $this->input->post('customer_name');
-		$customer_dob 				= $this->input->post('customer_dob');
-		$customer_gender	 		= $this->input->post('customer_gender');
-		$customer_address 			= $this->input->post('customer_address');
-		$customer_address_blok 		= $this->input->post('customer_address_blok');
-		$customer_address_no 		= $this->input->post('customer_address_no');
-		$customer_address_rt 		= $this->input->post('customer_address_rt');
-		$customer_address_rw 		= $this->input->post('customer_address_rw');
-		$customer_address_phone 	= $this->input->post('customer_address_phone');
-		$customer_address_email 	= $this->input->post('customer_address_email');
-		$customer_send_address 		= $this->input->post('customer_send_address');
-		$customer_expedisi 			= $this->input->post('customer_expedisi');
-		$customer_npwp 				= $this->input->post('customer_npwp');
-		$customer_nik 				= $this->input->post('customer_nik');
-		$customer_rate 				= $this->input->post('customer_rate');
-		$customer_expedisi_text     = $this->input->post('customer_expedisi_text');
-		
-		if($customer_name == null){
-			$msg = "Nama Customer Harus Di isi";
-			echo json_encode(['code'=>0, 'result'=>$msg]);die();
-		}
+		$modul = 'Customer';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$customer_name 				= $this->input->post('customer_name');
+			$customer_dob 				= $this->input->post('customer_dob');
+			$customer_gender	 		= $this->input->post('customer_gender');
+			$customer_address 			= $this->input->post('customer_address');
+			$customer_address_blok 		= $this->input->post('customer_address_blok');
+			$customer_address_no 		= $this->input->post('customer_address_no');
+			$customer_address_rt 		= $this->input->post('customer_address_rt');
+			$customer_address_rw 		= $this->input->post('customer_address_rw');
+			$customer_address_phone 	= $this->input->post('customer_address_phone');
+			$customer_address_email 	= $this->input->post('customer_address_email');
+			$customer_send_address 		= $this->input->post('customer_send_address');
+			$customer_expedisi 			= $this->input->post('customer_expedisi');
+			$customer_npwp 				= $this->input->post('customer_npwp');
+			$customer_nik 				= $this->input->post('customer_nik');
+			$customer_rate 				= $this->input->post('customer_rate');
+			$customer_expedisi_text     = $this->input->post('customer_expedisi_text');
+			$user_id 		   			= $_SESSION['user_id'];
 
-		if($customer_address_phone == null){
-			$msg = "No Hp Harus Di isi";
-			echo json_encode(['code'=>0, 'result'=>$msg]);die();
-		}
+			if($customer_name == null){
+				$msg = "Nama Customer Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
 
-		$customer_code = strtoupper(substr($customer_name, 0, 3));
-		$maxCode = $this->masterdata_model->last_customer_code($customer_code);
-		if ($maxCode == NULL) {
-			$last_code = $customer_code.'001';
-		} else {
-			$maxCode = $maxCode[0]->customer_code;
-			$last_code = substr($maxCode, -3);
-			$last_code = $customer_code.substr('000' . strval(floatval($last_code) + 1), -3);
-		}
+			if($customer_address_phone == null){
+				$msg = "No Hp Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
 
-		$data_insert = array(
-			'customer_code'	       	=> $last_code,
-			'customer_name'	       	=> $customer_name,
-			'customer_dob'	       	=> $customer_dob,
-			'customer_gender'	    => $customer_gender,
-			'customer_address'	    => $customer_address,
-			'customer_address_blok'	=> $customer_address_blok,
-			'customer_address_no'	=> $customer_address_no,
-			'customer_rt'	       	=> $customer_address_rt,
-			'customer_rw'	       	=> $customer_address_rw,
-			'customer_phone'	   	=> $customer_address_phone,
-			'customer_email'	    => $customer_address_email,
-			'customer_send_address'	=> $customer_send_address,
-			'customer_npwp'	       	=> $customer_npwp,
-			'customer_nik'	       	=> $customer_nik,
-			'customer_rate'	       	=> $customer_rate,
-			'customer_expedisi_tag' => $customer_expedisi_text
+			$customer_code = strtoupper(substr($customer_name, 0, 3));
+			$maxCode = $this->masterdata_model->last_customer_code($customer_code);
+			if ($maxCode == NULL) {
+				$last_code = $customer_code.'001';
+			} else {
+				$maxCode = $maxCode[0]->customer_code;
+				$last_code = substr($maxCode, -3);
+				$last_code = $customer_code.substr('000' . strval(floatval($last_code) + 1), -3);
+			}
 
-		);
-		$this->masterdata_model->save_customer($data_insert);
-
-		foreach($customer_expedisi as $row){
-			$insert_exp = array(
+			$data_insert = array(
 				'customer_code'	       	=> $last_code,
-				'expedisi_id'	       	=> $row,
-			);
-			$this->masterdata_model->save_customer_ekspedisi($insert_exp);
-		}
+				'customer_name'	       	=> $customer_name,
+				'customer_dob'	       	=> $customer_dob,
+				'customer_gender'	    => $customer_gender,
+				'customer_address'	    => $customer_address,
+				'customer_address_blok'	=> $customer_address_blok,
+				'customer_address_no'	=> $customer_address_no,
+				'customer_rt'	       	=> $customer_address_rt,
+				'customer_rw'	       	=> $customer_address_rw,
+				'customer_phone'	   	=> $customer_address_phone,
+				'customer_email'	    => $customer_address_email,
+				'customer_send_address'	=> $customer_send_address,
+				'customer_npwp'	       	=> $customer_npwp,
+				'customer_nik'	       	=> $customer_nik,
+				'customer_rate'	       	=> $customer_rate,
+				'customer_expedisi_tag' => $customer_expedisi_text
 
-		$msg = "Succes Input";
-		echo json_encode(['code'=>200, 'result'=>$msg]);
-		die();
+			);
+			$this->masterdata_model->save_customer($data_insert);
+
+			foreach($customer_expedisi as $row){
+				$insert_exp = array(
+					'customer_code'	       	=> $last_code,
+					'expedisi_id'	       	=> $row,
+				);
+				$this->masterdata_model->save_customer_ekspedisi($insert_exp);
+			}
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Master Customer',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
 	}
 
 	public function customer(){
-		$customer_list['customer_list'] = $this->masterdata_model->customer_list();
-		$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
-		$data['data'] = array_merge($customer_list, $ekspedisi_list);
-		$this->load->view('Pages/Masterdata/customer', $data);
+		$modul = 'Customer';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($customer_list, $ekspedisi_list, $check_auth);
+			$this->load->view('Pages/Masterdata/customer', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
 	}
 
 	public function detailcustomer(){
-		$id = $this->input->get('id');
-		$get_customer_by_id['get_customer_by_id'] = $this->masterdata_model->get_customer_by_id($id);
-		$this->load->view('Pages/Masterdata/customer_detail', $get_customer_by_id);
+		$modul = 'Customer';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id = $this->input->get('id');
+			$get_customer_by_id['get_customer_by_id'] = $this->masterdata_model->get_customer_by_id($id);
+			$this->load->view('Pages/Masterdata/customer_detail', $get_customer_by_id);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
+
+	public function get_customer_id(){
+		$id = $this->input->post('id');
+		$get_customer_by_id['get_customer_by_id'] = $this->masterdata_model->get_customer_by_id($id);
+		echo json_encode(['code'=>200, 'result'=>$get_customer_by_id]);
+	}
+
+	public function delete_customer()
+	{
+		$modul = 'Customer';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$customer_id  	= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_customer($customer_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Customer',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
+	}
 	// end customer //
 
 	// ekspedisi //
