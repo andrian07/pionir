@@ -245,8 +245,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
 
             <div class="table-responsive">
+
               <table
-              id="basic-datatables"
+              id="product-list"
               class="display table table-striped table-hover"
               >
               <thead>
@@ -262,28 +263,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>BAT00075 <br /> Baterai Dynamax A2</td>
-                  <td>ACR</td>
-                  <td>Baterai</td>
-                  <td><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
-                  <td><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
-                  <td><span class="badge badge-success multi-badge"><i class="fas fa-check-circle"></i></span></td>
-                  <td>
-                    <a data-fancybox data-src="<?php echo base_url();?>assets/default.png" data-caption="Adaptor 12v 1A HK (Pipih)">
-                      <img src="<?php echo base_url();?>assets/default.png"class="img-thumbnail" width="80%" />
-                    </a>
-                  </td>
-                  <td>
-                    <a href="<?php echo base_url();?>Masterdata/settingproduct">
-                      <button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-cog"></i></button>
-                    </a>
-                    <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" ><i class="fas fa-trash-alt sizing-fa"></i></button>
-                    <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="far fa-edit sizing-fa"></i></button>
-                  </td>
-                </tr>
-
-
 
               </tbody>
             </table>
@@ -300,7 +279,45 @@ require DOC_ROOT_PATH . $this->config->item('header');
 require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
-<script>
+<script>  
+
+  $(document ).ready(function() {
+    $('#product-list').DataTable( {
+      serverSide: true,
+      ajax: {
+        url: '<?php echo base_url(); ?>Masterdata/product_list',
+        type: 'POST'
+      },
+      columns: [
+      {
+        data: 'product_code'
+      },
+      {
+        data: 'product_name'
+      },
+      {
+        data: 'product_brand'
+      },
+      {
+        data: 'product_category'
+      },
+      {
+        data: 'product_supplier_tag'
+      },
+      {
+        data: 'product_package'
+      },
+      {
+        data: 'product_ppn'
+      },
+      {
+        data: 'product_image'
+      }
+      ],
+    });
+  });
+
+
 
   $(".delete").click(function (e) {
     swal({
@@ -335,17 +352,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon",
-    "image/avif",
+  "image/apng",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/pjpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "image/x-icon",
+  "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

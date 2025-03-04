@@ -319,6 +319,15 @@ class masterdata_model extends CI_Model {
     }
     //end supplier
 
+
+    //product
+
+    public function product_list()
+    {
+        $query = $this->db->query("select * from ms_product where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
 }
 
 ?>

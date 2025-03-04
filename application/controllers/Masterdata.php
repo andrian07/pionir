@@ -1091,7 +1091,7 @@ class Masterdata extends CI_Controller {
 	//end supplier
 
 
-	//supplier
+	//product
 	public function product(){
 		$modul = 'Supplier';
 		$check_auth = $this->check_auth($modul);
@@ -1106,13 +1106,23 @@ class Masterdata extends CI_Controller {
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);
 		}
+	}	
+
+	public function product_list()
+	{
+		$data['data']							= $this->masterdata_model->product_list();
+		$draw['draw']							= 1;
+		$recordsTotal['recordsTotal']			= 5;
+		$recordsFiltered['recordsFiltered'] 	= 2;
+		$product_data['product_data'] 			= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
+		echo json_encode($product_data);
 	}
 
 	public function settingproduct(){
 		$this->load->view('Pages/Masterdata/product_setting');
 	}
 
-	//end supplier
+	//end product
 }	
 
 ?>
