@@ -30,6 +30,7 @@ class Auth extends CI_Controller {
 		}
 	}
 
+
 	public function processlogin(){
 		$username = $this->input->post('username');
 		$password = md5($this->input->post('password'));
@@ -40,7 +41,7 @@ class Auth extends CI_Controller {
 			$user_id  		= $login[0]->user_id;
 			$user_role_id  	= $login[0]->role_id;
 			$user_role  	= $login[0]->role_name;
-			$user_branch  	= $login[0]->branch_name;
+			$user_branch  	= $login[0]->warehouse_name;
 
 			$newdata = [
 				'user_name'  	=> $user_name,

@@ -158,6 +158,7 @@ class Masterdata extends CI_Controller {
 
 	public function save_customer()
 	{	
+
 		$modul = 'Customer';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
@@ -178,6 +179,7 @@ class Masterdata extends CI_Controller {
 			$customer_rate 				= $this->input->post('customer_rate');
 			$customer_expedisi_text     = $this->input->post('customer_expedisi_text');
 			$user_id 		   			= $_SESSION['user_id'];
+			$customer_expedisi_tag_id 	= implode(",",$customer_expedisi);
 
 			if($customer_name == null){
 				$msg = "Nama Customer Harus Di isi";
@@ -200,22 +202,23 @@ class Masterdata extends CI_Controller {
 			}
 
 			$data_insert = array(
-				'customer_code'	       	=> $last_code,
-				'customer_name'	       	=> $customer_name,
-				'customer_dob'	       	=> $customer_dob,
-				'customer_gender'	    => $customer_gender,
-				'customer_address'	    => $customer_address,
-				'customer_address_blok'	=> $customer_address_blok,
-				'customer_address_no'	=> $customer_address_no,
-				'customer_rt'	       	=> $customer_address_rt,
-				'customer_rw'	       	=> $customer_address_rw,
-				'customer_phone'	   	=> $customer_address_phone,
-				'customer_email'	    => $customer_address_email,
-				'customer_send_address'	=> $customer_send_address,
-				'customer_npwp'	       	=> $customer_npwp,
-				'customer_nik'	       	=> $customer_nik,
-				'customer_rate'	       	=> $customer_rate,
-				'customer_expedisi_tag' => $customer_expedisi_text
+				'customer_code'	       		=> $last_code,
+				'customer_name'	       		=> $customer_name,
+				'customer_dob'	       		=> $customer_dob,
+				'customer_gender'	    	=> $customer_gender,
+				'customer_address'	    	=> $customer_address,
+				'customer_address_blok'		=> $customer_address_blok,
+				'customer_address_no'		=> $customer_address_no,
+				'customer_rt'	       		=> $customer_address_rt,
+				'customer_rw'	       		=> $customer_address_rw,
+				'customer_phone'	   		=> $customer_address_phone,
+				'customer_email'	    	=> $customer_address_email,
+				'customer_send_address'		=> $customer_send_address,
+				'customer_npwp'	       		=> $customer_npwp,
+				'customer_nik'	       		=> $customer_nik,
+				'customer_rate'	       		=> $customer_rate,
+				'customer_expedisi_tag' 	=> $customer_expedisi_text,
+				'customer_expedisi_tag_id' 	=> $customer_expedisi_tag_id
 
 			);
 			$this->masterdata_model->save_customer($data_insert);
@@ -230,6 +233,90 @@ class Masterdata extends CI_Controller {
 
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Master Customer',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
+	}
+
+	public function edit_customer()
+	{
+		$modul = 'Customer';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$customer_id   				= $this->input->post('customer_id');
+			$customer_code 				= $this->input->post('customer_code');
+			$customer_name 				= $this->input->post('customer_name');
+			$customer_dob 				= $this->input->post('customer_dob');
+			$customer_gender	 		= $this->input->post('customer_gender');
+			$customer_address 			= $this->input->post('customer_address');
+			$customer_address_blok 		= $this->input->post('customer_address_blok');
+			$customer_address_no 		= $this->input->post('customer_address_no');
+			$customer_address_rt 		= $this->input->post('customer_address_rt');
+			$customer_address_rw 		= $this->input->post('customer_address_rw');
+			$customer_address_phone 	= $this->input->post('customer_address_phone');
+			$customer_address_email 	= $this->input->post('customer_address_email');
+			$customer_send_address 		= $this->input->post('customer_send_address');
+			$customer_expedisi 			= $this->input->post('customer_expedisi');
+			$customer_npwp 				= $this->input->post('customer_npwp');
+			$customer_nik 				= $this->input->post('customer_nik');
+			$customer_rate 				= $this->input->post('customer_rate');
+			$customer_expedisi_text     = $this->input->post('customer_expedisi_text');
+			$user_id 		   			= $_SESSION['user_id'];
+			$customer_expedisi_tag_id 	= implode(",",$customer_expedisi);
+
+			if($customer_name == null){
+				$msg = "Nama Customer Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($customer_address_phone == null){
+				$msg = "No Hp Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'customer_name'	       		=> $customer_name,
+				'customer_dob'	       		=> $customer_dob,
+				'customer_gender'	    	=> $customer_gender,
+				'customer_address'	    	=> $customer_address,
+				'customer_address_blok'		=> $customer_address_blok,
+				'customer_address_no'		=> $customer_address_no,
+				'customer_rt'	       		=> $customer_address_rt,
+				'customer_rw'	       		=> $customer_address_rw,
+				'customer_phone'	   		=> $customer_address_phone,
+				'customer_email'	    	=> $customer_address_email,
+				'customer_send_address'		=> $customer_send_address,
+				'customer_npwp'	       		=> $customer_npwp,
+				'customer_nik'	       		=> $customer_nik,
+				'customer_rate'	       		=> $customer_rate,
+				'customer_expedisi_tag' 	=> $customer_expedisi_text,
+				'customer_expedisi_tag_id' 	=> $customer_expedisi_tag_id
+			);
+
+
+			$this->masterdata_model->edit_customer($data_edit, $customer_code);
+
+
+			$this->masterdata_model->delete_customer_expedisi($customer_code);
+
+			foreach($customer_expedisi as $row){
+				$insert_exp = array(
+					'customer_code'	       	=> $customer_code,
+					'expedisi_id'	       	=> $row,
+				);
+				$this->masterdata_model->save_customer_ekspedisi($insert_exp);
+			}
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Customer',
 				'activity_table_user'	       => $user_id,
 			);
 			$this->global_model->save($data_insert_act);
@@ -303,44 +390,729 @@ class Masterdata extends CI_Controller {
 
 	// ekspedisi //
 	public function ekspedisi(){
-		$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
-		$this->load->view('Pages/Masterdata/expedisi', $ekspedisi_list);
+		$modul = 'Ekspedisi';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $ekspedisi_list);
+			$this->load->view('Pages/Masterdata/expedisi', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
+	public function save_ekspedisi()
+	{
+		$modul = 'Ekspedisi';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$expedisi_name 		= $this->input->post('expedisi_name');
+			$expedisi_address 	= $this->input->post('expedisi_address');
+			$expedisi_phone 	= $this->input->post('expedisi_phone');
+			$expedisi_desc 		= $this->input->post('expedisi_desc');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($expedisi_name == null){
+				$msg = "Nama Ekspedisi Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'ekspedisi_name'	=> $expedisi_name,
+				'ekspedisi_phone'	=> $expedisi_address,
+				'ekspedisi_address'	=> $expedisi_phone,
+				'ekspedisi_desc'	=> $expedisi_desc
+			);
+			$this->masterdata_model->save_ekspedisi($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Master Ekspedisi Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+
+	public function edit_ekspedisi()
+	{
+		$modul = 'Ekspedisi';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$expedisi_id 		= $this->input->post('expedisi_id');
+			$expedisi_name 		= $this->input->post('expedisi_name');
+			$expedisi_address 	= $this->input->post('expedisi_address');
+			$expedisi_phone 	= $this->input->post('expedisi_phone');
+			$expedisi_desc 		= $this->input->post('expedisi_desc');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($expedisi_name == null){
+				$msg = "Nama Ekspedisi Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'ekspedisi_name'	=> $expedisi_name,
+				'ekspedisi_phone'	=> $expedisi_address,
+				'ekspedisi_address'	=> $expedisi_phone,
+				'ekspedisi_desc'	=> $expedisi_desc
+			);
+			$this->masterdata_model->edit_ekspedisi($data_edit, $expedisi_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Ekspedisi Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+
+	public function delete_ekspedisi()
+	{
+		$modul = 'Ekspedisi';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$expedisi_id  	= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_ekspedisi($expedisi_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Ekspedisi',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
+	}
 
 	// end ekspedisi //
+
+	// warehouse
 	public function warehouse(){
-		$this->load->view('Pages/Masterdata/warehouse');
+		$modul = 'Warehouse';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $warehouse_list);
+			$this->load->view('Pages/Masterdata/warehouse', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
+	public function save_warehouse()
+	{
+		$modul = 'Warehouse';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$warehouse_code 	= $this->input->post('warehouse_code');
+			$warehouse_name 	= $this->input->post('warehouse_name');
+			$warehouse_address 	= $this->input->post('warehouse_address');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($warehouse_code == null){
+				$msg = "Kode Gudang Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($warehouse_name == null){
+				$msg = "Nama Gudang Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'warehouse_code'	=> $warehouse_code,
+				'warehouse_name'	=> $warehouse_name,
+				'warehouse_address'	=> $warehouse_address
+			);
+			$this->masterdata_model->save_warehouse($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Master Gudang Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_warehouse()
+	{
+		$modul = 'Warehouse';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$warehouse_id 	 	= $this->input->post('warehouse_id');
+			$warehouse_code 	= $this->input->post('warehouse_code');
+			$warehouse_name 	= $this->input->post('warehouse_name');
+			$warehouse_address 	= $this->input->post('warehouse_address');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($warehouse_code == null){
+				$msg = "Kode Gudang Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($warehouse_name == null){
+				$msg = "Nama Gudang Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'warehouse_code'	=> $warehouse_code,
+				'warehouse_name'	=> $warehouse_name,
+				'warehouse_address'	=> $warehouse_address
+			);
+			$this->masterdata_model->edit_warehouse($data_edit, $warehouse_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Gudang',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+	public function delete_warehouse()
+	{
+		$modul = 'Warehouse';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$warehouse_id  	= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_warehouse($warehouse_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Gudang',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	// end warehouse
+
+
+	// category
 	public function category(){
-		$this->load->view('Pages/Masterdata/category');
+		$modul = 'Category';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$category_list['category_list'] = $this->masterdata_model->category_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $category_list);
+			$this->load->view('Pages/Masterdata/category', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
+	public function save_category()
+	{
+		$modul = 'Category';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$category_name 	= $this->input->post('category_name');
+			$category_desc 	= $this->input->post('category_desc');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($category_name == null){
+				$msg = "Nama Kategori Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'category_name'	=> $category_name,
+				'category_desc'	=> $category_desc
+			);
+			$this->masterdata_model->save_category($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Kategori Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_category()
+	{
+		$modul = 'Category';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$category_id 	= $this->input->post('category_id');
+			$category_name 	= $this->input->post('category_name');
+			$category_desc 	= $this->input->post('category_desc');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($category_name == null){
+				$msg = "Nama Kategori Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'category_name'	=> $category_name,
+				'category_desc'	=> $category_desc
+			);
+			$this->masterdata_model->edit_category($data_edit, $category_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Kategori',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function delete_category()
+	{
+		$modul = 'Category';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$category_id  	= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_category($category_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Kategori',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+	// end category
+
+	// salesman
+	public function salesman(){
+		$modul = 'Salesman';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $salesman_list, $warehouse_list);
+			$this->load->view('Pages/Masterdata/salesman', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function save_salesman()
+	{
+		$modul = 'Salesman';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$salesman_name 		= $this->input->post('salesman_name');
+			$salesman_phone 	= $this->input->post('salesman_phone');
+			$salesman_address 	= $this->input->post('salesman_address');
+			$salesman_branch 	= $this->input->post('salesman_branch');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($salesman_name == null){
+				$msg = "Nama Salesman Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'salesman_name'		=> $salesman_name,
+				'salesman_address'	=> $salesman_address,
+				'salesman_phone'	=> $salesman_phone,
+				'salesman_branch'	=> $salesman_branch
+			);
+			$this->masterdata_model->save_salesman($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Salesman Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_salesman()
+	{
+
+		$modul = 'Salesman';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$salesman_id	 	= $this->input->post('salesman_id');
+			$salesman_name 		= $this->input->post('salesman_name');
+			$salesman_phone 	= $this->input->post('salesman_phone');
+			$salesman_address 	= $this->input->post('salesman_address');
+			$salesman_branch 	= $this->input->post('salesman_branch');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($salesman_name == null){
+				$msg = "Nama Salesman Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'salesman_name'		=> $salesman_name,
+				'salesman_address'	=> $salesman_address,
+				'salesman_phone'	=> $salesman_phone,
+				'salesman_branch'	=> $salesman_branch
+			);
+			$this->masterdata_model->edit_salesman($data_edit, $salesman_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Salesman',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function delete_salesman()
+	{
+		$modul = 'Salesman';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$salesman_id  	= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_salesman($salesman_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Salesman',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+
+	public function detailsalesman(){
+		$modul = 'Salesman';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id = $this->input->get('id');
+			$salesman_detail['salesman_detail'] = $this->masterdata_model->salesman_detail($id);
+			$this->load->view('Pages/Masterdata/salesman_detail', $salesman_detail);
+		}
+	}
+
+	// end salesman
+
+	//unit
+	public function unit(){
+		$modul = 'Unit';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$unit_list['unit_list'] = $this->masterdata_model->unit_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $unit_list);
+			$this->load->view('Pages/Masterdata/unit', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function save_unit()
+	{
+		$modul = 'Unit';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$unit_name 	= $this->input->post('unit_name');
+			$unit_desc 	= $this->input->post('unit_desc');
+			$user_id 	= $_SESSION['user_id'];
+
+			if($unit_name == null){
+				$msg = "Nama Unit Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'unit_name'		=> $unit_name,
+				'unit_desc'		=> $unit_desc
+			);
+			$this->masterdata_model->save_unit($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Satuan Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_unit()
+	{
+		
+		$modul = 'Unit';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$unit_id 	= $this->input->post('unit_id');
+			$unit_name 	= $this->input->post('unit_name');
+			$unit_desc 	= $this->input->post('unit_desc');
+			$user_id 	= $_SESSION['user_id'];
+
+			if($unit_name == null){
+				$msg = "Nama Unit Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$data_edit = array(
+				'unit_name'		=> $unit_name,
+				'unit_desc'		=> $unit_desc
+			);
+
+			$this->masterdata_model->edit_unit($data_edit, $unit_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Satuan',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function delete_unit()
+	{
+		$modul = 'Unit';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$unit_id  		= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->masterdata_model->delete_unit($unit_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Satuan',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+	// end unit
+
+	//supplier
+	public function supplier(){
+		$modul = 'Supplier';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $supplier_list);
+			$this->load->view('Pages/Masterdata/supplier', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function save_supplier()
+	{
+		$modul = 'Supplier';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$supplier_name 		= $this->input->post('supplier_name');
+			$supplier_telp 		= $this->input->post('supplier_telp');
+			$supplier_address 	= $this->input->post('supplier_address');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($supplier_name == null){
+				$msg = "Nama Supplier Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$maxCode = $this->masterdata_model->get_last_supplier();
+			if ($maxCode == NULL) {
+				$last_code = 'S-00001';
+			} else {
+				$maxCode = $maxCode[0]->supplier_code;
+				$last_code = substr($maxCode, -5);
+				$last_code = 'S-'.substr('00000' . strval(floatval($last_code) + 1), -5);
+			}
+
+			$insert = array(
+				'supplier_code'		=> $last_code,
+				'supplier_name'		=> $supplier_name,
+				'supplier_address'	=> $supplier_address,
+				'supplier_phone'	=> $supplier_telp
+			);
+			$this->masterdata_model->save_supplier($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Supplier Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_supplier()
+	{
+		
+		$modul = 'Supplier';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$supplier_id 		= $this->input->post('supplier_id');
+			$supplier_name 		= $this->input->post('supplier_name');
+			$supplier_telp 		= $this->input->post('supplier_telp');
+			$supplier_address 	= $this->input->post('supplier_address');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($supplier_name == null){
+				$msg = "Nama Supplier Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$data_edit = array(
+				'supplier_name'		=> $supplier_name,
+				'supplier_address'	=> $supplier_address,
+				'supplier_phone'	=> $supplier_telp
+			);
+
+			$this->masterdata_model->edit_supplier($data_edit, $supplier_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Supplier',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function delete_supplier()
+	{
+		$modul = 'Supplier';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$supplier_id  		= $this->input->post('id');
+			$user_id 			= $_SESSION['user_id'];
+			$this->masterdata_model->delete_supplier($supplier_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Supplier',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+	//end supplier
+
+
+	//supplier
 	public function product(){
-		$this->load->view('Pages/Masterdata/product');
+		$modul = 'Supplier';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$category_list['category_list'] = $this->masterdata_model->category_list();
+			$brand_list['brand_list'] 		= $this->masterdata_model->brand_list();
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$check_auth['check_auth'] 		= $check_auth;
+			$data['data'] = array_merge($check_auth, $category_list, $brand_list, $supplier_list);
+			$this->load->view('Pages/Masterdata/product', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
 	}
 
 	public function settingproduct(){
 		$this->load->view('Pages/Masterdata/product_setting');
 	}
 
-	public function salesman(){
-		$this->load->view('Pages/Masterdata/salesman');
-	}
-
-	public function detailsalesman(){
-		$this->load->view('Pages/Masterdata/salesman_detail');
-	}
-
-	public function unit(){
-		$this->load->view('Pages/Masterdata/unit');
-	}
-
-	public function supplier(){
-		$this->load->view('Pages/Masterdata/supplier');
-	}
-
-}
+	//end supplier
+}	
 
 ?>

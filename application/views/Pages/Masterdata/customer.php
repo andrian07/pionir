@@ -27,7 +27,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </li>
                   </ul>
                 </div>
-                <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
+                <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <?php if($data['check_auth'][0]->add == 'N'){ ?>
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg" disabled="disabled"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <?php }else{ ?>
@@ -196,6 +196,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Customer</label>
                               <div class="col-md-12 p-0">
+                                <input type="hidden" class="form-control input-full" id="customer_id_edit" readonly>
                                 <input type="text" class="form-control input-full" id="customer_code_edit" value="Auto" readonly>
                               </div>
                             </div>
@@ -322,7 +323,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <button type="button" id="btnedit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
@@ -356,156 +357,175 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <td><?php echo $row->customer_code; ?></td>
                     <td>
                       <?php if($row->customer_rate == 'Normal'){ ?>
-                      <span class="badge badge-primary">
-                      <?php }else if($row->customer_rate == 'Toko'){ ?>
-                      <span class="badge badge-warning">
-                      <?php }else if($row->customer_rate == 'Sales'){ ?>
-                      <span class="badge badge-info">
-                      <?php }else{ ?>
-                      <span class="badge badge-success">
-                      <?php } ?>
-                    <?php echo $row->customer_rate; ?></span></td>
-                    <td><?php echo $row->customer_name; ?></td>
-                    <td><?php echo $row->customer_address; ?></td>
-                    <td><?php echo $row->customer_phone; ?></td>
-                    <td><?php foreach(explode(",",$row->customer_expedisi_tag) as $rows){ echo '<span class="badge badge-primary" style="margin-right:1px;">'.$rows.'</span>';} ?></td>
-                    <td><?php echo $row->customer_poin; ?></td>
-                    <td>
-                      <?php if($data['check_auth'][0]->view == 'N'){ ?>
-                      <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa" disabled="disabled"></i></button></a>
-                      <?php }else{ ?> 
-                      <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
-                      <?php } ?>
-                      <?php if($data['check_auth'][0]->delete == 'N'){ ?>
-                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa" disabled="disabled"></i></button>
-                      <?php }else{ ?> 
-                      <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
-                      <?php } ?>
-                      <?php if($data['check_auth'][0]->edit == 'N'){ ?>
-                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
-                      <?php }else{ ?> 
-                      <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
-                      <?php } ?>
-                    </td>
-                  </tr>
-                <?php } ?>
-              </tbody>
-            </table>
+                        <span class="badge badge-primary">
+                        <?php }else if($row->customer_rate == 'Toko'){ ?>
+                          <span class="badge badge-warning">
+                          <?php }else if($row->customer_rate == 'Sales'){ ?>
+                            <span class="badge badge-info">
+                            <?php }else{ ?>
+                              <span class="badge badge-success">
+                              <?php } ?>
+                              <?php echo $row->customer_rate; ?></span></td>
+                              <td><?php echo $row->customer_name; ?></td>
+                              <td><?php echo $row->customer_address; ?></td>
+                              <td><?php echo $row->customer_phone; ?></td>
+                              <td><?php foreach(explode(",",$row->customer_expedisi_tag) as $rows){ echo '<span class="badge badge-primary" style="margin-right:1px;">'.$rows.'</span>';} ?></td>
+                              <td><?php echo $row->customer_poin; ?></td>
+                              <td>
+                                <?php if($data['check_auth'][0]->view == 'N'){ ?>
+                                  <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa" disabled="disabled"></i></button></a>
+                                <?php }else{ ?> 
+                                  <a href="<?php echo base_url();?>Masterdata/detailcustomer?id=<?php echo $row->customer_id; ?>" data-fancybox data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn"><i class="fas fa-eye sizing-fa"></i></button></a>
+                                <?php } ?>
+                                <?php if($data['check_auth'][0]->delete == 'N'){ ?>
+                                  <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa" disabled="disabled"></i></button>
+                                <?php }else{ ?> 
+                                  <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
+                                <?php } ?>
+                                <?php if($data['check_auth'][0]->edit == 'N'){ ?>
+                                  <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
+                                <?php }else{ ?> 
+                                  <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->customer_id; ?>" data-name="<?php echo $row->customer_name; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                                <?php } ?>
+                              </td>
+                            </tr>
+                          <?php } ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
 
 
-<?php 
-require DOC_ROOT_PATH . $this->config->item('footer');
-?>
+        <?php 
+        require DOC_ROOT_PATH . $this->config->item('footer');
+        ?>
 
-<script>
+        <script>
 
-   $(".delete").click(function (e) {
-    var id = $(this).attr("data-id");
-    var name = $(this).attr("data-name");
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus '"+name+"' ?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "POST",
-          url: "<?php echo base_url(); ?>Masterdata/delete_customer",
-          dataType: "json",
-          data: {id:id},
-          success : function(data){
-            if (data.code == "200"){
-              location.reload();
-              Swal.fire('Saved!', '', 'success'); 
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data.msg,
-              })
-            }
-          }
-        });
-      }
-    })
-  });
+          $(".delete").click(function (e) {
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-name");
+            Swal.fire({
+              title: 'Konfirmasi?',
+              text: "Apakah Anda Yakin Menghapus '"+name+"' ?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Hapus'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  type: "POST",
+                  url: "<?php echo base_url(); ?>Masterdata/delete_customer",
+                  dataType: "json",
+                  data: {id:id},
+                  success : function(data){
+                    if (data.code == "200"){
+                      location.reload();
+                      Swal.fire('Saved!', '', 'success'); 
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.msg,
+                      })
+                    }
+                  }
+                });
+              }
+            })
+          });
 
-  $('#btnedit').click(function(e){
-    e.preventDefault();
-    var brand_id    = $("#brand_id").val();
-    var brand_name_edit  = $("#brand_name_edit").val();
-    var brand_desc_edit  = $("#brand_desc_edit").val();
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/edit_brand",
-      dataType: "json",
-      data: {brand_id:brand_id, brand_name_edit:brand_name_edit, brand_desc_edit:brand_desc_edit},
-      success : function(data){
-        if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
-          Swal.fire('Saved!', '', 'success');
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
-        }
-      }
-    });
-  });
 
-  $('#btnsave').click(function(e){
-    e.preventDefault();
-    var customer_name             = $("#customer_name").val();
-    var customer_dob              = $("#customer_dob").val();
-    var customer_gender           = $("#customer_gender").val();
-    var customer_address          = $("#customer_address").val();
-    var customer_address_blok     = $("#customer_address_blok").val();
-    var customer_address_no       = $("#customer_address_no").val();
-    var customer_address_rt       = $("#customer_address_rt").val();
-    var customer_address_rw       = $("#customer_address_rw").val();
-    var customer_address_phone    = $("#customer_address_phone").val();
-    var customer_address_email    = $("#customer_address_email").val();
-    var customer_send_address     = $("#customer_send_address").val();
-    var customer_expedisi         = $("#customer_expedisi").val();
-    var customer_expedisi_text    = $('#customer_expedisi option:selected').toArray().map(item => item.text).join();
-    var customer_npwp             = $("#customer_npwp").val();
-    var customer_nik              = $("#customer_nik").val();
-    var customer_rate             = $("#customer_rate").val();
 
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/save_customer",
-      dataType: "json",
-      data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate, customer_expedisi_text:customer_expedisi_text},
-      success : function(data){
-        if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/customer";
-          Swal.fire('Saved!', '', 'success');
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
-        }
-      }
-    });
-  });
+          $('#btnsave').click(function(e){
+            e.preventDefault();
+            var customer_name             = $("#customer_name").val();
+            var customer_dob              = $("#customer_dob").val();
+            var customer_gender           = $("#customer_gender").val();
+            var customer_address          = $("#customer_address").val();
+            var customer_address_blok     = $("#customer_address_blok").val();
+            var customer_address_no       = $("#customer_address_no").val();
+            var customer_address_rt       = $("#customer_address_rt").val();
+            var customer_address_rw       = $("#customer_address_rw").val();
+            var customer_address_phone    = $("#customer_address_phone").val();
+            var customer_address_email    = $("#customer_address_email").val();
+            var customer_send_address     = $("#customer_send_address").val();
+            var customer_expedisi         = $("#customer_expedisi").val();
+            var customer_expedisi_text    = $('#customer_expedisi option:selected').toArray().map(item => item.text).join();
+            var customer_npwp             = $("#customer_npwp").val();
+            var customer_nik              = $("#customer_nik").val();
+            var customer_rate             = $("#customer_rate").val();
 
-  $('#exampleModaledit').on('show.bs.modal', function (event) {
+            $.ajax({
+              type: "POST",
+              url: "<?php echo base_url(); ?>Masterdata/save_customer",
+              dataType: "json",
+              data: {customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate, customer_expedisi_text:customer_expedisi_text},
+              success : function(data){
+                if (data.code == "200"){
+                  window.location.href = "<?php echo base_url(); ?>Masterdata/customer";
+                  Swal.fire('Saved!', '', 'success');
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.result,
+                  })
+                }
+              }
+            });
+          });
+
+
+          $('#btnedit').click(function(e){
+            e.preventDefault();
+            var customer_id               = $("#customer_id_edit").val();
+            var customer_code             = $("#customer_code_edit").val();
+            var customer_name             = $("#customer_name_edit").val();
+            var customer_dob              = $("#customer_dob_edit").val();
+            var customer_gender           = $("#customer_gender_edit").val();
+            var customer_address          = $("#customer_address_edit").val();
+            var customer_address_blok     = $("#customer_address_blok").val();
+            var customer_address_no       = $("#customer_address_no_edit").val();
+            var customer_address_rt       = $("#customer_address_rt_edit").val();
+            var customer_address_rw       = $("#customer_address_rw_edit").val();
+            var customer_address_phone    = $("#customer_address_phone_edit").val();
+            var customer_address_email    = $("#customer_address_email_edit").val();
+            var customer_send_address     = $("#customer_send_address_edit").val();
+            var customer_expedisi         = $("#customer_expedisi_edit").val();
+            var customer_expedisi_text    = $('#customer_expedisi_edit option:selected').toArray().map(item => item.text).join();
+            var customer_npwp             = $("#customer_npwp_edit").val();
+            var customer_nik              = $("#customer_nik_edit").val();
+            var customer_rate             = $("#customer_rate_edit").val();
+
+            $.ajax({
+              type: "POST",
+              url: "<?php echo base_url(); ?>Masterdata/edit_customer",
+              dataType: "json",
+              data: {customer_id:customer_id, customer_code:customer_code, customer_name:customer_name, customer_dob:customer_dob, customer_gender:customer_gender, customer_address:customer_address, customer_address_blok:customer_address_blok, customer_address_no:customer_address_no, customer_address_rt:customer_address_rt, customer_address_rw:customer_address_rw, customer_address_phone:customer_address_phone, customer_address_email:customer_address_email, customer_send_address:customer_send_address, customer_dob:customer_dob, customer_gender:customer_gender, customer_expedisi:customer_expedisi, customer_npwp:customer_npwp, customer_nik:customer_nik, customer_rate:customer_rate, customer_expedisi_text:customer_expedisi_text},
+              success : function(data){
+                if (data.code == "200"){
+                  window.location.href = "<?php echo base_url(); ?>Masterdata/customer";
+                  Swal.fire('Saved!', '', 'success');
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.result,
+                  })
+                }
+              }
+            });
+          });
+
+          $('#exampleModaledit').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var id   = button.data('id')
     var name = button.data('name')
@@ -520,6 +540,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           let customer_data = data.result.get_customer_by_id;
           for (let i = 0; i < customer_data.length; i++) {
             modal.find('.modal-title').text('Edit ' + customer_data[i].customer_name)
+            modal.find('#customer_id_edit').val(customer_data[i].customer_id)
             modal.find('#customer_code_edit').val(customer_data[i].customer_code)
             modal.find('#customer_name_edit').val(customer_data[i].customer_name)
             modal.find('#customer_dob_edit').val(customer_data[i].customer_dob)
@@ -529,6 +550,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             modal.find('#customer_address_no_edit').val(customer_data[i].customer_address_no)
             modal.find('#customer_address_rt_edit').val(customer_data[i].customer_rt)
             modal.find('#customer_address_rw_edit').val(customer_data[i].customer_rw)
+            modal.find('#customer_address_phone_edit').val(customer_data[i].customer_phone)
+            modal.find('#customer_address_email_edit').val(customer_data[i].customer_email)
+            modal.find('#customer_send_address_edit').val(customer_data[i].customer_send_address)
+            modal.find('#customer_npwp_edit').val(customer_data[i].customer_npwp)
+            modal.find('#customer_nik_edit').val(customer_data[i].customer_nik)
+            modal.find('#customer_rate_edit').val(customer_data[i].customer_rate)
+            const customer_expedisi_tag_array = customer_data[i].customer_expedisi_tag_id.split(",")
+            modal.find('#customer_expedisi_edit').val(customer_expedisi_tag_array)
           }
         } else {
           Swal.fire({
@@ -540,4 +569,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   })
-</script>
+
+          $('#reload').click(function(e){
+            e.preventDefault();
+            location.reload();
+          });
+        </script>

@@ -30,26 +30,24 @@
     <div class="col-md-12">
       <table class="table table-bordered">
         <tbody>
-          <tr>
-            <td class="title-detail">Kode Salesman: </td>
-            <td>S0001</td>
-          </tr>
+          <?php foreach($salesman_detail as $row){ ?>
           <tr>
             <td class="title-detail">Nama Salesman:  </td>
-            <td>Beni</td>
+            <td><?php echo $row->salesman_name; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Alamat: </td>
-            <td width="70%">JALAN ADISUCIPTO KM 8 DESA PARIT BARU RT.003 RW.006 SUNGAI RAYA, SUNGAI RAYA KAB. KUBU RAYA KALIMANTAN BARAT</td>
+            <td width="70%"><?php echo $row->salesman_address; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Telp :</td>
-            <td>0800000000</td>
+            <td><?php echo $row->salesman_phone; ?></td>
           </tr>
           <tr>
             <td class="title-detail">Cabang:  </td>
-            <td><span class="badge badge-primary">Pusat</span></td>
+            <td><span class="badge badge-primary"><?php echo $row->warehouse_name; ?></span></td>
           </tr>
+        <?php } ?>
         </tbody>
       </table>
     </div>
