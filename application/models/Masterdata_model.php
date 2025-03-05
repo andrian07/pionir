@@ -322,11 +322,35 @@ class masterdata_model extends CI_Model {
 
     //product
 
-    public function product_list()
+    public function product_list($search)
     {
-        $query = $this->db->query("select * from ms_product where is_active = 'Y'");
-        $result = $query->result();
-        return $result;
+        $this->db->select('*');
+        $this->db->from('ms_product');
+        $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        $this->db->where('ms_product.is_active', 'y');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function count_product()
+    {
+        $this->db->from('ms_product');
+        $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        $this->db->where('ms_product.is_active', 'y');
+        return $this->db->count_all_results();
+    }
+
+    function count_product_filtered()
+    {
+        $this->db->select('*');
+        $this->db->from('ms_product');
+        $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        $this->db->where('ms_product.is_active', 'y');
+        $query = $this->db->get();
+        return $query->num_rows();
     }
 }
 

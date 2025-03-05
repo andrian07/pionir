@@ -284,36 +284,22 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $(document ).ready(function() {
     $('#product-list').DataTable( {
       serverSide: true,
+      search: true,
       ajax: {
         url: '<?php echo base_url(); ?>Masterdata/product_list',
         type: 'POST'
       },
       columns: [
-      {
-        data: 'product_code'
-      },
-      {
-        data: 'product_name'
-      },
-      {
-        data: 'product_brand'
-      },
-      {
-        data: 'product_category'
-      },
-      {
-        data: 'product_supplier_tag'
-      },
-      {
-        data: 'product_package'
-      },
-      {
-        data: 'product_ppn'
-      },
-      {
-        data: 'product_image'
-      }
+        {data: 'product_code'},
+        {data: 'product_name'},
+        {data: 'brand_name'},
+        {data: 'category_name'},
+        {data: 'product_supplier_tag'},
+        {data: 'product_package'},
+        {data: 'product_ppn'},
+        {defaultContent: '<input type="button" class="deleteTrans" value="Delete"/>'}
       ],
+      order: [[0, 'desc']]
     });
   });
 
@@ -352,17 +338,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-  "image/avif",
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+    "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

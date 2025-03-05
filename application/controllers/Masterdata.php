@@ -1110,12 +1110,49 @@ class Masterdata extends CI_Controller {
 
 	public function product_list()
 	{
-		$data['data']							= $this->masterdata_model->product_list();
-		$draw['draw']							= 1;
-		$recordsTotal['recordsTotal']			= 5;
-		$recordsFiltered['recordsFiltered'] 	= 2;
-		$product_data['product_data'] 			= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
-		echo json_encode($product_data);
+		$search = $this->input->post('search');
+		if($search != null){
+			$search = $search['value'];
+		}
+		$list = $this->masterdata_model->product_list($search)->result_array();
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($list as $field) {
+			$no++;
+			$row = array();
+			$row[] = $field['product_code'];
+			$row[] = $field['product_name'];
+			$row[] = $field['brand_name'];
+			$row[] = $field['category_name'];
+			$row[] = $field['product_supplier_tag'];
+			$row[] = $field['product_package'];
+			$row[] = $field['product_ppn'];
+			$row[] = $field['product_image'];
+			$data[] = $row;
+		}
+
+		$product_data = array_merge($data, $draw, $recordsTotal, $recordsFiltered);
+		echo json_encode($product_data);die();
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => '12',
+			"recordsFiltered" => '12',
+			"data" => $data,
+		);
+		echo json_encode($output);
+		/*
+		$search = $this->input->post('search');
+		if($search != null){
+			$search = $search['value'];
+		}
+		$draws	= $this->input->post('draw');
+		$data['data']							= $this->masterdata_model->product_list($search);
+		$draw['draw']							= $draws;
+		$recordsTotal['recordsTotal']			= 10;
+		$recordsFiltered['recordsFiltered'] 	= 12;
+		$product_data 							= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
+		echo json_encode($product_data);die();
+		*/
 	}
 
 	public function settingproduct(){
