@@ -1110,6 +1110,7 @@ class Masterdata extends CI_Controller {
 
 	public function product_list()
 	{
+		/*
 		$search = $this->input->post('search');
 		if($search != null){
 			$search = $search['value'];
@@ -1130,9 +1131,6 @@ class Masterdata extends CI_Controller {
 			$row[] = $field['product_image'];
 			$data[] = $row;
 		}
-
-		$product_data = array_merge($data, $draw, $recordsTotal, $recordsFiltered);
-		echo json_encode($product_data);die();
 		$output = array(
 			"draw" => $_POST['draw'],
 			"recordsTotal" => '12',
@@ -1140,19 +1138,19 @@ class Masterdata extends CI_Controller {
 			"data" => $data,
 		);
 		echo json_encode($output);
-		/*
+		*/
 		$search = $this->input->post('search');
 		if($search != null){
 			$search = $search['value'];
 		}
 		$draws	= $this->input->post('draw');
-		$data['data']							= $this->masterdata_model->product_list($search);
+		$data['data']							= $this->masterdata_model->product_list($search)->result_array();
 		$draw['draw']							= $draws;
 		$recordsTotal['recordsTotal']			= 10;
 		$recordsFiltered['recordsFiltered'] 	= 12;
 		$product_data 							= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
 		echo json_encode($product_data);die();
-		*/
+		
 	}
 
 	public function settingproduct(){

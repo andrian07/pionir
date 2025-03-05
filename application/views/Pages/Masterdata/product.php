@@ -75,7 +75,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <div class="col-md-12 p-0">
                                 <select class="form-control input-full js-example-basic-single" id="product_category" name="product_category">
                                   <option>-- Pilih Kategori --</option>
-                                  <option>Headset</option>
+                                  <option value="headset">Headset</option>
                                   <option>Monitor</option>
                                   <option>Speaker</option>
                                 </select>
@@ -282,28 +282,33 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 <script>  
 
   $(document ).ready(function() {
+    let product_category = $("#product_category").val();
+
     $('#product-list').DataTable( {
       serverSide: true,
       search: true,
       ajax: {
         url: '<?php echo base_url(); ?>Masterdata/product_list',
-        type: 'POST'
+        type: 'POST',
+        data:  {product_category:product_category},
       },
       columns: [
-        {data: 'product_code'},
-        {data: 'product_name'},
-        {data: 'brand_name'},
-        {data: 'category_name'},
-        {data: 'product_supplier_tag'},
-        {data: 'product_package'},
-        {data: 'product_ppn'},
-        {defaultContent: '<input type="button" class="deleteTrans" value="Delete"/>'}
-      ],
-      order: [[0, 'desc']]
-    });
+      {data: 'product_code'},
+      {data: 'product_name'},
+      {data: 'brand_name'},
+      {data: 'category_name'},
+      {data: 'product_supplier_tag'},
+      {data: 'product_package'},
+      {data: 'product_ppn'},
+      {render: renderCellItems}
+        ],
+        order: [[0, 'desc']]
+      });
   });
 
-
+  function renderCellItems(data, type, row) {
+      return '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'+row['product_id']+'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button>';
+  }
 
   $(".delete").click(function (e) {
     swal({
@@ -338,17 +343,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   /* image uplaod */
   const fileTypes = [
-    "image/apng",
-    "image/bmp",
-    "image/gif",
-    "image/jpeg",
-    "image/pjpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
-    "image/x-icon",
-    "image/avif",
+  "image/apng",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/pjpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "image/x-icon",
+  "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);

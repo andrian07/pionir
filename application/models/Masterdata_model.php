@@ -329,6 +329,11 @@ class masterdata_model extends CI_Model {
         $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
         $this->db->where('ms_product.is_active', 'y');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
+        }
         $query = $this->db->get();
         return $query;
     }
