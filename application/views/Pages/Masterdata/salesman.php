@@ -164,9 +164,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" data-id="<?php echo $row->salesman_id; ?>" data-name="<?php echo $row->salesman_name; ?>"><i class="fas fa-trash-alt sizing-fa"></i></button>
                       <?php } ?>
                       <?php if($data['check_auth'][0]->edit == 'N'){ ?>
-                        <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->salesman_id; ?>" data-name="<?php echo $row->salesman_name; ?>" data-address="<?php echo $row->salesman_address; ?>" data-phone="<?php echo $row->salesman_phone; ?>" data-branch="<?php echo $row->salesman_branch; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
+                        <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->salesman_id; ?>" data-name="<?php echo $row->salesman_name; ?>" data-address="<?php echo $row->salesman_address; ?>" data-phone="<?php echo $row->salesman_phone; ?>" data-branch="<?php echo $row->salesman_branch; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="far fa-edit sizing-fa"></i></button>
                       <?php }else{ ?> 
-                        <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn edit" data-id="<?php echo $row->salesman_id; ?>" data-name="<?php echo $row->salesman_name; ?>" data-address="<?php echo $row->salesman_address; ?>" data-phone="<?php echo $row->salesman_phone; ?>" data-branch="<?php echo $row->salesman_branch; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
+                        <button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="<?php echo $row->salesman_id; ?>" data-name="<?php echo $row->salesman_name; ?>" data-address="<?php echo $row->salesman_address; ?>" data-phone="<?php echo $row->salesman_phone; ?>" data-branch="<?php echo $row->salesman_branch; ?>" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="far fa-edit sizing-fa"></i></button>
                       <?php } ?>
                     </td>
                   </tr>

@@ -1110,7 +1110,7 @@ class Masterdata extends CI_Controller {
 
 	public function product_list()
 	{
-		/*
+		
 		$search = $this->input->post('search');
 		if($search != null){
 			$search = $search['value'];
@@ -1119,16 +1119,32 @@ class Masterdata extends CI_Controller {
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
+
+			if($field['product_ppn'] == 'PPN'){
+				$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+			}else{
+				$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+			}
+
+			if($field['product_package'] == 'PPN'){
+				$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+			}else{
+				$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+			}
+
 			$no++;
 			$row = array();
-			$row[] = $field['product_code'];
-			$row[] = $field['product_name'];
+			$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
 			$row[] = $field['brand_name'];
 			$row[] = $field['category_name'];
 			$row[] = $field['product_supplier_tag'];
-			$row[] = $field['product_package'];
+			$row[] = $prodcut_ppn;
+			$row[] = $product_package;
 			$row[] = $field['product_ppn'];
-			$row[] = $field['product_image'];
+			$row[] = '
+			<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="fas fa-edit sizing-fa"></i></button> 
+			<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button> 
+			<button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="fas fa-cog sizing-fa"></i></button>';
 			$data[] = $row;
 		}
 		$output = array(
@@ -1138,7 +1154,8 @@ class Masterdata extends CI_Controller {
 			"data" => $data,
 		);
 		echo json_encode($output);
-		*/
+		
+		/*
 		$search = $this->input->post('search');
 		if($search != null){
 			$search = $search['value'];
@@ -1146,10 +1163,11 @@ class Masterdata extends CI_Controller {
 		$draws	= $this->input->post('draw');
 		$data['data']							= $this->masterdata_model->product_list($search)->result_array();
 		$draw['draw']							= $draws;
-		$recordsTotal['recordsTotal']			= 10;
+		$recordsTotal['recordsTotal']			= 12;
 		$recordsFiltered['recordsFiltered'] 	= 12;
 		$product_data 							= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
 		echo json_encode($product_data);die();
+		*/
 		
 	}
 
