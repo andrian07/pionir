@@ -322,7 +322,7 @@ class masterdata_model extends CI_Model {
 
     //product
 
-    public function product_list($search)
+    public function product_list($search, $length, $start)
     {
         $this->db->select('*');
         $this->db->from('ms_product');
@@ -334,6 +334,8 @@ class masterdata_model extends CI_Model {
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
             $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
         }
+        $this->db->limit($length);
+        $this->db->offset($start);
         $query = $this->db->get();
         return $query;
     }

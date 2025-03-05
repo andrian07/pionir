@@ -1112,10 +1112,12 @@ class Masterdata extends CI_Controller {
 	{
 		
 		$search = $this->input->post('search');
+		$length = $this->input->post('length');
+		$start = $this->input->post('start');
 		if($search != null){
 			$search = $search['value'];
 		}
-		$list = $this->masterdata_model->product_list($search)->result_array();
+		$list = $this->masterdata_model->product_list($search, $length, $start)->result_array();
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -1132,14 +1134,24 @@ class Masterdata extends CI_Controller {
 				$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
 			}
 
+			if($field['product_supplier_tag'] != null){
+				$product_supplier_tag = explode(",",$field['product_supplier_tag']) ;
+				foreach ($product_supplier_tag as $field_tag) {
+					$filed_tag_row[] = '<span class="badge badge-primary" style="margin-right:5px;">'.$field_tag.'</span>';
+				}
+			}
 			$no++;
 			$row = array();
 			$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
 			$row[] = $field['brand_name'];
 			$row[] = $field['category_name'];
-			$row[] = $field['product_supplier_tag'];
-			$row[] = $prodcut_ppn;
+			if($field['product_supplier_tag'] != null){
+				$row[] = $filed_tag_row;
+			}else{
+				$row[] = '';
+			}
 			$row[] = $product_package;
+			$row[] = $prodcut_ppn;
 			$row[] = $field['product_ppn'];
 			$row[] = '
 			<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="fas fa-edit sizing-fa"></i></button> 
