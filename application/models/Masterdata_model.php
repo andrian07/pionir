@@ -322,7 +322,7 @@ class masterdata_model extends CI_Model {
 
     //product
 
-    public function product_list($search, $length, $start)
+    public function product_list($search, $length, $start, $product_category)
     {
         $this->db->select('*');
         $this->db->from('ms_product');
@@ -333,12 +333,38 @@ class masterdata_model extends CI_Model {
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
             $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
+        }
+        if($product_category != null){
+            $this->db->or_where('ms_product.product_category = "'.$product_category.'"');
         }
         $this->db->limit($length);
         $this->db->offset($start);
         $query = $this->db->get();
         return $query;
     }
+
+    public function product_list_count($search, $product_category)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('ms_product');
+        $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        $this->db->where('ms_product.is_active', 'y');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
+        }
+        if($product_category != null){
+            $this->db->or_where('ms_product.product_category = "'.$product_category.'"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    
 
     public function count_product()
     {

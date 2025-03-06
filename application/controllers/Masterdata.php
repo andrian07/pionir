@@ -1099,8 +1099,9 @@ class Masterdata extends CI_Controller {
 			$category_list['category_list'] = $this->masterdata_model->category_list();
 			$brand_list['brand_list'] 		= $this->masterdata_model->brand_list();
 			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$unit_list['unit_list'] 		= $this->masterdata_model->unit_list();
 			$check_auth['check_auth'] 		= $check_auth;
-			$data['data'] = array_merge($check_auth, $category_list, $brand_list, $supplier_list);
+			$data['data'] = array_merge($check_auth, $category_list, $brand_list, $supplier_list, $unit_list);
 			$this->load->view('Pages/Masterdata/product', $data);
 		}else{
 			$msg = "No Access";
@@ -1111,13 +1112,17 @@ class Masterdata extends CI_Controller {
 	public function product_list()
 	{
 		
-		$search = $this->input->post('search');
-		$length = $this->input->post('length');
-		$start = $this->input->post('start');
+		$search 			= $this->input->post('search');
+		$length 			= $this->input->post('length');
+		$start 			  	= $this->input->post('start');
+		$product_category 	= $this->input->post('product_category');
+
 		if($search != null){
 			$search = $search['value'];
 		}
-		$list = $this->masterdata_model->product_list($search, $length, $start)->result_array();
+		$list = $this->masterdata_model->product_list($search, $length, $start,  $product_category)->result_array();
+		$count_list = $this->masterdata_model->product_list_count($search, $product_category)->result_array();
+		$total_row = $count_list[0]['total_row'];
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -1134,22 +1139,12 @@ class Masterdata extends CI_Controller {
 				$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
 			}
 
-			if($field['product_supplier_tag'] != null){
-				$product_supplier_tag = explode(",",$field['product_supplier_tag']) ;
-				foreach ($product_supplier_tag as $field_tag) {
-					$filed_tag_row[] = '<span class="badge badge-primary" style="margin-right:5px;">'.$field_tag.'</span>';
-				}
-			}
 			$no++;
 			$row = array();
 			$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
 			$row[] = $field['brand_name'];
 			$row[] = $field['category_name'];
-			if($field['product_supplier_tag'] != null){
-				$row[] = $filed_tag_row;
-			}else{
-				$row[] = '';
-			}
+			$row[] = $field['product_supplier_tag'];
 			$row[] = $product_package;
 			$row[] = $prodcut_ppn;
 			$row[] = $field['product_ppn'];
@@ -1161,26 +1156,48 @@ class Masterdata extends CI_Controller {
 		}
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => '12',
-			"recordsFiltered" => '12',
+			"recordsTotal" => $total_row,
+			"recordsFiltered" => $total_row,
 			"data" => $data,
 		);
 		echo json_encode($output);
-		
-		/*
-		$search = $this->input->post('search');
-		if($search != null){
-			$search = $search['value'];
+
+	}
+
+	public function save_product()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$screenshoot 		= $this->input->post('screenshoot');
+			$user_id 			= $_SESSION['user_id'];
+
+			if($_FILES['screenshoot']['name'] == null){
+				$new_name = 'default.png';
+			}else{
+				$new_name = md5(time()).'.png';
+				$config['upload_path'] = './assets/products/';
+				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
+
+				$config['file_name'] = $new_name;
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('screenshoot')) 
+				{
+					$error = array('error' => $this->upload->display_errors());
+				} 
+				else
+				{
+					$data = array('image_metadata' => $this->upload->data());
+					echo json_encode(['code'=>'200', 'result'=>$new_name]); 
+				}
+			}
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
 		}
-		$draws	= $this->input->post('draw');
-		$data['data']							= $this->masterdata_model->product_list($search)->result_array();
-		$draw['draw']							= $draws;
-		$recordsTotal['recordsTotal']			= 12;
-		$recordsFiltered['recordsFiltered'] 	= 12;
-		$product_data 							= array_merge($data, $draw, $recordsTotal, $recordsFiltered);
-		echo json_encode($product_data);die();
-		*/
-		
 	}
 
 	public function settingproduct(){

@@ -14,7 +14,7 @@ class Dashboard extends CI_Controller {
 
 	public function index()
 	{
-		if(isset($_SESSION['user_name']) != null){
+		if(isset($_SESSION['user_name'] ) != null || isset($_SESSION['user_branch'] ) != null){
 			redirect('Dashboard/Admin', 'refresh');
 		}else{
 			$this->load->view('Pages/login');
