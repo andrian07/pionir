@@ -1127,13 +1127,13 @@ class Masterdata extends CI_Controller {
 		$no = $_POST['start'];
 		foreach ($list as $field) {
 
-			if($field['product_ppn'] == 'PPN'){
+			if($field['is_ppn'] == 'PPN'){
 				$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
 			}else{
 				$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
 			}
 
-			if($field['product_package'] == 'PPN'){
+			if($field['is_package'] == 'PPN'){
 				$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
 			}else{
 				$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
@@ -1147,7 +1147,7 @@ class Masterdata extends CI_Controller {
 			$row[] = $field['product_supplier_tag'];
 			$row[] = $product_package;
 			$row[] = $prodcut_ppn;
-			$row[] = $field['product_ppn'];
+			$row[] = $field['is_ppn'];
 			$row[] = '
 			<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="fas fa-edit sizing-fa"></i></button> 
 			<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button> 
@@ -1169,17 +1169,39 @@ class Masterdata extends CI_Controller {
 		$modul = 'Product';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
-			$screenshoot 		= $this->input->post('screenshoot');
-			$user_id 			= $_SESSION['user_id'];
+			$screenshoot 				= $this->input->post('screenshoot');
+			$product_name 				= $this->input->post('product_name');
+			$product_category 			= $this->input->post('product_category');
+			$product_brand				= $this->input->post('product_brand');
+			$product_supplier 			= $this->input->post('product_supplier');
+			$product_item_supplier  	= $this->input->post('product_item_supplier');
+			$product_tax 				= $this->input->post('product_tax');
+			$product_unit 				= $this->input->post('product_unit');
+			$product_type 				= $this->input->post('product_type');
+			$product_min_stock			= $this->input->post('product_min_stock');
+			$product_weight				= $this->input->post('product_weight');
+			$product_location			= $this->input->post('product_location');
+			$product_description		= $this->input->post('product_description');
+			$product_search_key			= $this->input->post('product_search_key');
+			$user_id 					= $_SESSION['user_id'];
+			$product_supplier_tag_id 	= implode(",",$product_supplier);
 
+			$product_code = strtoupper(substr($product_name, 0, 3));
+			$maxCode = $this->masterdata_model->last_product_code();
+			if ($maxCode == NULL) {
+				$last_code = $product_code.'001';
+			} else {
+				$maxCode = $maxCode[0]->product_code;
+				$last_code = substr($maxCode, -3);
+				$last_code = $product_code.substr('000' . strval(floatval($last_code) + 1), -3);
+			}
 			if($_FILES['screenshoot']['name'] == null){
-				$new_name = 'default.png';
+				$new_image_name = 'default.png';
 			}else{
-				$new_name = md5(time()).'.png';
+				$new_image_name = md5(time()).'.png';
 				$config['upload_path'] = './assets/products/';
 				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
-
-				$config['file_name'] = $new_name;
+				$config['file_name'] = $new_image_name;
 				$this->load->library('upload', $config);
 				if (!$this->upload->do_upload('screenshoot')) 
 				{
@@ -1188,15 +1210,48 @@ class Masterdata extends CI_Controller {
 				else
 				{
 					$data = array('image_metadata' => $this->upload->data());
-					echo json_encode(['code'=>'200', 'result'=>$new_name]); 
 				}
 			}
+
+			$data_insert = array(
+				'product_code'				=> $last_code,
+				'product_name'				=> $product_name,
+				'product_brand'				=> $product_brand,
+				'product_unit'				=> $product_unit,
+				'product_category'			=> $product_category,
+				'product_supplier_tag'		=> $product_supplier_tag_id,
+				'product_supplier_name'		=> $product_item_supplier,
+				'is_package'				=> $product_type,
+				'is_ppn'					=> $product_tax,
+				'product_min_stock'			=> $product_min_stock,
+				'product_weight'			=> $product_weight,
+				'product_location'			=> $product_location,
+				'product_desc'				=> $product_description,
+				'product_key'				=> $product_search_key,
+				'product_image'				=> $new_image_name
+			);
+
+			$this->masterdata_model->save_product($data_insert);
+
+			foreach($product_supplier as $row){
+				$insert_supplier = array(
+					'product_id'				=> $last_code,
+					'supplier_id'				=> $product_name
+				);
+				$this->masterdata_model->save_product_supplier($insert_supplier);
+			}	
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Produk Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
 			$msg = "Succes Input";
-			echo json_encode(['code'=>200, 'result'=>$msg]);
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
 			die();
 		}else{
 			$msg = "No Access";
-			echo json_encode(['code'=>0, 'result'=>$msg]);
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 	}
 

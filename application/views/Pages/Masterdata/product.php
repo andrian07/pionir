@@ -118,8 +118,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
                                 <div class="col-md-12 p-0">
                                   <select class="form-select form-control" name="product_tax" id="product_tax">
-                                    <option value="Y">Barang Kena Pajak</option>
-                                    <option value="N">Barang Tidak Kena Pajak</option>
+                                    <option value="PPN">Barang Kena Pajak</option>
+                                    <option value="NON PPN">Barang Tidak Kena Pajak</option>
                                   </select>
                                 </div>
                               </div>
@@ -140,8 +140,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
                                 <div class="col-md-12 p-0">
                                   <select class="form-select form-control" id="product_type" name="product_type">
-                                    <option value="Produk">Produk</option>
-                                    <option value="Paket">Paket</option>
+                                    <option value="N">Produk</option>
+                                    <option value="Y">Paket</option>
                                   </select>
                                 </div>
                               </div>
@@ -253,14 +253,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         contentType: false,
         processData: false,
         success:function(data){
-          console.log(data);
+         console.log(data);
+         if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
         }
-      });
-    }));
-
-    $("#ImageBrowse").on("change", function() {
-      $("#imageUploadForm").submit();
+      }
     });
+    }));
 
   });
 
@@ -279,14 +285,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
     columns: 
     [
-      {data: 0},
-      {data: 1},
-      {data: 2},
-      {data: 3},
-      {data: 4},
-      {data: 5},
-      {data: 6},
-      {data: 7}
+    {data: 0},
+    {data: 1},
+    {data: 2},
+    {data: 3},
+    {data: 4},
+    {data: 5},
+    {data: 6},
+    {data: 7}
     ]
   });
  }
@@ -325,21 +331,21 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 });
 
 
-  /* image uplaod */
+ /* image uplaod */
  const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-  "image/avif",
-];
-function validFileType(file) {
+ "image/apng",
+ "image/bmp",
+ "image/gif",
+ "image/jpeg",
+ "image/pjpeg",
+ "image/png",
+ "image/svg+xml",
+ "image/tiff",
+ "image/webp",
+ "image/x-icon",
+ "image/avif",
+ ];
+ function validFileType(file) {
   return fileTypes.includes(file.type);
 }
 

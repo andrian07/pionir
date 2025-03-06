@@ -322,6 +322,16 @@ class masterdata_model extends CI_Model {
 
     //product
 
+    public function save_product($data_insert)
+    {
+        $this->db->insert('ms_product', $data_insert);
+    }
+
+    public function save_product_supplier($insert_supplier)
+    {
+        $this->db->insert('ms_product_supplier', $insert_supplier);
+    }
+
     public function product_list($search, $length, $start, $product_category)
     {
         $this->db->select('*');
@@ -385,6 +395,16 @@ class masterdata_model extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows();
     }
+
+
+    public function last_product_code()
+    {
+        $query = $this->db->query("select product_code from ms_product order by product_id desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+    // end product
 }
 
 ?>
