@@ -80,6 +80,8 @@ $('body').on('shown.bs.modal', '.modal', function() {
   });
 });
 
+
+
  $(document).ready(function() {
   $('.js-example-basic-multiple').select2();
 });
@@ -91,6 +93,18 @@ $('body').on('shown.bs.modal', '.modal', function() {
       dropdownParent = $("#myModal");
     $(this).select2({
       dropdownParent: $("#myModal")
+      // ...
+    });
+  });
+});
+
+ $('body').on('shown.bs.modal', '.editmodal', function() {
+  $(this).find('.js-example-basic-single').each(function() {
+    var dropdownParent = $(document.body);
+    if ($(this).parents('#exampleModaledit').length !== 0)
+      dropdownParent = $("#exampleModaledit");
+    $(this).select2({
+      dropdownParent: $("#exampleModaledit")
       // ...
     });
   });

@@ -1142,7 +1142,7 @@ class Masterdata extends CI_Controller {
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn btnprice" onclick="setprice('.$field['product_id'].')""><i class="fas fa-cog sizing-fa"></i></button> ';
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['product_id'].'" data-name="'.$field['product_name'].'"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn btnprice" onclick="setprice('.$field['product_id'].')""><i class="fas fa-cog sizing-fa"></i></button> ';
 				}else{
 					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-cog sizing-fa"></i></button> ';
 				}
@@ -1153,6 +1153,7 @@ class Masterdata extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				$url_image = base_url().'assets/products/'.$field['product_image'];
 				$no++;
 				$row = array();
 				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
@@ -1161,7 +1162,7 @@ class Masterdata extends CI_Controller {
 				$row[] = $field['product_supplier_tag'];
 				$row[] = $product_package;
 				$row[] = $prodcut_ppn;
-				$row[] = $field['is_ppn'];
+				$row[] = '<img src="'.$url_image.'" width="50%">';
 				$row[] = $edit.$delete;
 				$data[] = $row;
 			}
@@ -1213,7 +1214,7 @@ class Masterdata extends CI_Controller {
 			if($_FILES['screenshoot']['name'] == null){
 				$new_image_name = 'default.png';
 			}else{
-				$new_image_name = md5(time()).'.png';
+				$new_image_name = $last_code.'.png';
 				$config['upload_path'] = './assets/products/';
 				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
 				$config['file_name'] = $new_image_name;
@@ -1277,6 +1278,20 @@ class Masterdata extends CI_Controller {
 			$id = $this->input->get('id');
 			$settingproduct['settingproduct'] = $this->masterdata_model->settingproduct($id);
 			$this->load->view('Pages/Masterdata/product_setting', $settingproduct);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function get_edit_product()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id = $this->input->post('id');
+			$settingproduct = $this->masterdata_model->settingproduct($id);
+			echo json_encode(['code'=>200, 'result'=>$settingproduct]);die();
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();

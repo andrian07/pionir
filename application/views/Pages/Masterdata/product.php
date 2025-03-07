@@ -27,7 +27,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </li>
                   </ul>
                 </div>
-                <button class="btn btn-info"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
+                <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <?php if($data['check_auth'][0]->add == 'N'){ ?>
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".bd-example-modal-xl" disabled="disabled"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <?php }else{ ?>
@@ -126,6 +126,18 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="product_type" name="product_type">
+                                  <option value="N">Produk</option>
+                                  <option value="Y">Paket</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+
+                            <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Satuan Dasar</label>
                               <div class="col-md-12 p-0">
                                 <select class="form-control input-full js-example-basic-single" id="product_unit" name="product_unit">
@@ -137,17 +149,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               </div>
                             </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="product_type" name="product_type">
-                                  <option value="N">Produk</option>
-                                  <option value="Y">Paket</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
                               <div class="col-md-12 p-0">
@@ -194,7 +195,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
 
-              <div class="modal fade bd-example-modal-xl" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+              <div class="modal fade bd-example-modal-xl editmodal" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                 <div class="modal-dialog modal-xl" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -222,6 +223,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
                               <div class="col-md-12 p-0">
+                                <input type="hidden" class="form-control input-full" name="product_id_edit" id="product_id_edit" value="Auto" readonly>
                                 <input type="text" class="form-control input-full" name="product_code_edit" id="product_code_edit" value="Auto" readonly>
                               </div>
                             </div>
@@ -288,6 +290,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-select form-control" id="product_type_edit" name="product_type_edit">
+                                  <option value="N">Produk</option>
+                                  <option value="Y">Paket</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Satuan Dasar</label>
                               <div class="col-md-12 p-0">
                                 <select class="form-control input-full js-example-basic-single" id="product_unit_edit" name="product_unit_edit">
@@ -299,17 +312,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               </div>
                             </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="product_type_edit" name="product_type_edit">
-                                  <option value="N">Produk</option>
-                                  <option value="Y">Paket</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
                               <div class="col-md-12 p-0">
@@ -327,21 +329,21 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
                               <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_location" name="product_location_edit" rows="4"></textarea>
+                                <textarea class="form-control" id="product_location_edit" name="product_location_edit" rows="4"></textarea>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
                               <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_description" name="product_description_edit" rows="4"></textarea>
+                                <textarea class="form-control" id="product_description_edit" name="product_description_edit" rows="4"></textarea>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
                               <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_search_key" name="product_search_key_edit" rows="4"></textarea>
+                                <textarea class="form-control" id="product_search_key_edit" name="product_search_key_edit" rows="4"></textarea>
                               </div>
                             </div>
                           </div>
@@ -408,33 +410,22 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7}
       ]
     });
-
-
-    $('.btnedit').click(function(e){
-      var id = button.data('id')
-      console.log(id);
-      window.location.href = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
-    });
-
   });
 
   
-  function setprice(id)
-  {
+  function setprice(id){
     window.location.href = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
   }
-
-
 
   $('#save_product_form').on('submit',(function(e) {
     e.preventDefault();
@@ -494,59 +485,59 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   }));
 
- /* image uplaod */
+  /* image uplaod */
   const fileTypes = [
-   "image/apng",
-   "image/bmp",
-   "image/gif",
-   "image/jpeg",
-   "image/pjpeg",
-   "image/png",
-   "image/svg+xml",
-   "image/tiff",
-   "image/webp",
-   "image/x-icon",
-   "image/avif",
- ];
- function validFileType(file) {
-  return fileTypes.includes(file.type);
-}
-
-let inputHidden = document.querySelector("#screenshoot");
-let triggerInput = document.querySelector(".selectImage");
-let imgArea = document.querySelector(".imgArea");
-
-triggerInput.addEventListener("click",function(){
-  inputHidden.click();
-})
-
-inputHidden.addEventListener("change",function(e){
-  let image = e.target.files[0];
-  if(!validFileType(image)){
-    alert("invalid file type");
-    return;
+  "image/apng",
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/pjpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "image/x-icon",
+  "image/avif",
+  ];
+  function validFileType(file) {
+    return fileTypes.includes(file.type);
   }
-  if(image.size > 2097152){
-    alert("image size must be less than 2MB");
-    return;
-  }else{
-    const reader = new FileReader();
-    reader.addEventListener("load",function(){
-      const allImgs = document.querySelectorAll(".imgArea img");
-      allImgs.forEach((img) => {
-        img.remove();
+
+  let inputHidden = document.querySelector("#screenshoot");
+  let triggerInput = document.querySelector(".selectImage");
+  let imgArea = document.querySelector(".imgArea");
+
+  triggerInput.addEventListener("click",function(){
+    inputHidden.click();
+  })
+
+  inputHidden.addEventListener("change",function(e){
+    let image = e.target.files[0];
+    if(!validFileType(image)){
+      alert("invalid file type");
+      return;
+    }
+    if(image.size > 2097152){
+      alert("image size must be less than 2MB");
+      return;
+    }else{
+      const reader = new FileReader();
+      reader.addEventListener("load",function(){
+        const allImgs = document.querySelectorAll(".imgArea img");
+        allImgs.forEach((img) => {
+          img.remove();
+        })
+        const imgUrl = reader.result;
+        const img = document.createElement("img");
+        img.src = imgUrl;
+        imgArea.appendChild(img);
+        imgArea.classList.add("active");
+        imgArea.dataset.title = image.name;
       })
-      const imgUrl = reader.result;
-      const img = document.createElement("img");
-      img.src = imgUrl;
-      imgArea.appendChild(img);
-      imgArea.classList.add("active");
-      imgArea.dataset.title = image.name;
-    })
-    reader.readAsDataURL(image);
-  }
-})
-/* END IMAGE UPLOAD */
+      reader.readAsDataURL(image);
+    }
+  })
+  /* END IMAGE UPLOAD */
 
 
 // Edit Image //
@@ -587,5 +578,56 @@ inputHidden_edit.addEventListener("change",function(e){
 })
 
 // End Edit Image //
+
+
+$('#exampleModaledit').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id   = button.data('id')
+    var name = button.data('name')
+    var modal = $(this)
+    modal.find('.modal-title').text('Edit product ' + name)
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/get_edit_product",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          let row = data.result[0];
+          modal.find('#product_id_edit').val(id)
+          modal.find('#product_code_edit').val(row.product_code)
+          modal.find('#product_name_edit').val(row.product_name)
+          modal.find('#product_category_edit').val(row.category_id)
+          modal.find('#product_brand_edit').val(row.brand_id)
+          modal.find('#product_unit_edit').val(row.unit_id)
+          const product_supplier_tag = row.product_supplier_tag.split(",")
+          modal.find('#product_supplier_edit').val(product_supplier_tag)
+          modal.find('#product_item_supplier_edit').val(row.product_supplier_name)
+          modal.find('#product_tax_edit').val(row.is_ppn)
+          modal.find('#product_type_edit').val(row.is_package)
+          modal.find('#product_min_stock_edit').val(row.product_min_stock)
+          modal.find('#product_weight_edit').val(row.product_weight)
+          modal.find('#product_location_edit').val(row.product_location)
+          modal.find('#product_description_edit').val(row.product_desc)
+          modal.find('#product_search_key_edit').val(row.product_key)
+
+          var elem = document.createElement("img");
+          document.getElementById("active-image").appendChild(elem);
+          elem.src = '<?php echo base_url(); ?>assets/products/'+row.product_image;
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  })
+
+$('#reload').click(function(e){
+  e.preventDefault();
+  location.reload();
+});
 
 </script>
