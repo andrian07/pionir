@@ -332,7 +332,7 @@ class masterdata_model extends CI_Model {
         $this->db->insert('ms_product_supplier', $insert_supplier);
     }
 
-    public function product_list($search, $length, $start, $product_category)
+    public function product_list($search, $length, $start)
     {
         $this->db->select('*');
         $this->db->from('ms_product');
@@ -345,16 +345,13 @@ class masterdata_model extends CI_Model {
             $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
         }
-        if($product_category != null){
-            $this->db->or_where('ms_product.product_category = "'.$product_category.'"');
-        }
         $this->db->limit($length);
         $this->db->offset($start);
         $query = $this->db->get();
         return $query;
     }
 
-    public function product_list_count($search, $product_category)
+    public function product_list_count($search)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('ms_product');
@@ -367,14 +364,9 @@ class masterdata_model extends CI_Model {
             $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
         }
-        if($product_category != null){
-            $this->db->or_where('ms_product.product_category = "'.$product_category.'"');
-        }
         $query = $this->db->get();
         return $query;
     }
-
-    
 
     public function count_product()
     {
@@ -400,6 +392,13 @@ class masterdata_model extends CI_Model {
     public function last_product_code()
     {
         $query = $this->db->query("select product_code from ms_product order by product_id desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function settingproduct($id)
+    {
+        $query = $this->db->query("select * from ms_product a, ms_brand b, ms_unit c, ms_category d where a.product_brand = b.brand_id and a.product_unit = c.unit_id and a.product_category = d.category_id and product_id  = '".$id."' and a.is_active = 'Y'");
         $result = $query->result();
         return $result;
     }

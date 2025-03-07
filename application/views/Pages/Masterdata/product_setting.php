@@ -186,90 +186,104 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
           </div>
           <div class="card-body">
-            <table width="100%" class="mb-3">
-              <tbody>
-                <tr>
-                  <th width="15%">Kode Produk</th>
-                  <td width="1%">:</td>
-                  <td width="84%" id="setup_product_code">BAT00075</td>
-                </tr>
-                <tr>
-                  <th>Nama Produk</th>
-                  <td>:</td>
-                  <td id="setup_product_name">Baterai Dynamax A2</td>
-                </tr>
-              </tbody>
-            </table>
+            <?php foreach ($settingproduct as $row) { ?>
+              <table width="100%" class="mb-3">
+                <tbody>
+                  <tr>
+                    <th width="15%">Kode Produk</th>
+                    <td width="1%">:</td>
+                    <td width="84%" id="setup_product_code"><?php echo $row->product_code; ?></td>
+                  </tr>
+                  <tr>
+                    <th>Nama Produk</th>
+                    <td>:</td>
+                    <td id="setup_product_name"><?php echo $row->product_name; ?></td>
+                  </tr>
+                </tbody>
+              </table>
 
-            <div class="row">
-              <div class="col-md-6">
-                <div class="table-responsive">
-                  <table class="table table-bordered">
-                    <tbody>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Kode:</th>
-                        <td colspan="4">BAT00075</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Nama Produk:</th>
-                        <td colspan="4">Baterai Dynamax A2</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Kategori:</th>
-                        <td colspan="4">Baterai</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Brand:</th>
-                        <td colspan="4">ACR</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Supplier:</th>
-                        <td colspan="4"><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Item Supplier:</th>
-                        <td colspan="4">Jaya Anugrah Elektronik: ACR 1225 Mk1</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Paket:</th>
-                        <td colspan="4"><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">PPN:</th>
-                        <td colspan="4"><span class="badge badge-success"><i class="fas fa-check-circle"></i></span></td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Satuan:</th>
-                        <td colspan="4">PCS</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Min Stock:</th>
-                        <td colspan="4">10</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Berat:</th>
-                        <td colspan="4">1 kg</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">HPP:</th>
-                        <td colspan="4">180.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Harga Beli:</th>
-                        <td colspan="4">2.000.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
-                        <td colspan="4">Di Bawah</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" class="productinfo-text-right">Catatan:</th>
-                        <td colspan="4">Middle Ada corong / Frequenzy 52Hz - 10.6</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Kode:</th>
+                          <td colspan="4"><?php echo $row->product_code; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Nama Produk:</th>
+                          <td colspan="4"><?php echo $row->product_name; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Kategori:</th>
+                          <td colspan="4"><?php echo $row->category_name; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Brand:</th>
+                          <td colspan="4"><?php echo $row->brand_name; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Supplier:</th>
+                          <td colspan="4"><?php foreach(explode(",",$row->product_supplier_tag) as $rows){ echo '<span class="badge badge-primary " style="margin-right:1px;">'.$rows.'</span>';} ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Item Supplier:</th>
+                          <td colspan="4"><?php echo $row->product_supplier_name; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Paket:</th>
+                          <td colspan="4">
+                            <?php if($row->is_package == 'Y'){
+                              echo '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+                            }else{
+                              echo '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+                            } ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">PPN:</th>
+                          <td colspan="4">
+                            <?php if($row->is_ppn == 'PPN'){
+                              echo '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+                            }else{
+                              echo '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+                            } ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Satuan:</th>
+                          <td colspan="4"><?php echo $row->unit_name; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Min Stock:</th>
+                          <td colspan="4"><?php echo $row->product_min_stock; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Berat:</th>
+                          <td colspan="4"><?php echo $row->product_weight; ?> Gram</td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">HPP:</th>
+                          <td colspan="4"><?php echo number_format($row->product_hpp); ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Harga Beli:</th>
+                          <td colspan="4"><?php echo number_format($row->product_price); ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
+                          <td colspan="4"><?php echo $row->product_location; ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="col" class="productinfo-text-right">Catatan:</th>
+                          <td colspan="4"><?php echo $row->product_desc; ?></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              <?php } ?>
               <div class="col-md-6">
                 <div class="table-responsive">
                   <table class="table table-bordered">
@@ -328,7 +342,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </tr>
                     </tbody>
                   </table>
-
                   <table class="table table-head-bg-info">
                     <thead>
                       <tr>
@@ -358,6 +371,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
             </div>
+
           </div>
 
         </div>

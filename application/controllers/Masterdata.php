@@ -1093,7 +1093,7 @@ class Masterdata extends CI_Controller {
 
 	//product
 	public function product(){
-		$modul = 'Supplier';
+		$modul = 'Product';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
 			$category_list['category_list'] = $this->masterdata_model->category_list();
@@ -1112,55 +1112,70 @@ class Masterdata extends CI_Controller {
 	public function product_list()
 	{
 		
-		$search 			= $this->input->post('search');
-		$length 			= $this->input->post('length');
-		$start 			  	= $this->input->post('start');
-		$product_category 	= $this->input->post('product_category');
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
 
-		if($search != null){
-			$search = $search['value'];
-		}
-		$list = $this->masterdata_model->product_list($search, $length, $start,  $product_category)->result_array();
-		$count_list = $this->masterdata_model->product_list_count($search, $product_category)->result_array();
-		$total_row = $count_list[0]['total_row'];
-		$data = array();
-		$no = $_POST['start'];
-		foreach ($list as $field) {
-
-			if($field['is_ppn'] == 'PPN'){
-				$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
-			}else{
-				$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+			if($search != null){
+				$search = $search['value'];
 			}
+			$list = $this->masterdata_model->product_list($search, $length, $start)->result_array();
+			$count_list = $this->masterdata_model->product_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
 
-			if($field['is_package'] == 'PPN'){
-				$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
-			}else{
-				$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+				if($field['is_ppn'] == 'PPN'){
+					$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				}else{
+					$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+				}
+
+				if($field['is_package'] == 'Y'){
+					$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				}else{
+					$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn btnprice" onclick="setprice('.$field['product_id'].')""><i class="fas fa-cog sizing-fa"></i></button> ';
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-cog sizing-fa"></i></button> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$no++;
+				$row = array();
+				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
+				$row[] = $field['brand_name'];
+				$row[] = $field['category_name'];
+				$row[] = $field['product_supplier_tag'];
+				$row[] = $product_package;
+				$row[] = $prodcut_ppn;
+				$row[] = $field['is_ppn'];
+				$row[] = $edit.$delete;
+				$data[] = $row;
 			}
-
-			$no++;
-			$row = array();
-			$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
-			$row[] = $field['brand_name'];
-			$row[] = $field['category_name'];
-			$row[] = $field['product_supplier_tag'];
-			$row[] = $product_package;
-			$row[] = $prodcut_ppn;
-			$row[] = $field['is_ppn'];
-			$row[] = '
-			<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn"><i class="fas fa-edit sizing-fa"></i></button> 
-			<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button> 
-			<button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn"><i class="fas fa-cog sizing-fa"></i></button>';
-			$data[] = $row;
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
-		$output = array(
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $total_row,
-			"recordsFiltered" => $total_row,
-			"data" => $data,
-		);
-		echo json_encode($output);
 
 	}
 
@@ -1174,6 +1189,7 @@ class Masterdata extends CI_Controller {
 			$product_category 			= $this->input->post('product_category');
 			$product_brand				= $this->input->post('product_brand');
 			$product_supplier 			= $this->input->post('product_supplier');
+			$product_supplier_text      = $this->input->post('product_supplier_text');
 			$product_item_supplier  	= $this->input->post('product_item_supplier');
 			$product_tax 				= $this->input->post('product_tax');
 			$product_unit 				= $this->input->post('product_unit');
@@ -1184,7 +1200,6 @@ class Masterdata extends CI_Controller {
 			$product_description		= $this->input->post('product_description');
 			$product_search_key			= $this->input->post('product_search_key');
 			$user_id 					= $_SESSION['user_id'];
-			$product_supplier_tag_id 	= implode(",",$product_supplier);
 
 			$product_code = strtoupper(substr($product_name, 0, 3));
 			$maxCode = $this->masterdata_model->last_product_code();
@@ -1219,7 +1234,7 @@ class Masterdata extends CI_Controller {
 				'product_brand'				=> $product_brand,
 				'product_unit'				=> $product_unit,
 				'product_category'			=> $product_category,
-				'product_supplier_tag'		=> $product_supplier_tag_id,
+				'product_supplier_tag'		=> $product_supplier_text,
 				'product_supplier_name'		=> $product_item_supplier,
 				'is_package'				=> $product_type,
 				'is_ppn'					=> $product_tax,
@@ -1256,7 +1271,16 @@ class Masterdata extends CI_Controller {
 	}
 
 	public function settingproduct(){
-		$this->load->view('Pages/Masterdata/product_setting');
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$id = $this->input->get('id');
+			$settingproduct['settingproduct'] = $this->masterdata_model->settingproduct($id);
+			$this->load->view('Pages/Masterdata/product_setting', $settingproduct);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
 	//end product
