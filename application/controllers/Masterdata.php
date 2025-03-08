@@ -1320,6 +1320,7 @@ class Masterdata extends CI_Controller {
 				}
 			}
 
+
 			$data_edit = array(
 				'product_code'				=> $product_code,
 				'product_name'				=> $product_name,
