@@ -1271,6 +1271,91 @@ class Masterdata extends CI_Controller {
 		}
 	}
 
+	public function edit_product()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$screenshoot 				= $this->input->post('screenshoot_edit');
+			$product_id 				= $this->input->post('product_id_edit');
+			$product_code 				= $this->input->post('product_code_edit');
+			$product_name 				= $this->input->post('product_name_edit');
+			$product_category 			= $this->input->post('product_category_edit');
+			$product_brand				= $this->input->post('product_brand_edit');
+			$product_supplier 			= $this->input->post('product_supplier_edit');
+			$product_supplier_text      = $this->input->post('product_supplier_text_edit');
+			$product_item_supplier  	= $this->input->post('product_item_supplierv');
+			$product_tax 				= $this->input->post('product_tax_edit');
+			$product_unit 				= $this->input->post('product_unit_edit');
+			$product_type 				= $this->input->post('product_type_edit');
+			$product_min_stock			= $this->input->post('product_min_stock_edit');
+			$product_weight				= $this->input->post('product_weight_edit');
+			$product_location			= $this->input->post('product_location_edit');
+			$product_description		= $this->input->post('product_description_edit');
+			$product_search_key			= $this->input->post('product_search_key_edit');
+			$user_id 					= $_SESSION['user_id'];
+
+			
+			if($_FILES['screenshoot']['name'] == null){
+				$new_image_name = 'default.png';
+			}else{
+				$new_image_name = $last_code.'.png';
+				$config['upload_path'] = './assets/products/';
+				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
+				$config['file_name'] = $new_image_name;
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('screenshoot')) 
+				{
+					$error = array('error' => $this->upload->display_errors());
+				} 
+				else
+				{
+					$data = array('image_metadata' => $this->upload->data());
+				}
+			}
+
+			$data_insert = array(
+				'product_code'				=> $product_code,
+				'product_name'				=> $product_name,
+				'product_brand'				=> $product_brand,
+				'product_unit'				=> $product_unit,
+				'product_category'			=> $product_category,
+				'product_supplier_tag'		=> $product_supplier_text,
+				'product_supplier_name'		=> $product_item_supplier,
+				'is_package'				=> $product_type,
+				'is_ppn'					=> $product_tax,
+				'product_min_stock'			=> $product_min_stock,
+				'product_weight'			=> $product_weight,
+				'product_location'			=> $product_location,
+				'product_desc'				=> $product_description,
+				'product_key'				=> $product_search_key,
+				'product_image'				=> $new_image_name
+			);
+
+			$this->masterdata_model->save_product($data_insert);
+
+			foreach($product_supplier as $row){
+				$insert_supplier = array(
+					'product_id'				=> $last_code,
+					'supplier_id'				=> $product_name
+				);
+				$this->masterdata_model->save_product_supplier($insert_supplier);
+			}	
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Produk Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function settingproduct(){
 		$modul = 'Product';
 		$check_auth = $this->check_auth($modul);

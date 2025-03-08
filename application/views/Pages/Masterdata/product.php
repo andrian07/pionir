@@ -202,7 +202,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       <h5 class="modal-title" id="exampleModaledit">Edit Produk</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form name="save_product_form" id="save_product_form" enctype="multipart/form-data" action="<?php echo base_url(); ?>Masterdata/save_product" method="post">
+                    <form name="edit_product_form" id="edit_product_form" enctype="multipart/form-data" action="<?php echo base_url(); ?>Masterdata/edit_product" method="post">
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-4 border-right">
@@ -410,14 +410,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-      {data: 0},
-      {data: 1},
-      {data: 2},
-      {data: 3},
-      {data: 4},
-      {data: 5},
-      {data: 6},
-      {data: 7}
+        {data: 0},
+        {data: 1},
+        {data: 2},
+        {data: 3},
+        {data: 4},
+        {data: 5},
+        {data: 6},
+        {data: 7}
       ]
     });
   });
@@ -485,19 +485,78 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   }));
 
+
+  $('#edit_product_form').on('submit',(function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    var product_name = $("#product_name_edit").val();
+    var product_category = $("#product_category_edit").val();
+    var product_brand = $("#product_brand_edit").val();
+    var product_supplier = $("#product_supplier_edit").val();
+    var product_unit = $("#product_unit_edit").val();
+    var product_supplier_text    = $('#product_supplier_edit option:selected').toArray().map(item => item.text).join();
+    formData.append('product_supplier_text_edit', product_supplier_text);
+
+
+    if(product_name == ''){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Nama Produk Harus Di Isi',
+      })
+    }else if(product_category == ''){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Kategori Harus Di Isi',
+      })
+    }else if(product_brand == ''){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Brand Harus Di Isi',
+      })
+    }else if(product_supplier == ''){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Supplier Harus Di Isi',
+      })
+    }else if(product_unit == ''){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Satuan Harus Di Isi',
+      })
+    }else{
+      $.ajax({
+        type:'POST',
+        url: $(this).attr('action'),
+        data:formData,
+        cache:false,
+        contentType: false,
+        processData: false,
+        success:function(data){          
+          //window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+          Swal.fire('Saved!', '', 'success');
+        }
+      });
+    }
+  }));
+
   /* image uplaod */
   const fileTypes = [
-  "image/apng",
-  "image/bmp",
-  "image/gif",
-  "image/jpeg",
-  "image/pjpeg",
-  "image/png",
-  "image/svg+xml",
-  "image/tiff",
-  "image/webp",
-  "image/x-icon",
-  "image/avif",
+    "image/apng",
+    "image/bmp",
+    "image/gif",
+    "image/jpeg",
+    "image/pjpeg",
+    "image/png",
+    "image/svg+xml",
+    "image/tiff",
+    "image/webp",
+    "image/x-icon",
+    "image/avif",
   ];
   function validFileType(file) {
     return fileTypes.includes(file.type);
@@ -542,45 +601,45 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 // Edit Image //
 
-let inputHidden_edit = document.querySelector("#screenshoot_edit");
-let triggerInput_edit = document.querySelector(".selectImage_edit");
-let imgArea_edit = document.querySelector(".imgArea_edit");
+  let inputHidden_edit = document.querySelector("#screenshoot_edit");
+  let triggerInput_edit = document.querySelector(".selectImage_edit");
+  let imgArea_edit = document.querySelector(".imgArea_edit");
 
-triggerInput_edit.addEventListener("click",function(){
-  inputHidden_edit.click();
-})
+  triggerInput_edit.addEventListener("click",function(){
+    inputHidden_edit.click();
+  })
 
-inputHidden_edit.addEventListener("change",function(e){
-  let image = e.target.files[0];
-  if(!validFileType(image)){
-    alert("invalid file type");
-    return;
-  }
-  if(image.size > 2097152){
-    alert("image size must be less than 2MB");
-    return;
-  }else{
-    const reader = new FileReader();
-    reader.addEventListener("load",function(){
-      const allImgs = document.querySelectorAll(".imgArea_edit img");
-      allImgs.forEach((img) => {
-        img.remove();
+  inputHidden_edit.addEventListener("change",function(e){
+    let image = e.target.files[0];
+    if(!validFileType(image)){
+      alert("invalid file type");
+      return;
+    }
+    if(image.size > 2097152){
+      alert("image size must be less than 2MB");
+      return;
+    }else{
+      const reader = new FileReader();
+      reader.addEventListener("load",function(){
+        const allImgs = document.querySelectorAll(".imgArea_edit img");
+        allImgs.forEach((img) => {
+          img.remove();
+        })
+        const imgUrl = reader.result;
+        const img = document.createElement("img");
+        img.src = imgUrl;
+        imgArea_edit.appendChild(img);
+        imgArea_edit.classList.add("active");
+        imgArea_edit.dataset.title = image.name;
       })
-      const imgUrl = reader.result;
-      const img = document.createElement("img");
-      img.src = imgUrl;
-      imgArea_edit.appendChild(img);
-      imgArea_edit.classList.add("active");
-      imgArea_edit.dataset.title = image.name;
-    })
-    reader.readAsDataURL(image);
-  }
-})
+      reader.readAsDataURL(image);
+    }
+  })
 
 // End Edit Image //
 
 
-$('#exampleModaledit').on('show.bs.modal', function (event) {
+  $('#exampleModaledit').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var id   = button.data('id')
     var name = button.data('name')
@@ -625,9 +684,9 @@ $('#exampleModaledit').on('show.bs.modal', function (event) {
     });
   })
 
-$('#reload').click(function(e){
-  e.preventDefault();
-  location.reload();
-});
+  $('#reload').click(function(e){
+    e.preventDefault();
+    location.reload();
+  });
 
 </script>
