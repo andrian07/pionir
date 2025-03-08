@@ -282,7 +282,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
                               <div class="col-md-12 p-0">
-                                <select class="form-select form-control" name="product_tax" id="product_tax_edit">
+                                <select class="form-select form-control" name="product_tax_edit" id="product_tax_edit">
                                   <option value="PPN">Barang Kena Pajak</option>
                                   <option value="NON PPN">Barang Tidak Kena Pajak</option>
                                 </select>
@@ -478,7 +478,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         contentType: false,
         processData: false,
         success:function(data){          
-          window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+         // window.location.href = "<?php echo base_url(); ?>Masterdata/product";
           Swal.fire('Saved!', '', 'success');
         }
       });
@@ -652,6 +652,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {id:id},
       success : function(data){
         if (data.code == "200"){
+          document.getElementById("active-image").innerHTML = "";
           let row = data.result[0];
           modal.find('#product_id_edit').val(id)
           modal.find('#product_code_edit').val(row.product_code)
@@ -659,8 +660,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           modal.find('#product_category_edit').val(row.category_id)
           modal.find('#product_brand_edit').val(row.brand_id)
           modal.find('#product_unit_edit').val(row.unit_id)
-          const product_supplier_tag = row.product_supplier_tag.split(",")
-          modal.find('#product_supplier_edit').val(product_supplier_tag)
+          const product_supplier_id_tag = row.product_supplier_id_tag.split(",")
+          modal.find('#product_supplier_edit').val(product_supplier_id_tag)
           modal.find('#product_item_supplier_edit').val(row.product_supplier_name)
           modal.find('#product_tax_edit').val(row.is_ppn)
           modal.find('#product_type_edit').val(row.is_package)

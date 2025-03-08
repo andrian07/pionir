@@ -403,6 +403,19 @@ class masterdata_model extends CI_Model {
         return $result;
     }
 
+    public function edit_product($data_edit, $product_id)
+    {
+        $this->db->set($data_edit);
+        $this->db->where('product_id', $product_id);
+        $this->db->update('ms_product');
+    }
+
+    public function delete_product_supplier($product_id)
+    {
+        $this->db->where('product_id ', $product_id);
+        $this->db->delete('ms_product_supplier');
+    }
+
     // end product
 }
 
