@@ -1178,6 +1178,18 @@ class Masterdata extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 
+	}	
+
+	function generateRandomString($length = 10) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[random_int(0, $charactersLength - 1)];
+		}
+
+		return $randomString;
 	}
 
 	public function save_product()
@@ -1216,7 +1228,7 @@ class Masterdata extends CI_Controller {
 			if($_FILES['screenshoot']['name'] == null){
 				$new_image_name = 'default.png';
 			}else{
-				$new_image_name = $last_code.'.png';
+				$new_image_name = $last_code.$this->generateRandomString().'.png';
 				$config['upload_path'] = './assets/products/';
 				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
 				$config['file_name'] = $new_image_name;
@@ -1299,27 +1311,26 @@ class Masterdata extends CI_Controller {
 			$user_id 					= $_SESSION['user_id'];
 			$product_supplier_id_tag 	= implode(",",$product_supplier);
 
-			print_r($screenshoot);die();
-			if($screenshoot != null){
-				if($_FILES['screenshoot_edit']['name'] == null){
-					$new_image_name = 'default.png';
-				}else{
-					$new_image_name = $last_code.'.png';
-					$config['upload_path'] = './assets/products/';
-					$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
-					$config['file_name'] = $new_image_name;
-					$this->load->library('upload', $config);
-					if (!$this->upload->do_upload('screenshoot_edit')) 
-					{
-						$error = array('error' => $this->upload->display_errors());
-					} 
-					else
-					{
-						$data = array('image_metadata' => $this->upload->data());
-					}
+
+			if($_FILES['screenshoot_edit']['name'] == null){
+				$new_image_name = 'default.png';
+			}else{
+				$new_image_name = $product_code.$this->generateRandomString().'.png';
+				$config['upload_path'] = './assets/products/';
+				$config['allowed_types'] = 'gif|jpg|png|jpeg|PNG';
+				$config['file_name'] = $new_image_name;
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('screenshoot_edit')) 
+				{
+					$error = array('error' => $this->upload->display_errors());
+					print_r($error);die();
+				} 
+				else
+				{
+					$data = array('image_metadata' => $this->upload->data());
+					$data_edit = array('product_image' => $new_image_name);
 				}
 			}
-
 
 			$data_edit = array(
 				'product_code'				=> $product_code,
@@ -1336,14 +1347,10 @@ class Masterdata extends CI_Controller {
 				'product_weight'			=> $product_weight,
 				'product_location'			=> $product_location,
 				'product_desc'				=> $product_description,
-				'product_key'				=> $product_search_key
+				'product_key'				=> $product_search_key,
+				'product_image' 			=> $new_image_name
 			);	
 
-			if($screenshoot != null){
-				$data_edit = array(
-					'product_image' => $new_image_name
-				);
-			}
 			$this->masterdata_model->edit_product($data_edit, $product_id);
 
 
