@@ -478,7 +478,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         contentType: false,
         processData: false,
         success:function(data){          
-         // window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+          window.location.href = "<?php echo base_url(); ?>Masterdata/product";
           Swal.fire('Saved!', '', 'success');
         }
       });
@@ -537,7 +537,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         contentType: false,
         processData: false,
         success:function(data){          
-          //window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+          window.location.href = "<?php echo base_url(); ?>Masterdata/product";
           Swal.fire('Saved!', '', 'success');
         }
       });
