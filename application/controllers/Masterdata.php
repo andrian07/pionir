@@ -1379,6 +1379,28 @@ class Masterdata extends CI_Controller {
 		}
 	}
 
+	public function delete_product()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$id  		= $this->input->post('id');
+			$user_id 	= $_SESSION['user_id'];
+			$this->masterdata_model->delete_product($id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Produk',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function settingproduct(){
 		$modul = 'Product';
 		$check_auth = $this->check_auth($modul);

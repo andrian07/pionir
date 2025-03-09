@@ -699,7 +699,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Masterdata/delete_ekspedisi",
+          url: "<?php echo base_url(); ?>Masterdata/delete_product",
           dataType: "json",
           data: {id:id},
           success : function(data){
