@@ -537,7 +537,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         contentType: false,
         processData: false,
         success:function(data){          
-          // /window.location.href = "<?php echo base_url(); ?>Masterdata/product";
+          window.location.href = "<?php echo base_url(); ?>Masterdata/product";
           Swal.fire('Saved!', '', 'success');
         }
       });
@@ -684,6 +684,47 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   })
+
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data Produk ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Masterdata/delete_ekspedisi",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              location.reload();
+              Swal.fire('Saved!', '', 'success'); 
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.msg,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
+  $(".delete").click(function (e) {
+    var id = $(this).attr("data-id");
+    var name = $(this).attr("data-name");
+
+  });
+
 
   $('#reload').click(function(e){
     e.preventDefault();
