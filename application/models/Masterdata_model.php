@@ -406,6 +406,7 @@ class masterdata_model extends CI_Model {
     public function get_product_by_id($product_id)
     {
         $query = $this->db->query("select * from ms_product where product_id  = '".$product_id."' and is_active = 'Y'");
+        
         $result = $query->result();
         return $result;
     }
