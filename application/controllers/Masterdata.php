@@ -1351,6 +1351,7 @@ class Masterdata extends CI_Controller {
 				'product_image' 			=> $new_image_name
 			);	
 
+
 			$this->masterdata_model->edit_product($data_edit, $product_id);
 
 
