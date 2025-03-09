@@ -1148,9 +1148,9 @@ class Masterdata extends CI_Controller {
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['product_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}else{
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn delete" data-id="'.$field['product_id'].'" data-name="AKAKO" disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
 				$url_image = base_url().'assets/products/'.$field['product_image'];
@@ -1313,7 +1313,8 @@ class Masterdata extends CI_Controller {
 
 
 			if($_FILES['screenshoot_edit']['name'] == null){
-				$new_image_name = 'default.png';
+				$get_product_by_id   = $this->masterdata_model->get_product_by_id($product_id);
+				$new_image_name 	 = $get_product_by_id[0]->product_image;
 			}else{
 				$new_image_name = $product_code.$this->generateRandomString().'.png';
 				$config['upload_path'] = './assets/products/';
@@ -1323,7 +1324,6 @@ class Masterdata extends CI_Controller {
 				if (!$this->upload->do_upload('screenshoot_edit')) 
 				{
 					$error = array('error' => $this->upload->display_errors());
-					print_r($error);die();
 				} 
 				else
 				{
@@ -1372,6 +1372,28 @@ class Masterdata extends CI_Controller {
 			$this->global_model->save($data_insert_act);
 			$msg = "Succes Input";
 			echo json_encode(['code'=>200, 'result'=>$msg]);die();
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function delete_product()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$id  		= $this->input->post('id');
+			$user_id 	= $_SESSION['user_id'];
+			$this->masterdata_model->delete_product($id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Produk',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
 			die();
 		}else{
 			$msg = "No Access";

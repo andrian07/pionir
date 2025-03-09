@@ -25,7 +25,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Satuan</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Setting Harga</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
 
@@ -36,6 +36,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Item / Barcode</label>
                               <div class="col-md-12 p-0">
+                                <input type="hidden" class="form-control input-full" id="item_id" value="<?php echo $_GET['id']; ?>" readonly>
                                 <input type="text" class="form-control input-full" id="item_code" value="BAT00075" readonly>
                               </div>
                             </div>
@@ -121,11 +122,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Disc Normal</label>
                               <div class="row">
                                 <div class="col-sm-4">
-                                  <input id="item_disc_1_percentage" name="item_disc_1_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                  <input id="item_disc_1_percentage" name="item_disc_1_percentage" type="text" class="form-control text-right" value="0">
                                 </div>
 
                                 <div class="col-sm-8">
-                                  <input id="item_disc_1" name="item_disc_1" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                  <input id="item_disc_1" name="item_disc_1" type="text" class="form-control text-right"  value="0" readonly>
                                 </div>
                               </div>
                             </div>
@@ -134,11 +135,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Disc Toko</label>
                               <div class="row">
                                 <div class="col-sm-4">
-                                  <input id="item_disc_2_percentage" name="item_disc_2_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                  <input id="item_disc_2_percentage" name="item_disc_2_percentage" type="text" class="form-control text-right" value="0">
                                 </div>
 
                                 <div class="col-sm-8">
-                                  <input id="item_disc_2" name="item_disc_2" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                  <input id="item_disc_2" name="item_disc_2" type="text" class="form-control text-right"  value="0" readonly>
                                 </div>
                               </div>
                             </div>
@@ -147,11 +148,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Disc Sales</label>
                               <div class="row">
                                 <div class="col-sm-4">
-                                  <input id="item_disc_3_percentage" name="item_disc_3_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                  <input id="item_disc_3_percentage" name="item_disc_3_percentage" type="text" class="form-control text-right" value="0">
                                 </div>
 
                                 <div class="col-sm-8">
-                                  <input id="item_disc_3" name="item_disc_3" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                  <input id="item_disc_3" name="item_disc_3" type="text" class="form-control text-right"  value="0" readonly>
                                 </div>
                               </div>
                             </div>
@@ -160,11 +161,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Disc Khusus</label>
                               <div class="row">
                                 <div class="col-sm-4">
-                                  <input id="item_disc_4_percentage" name="item_disc_4_percentage" type="text" class="form-control text-right" placeholder="0%">
+                                  <input id="item_disc_4_percentage" name="item_disc_4_percentage" type="text" class="form-control text-right" value="0">
                                 </div>
 
                                 <div class="col-sm-8">
-                                  <input id="item_disc_4" name="item_disc_4" type="text" class="form-control text-right"  placeholder="RP. 1.000.000" readonly>
+                                  <input id="item_disc_4" name="item_disc_4" type="text" class="form-control text-right"  value="0" readonly>
                                 </div>
                               </div>
                             </div>
@@ -283,95 +284,95 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     </table>
                   </div>
                 </div>
-              <?php } ?>
-              <div class="col-md-6">
-                <div class="table-responsive">
-                  <table class="table table-bordered">
-                    <tbody>
-                      <tr>
-                        <th scope="col" rowspan="2">Umum</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Toko</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Sales</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                      <tr>
-                        <th scope="col" rowspan="2">Khusus</th>
-                        <td>Margin</td>
-                        <td>Hrg.Jual</td>
-                        <td>Diskon(%)</td>
-                        <td>Diskon(Rp)</td>
-                      </tr>
-                      <tr>
-                        <td>20%</td>
-                        <td><span class="badge badge-danger">240.000</span></td>
-                        <td>10%</td>
-                        <td>216.000</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <table class="table table-head-bg-info">
-                    <thead>
-                      <tr>
-                        <th>Stock</th>
-                        <th>Qty</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Cabang Kobar</td>
-                        <td>15 Pcs</td>
-                      </tr>
-                      <tr>
-                        <td>Cabang Serdam</td>
-                        <td>2 Pcs</td>
-                      </tr>
-                      <tr>
-                        <td>Gudang Bongkar</td>
-                        <td>2 Pcs</td>
-                      </tr>
-                      <tr>
-                        <td>Gudang Retur</td>
-                        <td>1 Pcs</td>
-                      </tr>
-                    </tbody>
-                  </table>
+
+                <div class="col-md-6">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <th scope="col" rowspan="2">Umum</th>
+                          <td>Margin</td>
+                          <td>Hrg.Jual</td>
+                          <td>Diskon(%)</td>
+                          <td>Diskon(Rp)</td>
+                        </tr>
+                        <tr>
+                          <td>20%</td>
+                          <td><span class="badge badge-danger">240.000</span></td>
+                          <td>10%</td>
+                          <td>216.000</td>
+                        </tr>
+                        <tr>
+                          <th scope="col" rowspan="2">Toko</th>
+                          <td>Margin</td>
+                          <td>Hrg.Jual</td>
+                          <td>Diskon(%)</td>
+                          <td>Diskon(Rp)</td>
+                        </tr>
+                        <tr>
+                          <td>20%</td>
+                          <td><span class="badge badge-danger">240.000</span></td>
+                          <td>10%</td>
+                          <td>216.000</td>
+                        </tr>
+                        <tr>
+                          <th scope="col" rowspan="2">Sales</th>
+                          <td>Margin</td>
+                          <td>Hrg.Jual</td>
+                          <td>Diskon(%)</td>
+                          <td>Diskon(Rp)</td>
+                        </tr>
+                        <tr>
+                          <td>20%</td>
+                          <td><span class="badge badge-danger">240.000</span></td>
+                          <td>10%</td>
+                          <td>216.000</td>
+                        </tr>
+                        <tr>
+                          <th scope="col" rowspan="2">Khusus</th>
+                          <td>Margin</td>
+                          <td>Hrg.Jual</td>
+                          <td>Diskon(%)</td>
+                          <td>Diskon(Rp)</td>
+                        </tr>
+                        <tr>
+                          <td>20%</td>
+                          <td><span class="badge badge-danger">240.000</span></td>
+                          <td>10%</td>
+                          <td>216.000</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table class="table table-head-bg-info">
+                      <thead>
+                        <tr>
+                          <th>Stock</th>
+                          <th>Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Cabang Kobar</td>
+                          <td>15 Pcs</td>
+                        </tr>
+                        <tr>
+                          <td>Cabang Serdam</td>
+                          <td>2 Pcs</td>
+                        </tr>
+                        <tr>
+                          <td>Gudang Bongkar</td>
+                          <td>2 Pcs</td>
+                        </tr>
+                        <tr>
+                          <td>Gudang Retur</td>
+                          <td>1 Pcs</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-
+            <?php } ?>
           </div>
 
         </div>
@@ -454,6 +455,58 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     decimalPlaces: 0,
   });
 
+  let item_disc_1 = new AutoNumeric('#item_disc_1', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let item_disc_2 = new AutoNumeric('#item_disc_2', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+  let item_disc_3 = new AutoNumeric('#item_disc_3', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let item_disc_4 = new AutoNumeric('#item_disc_4', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  
+  let item_disc_1_percentage = new AutoNumeric('#item_disc_1_percentage', {
+    suffixText: "%",
+    decimalPlaces: 0,
+  });
+
+  let item_disc_2_percentage = new AutoNumeric('#item_disc_2_percentage', {
+    suffixText: "%",
+    decimalPlaces: 0,
+  });
+
+  let item_disc_3_percentage = new AutoNumeric('#item_disc_3_percentage', {
+    suffixText: "%",
+    decimalPlaces: 0,
+  });
+
+  let item_disc_4_percentage = new AutoNumeric('#item_disc_4_percentage', {
+    suffixText: "%",
+    decimalPlaces: 0,
+  });
+
   $('body').on('shown.bs.modal', '.modal', function() {
     $(this).find('.js-example-basic-multiple').each(function() {
       var dropdownParent = $(document.body);
@@ -470,33 +523,92 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     $('.js-example-basic-multiple').select2();
   });
 
-  $(".delete").click(function (e) {
-    swal({
-      title: "Hapus !!",
-      text: "Hapus Data!",
-      type: "warning",
-      buttons: {
-        cancel: {
-          visible: true,
-          text: "Tidak, Batal!",
-          className: "btn btn-danger",
-        },
-        confirm: {
-          text: "Ya, Hapus!",
-          className: "btn btn-success",
-        },
-      },
-    }).then((willDelete) => {
-      if (willDelete) {
-        swal("Sukses Hapus Data!", {
-          icon: "success",
-          buttons: {
-            confirm: {
-              className: "btn btn-success",
-            },
-          },
-        });
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var item_purchase_price       = $("#item_purchase_price").val();
+    var item_hpp                  = $("#item_hpp").val();
+    var item_price_1_percentage   = $("#item_price_1_percentage").val();
+    var item_price_2_percentage   = $("#item_price_2_percentage").val();
+    var item_price_3_percentage   = $("#item_price_3_percentage").val();
+    var item_price_4_percentage   = $("#item_price_4_percentage").val();
+    var item_price_1              = $("#item_price_1").val();
+    var item_price_2              = $("#item_price_2").val();
+    var item_price_3              = $("#item_price_3").val();
+    var item_price_4              = $("#item_price_4").val();
+    var item_disc_1_percentage    = $("#item_disc_1_percentage").val();
+    var item_disc_2_percentage    = $("#item_disc_2_percentage").val();
+    var item_disc_3_percentage    = $("#item_disc_3_percentage").val();
+    var item_disc_4_percentage    = $("#item_disc_4_percentage").val();
+    var item_disc_1               = $("#item_disc_1").val();
+    var item_disc_2               = $("#item_disc_2").val();
+    var item_disc_3               = $("#item_disc_3").val();
+    var item_disc_4               = $("#item_disc_4").val();
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/save_salesman",
+      dataType: "json",
+      data: {salesman_name:salesman_name, salesman_phone:salesman_phone, salesman_address:salesman_address, salesman_branch:salesman_branch},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/salesman";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
       }
     });
   });
+
+
+  $('#myModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var modal = $(this)
+    modal.find('.modal-title').text('Edit Harga')
+    var id = $("#item_id").val();
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/get_edit_product",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          let row = data.result[0];
+          modal.find('#item_code').val(row.product_code)
+          item_purchase_price.set(row.product_price)
+          item_hpp.set(row.product_hpp)
+
+          item_price_1.set(row.product_sell_price_1)
+          item_price_2.set(row.product_sell_price_2)
+          item_price_3.set(row.product_sell_price_3)
+          item_price_4.set(row.product_sell_price_4)
+          item_price_1_percentage.set(row.product_sell_percentage_1)
+          item_price_2_percentage.set(row.product_sell_percentage_2)
+          item_price_3_percentage.set(row.product_sell_percentage_3)
+          item_price_4_percentage.set(row.product_sell_percentage_4)
+          item_disc_1_percentage.set(row.product_disc_1_percentage)
+          item_disc_2_percentage.set(row.product_disc_2_percentage)
+          item_disc_3_percentage.set(row.product_disc_3_percentage)
+          item_disc_4_percentage.set(row.product_disc_4_percentage)
+          item_disc_1.set(row.product_disc_1_price)
+          item_disc_2.set(row.product_disc_2_price)
+          item_disc_3.set(row.product_disc_3_price)
+          item_disc_4.set(row.product_disc_4_price)
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+
+  })
+
 </script>

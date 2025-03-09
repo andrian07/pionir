@@ -403,6 +403,14 @@ class masterdata_model extends CI_Model {
         return $result;
     }
 
+    public function get_product_by_id($product_id)
+    {
+        $query = $this->db->query("select * from ms_product where product_id  = '".$product_id."' and is_active = 'Y'");
+
+        $result = $query->result();
+        return $result;
+    }
+
     public function edit_product($data_edit, $product_id)
     {
         $this->db->set($data_edit);
@@ -414,6 +422,13 @@ class masterdata_model extends CI_Model {
     {
         $this->db->where('product_id ', $product_id);
         $this->db->delete('ms_product_supplier');
+    }
+
+    public function delete_product($id)
+    {
+        $this->db->set('is_active', 'N');
+        $this->db->where('product_id ', $id);
+        $this->db->update('ms_product');
     }
 
     // end product
