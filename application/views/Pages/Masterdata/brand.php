@@ -20,9 +20,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="btnreload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <?php if($data['check_auth'][0]->add == 'N'){ ?>
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled="disabled"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled="disabled" data-backdrop="static" data-keyboard="false"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <?php }else{ ?>
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-backdrop="static" data-keyboard="false"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button>
                 <?php } ?>
 
                 <!-- Tambah Brand -->
@@ -233,6 +233,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     location.reload();
   });
 
+ 
 
 
   $('#exampleModaledit').on('show.bs.modal', function (event) {

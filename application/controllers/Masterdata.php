@@ -1379,6 +1379,61 @@ class Masterdata extends CI_Controller {
 		}
 	}
 
+
+	public function edit_price()
+	{
+		$modul = 'Product';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$product_id 					= $this->input->post('item_id');
+			$item_purchase_price_val 		= $this->input->post('item_purchase_price_val');
+			$item_hpp_val 					= $this->input->post('item_hpp_val');
+			$item_price_1_percentage_val 	= $this->input->post('item_price_1_percentage_val');
+			$item_price_2_percentage_val 	= $this->input->post('item_price_2_percentage_val');
+			$item_price_3_percentage_val	= $this->input->post('item_price_3_percentage_val');
+			$item_price_4_percentage_val 	= $this->input->post('item_price_4_percentage_val');
+			$item_price_1_val      			= $this->input->post('item_price_1_val');
+			$item_price_2_val  				= $this->input->post('item_price_2_val');
+			$item_price_3_val 				= $this->input->post('item_price_3_val');
+			$item_price_4_val 				= $this->input->post('item_price_4_val');
+			$disc_percentage_val 			= $this->input->post('disc_percentage_val');
+			$start_disc_val					= $this->input->post('start_disc_val');
+			$end_disc_val					= $this->input->post('end_disc_val');
+			$user_id 						= $_SESSION['user_id'];
+
+			$data_edit = array(
+				'product_price'				=> $item_purchase_price_val,
+				'product_hpp'				=> $item_hpp_val,
+				'product_sell_percentage_1'	=> $item_price_1_percentage_val,
+				'product_sell_percentage_2'	=> $item_price_2_percentage_val,
+				'product_sell_percentage_3'	=> $item_price_3_percentage_val,
+				'product_sell_percentage_4'	=> $item_price_4_percentage_val,
+				'product_sell_price_1'		=> $item_price_1_val,
+				'product_sell_price_2'		=> $item_price_2_val,
+				'product_sell_price_3'		=> $item_price_3_val,
+				'product_sell_price_4'		=> $item_price_4_val,
+				'product_disc_percentage'	=> $disc_percentage_val,
+				'product_disc_start_date'	=> $start_disc_val,
+				'product_disc_end_date'		=> $end_disc_val,
+			);	
+
+
+			$this->masterdata_model->edit_product($data_edit, $product_id);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Update Harga Produk Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function delete_product()
 	{
 		$modul = 'Product';

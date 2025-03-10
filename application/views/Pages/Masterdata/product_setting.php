@@ -32,12 +32,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       <div class="modal-body">
                         <div class="row">
                           <div class="col-md-4 border-right">
-                            <h4 style="text-align:center;">Detail Item</h4>
+                            <h4 style="text-align:center;">Detail Produk</h4>
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Item / Barcode</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk / Barcode</label>
                               <div class="col-md-12 p-0">
                                 <input type="hidden" class="form-control input-full" id="item_id" value="<?php echo $_GET['id']; ?>" readonly>
-                                <input type="text" class="form-control input-full" id="item_code" value="BAT00075" readonly>
+                                <input type="text" class="form-control input-full" id="item_code" readonly>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Nama Produk</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="item_name" readonly>
                               </div>
                             </div>
 
@@ -116,69 +123,41 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </div>
 
                           <div class="col-md-4 border-right">
-                            <h4 style="text-align:center;">Disc</h4>
+                            <h4 style="text-align:center;">Disc Seasonal</h4>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Disc Normal</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Disc</label>
                               <div class="row">
-                                <div class="col-sm-4">
-                                  <input id="item_disc_1_percentage" name="item_disc_1_percentage" type="text" class="form-control text-right" value="0">
-                                </div>
-
-                                <div class="col-sm-8">
-                                  <input id="item_disc_1" name="item_disc_1" type="text" class="form-control text-right"  value="0" readonly>
+                                <div class="col-sm-12">
+                                  <input id="disc_percentage" name="disc_percentage" type="text" class="form-control text-right" value="0">
                                 </div>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Disc Toko</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Dari Tanggal: </label>
                               <div class="row">
-                                <div class="col-sm-4">
-                                  <input id="item_disc_2_percentage" name="item_disc_2_percentage" type="text" class="form-control text-right" value="0">
-                                </div>
-
-                                <div class="col-sm-8">
-                                  <input id="item_disc_2" name="item_disc_2" type="text" class="form-control text-right"  value="0" readonly>
+                                <div class="col-sm-12">
+                                  <input id="start_disc" name="start_disc" type="date" class="form-control text-right" value="0">
                                 </div>
                               </div>
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Disc Sales</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Sampai Tanggal: </label>
                               <div class="row">
-                                <div class="col-sm-4">
-                                  <input id="item_disc_3_percentage" name="item_disc_3_percentage" type="text" class="form-control text-right" value="0">
-                                </div>
-
-                                <div class="col-sm-8">
-                                  <input id="item_disc_3" name="item_disc_3" type="text" class="form-control text-right"  value="0" readonly>
+                                <div class="col-sm-12">
+                                  <input id="end_disc" name="end_disc" type="date" class="form-control text-right" value="0">
                                 </div>
                               </div>
                             </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Disc Khusus</label>
-                              <div class="row">
-                                <div class="col-sm-4">
-                                  <input id="item_disc_4_percentage" name="item_disc_4_percentage" type="text" class="form-control text-right" value="0">
-                                </div>
-
-                                <div class="col-sm-8">
-                                  <input id="item_disc_4" name="item_disc_4" type="text" class="form-control text-right"  value="0" readonly>
-                                </div>
-                              </div>
-                            </div>
-
                           </div>
-
                         </div>
-
                       </div>
 
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <button type="button" class="btn btn-primary" id="btnsave"><i class="fas fa-save"></i> Simpan</button>
                       </div>
                     </div>
                   </div>
@@ -285,10 +264,15 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
 
+
                 <div class="col-md-6">
                   <div class="table-responsive">
                     <table class="table table-bordered">
                       <tbody>
+                        <tr>
+                          <th>Disc Periode:</th>
+                          <td colspan="5"><?php $date_start = date_create($row->product_disc_start_date); echo date_format($date_start,"d-m-Y"); ?> / <?php $date_end = date_create($row->product_disc_end_date); echo date_format($date_end,"d-m-Y"); ?></td>
+                        </tr>
                         <tr>
                           <th scope="col" rowspan="2">Umum</th>
                           <td>Margin</td>
@@ -297,10 +281,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td>Diskon(Rp)</td>
                         </tr>
                         <tr>
-                          <td>20%</td>
-                          <td><span class="badge badge-danger">240.000</span></td>
-                          <td>10%</td>
-                          <td>216.000</td>
+                          <td><?php echo $row->product_sell_percentage_1; ?> %</td>
+                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_1); ?></span></td>
+                          <td><?php echo $row->product_disc_percentage; ?> %</td>
+                          <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_1 - ($row->product_sell_price_1 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
                         <tr>
                           <th scope="col" rowspan="2">Toko</th>
@@ -310,10 +294,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td>Diskon(Rp)</td>
                         </tr>
                         <tr>
-                          <td>20%</td>
-                          <td><span class="badge badge-danger">240.000</span></td>
-                          <td>10%</td>
-                          <td>216.000</td>
+                          <td><?php echo $row->product_sell_percentage_2; ?> %</td>
+                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_2); ?></span></td>
+                          <td><?php echo $row->product_disc_percentage; ?> %</td>
+                          <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_2 - ($row->product_sell_price_2 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
                         <tr>
                           <th scope="col" rowspan="2">Sales</th>
@@ -323,10 +307,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td>Diskon(Rp)</td>
                         </tr>
                         <tr>
-                          <td>20%</td>
-                          <td><span class="badge badge-danger">240.000</span></td>
-                          <td>10%</td>
-                          <td>216.000</td>
+                          <td><?php echo $row->product_sell_percentage_3; ?> %</td>
+                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_3); ?></span></td>
+                          <td><?php echo $row->product_disc_percentage; ?> %</td>
+                          <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_3 - ($row->product_sell_price_3 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
                         <tr>
                           <th scope="col" rowspan="2">Khusus</th>
@@ -336,10 +320,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td>Diskon(Rp)</td>
                         </tr>
                         <tr>
-                          <td>20%</td>
-                          <td><span class="badge badge-danger">240.000</span></td>
-                          <td>10%</td>
-                          <td>216.000</td>
+                          <td><?php echo $row->product_sell_percentage_4; ?> %</td>
+                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_4); ?></span></td>
+                          <td><?php echo $row->product_disc_percentage; ?> %</td>
+                          <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_4 - ($row->product_sell_price_4 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
                       </tbody>
                     </table>
@@ -455,57 +439,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     decimalPlaces: 0,
   });
 
-  let item_disc_1 = new AutoNumeric('#item_disc_1', {
-    currencySymbol : 'Rp. ',
-    decimalCharacter : ',',
-    decimalPlaces: 0,
-    decimalPlacesShownOnFocus: 0,
-    digitGroupSeparator : '.',
-  });
 
-  let item_disc_2 = new AutoNumeric('#item_disc_2', {
-    currencySymbol : 'Rp. ',
-    decimalCharacter : ',',
-    decimalPlaces: 0,
-    decimalPlacesShownOnFocus: 0,
-    digitGroupSeparator : '.',
-  });
-  let item_disc_3 = new AutoNumeric('#item_disc_3', {
-    currencySymbol : 'Rp. ',
-    decimalCharacter : ',',
-    decimalPlaces: 0,
-    decimalPlacesShownOnFocus: 0,
-    digitGroupSeparator : '.',
-  });
-
-  let item_disc_4 = new AutoNumeric('#item_disc_4', {
-    currencySymbol : 'Rp. ',
-    decimalCharacter : ',',
-    decimalPlaces: 0,
-    decimalPlacesShownOnFocus: 0,
-    digitGroupSeparator : '.',
-  });
 
   
-  let item_disc_1_percentage = new AutoNumeric('#item_disc_1_percentage', {
+  let disc_percentage = new AutoNumeric('#disc_percentage', {
     suffixText: "%",
     decimalPlaces: 0,
   });
 
-  let item_disc_2_percentage = new AutoNumeric('#item_disc_2_percentage', {
-    suffixText: "%",
-    decimalPlaces: 0,
-  });
-
-  let item_disc_3_percentage = new AutoNumeric('#item_disc_3_percentage', {
-    suffixText: "%",
-    decimalPlaces: 0,
-  });
-
-  let item_disc_4_percentage = new AutoNumeric('#item_disc_4_percentage', {
-    suffixText: "%",
-    decimalPlaces: 0,
-  });
 
   $('body').on('shown.bs.modal', '.modal', function() {
     $(this).find('.js-example-basic-multiple').each(function() {
@@ -515,7 +456,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-      });
+    });
     });
   });
 
@@ -525,33 +466,29 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var item_purchase_price       = $("#item_purchase_price").val();
-    var item_hpp                  = $("#item_hpp").val();
-    var item_price_1_percentage   = $("#item_price_1_percentage").val();
-    var item_price_2_percentage   = $("#item_price_2_percentage").val();
-    var item_price_3_percentage   = $("#item_price_3_percentage").val();
-    var item_price_4_percentage   = $("#item_price_4_percentage").val();
-    var item_price_1              = $("#item_price_1").val();
-    var item_price_2              = $("#item_price_2").val();
-    var item_price_3              = $("#item_price_3").val();
-    var item_price_4              = $("#item_price_4").val();
-    var item_disc_1_percentage    = $("#item_disc_1_percentage").val();
-    var item_disc_2_percentage    = $("#item_disc_2_percentage").val();
-    var item_disc_3_percentage    = $("#item_disc_3_percentage").val();
-    var item_disc_4_percentage    = $("#item_disc_4_percentage").val();
-    var item_disc_1               = $("#item_disc_1").val();
-    var item_disc_2               = $("#item_disc_2").val();
-    var item_disc_3               = $("#item_disc_3").val();
-    var item_disc_4               = $("#item_disc_4").val();
+    var item_id                       = $("#item_id").val();
+    var item_purchase_price_val       = item_purchase_price.get();
+    var item_hpp_val                  = item_hpp.get();
+    var item_price_1_percentage_val   = item_price_1_percentage.get();
+    var item_price_2_percentage_val   = item_price_2_percentage.get();
+    var item_price_3_percentage_val   = item_price_3_percentage.get();
+    var item_price_4_percentage_val   = item_price_4_percentage.get();
+    var item_price_1_val              = item_price_1.get();
+    var item_price_2_val              = item_price_2.get();
+    var item_price_3_val              = item_price_3.get();
+    var item_price_4_val              = item_price_4.get();
+    var disc_percentage_val           = disc_percentage.get();
+    var start_disc_val                = $("#start_disc").val();
+    var end_disc_val                  = $("#end_disc").val();
 
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/save_salesman",
+      url: "<?php echo base_url(); ?>Masterdata/edit_price",
       dataType: "json",
-      data: {salesman_name:salesman_name, salesman_phone:salesman_phone, salesman_address:salesman_address, salesman_branch:salesman_branch},
+      data: {item_id:item_id, item_purchase_price_val:item_purchase_price_val, item_hpp_val:item_hpp_val, item_price_1_percentage_val:item_price_1_percentage_val, item_price_2_percentage_val:item_price_2_percentage_val, item_price_3_percentage_val:item_price_3_percentage_val, item_price_4_percentage_val:item_price_4_percentage_val, item_price_1_val:item_price_1_val, item_price_2_val:item_price_2_val, item_price_3_val:item_price_3_val, item_price_4_val:item_price_4_val, disc_percentage_val:disc_percentage_val, start_disc_val:start_disc_val, end_disc_val:end_disc_val},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/salesman";
+          window.location.href = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+item_id;
           Swal.fire('Saved!', '', 'success');
         } else {
           Swal.fire({
@@ -580,9 +517,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         if (data.code == "200"){
           let row = data.result[0];
           modal.find('#item_code').val(row.product_code)
+          modal.find('#item_name').val(row.product_name)
           item_purchase_price.set(row.product_price)
           item_hpp.set(row.product_hpp)
-
           item_price_1.set(row.product_sell_price_1)
           item_price_2.set(row.product_sell_price_2)
           item_price_3.set(row.product_sell_price_3)
@@ -591,14 +528,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           item_price_2_percentage.set(row.product_sell_percentage_2)
           item_price_3_percentage.set(row.product_sell_percentage_3)
           item_price_4_percentage.set(row.product_sell_percentage_4)
-          item_disc_1_percentage.set(row.product_disc_1_percentage)
-          item_disc_2_percentage.set(row.product_disc_2_percentage)
-          item_disc_3_percentage.set(row.product_disc_3_percentage)
-          item_disc_4_percentage.set(row.product_disc_4_percentage)
-          item_disc_1.set(row.product_disc_1_price)
-          item_disc_2.set(row.product_disc_2_price)
-          item_disc_3.set(row.product_disc_3_price)
-          item_disc_4.set(row.product_disc_4_price)
+          disc_percentage.set(row.product_disc_percentage)
+          modal.find('#start_disc').val(row.product_disc_start_date)
+          modal.find('#end_disc').val(row.product_disc_end_date)
         } else {
           Swal.fire({
             icon: 'error',
@@ -608,7 +540,83 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         }
       }
     });
-
   })
+
+  $('#item_price_1_percentage').on('input', function (event) {
+    let item_price_1_percentage_cal = parseInt(item_price_1_percentage.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_1_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_1_percentage_cal / 100));
+    item_price_1.set(item_price_1_cal);
+  })
+
+  $('#item_price_2_percentage').on('input', function (event) {
+    let item_price_2_percentage_cal = parseInt(item_price_2_percentage.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_2_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_2_percentage_cal / 100));
+    item_price_2.set(item_price_2_cal);
+  })
+
+  $('#item_price_3_percentage').on('input', function (event) {
+    let item_price_3_percentage_cal = parseInt(item_price_3_percentage.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_3_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_3_percentage_cal / 100));
+    item_price_3.set(item_price_3_cal);
+  })
+
+  $('#item_price_4_percentage').on('input', function (event) {
+    let item_price_4_percentage_cal = parseInt(item_price_4_percentage.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_4_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_4_percentage_cal / 100));
+    item_price_4.set(item_price_4_cal);
+  })
+
+
+
+  $('#item_price_1').on('input', function (event) {
+    let item_price_1_cal = parseInt(item_price_1.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_1_percentage_cal = (item_price_1_cal / item_purchase_price_cal * 100) - 100;
+    item_price_1_percentage.set(item_price_1_percentage_cal);
+  })
+
+  $('#item_price_2').on('input', function (event) {
+    let item_price_2_cal = parseInt(item_price_2.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_2_percentage_cal = (item_price_2_cal / item_purchase_price_cal * 100) - 100;
+    item_price_2_percentage.set(item_price_2_percentage_cal);
+  })
+
+  $('#item_price_3').on('input', function (event) {
+    let item_price_3_cal = parseInt(item_price_3.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_3_percentage_cal = (item_price_3_cal / item_purchase_price_cal * 100) - 100;
+    item_price_3_percentage.set(item_price_3_percentage_cal);
+  })
+
+  $('#item_price_4').on('input', function (event) {
+    let item_price_4_cal = parseInt(item_price_4.get());
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_4_percentage_cal = (item_price_4_cal / item_purchase_price_cal * 100) - 100;
+    item_price_4_percentage.set(item_price_4_percentage_cal);
+  })
+
+   $('#item_purchase_price').on('input', function (event) {
+    let item_purchase_price_cal = parseInt(item_purchase_price.get());
+    let item_price_1_percentage_cal = parseInt(item_price_1_percentage.get());
+    let item_price_2_percentage_cal = parseInt(item_price_2_percentage.get());
+    let item_price_3_percentage_cal = parseInt(item_price_3_percentage.get());
+    let item_price_4_percentage_cal = parseInt(item_price_4_percentage.get());
+    let item_price_1_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_1_percentage_cal / 100));
+    let item_price_2_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_2_percentage_cal / 100));
+    let item_price_3_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_3_percentage_cal / 100));
+    let item_price_4_cal = (item_purchase_price_cal + (item_purchase_price_cal * item_price_4_percentage_cal / 100));
+    item_price_1.set(item_price_1_cal);
+    item_price_2.set(item_price_1_cal);
+    item_price_3.set(item_price_1_cal);
+    item_price_4.set(item_price_1_cal);
+  })
+  
+
+
 
 </script>

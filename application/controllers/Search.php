@@ -9,6 +9,8 @@ class Search extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
+
+		$this->load->model('masterdata_model');
 		$this->load->helper(array('url', 'html'));
 	}
 
@@ -16,8 +18,16 @@ class Search extends CI_Controller {
 		$this->load->view('Pages/Search/search');
 	}
 
+	public function product_list(){
+		$searchin_key = $this->input->post('key');
+		$product_list = $this->masterdata_model->search_product_list($searchin_key)->result_array();
+		echo json_encode($product_list);
+	}
+
 	public function detailsearch(){
-		$this->load->view('Pages/Search/detailsearch');
+		$id = $this->input->get('id');
+		$get_product_by_id['get_product_by_id'] = $this->masterdata_model->settingproduct($id);
+		$this->load->view('Pages/Search/detailsearch', $get_product_by_id);
 	}
 
 }

@@ -22,157 +22,192 @@
 </head>
 <body>
   <div class="card" style="padding:0;">
-      <div class="d-flex align-items-left">
-        <div>
-          <h3 class="fw-bold mb-3">Detail Product</h3>
-        </div>
-        <div class="ms-md-auto py-2 py-md-0">
-        </div>
+    <div class="d-flex align-items-left">
+      <div>
+        <h3 class="fw-bold mb-3">Detail Product</h3>
       </div>
-      <div class="card-body" style="padding:0;">
+      <div class="ms-md-auto py-2 py-md-0">
+      </div>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <?php foreach($get_product_by_id as $row){ ?>
         <div class="row">
           <div class="col-md-5">
             <div class="table-responsive">
               <table class="table table-bordered">
-                <tbody>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Kode:</th>
-                    <td colspan="4">BAT00075</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Nama Produk:</th>
-                    <td colspan="4">Baterai Dynamax A2</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Kategori:</th>
-                    <td colspan="4">Baterai</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Brand:</th>
-                    <td colspan="4">ACR</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Supplier:</th>
-                    <td colspan="4"><span class="badge badge-primary multi-badge">Jaya ACR</span><span class="badge badge-primary multi-badge">CV Arta</span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Item Supplier:</th>
-                    <td colspan="4">Jaya Anugrah Elektronik: ACR 1225 Mk1</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Paket:</th>
-                    <td colspan="4"><span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">PPN:</th>
-                    <td colspan="4"><span class="badge badge-success"><i class="fas fa-check-circle"></i></span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Satuan:</th>
-                    <td colspan="4">PCS</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Min Stock:</th>
-                    <td colspan="4">10</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Berat:</th>
-                    <td colspan="4">1 kg</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">HPP:</th>
-                    <td colspan="4">180.000</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Harga Beli:</th>
-                    <td colspan="4">2.000.000</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
-                    <td colspan="4">Di Bawah</td>
-                  </tr>
-                  <tr>
-                    <th scope="col" class="productinfo-text-right">Spesifikasi:</th>
-                    <td colspan="4">Middle Ada corong / Frequenzy 52Hz - 10.6</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="col-md-1">
-          </div>
-          <div class="col-md-6">
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <tbody>
-                  <tr>
-                    <th scope="col" rowspan="2">Umum</th>
-                    <td>Hrg.Jual</td>
-                    <td>Diskon</td>
-                  </tr>
-                  <tr>
-                    <td><span class="badge badge-danger">240.000</span></td>
-                    <td><span class="badge badge-warning">216.000</span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" rowspan="2">Toko</th>
-                    <td>Hrg.Jual</td>
-                    <td>Diskon</td>
-                  </tr>
-                  <tr>
-                    <td><span class="badge badge-danger">240.000</span></td>
-                    <td><span class="badge badge-warning">216.000</span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" rowspan="2">Sales</th>
-                    <td>Hrg.Jual</td>
-                    <td>Diskon</td>
-                  </tr>
-                  <tr>
-                    <td><span class="badge badge-danger">240.000</span></td>
-                    <td><span class="badge badge-warning">216.000</span></td>
-                  </tr>
-                  <tr>
-                    <th scope="col" rowspan="2">Khusus</th>
-                    <td>Hrg.Jual</td>
-                    <td>Diskon</td>
-                  </tr>
-                  <tr>
-                    <td><span class="badge badge-danger">240.000</span></td>
-                    <td><span class="badge badge-warning">216.000</span></td>
-                  </tr>
-                </tbody>
-              </table>
+               <tbody>
 
-              <table class="table table-bordered">
-                <tbody>
-                  <tr>
-                    <th>Cabang</th>
-                    <th>Qty</th>
-                  </tr>
-                  <tr>
-                    <td>Cabang Kobar</td>
-                    <td>15 Pcs</td>
-                  </tr>
-                  <tr>
-                    <td>Cabang Serdam</td>
-                    <td>2 Pcs</td>
-                  </tr>
-                  <tr>
-                    <td>Gudang Bongkar</td>
-                    <td>2 Pcs</td>
-                  </tr>
-                  <tr>
-                    <td>Gudang Retur</td>
-                    <td>1 Pcs</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Kode:</th>
+                  <td colspan="4"><?php echo $row->product_code; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Nama Produk:</th>
+                  <td colspan="4"><?php echo $row->product_name; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Kategori:</th>
+                  <td colspan="4"><?php echo $row->category_name; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Brand:</th>
+                  <td colspan="4"><?php echo $row->brand_name; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Supplier:</th>
+                  <td colspan="4"><?php foreach(explode(",",$row->product_supplier_tag) as $rows){ echo '<span class="badge badge-primary " style="margin-right:1px;">'.$rows.'</span>';} ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Item Supplier:</th>
+                  <td colspan="4"><?php echo $row->product_supplier_name; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Paket:</th>
+                  <td colspan="4">
+                    <?php if($row->is_package == 'Y'){
+                      echo '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+                    }else{
+                      echo '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+                    } ?>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">PPN:</th>
+                  <td colspan="4">
+                    <?php if($row->is_ppn == 'PPN'){
+                      echo '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+                    }else{
+                      echo '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+                    } ?>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Satuan:</th>
+                  <td colspan="4"><?php echo $row->unit_name; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Min Stock:</th>
+                  <td colspan="4"><?php echo $row->product_min_stock; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Berat:</th>
+                  <td colspan="4"><?php echo $row->product_weight; ?> Gram</td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">HPP:</th>
+                  <td colspan="4"><?php echo number_format($row->product_hpp); ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Harga Beli:</th>
+                  <td colspan="4"><?php echo number_format($row->product_price); ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
+                  <td colspan="4"><?php echo $row->product_location; ?></td>
+                </tr>
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Catatan:</th>
+                  <td colspan="4"><?php echo $row->product_desc; ?></td>
+                </tr>
+
+              </tbody>
+            </table>
           </div>
         </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-6">
+          <div class="table-responsive">
+           <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <th>Disc Periode:</th>
+                <td colspan="5"><?php $date_start = date_create($row->product_disc_start_date); echo date_format($date_start,"d-m-Y"); ?> / <?php $date_end = date_create($row->product_disc_end_date); echo date_format($date_end,"d-m-Y"); ?></td>
+              </tr>
+              <tr>
+                <th scope="col" rowspan="2">Umum</th>
+                <td>Margin</td>
+                <td>Hrg.Jual</td>
+                <td>Diskon(%)</td>
+                <td>Diskon(Rp)</td>
+              </tr>
+              <tr>
+                <td><?php echo $row->product_sell_percentage_1; ?> %</td>
+                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_1); ?></span></td>
+                <td><?php echo $row->product_disc_percentage; ?> %</td>
+                <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_1 - ($row->product_sell_price_1 * $row->product_disc_percentage / 100)); ?></span></td>
+              </tr>
+              <tr>
+                <th scope="col" rowspan="2">Toko</th>
+                <td>Margin</td>
+                <td>Hrg.Jual</td>
+                <td>Diskon(%)</td>
+                <td>Diskon(Rp)</td>
+              </tr>
+              <tr>
+                <td><?php echo $row->product_sell_percentage_2; ?> %</td>
+                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_2); ?></span></td>
+                <td><?php echo $row->product_disc_percentage; ?> %</td>
+                <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_2 - ($row->product_sell_price_2 * $row->product_disc_percentage / 100)); ?></span></td>
+              </tr>
+              <tr>
+                <th scope="col" rowspan="2">Sales</th>
+                <td>Margin</td>
+                <td>Hrg.Jual</td>
+                <td>Diskon(%)</td>
+                <td>Diskon(Rp)</td>
+              </tr>
+              <tr>
+                <td><?php echo $row->product_sell_percentage_3; ?> %</td>
+                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_3); ?></span></td>
+                <td><?php echo $row->product_disc_percentage; ?> %</td>
+                <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_3 - ($row->product_sell_price_3 * $row->product_disc_percentage / 100)); ?></span></td>
+              </tr>
+              <tr>
+                <th scope="col" rowspan="2">Khusus</th>
+                <td>Margin</td>
+                <td>Hrg.Jual</td>
+                <td>Diskon(%)</td>
+                <td>Diskon(Rp)</td>
+              </tr>
+              <tr>
+                <td><?php echo $row->product_sell_percentage_4; ?> %</td>
+                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_4); ?></span></td>
+                <td><?php echo $row->product_disc_percentage; ?> %</td>
+                <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_4 - ($row->product_sell_price_4 * $row->product_disc_percentage / 100)); ?></span></td>
+              </tr>
+            </tbody>
+          </table>
+        <?php } ?>  
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>Cabang</th>
+              <th>Qty</th>
+            </tr>
+            <tr>
+              <td>Cabang Kobar</td>
+              <td>15 Pcs</td>
+            </tr>
+            <tr>
+              <td>Cabang Serdam</td>
+              <td>2 Pcs</td>
+            </tr>
+            <tr>
+              <td>Gudang Bongkar</td>
+              <td>2 Pcs</td>
+            </tr>
+            <tr>
+              <td>Gudang Retur</td>
+              <td>1 Pcs</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    </div>
   </div>
+</div>
+</div>
 </body>
 
 </html>  
