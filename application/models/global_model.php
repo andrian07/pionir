@@ -13,6 +13,13 @@ class global_model extends CI_Model {
         return $result;
     }
 
+    public function search_product($keyword)
+    {
+        $query = $this->db->query("select * from ms_product where product_name like '%".$keyword."%' or product_code like '%".$keyword."%' and is_active = 'Y'" );
+        $result = $query->result();
+        return $result;
+    }
+
 }
 
 ?>

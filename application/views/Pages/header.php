@@ -22,10 +22,10 @@
       google: { families: ["Public Sans:300,400,500,600,700"] },
       custom: {
         families: [
-        "Font Awesome 5 Solid",
-        "Font Awesome 5 Regular",
-        "Font Awesome 5 Brands",
-        "simple-line-icons",
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
         ],
         urls: ["<?php echo base_url(); ?>dist/css/fonts.min.css"],
       },
@@ -42,6 +42,7 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/style.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/fancy.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/select2.css" />
+  <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/jquery-ui.css">
 
 </head>
 <body>
@@ -385,82 +386,82 @@
             </div>
           </div>
         </li>
-    </ul>
-  </li>
-  <li class="nav-item topbar-icon dropdown hidden-caret">
-    <a
-    class="nav-link"
-    data-bs-toggle="dropdown"
-    href="#"
-    aria-expanded="false"
-    >
-    <i class="fas fa-layer-group"></i>
-  </a>
-  <div class="dropdown-menu quick-actions animated fadeIn">
-    <div class="quick-actions-header">
-      <span class="title mb-1">Quick Actions</span>
-      <span class="subtitle op-7">Shortcuts</span>
-    </div>
-    <div class="quick-actions-scroll scrollbar-outer">
-      <div class="quick-actions-items">
-        <div class="row m-0">
+      </ul>
+    </li>
+    <li class="nav-item topbar-icon dropdown hidden-caret">
+      <a
+      class="nav-link"
+      data-bs-toggle="dropdown"
+      href="#"
+      aria-expanded="false"
+      >
+      <i class="fas fa-layer-group"></i>
+    </a>
+    <div class="dropdown-menu quick-actions animated fadeIn">
+      <div class="quick-actions-header">
+        <span class="title mb-1">Quick Actions</span>
+        <span class="subtitle op-7">Shortcuts</span>
+      </div>
+      <div class="quick-actions-scroll scrollbar-outer">
+        <div class="quick-actions-items">
+          <div class="row m-0">
+            <a class="col-6 col-md-4 p-0" href="#">
+              <div class="quick-actions-item">
+                <div class="avatar-item bg-danger rounded-circle">
+                  <i class="far fa-calendar-alt"></i>
+                </div>
+                <span class="text">Calendar</span>
+              </div>
+            </a>
+            <a class="col-6 col-md-4 p-0" href="#">
+              <div class="quick-actions-item">
+                <div
+                class="avatar-item bg-warning rounded-circle"
+                >
+                <i class="fas fa-map"></i>
+              </div>
+              <span class="text">Maps</span>
+            </div>
+          </a>
           <a class="col-6 col-md-4 p-0" href="#">
             <div class="quick-actions-item">
-              <div class="avatar-item bg-danger rounded-circle">
-                <i class="far fa-calendar-alt"></i>
+              <div class="avatar-item bg-info rounded-circle">
+                <i class="fas fa-file-excel"></i>
               </div>
-              <span class="text">Calendar</span>
+              <span class="text">Reports</span>
             </div>
           </a>
           <a class="col-6 col-md-4 p-0" href="#">
             <div class="quick-actions-item">
               <div
-              class="avatar-item bg-warning rounded-circle"
+              class="avatar-item bg-success rounded-circle"
               >
-              <i class="fas fa-map"></i>
+              <i class="fas fa-envelope"></i>
             </div>
-            <span class="text">Maps</span>
-          </div>
-        </a>
-        <a class="col-6 col-md-4 p-0" href="#">
-          <div class="quick-actions-item">
-            <div class="avatar-item bg-info rounded-circle">
-              <i class="fas fa-file-excel"></i>
-            </div>
-            <span class="text">Reports</span>
+            <span class="text">Emails</span>
           </div>
         </a>
         <a class="col-6 col-md-4 p-0" href="#">
           <div class="quick-actions-item">
             <div
-            class="avatar-item bg-success rounded-circle"
+            class="avatar-item bg-primary rounded-circle"
             >
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-file-invoice-dollar"></i>
           </div>
-          <span class="text">Emails</span>
+          <span class="text">Invoice</span>
         </div>
       </a>
       <a class="col-6 col-md-4 p-0" href="#">
         <div class="quick-actions-item">
           <div
-          class="avatar-item bg-primary rounded-circle"
+          class="avatar-item bg-secondary rounded-circle"
           >
-          <i class="fas fa-file-invoice-dollar"></i>
+          <i class="fas fa-credit-card"></i>
         </div>
-        <span class="text">Invoice</span>
+        <span class="text">Payments</span>
       </div>
     </a>
-    <a class="col-6 col-md-4 p-0" href="#">
-      <div class="quick-actions-item">
-        <div
-        class="avatar-item bg-secondary rounded-circle"
-        >
-        <i class="fas fa-credit-card"></i>
-      </div>
-      <span class="text">Payments</span>
-    </div>
-  </a>
-</div>
+  </div>
 </div>
 </div>
 </div>

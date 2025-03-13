@@ -242,3 +242,25 @@
 .table-product{
   font-size: 15px
 }
+
+.border-right {
+    border-right: 1px solid #dee2e6 !important;
+}
+
+.border-primary {
+    border-color: #007bff !important;
+}
+
+.ui-widget-content {
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+    color: #333 !important;
+}
+
+.ui-autocomplete {
+    z-index: 215000000 !important;
+}
+
+.ui-menu .ui-menu-item {
+    padding: 8px;
+}
