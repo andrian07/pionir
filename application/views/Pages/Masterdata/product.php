@@ -397,6 +397,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>  
 
+
   $(document ).ready(function() {
     $('#product-list').DataTable( {
       serverSide: true,

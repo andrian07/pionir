@@ -2,7 +2,7 @@
 
 class purchase_model extends CI_Model {
 
-    public function product_list($search, $length, $start)
+    public function submission_list($search, $length, $start)
     {
         $this->db->select('*');
         $this->db->from('ms_product');
@@ -21,7 +21,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function product_list_count($search)
+    public function submission_list_count($search)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('ms_product');

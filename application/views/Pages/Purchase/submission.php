@@ -42,7 +42,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Tanggal</label>
                               <div class="col-md-12 p-0">
-                                <input type="date" class="form-control input-full" id="submission_date" value="<?php echo date("Y-m-d"); ?>">
+                                <input type="date" class="form-control input-full" id="submission_date" value="<?php echo date("Y-m-d"); ?>" readonly>
                               </div>
                             </div>
 
@@ -123,7 +123,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                     <div class="modal-footer">
                       <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                      <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                      <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                     </div>
                   </div>
                 </div>
@@ -175,7 +175,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
-  
+
   $(document ).ready(function() {
     $('#product-list').DataTable( {
       serverSide: true,
@@ -257,5 +257,36 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $('#submission_product_id').val(ui.item.id);
       $('#submission_product_code').val(ui.item.product_code);
     },
+  });
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var submission_date           = $("#submission_date").val();
+    var submission_warehouse      = $("#submission_warehouse").val();
+    var submission_salesman       = $("#submission_salesman").val();
+    var submission_desc           = $("#submission_desc").val();
+    var submission_status         = $("#submission_status").val();
+    var submission_product_id     = $("#submission_product_id").val();
+    var submission_product_code   = $("#submission_product_code").val();
+    var submission_qty            = $("#submission_qty").val();
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/save_brand",
+      dataType: "json",
+      data: {submission_date:submission_date, submission_warehouse:submission_warehouse, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_status:submission_status, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
+          Swal.fire('Saved!', '', 'success');
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
   });
 </script>
