@@ -54,115 +54,146 @@
 
 
 
-$('#basic-datatables').DataTable({
-  order: [[0, 'asc']],
-})
+  new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
 
-$('body').on('shown.bs.modal', '.modal', function() {
-  $(this).find('.js-example-basic-multiple').each(function() {
-    var dropdownParent = $(document.body);
-    if ($(this).parents('#myModal').length !== 0)
-      dropdownParent = $("#myModal");
-    $(this).select2({
-      dropdownParent: $("#myModal")
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+
+
+  $('#basic-datatables').DataTable({
+    order: [[0, 'asc']],
+  })
+
+  $('body').on('shown.bs.modal', '.modal', function() {
+    $(this).find('.js-example-basic-multiple').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#myModal').length !== 0)
+        dropdownParent = $("#myModal");
+      $(this).select2({
+        dropdownParent: $("#myModal")
       // ...
+      });
     });
   });
-});
 
 
- $('body').on('shown.bs.modal', '.editmodal', function() {
-  $(this).find('.js-example-basic-multiple').each(function() {
-    var dropdownParent = $(document.body);
-    if ($(this).parents('#exampleModaledit').length !== 0)
-      dropdownParent = $("#exampleModaledit");
-    $(this).select2({
-      dropdownParent: $("#exampleModaledit")
+  $('body').on('shown.bs.modal', '.editmodal', function() {
+    $(this).find('.js-example-basic-multiple').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#exampleModaledit').length !== 0)
+        dropdownParent = $("#exampleModaledit");
+      $(this).select2({
+        dropdownParent: $("#exampleModaledit")
       // ...
+      });
     });
   });
-});
 
 
 
- $(document).ready(function() {
-  $('.js-example-basic-multiple').select2();
-});
+  $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+  });
 
- $('body').on('shown.bs.modal', '.modal', function() {
-  $(this).find('.js-example-basic-single').each(function() {
-    var dropdownParent = $(document.body);
-    if ($(this).parents('#myModal').length !== 0)
-      dropdownParent = $("#myModal");
-    $(this).select2({
-      dropdownParent: $("#myModal")
+  $('body').on('shown.bs.modal', '.modal', function() {
+    $(this).find('.js-example-basic-single').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#myModal').length !== 0)
+        dropdownParent = $("#myModal");
+      $(this).select2({
+        dropdownParent: $("#myModal")
       // ...
+      });
     });
   });
-});
 
- $('body').on('shown.bs.modal', '.editmodal', function() {
-  $(this).find('.js-example-basic-single').each(function() {
-    var dropdownParent = $(document.body);
-    if ($(this).parents('#exampleModaledit').length !== 0)
-      dropdownParent = $("#exampleModaledit");
-    $(this).select2({
-      dropdownParent: $("#exampleModaledit")
+  $('body').on('shown.bs.modal', '.editmodal', function() {
+    $(this).find('.js-example-basic-single').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#exampleModaledit').length !== 0)
+        dropdownParent = $("#exampleModaledit");
+      $(this).select2({
+        dropdownParent: $("#exampleModaledit")
       // ...
+      });
     });
   });
-});
 
- $(document).ready(function() {
-  $('.js-example-basic-single').select2();
-});
+  $('#reload').click(function(e){
+    e.preventDefault();
+    location.reload();
+  });
 
- Fancybox.bind("[data-fancybox]", {
- }) 
+  $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+  });
 
- var pieChart = document.getElementById("pieChart").getContext("2d");
- var myPieChart = new Chart(pieChart, {
-  type: "pie",
-  data: {
-    datasets: [
-      {
-        data: [50, 35, 15],
-        backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
-        borderWidth: 0,
+  Fancybox.bind("[data-fancybox]", {
+  }) 
+
+  var pieChart = document.getElementById("pieChart").getContext("2d");
+  var myPieChart = new Chart(pieChart, {
+    type: "pie",
+    data: {
+      datasets: [
+        {
+          data: [50, 35, 15],
+          backgroundColor: ["#1d7af3", "#f3545d", "#fdaf4b"],
+          borderWidth: 0,
+        },
+      ],
+      labels: ["Pendapatan", "Pengeluaran", "Hpp"],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+        position: "bottom",
+        labels: {
+          fontColor: "rgb(154, 154, 154)",
+          fontSize: 11,
+          usePointStyle: true,
+          padding: 20,
+        },
       },
-    ],
-    labels: ["Pendapatan", "Pengeluaran", "Hpp"],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-      position: "bottom",
-      labels: {
-        fontColor: "rgb(154, 154, 154)",
-        fontSize: 11,
-        usePointStyle: true,
-        padding: 20,
+      pieceLabel: {
+        render: "percentage",
+        fontColor: "white",
+        fontSize: 14,
+      },
+      tooltips: false,
+      layout: {
+        padding: {
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 20,
+        },
       },
     },
-    pieceLabel: {
-      render: "percentage",
-      fontColor: "white",
-      fontSize: 14,
-    },
-    tooltips: false,
-    layout: {
-      padding: {
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: 20,
+  });
+
+  function notif_success(title, message, state)
+  {
+    var placementFrom = $("#notify_placement_from option:selected").val();
+    var placementAlign = $("#notify_placement_align option:selected").val();
+    var state = state;
+    var style = state;
+    var content = {};
+
+    content.message = message;
+    content.title = title;
+    content.icon = "fa fa-bell";
+
+    $.notify(content, {
+      type: state,
+      placement: {
+        from: placementFrom,
+        align: placementAlign,
       },
-    },
-  },
-});
-
-
+      time: 1000,
+      delay: 25,
+    });
+  }
 
 </script>
 </body>

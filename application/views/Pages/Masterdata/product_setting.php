@@ -166,7 +166,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
           </div>
           <div class="card-body">
-            <?php foreach ($settingproduct as $row) { ?>
+            <?php foreach ($data['settingproduct'] as $row) { ?>
               <table width="100%" class="mb-3">
                 <tbody>
                   <tr>
@@ -330,27 +330,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <table class="table table-head-bg-info">
                       <thead>
                         <tr>
-                          <th>Stock</th>
+                          <th>Cabang</th>
                           <th>Qty</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Cabang Kobar</td>
-                          <td>15 Pcs</td>
-                        </tr>
-                        <tr>
-                          <td>Cabang Serdam</td>
-                          <td>2 Pcs</td>
-                        </tr>
-                        <tr>
-                          <td>Gudang Bongkar</td>
-                          <td>2 Pcs</td>
-                        </tr>
-                        <tr>
-                          <td>Gudang Retur</td>
-                          <td>1 Pcs</td>
-                        </tr>
+                        <?php foreach($data['product_stock'] as $rows){ ?>
+                          <tr>
+                            <td><?php echo $rows->warehouse_name; ?></td>
+                            <td><?php echo $rows->stock; ?> <?php echo $rows->unit_name; ?></td>
+                          </tr>
+                        <?php } ?>
                       </tbody>
                     </table>
                   </div>
@@ -456,7 +446,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $(this).select2({
         dropdownParent: $("#myModal")
       // ...
-    });
+      });
     });
   });
 
@@ -600,7 +590,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     item_price_4_percentage.set(item_price_4_percentage_cal);
   })
 
-   $('#item_purchase_price').on('input', function (event) {
+  $('#item_purchase_price').on('input', function (event) {
     let item_purchase_price_cal = parseInt(item_purchase_price.get());
     let item_price_1_percentage_cal = parseInt(item_price_1_percentage.get());
     let item_price_2_percentage_cal = parseInt(item_price_2_percentage.get());

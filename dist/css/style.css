@@ -264,3 +264,37 @@
 .ui-menu .ui-menu-item {
     padding: 8px;
 }
+
+p.detail-company {
+    line-height: 21px;
+}
+
+.detail-invoice{
+  font-weight: 700;
+}
+
+.col-detail-inv{
+  text-align: center;
+}
+
+.header-detail{
+  border-bottom: 1px solid #ebecec !important;
+}
+
+.title-detail-middle{
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.col-md-4.detail-right p{
+    line-height: 9px;
+}
+
+.header-detail{
+  font-size: 0.8em;
+  padding-left: 8px;
+}
+
+.fancybox__content{
+  padding: 0 !important;
+}

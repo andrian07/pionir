@@ -277,8 +277,5 @@ $('#btnsave').click(function(e){
     modal.find('#supplier_address_edit').val(supplier_address_edit)
   })
 
-  $('#reload').click(function(e){
-    e.preventDefault();
-    location.reload();
-  });
+
 </script>

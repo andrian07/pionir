@@ -19,11 +19,29 @@ class Purchase extends CI_Controller {
 		
 	}
 
-	public function submission(){
-		$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
-		$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
-		$data['data'] = array_merge($warehouse_list, $salesman_list);
-		$this->load->view('Pages/Purchase/submission', $data);
+	private function check_auth($modul){
+		if(isset($_SESSION['user_name']) == null){
+			redirect('Dashboard', 'refresh');
+		}else{
+			$user_role_id = $_SESSION['user_role_id'];
+			$check_access = $this->global_model->check_access($user_role_id, $modul);
+			return($check_access);
+		}
+	}
+
+	public function submission()
+	{
+		$modul = 'Submission';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list);
+			$this->load->view('Pages/Purchase/submission', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
 	public function search_product()
@@ -66,43 +84,48 @@ class Purchase extends CI_Controller {
 			$no = $_POST['start'];
 			foreach ($list as $field) {
 
-				if($field['is_ppn'] == 'PPN'){
-					$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				if($field['submission_status'] == 'Success'){
+					$submission_status = '<span class="badge badge-success">Success</span>';
+				}else if($field['submission_status'] == 'Pending'){
+					$submission_status = '<span class="badge badge-primary multi-badge">Pending</span>';
 				}else{
-					$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+					$submission_status = '<span class="badge badge-danger multi-badge">Cancel</span>';
 				}
 
-				if($field['is_package'] == 'Y'){
-					$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'Purchase/detailsubmission?id='.$field['submission_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['submission_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+					$detail = '<a href="'.base_url().'Purchase/detailsubmission?id='.$field['submission_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['product_id'].'" data-name="'.$field['product_name'].'"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn btnprice" onclick="setprice('.$field['product_id'].')""><i class="fas fa-cog sizing-fa"></i></button> ';
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['submission_id'].'" data-name="'.$field['submission_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
 				}else{
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-cog sizing-fa"></i></button> ';
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['product_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}else{
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
-				$url_image = base_url().'assets/products/'.$field['product_image'];
+				$date = date_create($field['submission_date']); 
+
 				$no++;
 				$row = array();
-				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
-				$row[] = $field['brand_name'];
-				$row[] = $field['category_name'];
-				$row[] = $field['product_supplier_tag'];
-				$row[] = $product_package;
-				$row[] = $prodcut_ppn;
-				$row[] = '<img src="'.$url_image.'" width="50%">';
-				$row[] = $edit.$delete;
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['submission_qty'].' '.$field['unit_name'];
+				$row[] 	= $field['submission_invoice'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['submission_desc'];
+				$row[] 	= $submission_status;
+				$row[] 	= $field['submission_text'];
+				$row[] 	= $detail.$edit.$delete;
 				$data[] = $row;
 			}
+
 			$output = array(
 				"draw" => $_POST['draw'],
 				"recordsTotal" => $total_row,
@@ -116,6 +139,153 @@ class Purchase extends CI_Controller {
 		}
 
 	}
+
+	public function detailsubmission()
+	{
+		$modul = 'Submission';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id = $this->input->get('id');
+			$submission_by_id['submission_by_id'] = $this->purchase_model->submission_by_id($id); 
+			$this->load->view('Pages/Purchase/detailsubmission', $submission_by_id);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function delete_submission()
+	{
+		$modul = 'Submission';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$submission_id  = $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->purchase_model->delete_submission($submission_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Hapus Master Brand',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function save_submission()
+	{
+		$modul = 'Submission';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$submission_date 				= $this->input->post('submission_date');
+			$submission_warehouse_name 		= $this->input->post('submission_warehouse_name');
+			$submission_warehouse 			= $this->input->post('submission_warehouse');
+			$submission_salesman 			= $this->input->post('submission_salesman');
+			$submission_text 				= $this->input->post('submission_text');
+			$submission_desc 				= $this->input->post('submission_desc');
+			$submission_product_id 			= $this->input->post('submission_product_id');
+			$submission_product_code 		= $this->input->post('submission_product_code');
+			$submission_qty 				= $this->input->post('submission_qty');
+			$user_id 						= $_SESSION['user_id'];
+
+			$maxCode = $this->purchase_model->last_submission_inv();
+			$inv_code = 'PJ/'.$submission_product_code.'/'.$submission_warehouse_name.'/'.date("d/m/Y").'/';
+			if ($maxCode == NULL) {
+				$last_code = $inv_code.'000001';
+			} else {
+				$maxCode   = $maxCode[0]->submission_invoice;
+				$last_code = substr($maxCode, -6);
+				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
+			}
+
+			$data_insert = array(
+				'submission_invoice'		=> $last_code,
+				'submission_product_id'		=> $submission_product_id,
+				'submission_product_code'	=> $submission_product_code,
+				'submission_date'			=> $submission_date,
+				'submission_warehouse'		=> $submission_warehouse,
+				'submission_salesman'		=> $submission_salesman,
+				'submission_qty'			=> $submission_qty,
+				'submission_desc'			=> $submission_desc,
+				'submission_text'			=> $submission_text,
+				'created_by'				=> $user_id,
+			);	
+
+			$this->purchase_model->insert_submission($data_insert);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Pengajuan Baru',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+
+	public function edit_submission()
+	{
+		$modul = 'Submission';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$submission_id 					= $this->input->post('submission_id');
+			$submission_inv 				= $this->input->post('submission_inv');
+			$submission_date 				= $this->input->post('submission_date');
+			$submission_warehouse_name 		= $this->input->post('submission_warehouse_name');
+			$submission_warehouse 			= $this->input->post('submission_warehouse');
+			$submission_salesman 			= $this->input->post('submission_salesman');
+			$submission_text 				= $this->input->post('submission_text');
+			$submission_desc 				= $this->input->post('submission_desc');
+			$submission_product_id 			= $this->input->post('submission_product_id');
+			$submission_product_code 		= $this->input->post('submission_product_code');
+			$submission_qty 				= $this->input->post('submission_qty');
+			$user_id 						= $_SESSION['user_id'];
+
+			$data_edit = array(
+				'submission_product_id'		=> $submission_product_id,
+				'submission_product_code'	=> $submission_product_code,
+				'submission_date'			=> $submission_date,
+				'submission_warehouse'		=> $submission_warehouse,
+				'submission_salesman'		=> $submission_salesman,
+				'submission_qty'			=> $submission_qty,
+				'submission_desc'			=> $submission_desc,
+				'submission_text'			=> $submission_text,
+				'created_by'				=> $user_id,
+			);	
+
+			$check_status_submission = $this->purchase_model->submission_by_id($submission_id);
+			if($check_status_submission[0]->submission_status == 'Cancel'){
+				$msg = "Data Yang Sudah Di Cancel Tidak Bisa Di Edit";
+				echo json_encode(['code'=>0, 'result'=>$msg]);
+			}else{
+				$this->purchase_model->edit_submission($data_edit, $submission_id);
+				$data_insert_act = array(
+					'activity_table_desc'	       => 'Edit Pengajuan '.$submission_inv,
+					'activity_table_user'	       => $user_id,
+				);
+				$this->global_model->save($data_insert_act);
+				$msg = "Succes Input";
+				echo json_encode(['code'=>200, 'result'=>$msg]);
+			}
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function submission_by_id()
+	{
+		$id = $this->input->post('id');
+		$submission_by_id = $this->purchase_model->submission_by_id($id); 
+		echo json_encode(['code'=>200, 'result'=>$submission_by_id]);
+	} 
 
 }
 

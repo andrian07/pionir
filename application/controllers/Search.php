@@ -27,7 +27,9 @@ class Search extends CI_Controller {
 	public function detailsearch(){
 		$id = $this->input->get('id');
 		$get_product_by_id['get_product_by_id'] = $this->masterdata_model->settingproduct($id);
-		$this->load->view('Pages/Search/detailsearch', $get_product_by_id);
+		$product_stock['product_stock'] = $this->masterdata_model->product_stock($id);
+		$data['data'] = array_merge($get_product_by_id, $product_stock);
+		$this->load->view('Pages/Search/detailsearch', $data);
 	}
 
 }

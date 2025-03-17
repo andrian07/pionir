@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="card-body" style="padding:0;">
-      <?php foreach($get_product_by_id as $row){ ?>
+      <?php foreach($data['get_product_by_id'] as $row){ ?>
         <div class="row">
           <div class="col-md-5">
             <div class="table-responsive">
@@ -185,22 +185,12 @@
               <th>Cabang</th>
               <th>Qty</th>
             </tr>
-            <tr>
-              <td>Cabang Kobar</td>
-              <td>15 Pcs</td>
-            </tr>
-            <tr>
-              <td>Cabang Serdam</td>
-              <td>2 Pcs</td>
-            </tr>
-            <tr>
-              <td>Gudang Bongkar</td>
-              <td>2 Pcs</td>
-            </tr>
-            <tr>
-              <td>Gudang Retur</td>
-              <td>1 Pcs</td>
-            </tr>
+            <?php foreach($data['product_stock'] as $rows){ ?>
+              <tr>
+                <td><?php echo $rows->warehouse_name; ?></td>
+                <td><?php echo $rows->stock; ?> <?php echo $rows->unit_name; ?></td>
+              </tr>
+            <?php } ?>
           </tbody>
         </table>
       </div>

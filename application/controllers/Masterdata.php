@@ -1262,7 +1262,15 @@ class Masterdata extends CI_Controller {
 				'product_image'				=> $new_image_name
 			);
 
-			$this->masterdata_model->save_product($data_insert);
+			$insert = $this->masterdata_model->save_product($data_insert);
+
+			$data_insert_master_stock = array(
+				'product_id'				=> $insert,
+				'warehouse_id'				=> 1,
+				'stock'						=> 0
+			);
+
+			$this->masterdata_model->save_product_stock($data_insert_master_stock);
 
 			foreach($product_supplier as $row){
 				$insert_supplier = array(
@@ -1462,7 +1470,9 @@ class Masterdata extends CI_Controller {
 		if($check_auth[0]->edit == 'Y'){
 			$id = $this->input->get('id');
 			$settingproduct['settingproduct'] = $this->masterdata_model->settingproduct($id);
-			$this->load->view('Pages/Masterdata/product_setting', $settingproduct);
+			$product_stock['product_stock'] = $this->masterdata_model->product_stock($id);
+			$data['data'] = array_merge($settingproduct, $product_stock);
+			$this->load->view('Pages/Masterdata/product_setting', $data);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();

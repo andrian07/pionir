@@ -324,7 +324,16 @@ class masterdata_model extends CI_Model {
 
     public function save_product($data_insert)
     {
+        $this->db->trans_start();
         $this->db->insert('ms_product', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+    public function save_product_stock($data_insert_master_stock)
+    {
+        $this->db->insert('ms_product_stock', $data_insert_master_stock);
     }
 
     public function save_product_supplier($insert_supplier)
@@ -396,9 +405,16 @@ class masterdata_model extends CI_Model {
         return $result;
     }
 
+    public function product_stock($id)
+    {
+        $query = $this->db->query("select * from ms_product_stock a, ms_warehouse b, ms_product c, ms_unit d where a.warehouse_id = b.warehouse_id and a.product_id = c.product_id and c.product_unit = d.unit_id and a.product_id = '".$id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function settingproduct($id)
     {
-        $query = $this->db->query("select * from ms_product a, ms_brand b, ms_unit c, ms_category d where a.product_brand = b.brand_id and a.product_unit = c.unit_id and a.product_category = d.category_id and product_id  = '".$id."' and a.is_active = 'Y'");
+        $query = $this->db->query("select * from ms_product a, ms_brand b, ms_unit c, ms_category d where a.product_brand = b.brand_id and a.product_unit = c.unit_id and a.product_category = d.category_id and a.product_id  = '".$id."' and a.is_active = 'Y'");
         $result = $query->result();
         return $result;
     }
