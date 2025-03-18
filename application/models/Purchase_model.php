@@ -24,12 +24,13 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id');
+        $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('submission.submission_invoice like "%'.$search.'%"');
             $this->db->or_where('submission.submission_desc like "%'.$search.'%"');
         }
-        $this->db->order_by('created_at', 'desc');
+        $this->db->order_by('submission.created_at', 'desc');
         $this->db->limit($length);
         $this->db->offset($start);
         $query = $this->db->get();
@@ -41,9 +42,10 @@ class purchase_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('submission');
         $this->db->join('ms_product', 'submission.submission_product_id = ms_product.product_id');
-         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id');
+        $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('submission.submission_invoice like "%'.$search.'%"');
@@ -72,6 +74,13 @@ class purchase_model extends CI_Model {
         $this->db->set('submission_status', 'Cancel');
         $this->db->where('submission_id ', $submission_id);
         $this->db->update('submission');
+    }
+
+    public function get_current_stock($submission_product_id)
+    {
+         $query = $this->db->query("select * from ms_product a, ms_product_stock b where a.product_id = b.product_id and product_id = '".$submission_product_id."'");
+        $result = $query->result();
+        return $result;
     }
     // end submission
 

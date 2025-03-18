@@ -29,6 +29,7 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	// submission
 	public function submission()
 	{
 		$modul = 'Submission';
@@ -115,10 +116,12 @@ class Purchase extends CI_Controller {
 
 				$no++;
 				$row = array();
-				$row[] 	= $field['product_name'];
-				$row[] 	= $field['submission_qty'].' '.$field['unit_name'];
 				$row[] 	= $field['submission_invoice'];
 				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['user_name'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['submission_qty'].' '.$field['unit_name'];
+				$row[] 	= '';
 				$row[] 	= $field['submission_desc'];
 				$row[] 	= $submission_status;
 				$row[] 	= $field['submission_text'];
@@ -201,6 +204,8 @@ class Purchase extends CI_Controller {
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
+
+			$get_current_stock = $this->purchase_model->get_current_stock($submission_product_id);
 
 			$data_insert = array(
 				'submission_invoice'		=> $last_code,
@@ -287,6 +292,19 @@ class Purchase extends CI_Controller {
 		echo json_encode(['code'=>200, 'result'=>$submission_by_id]);
 	} 
 
+	// end submission
+
+
+
+	// pruchase order
+
+	public function purchase_order()
+	{
+		$modul = 'PO';
+		$this->load->view('Pages/Purchase/purchaseorder');
+	}
+
+	// end purchase order
 }
 
 ?>

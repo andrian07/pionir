@@ -179,6 +179,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                   <option value="Urgent">Urgent</option>
                                   <option value="New">New</option> 
                                   <option value="Restock">Restock</option> 
+                                  <option value="Stock On Hand">Stock On Hand</option>
+                                  <option value="Current Stock">Current Stock</option>
                                 </select>
                               </div>
                             </div>
@@ -223,14 +225,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>Nama Item</th>
-                  <th>Qty</th>
                   <th>No Pengajuan</th>
                   <th>Tgl. Pengajuan</th>
+                  <th>Diajukan</th>
+                  <th>Nama Produk</th>
+                  <th>Qty</th>
+                  <th>Tipe Stok</th>
                   <th>Keterangan</th>
                   <th>Status</th>
-                  <th>Catatan</th>
-                  <th>Diajukan</th>
+                  <th>Catatan Admin</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -276,7 +280,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8},
+        {data: 9}
       ]
     });
   }
