@@ -407,6 +407,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
         <script>
 
+
+          new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
+          new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+          
           $(".delete").click(function (e) {
             var id = $(this).attr("data-id");
             var name = $(this).attr("data-name");

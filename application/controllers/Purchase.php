@@ -121,7 +121,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['user_name'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['submission_qty'].' '.$field['unit_name'];
-				$row[] 	= '';
+				$row[] 	= $field['last_stock'];
 				$row[] 	= $field['submission_desc'];
 				$row[] 	= $submission_status;
 				$row[] 	= $field['submission_text'];
@@ -206,6 +206,7 @@ class Purchase extends CI_Controller {
 			}
 
 			$get_current_stock = $this->purchase_model->get_current_stock($submission_product_id);
+			$last_stock = $get_current_stock[0]->total_last_stock;
 
 			$data_insert = array(
 				'submission_invoice'		=> $last_code,
@@ -215,6 +216,7 @@ class Purchase extends CI_Controller {
 				'submission_warehouse'		=> $submission_warehouse,
 				'submission_salesman'		=> $submission_salesman,
 				'submission_qty'			=> $submission_qty,
+				'last_stock'				=> $last_stock,
 				'submission_desc'			=> $submission_desc,
 				'submission_text'			=> $submission_text,
 				'created_by'				=> $user_id,
@@ -298,10 +300,119 @@ class Purchase extends CI_Controller {
 
 	// pruchase order
 
-	public function purchase_order()
+	public function po()
 	{
 		$modul = 'PO';
-		$this->load->view('Pages/Purchase/purchaseorder');
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$this->load->view('Pages/Purchase/purchaseorder', $supplier_list);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function po_list()
+	{
+		
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->purchase_model->po_list($search, $length, $start)->result_array();
+			$count_list = $this->purchase_model->po_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($field['hd_po_tax'] == 'Y'){
+					$tax = '<span class="badge badge-success">BKP</span>';
+				}else{
+					$tax = '<span class="badge badge-danger">NON BKP</span>';
+				}
+
+				if($field['hd_po_status'] == 'Pending'){
+					$hd_po_status = '<span class="badge badge-primary">Pending</span>';
+				}else if($field['hd_po_status'] == 'Success'){
+					$hd_po_status = '<span class="badge badge-success">Selesai</span>';
+				}else{
+					$hd_po_status = '<span class="badge badge-danger">Batal</span>';
+				}
+
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id '].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_po_id '].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}else{
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_po_id'].'" data-name="'.$field['hd_po_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$date = date_create($field['hd_po_date']); 
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['hd_po_invoice'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['product_name'];
+				$row[] 	= $tax;
+				$row[] 	= $field['supplier_name'];
+				$row[] 	= 'Rp. '.number_format($field['dt_purchase_price']);
+				$row[] 	= 'Rp. '.number_format($field['hd_po_grand_total']);
+				$row[] 	= $hd_po_status;
+				$row[] 	= $field['hd_po_status_delivery'];
+				$row[] 	= $detail.$edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+
+	}
+
+	public function addpo()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$data['data'] = array_merge($supplier_list, $ekspedisi_list, $payment_list, $warehouse_list);
+			$this->load->view('Pages/Purchase/purchaseorderadd', $data);
+			//echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
 	// end purchase order

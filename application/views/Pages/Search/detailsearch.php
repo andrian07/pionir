@@ -182,7 +182,7 @@
         <table class="table table-bordered">
           <tbody>
             <tr>
-              <th>Cabang</th>
+              <th>Cabang / Gudang</th>
               <th>Qty</th>
             </tr>
             <?php foreach($data['product_stock'] as $rows){ ?>

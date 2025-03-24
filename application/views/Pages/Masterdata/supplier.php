@@ -175,7 +175,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
 
 <script>
-$('#btnsave').click(function(e){
+
+
+  new bootstrap.Modal(document.getElementById('exampleModal'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+  
+  $('#btnsave').click(function(e){
     e.preventDefault();
     var supplier_name     = $("#supplier_name").val();
     var supplier_telp     = $("#supplier_telp").val();

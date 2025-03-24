@@ -330,7 +330,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <table class="table table-head-bg-info">
                       <thead>
                         <tr>
-                          <th>Cabang</th>
+                          <th>Cabang / Gudang</th>
                           <th>Qty</th>
                         </tr>
                       </thead>
@@ -363,6 +363,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+
+  new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+  
   let item_purchase_price = new AutoNumeric('#item_purchase_price', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',

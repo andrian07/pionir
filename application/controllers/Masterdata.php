@@ -1494,6 +1494,12 @@ class Masterdata extends CI_Controller {
 	}
 
 	//end product
+
+
+	// payment type
+
+
+	// End payment type
 }	
 
 ?>

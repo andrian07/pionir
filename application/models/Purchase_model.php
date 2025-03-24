@@ -78,11 +78,59 @@ class purchase_model extends CI_Model {
 
     public function get_current_stock($submission_product_id)
     {
-         $query = $this->db->query("select * from ms_product a, ms_product_stock b where a.product_id = b.product_id and product_id = '".$submission_product_id."'");
+        $query = $this->db->query("select sum(stock) as total_last_stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and a.product_id = '".$submission_product_id."'");
         $result = $query->result();
         return $result;
     }
     // end submission
+
+    // start po
+
+
+    public function po_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_po');
+        $this->db->join('dt_po', 'hd_po.hd_po_id  = dt_po.hd_po_id ');
+        $this->db->join('ms_product', 'dt_po.dt_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_warehouse', 'hd_po.hd_po_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_user', 'hd_po.created_by = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('hd_po.hd_po_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('hd_po.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function po_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_po');
+        $this->db->join('dt_po', 'hd_po.hd_po_id  = dt_po.hd_po_id ');
+        $this->db->join('ms_product', 'dt_po.dt_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_warehouse', 'hd_po.hd_po_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_user', 'hd_po.created_by = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('hd_po.hd_po_invoice like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    // end po
 
 }
 

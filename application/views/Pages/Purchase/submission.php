@@ -230,7 +230,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Diajukan</th>
                   <th>Nama Produk</th>
                   <th>Qty</th>
-                  <th>Tipe Stok</th>
+                  <th>Stock On Hand</th>
                   <th>Keterangan</th>
                   <th>Status</th>
                   <th>Catatan Admin</th>

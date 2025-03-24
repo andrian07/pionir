@@ -140,6 +140,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+  
+  new bootstrap.Modal(document.getElementById('exampleModal'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
 
   $('#btnsave').click(function(e){
     e.preventDefault();

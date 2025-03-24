@@ -466,6 +466,18 @@ class masterdata_model extends CI_Model {
         return $query;
     }
     // end search product //
+
+
+    // payment type
+
+
+    public function payment_list()
+    {
+        $query = $this->db->query("select * from ms_payment where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+    // end payment type
 }
 
 ?>

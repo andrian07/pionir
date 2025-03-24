@@ -398,6 +398,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 <script>  
 
 
+  new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+  
   $(document ).ready(function() {
     $('#product-list').DataTable( {
       serverSide: true,

@@ -186,12 +186,16 @@
 }
 
 .select2-container .select2-selection--single {
-  height: 35px !important;
+  height: 40px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 38px !important;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   color: #444;
-  line-height: 35px !important;
+  line-height: 39px !important;
 }
 
 .top-border{
@@ -244,29 +248,29 @@
 }
 
 .border-right {
-    border-right: 1px solid #dee2e6 !important;
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .border-primary {
-    border-color: #007bff !important;
+  border-color: #007bff !important;
 }
 
 .ui-widget-content {
-    border: 1px solid #ddd !important;
-    background: #fff !important;
-    color: #333 !important;
+  border: 1px solid #ddd !important;
+  background: #fff !important;
+  color: #333 !important;
 }
 
 .ui-autocomplete {
-    z-index: 215000000 !important;
+  z-index: 215000000 !important;
 }
 
 .ui-menu .ui-menu-item {
-    padding: 8px;
+  padding: 8px;
 }
 
 p.detail-company {
-    line-height: 21px;
+  line-height: 21px;
 }
 
 .detail-invoice{
@@ -287,7 +291,7 @@ p.detail-company {
 }
 
 .col-md-4.detail-right p{
-    line-height: 9px;
+  line-height: 9px;
 }
 
 .header-detail{
@@ -297,4 +301,8 @@ p.detail-company {
 
 .fancybox__content{
   padding: 0 !important;
+}
+
+.text-right{
+  text-align: right;
 }

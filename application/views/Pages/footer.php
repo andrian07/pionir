@@ -54,9 +54,6 @@
 
 
 
-  new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
-
-  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
 
 
   $('#basic-datatables').DataTable({
