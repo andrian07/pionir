@@ -113,9 +113,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <input id="item_id" name="item_id" type="hidden" value="">
               <div class="col-md-3">
                 <label>No Pengajuan:</label>
-                <select id="nosubmission" name="nosubmission" class="form-control select2-hidden-accessible" data-select2-id="nosubmission" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-nosubmission-container"><span class="select2-selection__rendered" id="select2-nosubmission-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">-- Pilih No Pengajuan --</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <select id="submission_inv" name="submission_inv" class="form-control select2-hidden-accessible" data-select2-id="nosubmission" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-nosubmission-container"><span class="select2-selection__rendered" id="select2-nosubmission-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">-- Pilih No Pengajuan --</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
                 <input id="submission_id" type="hidden" name="submission_id">
-                <input id="submission_inv" type="hidden" name="submission_inv">
               </div>
 
               <div class="col-sm-4">
@@ -210,7 +209,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                 <div class="form-group">
 
-                  <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right"><i class="fas fa-plus"></i></button>
+                  <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right btn-add-temp"><i class="fas fa-plus"></i></button>
 
                 </div>
 
@@ -220,20 +219,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <div class="table-responsive">
               <table
-              id="po-list"
+              id="temp=po-list"
               class="display table table-striped table-hover"
               >
               <thead>
                 <tr>
-                  <th>No PO</th>
-                  <th>Tgl. PO</th>
-                  <th>Nama Produk</th>
-                  <th>Golongan</th>
-                  <th>Supplier</th>
-                  <th>Harga</th>
-                  <th>Total Harga</th>
-                  <th>Status</th>
-                  <th>Status Pengiriman</th>
+                  <th>No Pengajuan</th>
+                  <th>SKU</th>
+                  <th>Porduk</th>
+                  <th>Satuan</th>
+                  <th>Qty</th>
+                  <th>Diskon</th>
+                  <th>Ongkir</th>
+                  <th>Total</th>
                   <th>Aksi</th>
                 </tr>
               </thead>

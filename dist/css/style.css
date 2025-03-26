@@ -312,3 +312,9 @@ p.detail-company {
 .row.well.well-sm.input-temp label {
   font-weight: 800;
 }
+
+
+.btn-add-temp{
+      padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x) !important;
+      margin-top: 10px;
+}
