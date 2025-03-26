@@ -127,9 +127,11 @@
   border: 1px solid #ddd;
   background-color: #f6f6f6;
   box-shadow: none;
-  border-radius: 0px;
+  border-radius: 6px;
   padding: 10px;
   margin-bottom: 50px;
+  margin-left: 9px;
+  margin-right: 9px;
 }
 
 .btn-add-icon{
@@ -305,4 +307,8 @@ p.detail-company {
 
 .text-right{
   text-align: right;
+}
+
+.row.well.well-sm.input-temp label {
+  font-weight: 800;
 }

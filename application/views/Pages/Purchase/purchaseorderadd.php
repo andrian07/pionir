@@ -40,7 +40,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
 
             <div class="form-group row">
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Supplier :</label>
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Supplier Baru:</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" id="po_supplier" name="po_supplier">
                   <option>-- Pilih Supplier --</option>
@@ -108,6 +108,116 @@ require DOC_ROOT_PATH . $this->config->item('header');
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
+            <div class="row well well-sm input-temp">
+              <input id="temp_po_id" name="temp_po_id" type="hidden" value="">
+              <input id="item_id" name="item_id" type="hidden" value="">
+              <div class="col-md-3">
+                <label>No Pengajuan:</label>
+                <select id="nosubmission" name="nosubmission" class="form-control select2-hidden-accessible" data-select2-id="nosubmission" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-nosubmission-container"><span class="select2-selection__rendered" id="select2-nosubmission-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">-- Pilih No Pengajuan --</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                <input id="submission_id" type="hidden" name="submission_id">
+                <input id="submission_inv" type="hidden" name="submission_inv">
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label>Produk</label>
+                  <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" data-parsley-vproductname="" required="" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Harga Beli Per Unit</label>
+                  <input id="temp_price" name="temp_price" class="form-control text-right" value="0" data-parsley-vprice="" required="">
+                  <input id="temp_dpp" name="temp_dpp" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
+                  <input id="temp_tax" name="temp_tax" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="" required="">
+                </div>
+              </div>
+
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Qty</label>
+                  <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" data-parsley-vqty="" required="">
+                  <input id="total_price" name="total_price" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
+                </div>
+              </div>
+
+              <div class="col-md-5"></div>
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Ongkir</label>
+                  <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0">
+                </div>
+              </div>
+              
+              <div class="col-sm-2" style="display:none;">
+
+                <!-- text input -->
+
+                <div class="form-group">
+
+                  <label>Discount</label>
+
+                  <input id="temp_discount1" name="temp_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                  <input id="temp_discount2" name="temp_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                  <input id="temp_discount3" name="temp_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                  <input id="temp_discount_percentage1" name="temp_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                  <input id="temp_discount_percentage2" name="temp_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                  <input id="temp_discount_percentage3" name="temp_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                  <input id="total_temp_discount" name="total_temp_discount" type="text" class="form-control text-right" value="0" readonly="">
+
+                </div>
+
+              </div>
+
+
+              <div class="col-sm-2" style="display:none;">
+
+                <!-- text input -->
+
+                <div class="form-group">
+
+                  <label>Expire Date</label>
+
+                  <input id="temp_ed_date" name="temp_ed_date" type="date" class="form-control">
+
+                </div>
+
+              </div>
+
+
+              <div class="col-sm-4">
+
+                <!-- text input -->
+
+                <div class="form-group">
+
+                  <label>Total</label>
+
+                  <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
+
+                </div>
+
+              </div>
+
+              <div class="col-sm-1" style="padding-right: 62px;">
+
+                <!-- text input -->
+
+                <label>&nbsp;</label>
+
+                <div class="form-group">
+
+                  <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right"><i class="fas fa-plus"></i></button>
+
+                </div>
+
+              </div>
+
+            </div>
+
             <div class="table-responsive">
               <table
               id="po-list"
