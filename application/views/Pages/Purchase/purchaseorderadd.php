@@ -111,23 +111,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="row well well-sm input-temp">
               <input id="temp_po_id" name="temp_po_id" type="hidden" value="">
               <input id="item_id" name="item_id" type="hidden" value="">
-              <div class="col-md-3">
-                <label>No Pengajuan:</label>
-                <select id="submission_inv" name="submission_inv" class="form-control select2-hidden-accessible" data-select2-id="nosubmission" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-nosubmission-container"><span class="select2-selection__rendered" id="select2-nosubmission-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">-- Pilih No Pengajuan --</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-                <input id="submission_id" type="hidden" name="submission_id">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>No Pengajuan:</label>
+                  <input id="submission_inv" name="submission_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pengajuan">
+                  <input id="submission_id" type="hidden" name="submission_id">
+                </div>
               </div>
+              
 
               <div class="col-sm-4">
                 <div class="form-group">
                   <label>Produk</label>
-                  <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" data-parsley-vproductname="" required="" autocomplete="off">
+                  <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off">
+                  <input id="product_id" type="hidden" name="product_id">
                 </div>
               </div>
 
               <div class="col-sm-2">
                 <div class="form-group">
                   <label>Harga Beli Per Unit</label>
-                  <input id="temp_price" name="temp_price" class="form-control text-right" value="0" data-parsley-vprice="" required="">
+                  <input id="temp_price" name="temp_price" class="form-control text-right" value="0">
                   <input id="temp_dpp" name="temp_dpp" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
                   <input id="temp_tax" name="temp_tax" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="" required="">
                 </div>
@@ -137,57 +141,42 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-sm-2">
                 <div class="form-group">
                   <label>Qty</label>
-                  <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" data-parsley-vqty="" required="">
-                  <input id="total_price" name="total_price" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
+                  <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0">
                 </div>
               </div>
 
-              <div class="col-md-5"></div>
+
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Berat</label>
+                  <input id="temp_weight" name="temp_weight" type="text" class="form-control text-right" value="0">
+                </div>
+              </div>
 
               <div class="col-sm-2">
                 <div class="form-group">
                   <label>Ongkir</label>
-                  <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0">
+                  <input id="temp_delivery_price" name="temp_delivery_price" type="text" class="form-control text-right" value="0">
                 </div>
               </div>
-              
-              <div class="col-sm-2" style="display:none;">
 
-                <!-- text input -->
-
+              <div class="col-sm-2">
                 <div class="form-group">
-
-                  <label>Discount</label>
-
-                  <input id="temp_discount1" name="temp_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="temp_discount2" name="temp_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="temp_discount3" name="temp_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="temp_discount_percentage1" name="temp_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="temp_discount_percentage2" name="temp_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="temp_discount_percentage3" name="temp_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="total_temp_discount" name="total_temp_discount" type="text" class="form-control text-right" value="0" readonly="">
-
+                  <label>Total Berat</label>
+                  <input id="temp_total_weight" name="temp_total_weight" type="text" class="form-control text-right" value="0" readonly>
                 </div>
-
               </div>
 
-
-              <div class="col-sm-2" style="display:none;">
-
-                <!-- text input -->
-
+              <div class="col-sm-2">
                 <div class="form-group">
-
-                  <label>Expire Date</label>
-
-                  <input id="temp_ed_date" name="temp_ed_date" type="date" class="form-control">
-
+                  <label>Total Ongkir</label>
+                  <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" readonly>
                 </div>
-
               </div>
 
 
-              <div class="col-sm-4">
+              <div class="col-sm-3">
 
                 <!-- text input -->
 
@@ -219,7 +208,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <div class="table-responsive">
               <table
-              id="temp=po-list"
+              id="temp-po-list"
               class="display table table-striped table-hover"
               >
               <thead>
@@ -253,19 +242,54 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  $(document).ready(function() {
-    purchaseorder_table();
+  let temp_price = new AutoNumeric('#temp_price', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
   });
 
-  function purchaseorder_table(){
-    $('#po-list').DataTable( {
+  let temp_total = new AutoNumeric('#temp_total', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let temp_delivery_price = new AutoNumeric('#temp_delivery_price', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let temp_ongkir = new AutoNumeric('#temp_ongkir', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+  
+
+  
+
+  $(document).ready(function() {
+    temppo_table();
+  });
+
+  function temppo_table(){
+    $('#temp-po-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/po_list',
+        url: '<?php echo base_url(); ?>Purchase/temp_po_list',
         type: 'POST',
         data:  {},
       },
@@ -279,11 +303,105 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 5},
         {data: 6},
         {data: 7},
-        {data: 8},
-        {data: 9}
+        {data: 8}
       ]
     });
   }
 
+  $('#submission_inv').autocomplete({ 
+    minLength: 2,
+    source: function(req, add) {
+      $.ajax({
+        url: '<?php echo base_url(); ?>/Purchase/search_submission',
+        dataType: 'json',
+        type: 'GET',
+        data: req,
+        success: function(res) {
+          if (res.success == true) {
+            add(res.data);
+          }else{
+            $('#submission_inv').val('');
+          }
+        },
+      });
+    },
+    select: function(event, ui) {
+      console.log(ui);
+      let id = ui.item.id;
+      let product_name = ui.item.product_name;
+      let product_id = ui.item.product_id;
+      let product_price = ui.item.product_price;
+      let product_weight = ui.item.product_weight;
+      $('#submission_id').val(id);
+      $('#product_name').val(product_name);
+      $('#product_id').val(product_id);
+      temp_price.set(product_price);
+      $('#temp_weight').val(product_weight);
+    },
+  });
+
+
+  $('#temp_qty').on('input', function (event) {
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val);
+  })
+
+  $('#temp_delivery_price').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_total_weight_val = $('#temp_total_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val * temp_total_weight_val;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
+  })
+
+  
+  
+  $('#btnadd_temp').click(function(e){
+    e.preventDefault();
+    var submission_id           = $("#submission_id").val();
+    var product_id              = $("#product_id").val();
+    var temp_price_val          = parseInt(temp_price.get());
+    var temp_qty                = $("#temp_qty").val();
+    var temp_weight             = $("#temp_weight").val();
+    var temp_delivery_price_val = parseInt(temp_delivery_price.get());
+    var temp_total_weight       = $("#temp_total_weight").val();
+    var temp_ongkir_val         = parseInt(temp_ongkir.get());
+    var temp_total_val          = parseInt(temp_total.get());
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/add_temp_po",
+      dataType: "json",
+      data: {submission_id:submission_id, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+      success : function(data){
+        if (data.code == "200"){
+          temppo_table();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
   
 </script>

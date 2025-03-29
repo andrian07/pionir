@@ -365,7 +365,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 
   new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
-  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
   
   let item_purchase_price = new AutoNumeric('#item_purchase_price', {
     currencySymbol : 'Rp. ',
@@ -432,9 +431,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     suffixText: "%",
     decimalPlaces: 0,
   });
-
-
-
   
   let disc_percentage = new AutoNumeric('#disc_percentage', {
     suffixText: "%",

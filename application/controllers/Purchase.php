@@ -415,6 +415,133 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	public function search_submission()
+	{
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		if (!($keyword == '' || $keyword == NULL)) {
+			$find = $this->purchase_model->search_submission($keyword)->result_array(); 
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row['product_name'].'('.$row['submission_invoice'].')';
+				$find_result[] = [
+					'id'                  => $row['submission_id'],
+					'value'               => $diplay_text,
+					'product_name'        => $row['product_name'],
+					'product_id'          => $row['product_id'],
+					'product_price'       => $row['product_price'],
+					'product_weight'      => $row['product_weight'],
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
+	}
+
+	public function add_temp_po()
+	{
+
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$submission_id 				= $this->input->post('submission_id');
+			$product_id 				= $this->input->post('product_id');
+			$temp_price_val 			= $this->input->post('temp_price_val');
+			$temp_qty 					= $this->input->post('temp_qty');
+			$temp_weight 				= $this->input->post('temp_weight');
+			$temp_delivery_price_val 	= $this->input->post('temp_delivery_price_val');
+			$temp_total_weight 			= $this->input->post('temp_total_weight');
+			$temp_ongkir_val 			= $this->input->post('temp_ongkir_val');
+			$temp_total_val 			= $this->input->post('temp_total_val');
+			$user_id 					= $_SESSION['user_id'];
+
+			$data_insert = array(
+				'temp_submission_id'	=> $submission_id,
+				'temp_product_id'		=> $product_id,
+				'temp_po_price'			=> $temp_price_val,
+				'temp_po_qty'			=> $temp_qty,
+				'temp_po_weight'		=> $temp_weight,
+				'temp_po_ongkir'		=> $temp_delivery_price_val,
+				'temp_po_total_weight'	=> $temp_total_weight,
+				'temp_po_total_ongkir'	=> $temp_ongkir_val,
+				'temp_po_total'			=> $temp_total_val,
+				'temp_user_id'			=> $user_id,
+			);	
+
+			$this->purchase_model->insert_temp_po($data_insert);
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function temp_po_list()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->purchase_model->temp_po_list($search, $length, $start)->result_array();
+			$count_list = $this->purchase_model->temp_po_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['temp_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['temp_po_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}else{
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['temp_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['temp_po_id'].'" data-name="'.$field['product_name'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['submission_invoice'];
+				$row[] 	= $field['product_code'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['unit_name'];
+				$row[] 	= $field['temp_po_qty'];
+				$row[] 	= $field['temp_po_qty'];
+				$row[] 	= 'Rp. '.number_format($field['temp_po_total_ongkir']);
+				$row[] 	= 'Rp. '.number_format($field['temp_po_total']);
+				$row[] 	= $detail.$edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	// end purchase order
 }
 

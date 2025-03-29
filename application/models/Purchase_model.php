@@ -130,6 +130,60 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
+    public function search_submission($search)
+    {
+        $this->db->select('*');
+        $this->db->from('submission');
+        $this->db->join('ms_product', 'submission.submission_product_id  = ms_product.product_id');
+        if($search != null){
+            $this->db->where('submission_invoice like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function insert_temp_po($data_insert)
+    {
+        $this->db->insert('temp_po', $data_insert);
+    }
+
+    public function temp_po_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_po');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id ');
+        $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_po.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function temp_po_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('temp_po');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id ');
+        $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_po.created_at', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
     // end po
 
 }
