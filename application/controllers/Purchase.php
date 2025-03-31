@@ -37,7 +37,8 @@ class Purchase extends CI_Controller {
 		if($check_auth[0]->view == 'Y'){
 			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
 			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
-			$data['data'] = array_merge($warehouse_list, $salesman_list);
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $supplier_list);
 			$this->load->view('Pages/Purchase/submission', $data);
 		}else{
 			$msg = "No Access";
@@ -45,11 +46,15 @@ class Purchase extends CI_Controller {
 		}
 	}
 
-	public function search_product()
-	{
+	public function search_product_by_suplier()
+	{	
+		$supplier_id = $this->input->get('id');
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
-		if (!($keyword == '' || $keyword == NULL)) {
+		if($supplier_id == '' || $supplier_id == NULL){
+			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
+		}
+		else if (!($keyword == '' || $keyword == NULL)) {
 			$find = $this->global_model->search_product($keyword); 
 			$find_result = [];
 			foreach ($find as $row) {

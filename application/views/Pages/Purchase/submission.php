@@ -88,6 +88,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 </select>
                               </div>
                             </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
+                              <div class="col-md-12 p-0">
+                                <select class="form-control input-full js-example-basic-single" id="submission_supplier" name="submission_supplier">
+                                  <option value="">-- Pilih Supplier --</option>
+                                  <?php foreach ($data['supplier_list'] as $row) { ?>
+                                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                                  <?php } ?>
+                                </select>
+                              </div>
+                            </div>
+
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
                               <div class="col-md-12 p-0">
@@ -273,16 +286,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8},
-        {data: 9}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8},
+      {data: 9}
       ]
     });
   }
@@ -325,11 +338,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     })
   }
 
-  $('#submission_product_name').autocomplete({ 
+  $('#submission_product_name').autocomplete({
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product',
+        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier?id='+$('#submission_supplier').val(),
         dataType: 'json',
         type: 'GET',
         data: req,
