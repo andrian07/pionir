@@ -193,7 +193,7 @@ class purchase_model extends CI_Model {
 
     public function check_temp_po($user_id)
     {
-        $query = $this->db->query("select submission_supplier from temp_po a, submission b where a.temp_submission_id = b.submission_id and temp_user_id = '".$user_id."'");
+        $query = $this->db->query("select sum(temp_po_total) as sub_total, submission_supplier, is_ppn from temp_po a, submission b, ms_product c where a.temp_submission_id = b.submission_id and a.temp_product_id = c.product_id and temp_user_id = '".$user_id."'");
         $result = $query->result();
         return $result;
     }

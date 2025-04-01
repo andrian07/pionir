@@ -567,13 +567,33 @@ class Purchase extends CI_Controller {
 	{
 		$user_id 		= $_SESSION['user_id'];
 		$check_temp_po = $this->purchase_model->check_temp_po($user_id);
-		echo json_encode(['code'=>200, 'result'=>$check_temp_po]);
+		if($check_temp_po != null){
+			$supplier = $check_temp_po[0]->submission_supplier;
+			$product_tax = $check_temp_po[0]->is_ppn;
+			$sub_total = $check_temp_po[0]->sub_total;
+		}else{
+			$supplier = 0;
+			$product_tax = 0;
+			$sub_total = 0;
+		}
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total]);
 		die();
 	}
 
 	public function get_edit_temp_po()
 	{
 		$temp_po_id  = $this->input->post('id');
+	}
+
+	public function cal_due_date()
+	{	
+		$po_top = $this->input->post('po_top');
+		if($po_top != 0){
+			$po_top = $po_top - 1;
+		}
+		$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
+		echo json_encode(['code'=>200, 'result'=>$due_date]);
+		die();
 	}
 	// end purchase order
 }

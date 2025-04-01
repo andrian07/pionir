@@ -22,15 +22,15 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">T.O.P :</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="po_top" name="po_top">
+                <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="po_top" name="po_top">
                   <option>-- Pilih T.O.P --</option>
-                  <option value="CBD">CBD</option>
-                  <option value="JT7">JT7</option>
-                  <option value="JT15">JT15</option>
-                  <option value="JT30">JT30</option>
-                  <option value="JT45">JT45</option>
-                  <option value="JT60">JT60</option>
-                  <option value="JT90">JT90</option>
+                  <option value="0">CBD</option>
+                  <option value="7">JT7</option>
+                  <option value="15">JT15</option>
+                  <option value="30">JT30</option>
+                  <option value="45">JT45</option>
+                  <option value="60">JT60</option>
+                  <option value="90">JT90</option>
                 </select>
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
@@ -51,7 +51,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
               <div class="col-sm-3">
-                <input id="purchase_order_date" name="purchase_order_date" type="date" class="form-control" value="2025-03-21" readonly="">
+                <input id="purchase_order_due_date" name="purchase_order_due_date" type="date" class="form-control" value="" readonly="">
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
               <div class="col-sm-3">
@@ -68,8 +68,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">Golongan :</label>
               <div class="col-sm-3">
                 <select class="form-control" id="po_tax" name="po_tax">
-                  <option value="Y">BKP</option>
-                  <option value="N">NON BKP</option>
+                  <option value="PPN">BKP</option>
+                  <option value="NON PPN">NON BKP</option>
                 </select>
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Metode Bayar :</label>
@@ -246,17 +246,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
                 <div class="form-group row">
                   <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Discount :</label>
-                  <div class="col-sm-4">
+                  <div class="col-sm-5">
                     <input id="footer_discount1" name="footer_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
                     <input id="footer_discount2" name="footer_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
                     <input id="footer_discount3" name="footer_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
                     <input id="footer_discount_percentage1" name="footer_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
                     <input id="footer_discount_percentage2" name="footer_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
                     <input id="footer_discount_percentage3" name="footer_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                    <input id="footer_total_discount" name="footer_total_discount" type="text" class="form-control text-right" value="0" readonly="">
-                  </div>
-                  <div class="col-sm-1">
-                    <button id="btnaddfooterdiscount" class="btn btn-warning"><i class="fas fa-tags"></i></button>
+                    <input id="footer_total_discount" name="footer_total_discount" data-bs-toggle="modal" data-bs-target="#footerdiscount" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -291,6 +288,63 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
             </div>
+
+            <!-- Footer Modal Discount -->
+            <div class="modal fade" id="footerdiscount" tabindex="-1" aria-labelledby="exampleModaleditLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="title-frmfooterdiscount">Diskon</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form id="frmfooterdiscount" class="form-horizontal">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <div class="row">
+                          <label for="edit_footer_discount1_lbl" class="col-sm-12">Diskon 1</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount_percentage1" name="edit_footer_discount_percentage1" value="0">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount1" name="edit_footer_discount1" value="0">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <label for="edit_footer_discount2_lbl" class="col-sm-12">Diskon 2</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount_percentage2" name="edit_footer_discount_percentage2" value="0">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount2" name="edit_footer_discount2" value="0">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <label for="edit_footer_discount3_lbl" class="col-sm-12">Diskon 3</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount_percentage3" name="edit_footer_discount_percentage3" value="0">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="edit_footer_discount3" name="edit_footer_discount3" value="0">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                      <button type="button" id="btnedit"  class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                    </div>
+                  </form>
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- Footer Modal Discount -->
+
           </div>
         </div>
       </div>
@@ -335,9 +389,98 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     decimalPlacesShownOnFocus: 0,
     digitGroupSeparator : '.',
   });
+
+  let footer_sub_total = new AutoNumeric('#footer_sub_total', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let footer_total_discount = new AutoNumeric('#footer_total_discount', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let footer_dpp = new AutoNumeric('#footer_dpp', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let footer_total_ppn = new AutoNumeric('#footer_total_ppn', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let footer_total_ongkir = new AutoNumeric('#footer_total_ongkir', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
   
 
+  let footer_total_invoice = new AutoNumeric('#footer_total_invoice', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let edit_footer_discount1 = new AutoNumeric('#edit_footer_discount1', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let edit_footer_discount2 = new AutoNumeric('#edit_footer_discount2', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let edit_footer_discount3 = new AutoNumeric('#edit_footer_discount3', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
   
+
+  let edit_footer_discount_percentage1 = new AutoNumeric('#edit_footer_discount_percentage1', {
+    allowDecimalPadding: "floats",
+    alwaysAllowDecimalCharacter: true,
+    suffixText: "%"
+  });
+
+  let edit_footer_discount_percentage2 = new AutoNumeric('#edit_footer_discount_percentage2', {
+    allowDecimalPadding: "floats",
+    alwaysAllowDecimalCharacter: true,
+    suffixText: "%"
+  });
+
+  let edit_footer_discount_percentage3 = new AutoNumeric('#edit_footer_discount_percentage3', {
+    allowDecimalPadding: "floats",
+    alwaysAllowDecimalCharacter: true,
+    suffixText: "%"
+  });
 
   $(document).ready(function() {
     temppo_table();
@@ -357,15 +500,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8}
       ]
     });
     check_tempt_data();
@@ -466,7 +609,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         data: {submission_id:submission_id, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
         success : function(data){
           if (data.code == "200"){
-
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
@@ -510,9 +652,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';
               notif_success(title, message, state);
-              $('#temp-po-list').DataTable().ajax.reload();
               check_tempt_data();
-            } else {
+              $('#temp-po-list').DataTable().ajax.reload();
+              } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -534,12 +676,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {},
       success : function(data){
         if (data.code == "200"){
-          if(data.result.length == 0){
+          if(data.supplier == 0){
             $("#po_supplier").select2("val", " ");
             $('#po_supplier').prop('disabled', false);
+            $('#po_tax').val('');
+            $('#po_tax').prop('disabled', false);
+            footer_sub_total.set(0);
+            footer_dpp.set(0); 
+            footer_total_ppn.set(0);
           }else{
-            $("#po_supplier").select2("val", data.result[0].submission_supplier);
+            $("#po_supplier").select2("val", data.supplier);
             $('#po_supplier').prop('disabled', true);
+            $('#po_tax').val(data.product_tax);
+            $('#po_tax').prop('disabled', true);
+            footer_sub_total.set(data.sub_total);
+            footer_dpp.set(data.sub_total); 
+            if(data.product_tax == 'PPN'){
+              footer_total_ppn.set(0);
+            }else{
+              footer_total_ppn.set(0);
+            }
           }
         }
       }
@@ -560,5 +716,23 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     temp_ongkir.set(0);
     temp_total.set(0);
   }
+
+  function duedate_cal()
+  {
+    var po_top = document.getElementById("po_top").value;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/cal_due_date",
+      dataType: "json",
+      data: {po_top:po_top},
+      success : function(data){
+        if (data.code == "200"){
+          $('#purchase_order_due_date').val(data.result);
+        }
+      }
+    });
+  }
+
+  new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
   
 </script>
