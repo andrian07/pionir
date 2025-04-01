@@ -32,6 +32,8 @@
 </script>
 
 <script src="<?php echo base_url(); ?>dist/js/core/jquery-3.7.1.min.js"></script>
+
+
 <script src="<?php echo base_url(); ?>dist/js/core/popper.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/core/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
@@ -49,6 +51,8 @@
 <script src="<?php echo base_url(); ?>dist/js/autonumeric.js"></script>
 <script src="<?php echo base_url(); ?>dist/js/jquery-ui.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+ <script src="<?php echo base_url(); ?>dist/js/parsley.js"></script>
+
 
 <script>
 

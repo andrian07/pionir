@@ -184,6 +184,26 @@ class purchase_model extends CI_Model {
         $query = $this->db->get();
         return $query;
     }
+
+    public function delete_temmp_po($temp_po_id)
+    {
+        $this->db->where('temp_po_id', $temp_po_id);
+        $this->db->delete('temp_po');
+    }
+
+    public function check_temp_po($user_id)
+    {
+        $query = $this->db->query("select submission_supplier from temp_po a, submission b where a.temp_submission_id = b.submission_id and temp_user_id = '".$user_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function check_temp_po_input($product_id, $user_id)
+    {
+        $query = $this->db->query("select * from temp_po where temp_product_id = '".$product_id."' and temp_user_id = '".$user_id."'");
+        $result = $query->result();
+        return $result;
+    }
     // end po
 
 }

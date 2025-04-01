@@ -43,7 +43,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">Supplier Baru:</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" id="po_supplier" name="po_supplier">
-                  <option>-- Pilih Supplier --</option>
+                  <option value="">-- Pilih Supplier --</option>
                   <?php foreach ($data['supplier_list'] as $row) { ?>
                     <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
                   <?php } ?>
@@ -108,133 +108,195 @@ require DOC_ROOT_PATH . $this->config->item('header');
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <div class="row well well-sm input-temp">
-              <input id="temp_po_id" name="temp_po_id" type="hidden" value="">
-              <input id="item_id" name="item_id" type="hidden" value="">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label>No Pengajuan:</label>
-                  <input id="submission_inv" name="submission_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pengajuan">
-                  <input id="submission_id" type="hidden" name="submission_id">
-                </div>
-              </div>
-              
-
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label>Produk</label>
-                  <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off">
-                  <input id="product_id" type="hidden" name="product_id">
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Harga Beli Per Unit</label>
-                  <input id="temp_price" name="temp_price" class="form-control text-right" value="0">
-                  <input id="temp_dpp" name="temp_dpp" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
-                  <input id="temp_tax" name="temp_tax" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="" required="">
-                </div>
-              </div>
-
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Qty</label>
-                  <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0">
-                </div>
-              </div>
-
-
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Berat</label>
-                  <input id="temp_weight" name="temp_weight" type="text" class="form-control text-right" value="0">
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Ongkir</label>
-                  <input id="temp_delivery_price" name="temp_delivery_price" type="text" class="form-control text-right" value="0">
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Total Berat</label>
-                  <input id="temp_total_weight" name="temp_total_weight" type="text" class="form-control text-right" value="0" readonly>
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Total Ongkir</label>
-                  <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" readonly>
-                </div>
-              </div>
-
-
-              <div class="col-sm-3">
-
-                <!-- text input -->
-
-                <div class="form-group">
-
-                  <label>Total</label>
-
-                  <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
-
+            <form id="formaddtemp">
+              <div class="row well well-sm input-temp">
+                <input id="temp_po_id" name="temp_po_id" type="hidden" value="">
+                <input id="item_id" name="item_id" type="hidden" value="">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>No Pengajuan:</label>
+                    <input id="submission_inv" name="submission_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pengajuan">
+                    <input id="submission_id" type="hidden" name="submission_id" >
+                  </div>
                 </div>
 
-              </div>
 
-              <div class="col-sm-1" style="padding-right: 62px;">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Produk</label>
+                    <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk"required="">
+                    <input id="product_id" type="hidden" name="product_id">
+                  </div>
+                </div>
 
-                <!-- text input -->
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Harga Beli Per Unit</label>
+                    <input id="temp_price" name="temp_price" class="form-control text-right" value="0" required="">
+                    <input id="temp_dpp" name="temp_dpp" type="hidden" class="form-control text-right" value="Rp 0.00" required="">
+                    <input id="temp_tax" name="temp_tax" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="" required="">
+                  </div>
+                </div>
 
-                <label>&nbsp;</label>
 
-                <div class="form-group">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Qty</label>
+                    <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" data-parsley-min="1" data-parsley-min-message="*qty harus lebih besar dari 0" required="">
+                  </div>
+                </div>
 
-                  <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right btn-add-temp"><i class="fas fa-plus"></i></button>
+
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Berat</label>
+                    <input id="temp_weight" name="temp_weight" type="text" class="form-control text-right" value="0">
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Ongkir</label>
+                    <input id="temp_delivery_price" name="temp_delivery_price" type="text" class="form-control text-right" value="0">
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Total Berat</label>
+                    <input id="temp_total_weight" name="temp_total_weight" type="text" class="form-control text-right" value="0" readonly>
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Total Ongkir</label>
+                    <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" readonly>
+                  </div>
+                </div>
+
+
+                <div class="col-sm-3">
+
+                  <!-- text input -->
+
+                  <div class="form-group">
+
+                    <label>Total</label>
+
+                    <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
+
+                  </div>
 
                 </div>
 
-              </div>
+                <div class="col-sm-1" style="padding-right: 62px;">
 
-            </div>
+                  <!-- text input -->
+
+                  <label>&nbsp;</label>
+
+                  <div class="form-group">
+
+                    <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right btn-add-temp"><i class="fas fa-plus"></i></button>
+
+                  </div>
+
+                </div>
+
+              </div>
+            </form>
 
             <div class="table-responsive">
-              <table
-              id="temp-po-list"
-              class="display table table-striped table-hover"
-              >
-              <thead>
-                <tr>
-                  <th>No Pengajuan</th>
-                  <th>SKU</th>
-                  <th>Porduk</th>
-                  <th>Satuan</th>
-                  <th>Qty</th>
-                  <th>Diskon</th>
-                  <th>Ongkir</th>
-                  <th>Total</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
+              <table id="temp-po-list" class="display table table-striped table-hover" >
+                <thead>
+                  <tr>
+                    <th>No Pengajuan</th>
+                    <th>SKU</th>
+                    <th>Porduk</th>
+                    <th>Satuan</th>
+                    <th>Qty</th>
+                    <th>Diskon</th>
+                    <th>Ongkir</th>
+                    <th>Total</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="row form-space">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <textarea id="purchase_order_remark" name="purchase_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 text-right">
+                <div class="form-group row">
+                  <label for="footer_sub_total" class="col-sm-7 col-form-label text-right:">Sub Total:</label>
+                  <div class="col-sm-5">
+                    <input id="footer_sub_total" name="footer_sub_total" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Discount :</label>
+                  <div class="col-sm-4">
+                    <input id="footer_discount1" name="footer_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                    <input id="footer_discount2" name="footer_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                    <input id="footer_discount3" name="footer_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+                    <input id="footer_discount_percentage1" name="footer_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                    <input id="footer_discount_percentage2" name="footer_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                    <input id="footer_discount_percentage3" name="footer_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+                    <input id="footer_total_discount" name="footer_total_discount" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                  <div class="col-sm-1">
+                    <button id="btnaddfooterdiscount" class="btn btn-warning"><i class="fas fa-tags"></i></button>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_dpp" class="col-sm-7 col-form-label text-right:">DPP :</label>
+                  <div class="col-sm-5">
+                    <input id="footer_dpp" name="footer_dpp" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_ppn" class="col-sm-7 col-form-label text-right:">PPN 11% :</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_ppn" name="footer_total_ppn" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_ongkir" class="col-sm-7 col-form-label text-right:">Ongkir:</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_ongkir" name="footer_total_ongkir" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Grand Total :</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_invoice" name="footer_total_invoice" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <button id="btncancel" class="btn btn-danger"><i class="fas fa-times-circle"></i> Batal</button>
+                    <button id="btnsave" class="btn btn-success button-header-custom-save"><i class="fas fa-save"></i> Simpan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
-
 
 <?php 
 require DOC_ROOT_PATH . $this->config->item('footer');
@@ -306,6 +368,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 8}
       ]
     });
+    check_tempt_data();
   }
 
   $('#submission_inv').autocomplete({ 
@@ -326,7 +389,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
-      console.log(ui);
       let id = ui.item.id;
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
@@ -340,6 +402,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+  $('#temp_price').on('input', function (event) {
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val);
+  })
 
   $('#temp_qty').on('input', function (event) {
     let temp_price_val = parseInt(temp_price.get());
@@ -385,23 +457,108 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_total_weight       = $("#temp_total_weight").val();
     var temp_ongkir_val         = parseInt(temp_ongkir.get());
     var temp_total_val          = parseInt(temp_total.get());
+
+    if($('#formaddtemp').parsley().validate({force: true})){
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Purchase/add_temp_po",
+        dataType: "json",
+        data: {submission_id:submission_id, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+        success : function(data){
+          if (data.code == "200"){
+
+            let title = 'Tambah Data';
+            let message = 'Data Berhasil Di Tambah';
+            let state = 'info';
+            notif_success(title, message, state);
+            $('#temp-po-list').DataTable().ajax.reload();
+            check_tempt_data();
+            clear_input();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.result,
+            })
+          }
+        }
+      });
+    }
+  });
+
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Purchase/delete_temp_po",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+              $('#temp-po-list').DataTable().ajax.reload();
+              check_tempt_data();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.result,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
+  function check_tempt_data()
+  {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/add_temp_po",
+      url: "<?php echo base_url(); ?>Purchase/check_temp_po",
       dataType: "json",
-      data: {submission_id:submission_id, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+      data: {},
       success : function(data){
         if (data.code == "200"){
-          temppo_table();
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
+          if(data.result.length == 0){
+            $("#po_supplier").select2("val", " ");
+            $('#po_supplier').prop('disabled', false);
+          }else{
+            $("#po_supplier").select2("val", data.result[0].submission_supplier);
+            $('#po_supplier').prop('disabled', true);
+          }
         }
       }
     });
-  });
+  }
+
+  function clear_input()
+  {
+    $('#submission_inv').val('');
+    $('#submission_id').val('');
+    $('#product_name').val('');
+    $('#product_id').val('');
+    temp_price.set(0);
+    $('#temp_qty').val('');
+    $('#temp_weight').val('');
+    temp_delivery_price.set(0);
+    $('#temp_total_weight').val(0);
+    temp_ongkir.set(0);
+    temp_total.set(0);
+  }
   
 </script>

@@ -198,6 +198,7 @@ class Purchase extends CI_Controller {
 			$submission_product_id 			= $this->input->post('submission_product_id');
 			$submission_product_code 		= $this->input->post('submission_product_code');
 			$submission_qty 				= $this->input->post('submission_qty');
+			$submission_supplier 			= $this->input->post('submission_supplier');
 			$user_id 						= $_SESSION['user_id'];
 
 			$maxCode = $this->purchase_model->last_submission_inv();
@@ -222,6 +223,7 @@ class Purchase extends CI_Controller {
 				'submission_salesman'		=> $submission_salesman,
 				'submission_qty'			=> $submission_qty,
 				'last_stock'				=> $last_stock,
+				'submission_supplier' 		=> $submission_supplier,
 				'submission_desc'			=> $submission_desc,
 				'submission_text'			=> $submission_text,
 				'created_by'				=> $user_id,
@@ -258,6 +260,7 @@ class Purchase extends CI_Controller {
 			$submission_product_id 			= $this->input->post('submission_product_id');
 			$submission_product_code 		= $this->input->post('submission_product_code');
 			$submission_qty 				= $this->input->post('submission_qty');
+			$submission_supplier 			= $this->input->post('submission_supplier');
 			$user_id 						= $_SESSION['user_id'];
 
 			$data_edit = array(
@@ -267,6 +270,7 @@ class Purchase extends CI_Controller {
 				'submission_warehouse'		=> $submission_warehouse,
 				'submission_salesman'		=> $submission_salesman,
 				'submission_qty'			=> $submission_qty,
+				'submission_supplier' 		=> $submission_supplier,
 				'submission_desc'			=> $submission_desc,
 				'submission_text'			=> $submission_text,
 				'created_by'				=> $user_id,
@@ -460,6 +464,12 @@ class Purchase extends CI_Controller {
 			$temp_total_val 			= $this->input->post('temp_total_val');
 			$user_id 					= $_SESSION['user_id'];
 
+			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
+			if($check_temp_po_input != null){
+				$msg = 'Data Produk Sudah Di Input';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
 			$data_insert = array(
 				'temp_submission_id'	=> $submission_id,
 				'temp_product_id'		=> $product_id,
@@ -472,7 +482,7 @@ class Purchase extends CI_Controller {
 				'temp_po_total'			=> $temp_total_val,
 				'temp_user_id'			=> $user_id,
 			);	
-
+			$msg = 'Success Tambah';
 			$this->purchase_model->insert_temp_po($data_insert);
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
@@ -500,25 +510,8 @@ class Purchase extends CI_Controller {
 			$no = $_POST['start'];
 			foreach ($list as $field) {
 
-				if($check_auth[0]->view == 'Y'){
-					$url = base_url();
-					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['temp_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['temp_po_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
-				}else{
-					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['temp_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
-				}
-
-				if($check_auth[0]->edit == 'Y'){
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['temp_po_id'].'" data-name="'.$field['product_name'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
-				}else{
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
-				}
-
-				if($check_auth[0]->delete == 'Y'){
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
-				}else{
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
-				}
-
+				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit('.$field['temp_po_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 
 				$no++;
 				$row = array();
@@ -530,15 +523,21 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['temp_po_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total']);
-				$row[] 	= $detail.$edit.$delete;
+				$row[] 	= $edit.$delete;
 				$data[] = $row;
+			}
+
+			if($total_row == 0){
+				//$supplier = "0";
+			}else{
+				//print_r($list);die();
 			}
 
 			$output = array(
 				"draw" => $_POST['draw'],
 				"recordsTotal" => $total_row,
 				"recordsFiltered" => $total_row,
-				"data" => $data,
+				"data" => $data
 			);
 			echo json_encode($output);
 		}else{
@@ -547,6 +546,35 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	public function delete_temp_po()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$temp_po_id  = $this->input->post('id');
+			$user_id 	 = $_SESSION['user_id'];
+			$this->purchase_model->delete_temmp_po($temp_po_id);
+			$msg = 'Success Delete';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function check_temp_po()
+	{
+		$user_id 		= $_SESSION['user_id'];
+		$check_temp_po = $this->purchase_model->check_temp_po($user_id);
+		echo json_encode(['code'=>200, 'result'=>$check_temp_po]);
+		die();
+	}
+
+	public function get_edit_temp_po()
+	{
+		$temp_po_id  = $this->input->post('id');
+	}
 	// end purchase order
 }
 

@@ -318,3 +318,14 @@ p.detail-company {
       padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x) !important;
       margin-top: 10px;
 }
+
+ul#parsley-id-7, 
+li.parsley-min{
+    list-style: none;
+    color: red;
+    margin-left: -14px;
+}
+
+.form-space{
+  margin-top: 35px;
+}
