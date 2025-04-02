@@ -570,13 +570,15 @@ class Purchase extends CI_Controller {
 		if($check_temp_po != null){
 			$supplier = $check_temp_po[0]->submission_supplier;
 			$product_tax = $check_temp_po[0]->is_ppn;
-			$sub_total = $check_temp_po[0]->sub_total;
+			$sub_total   = $check_temp_po[0]->sub_total;
+			$ongkir      = $check_temp_po[0]->ongkir;
 		}else{
-			$supplier = 0;
-			$product_tax = 0;
-			$sub_total = 0;
+			$supplier     = 0;
+			$product_tax  = 0;
+			$sub_total    = 0;
+			$sub_total    = 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total]);
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
 		die();
 	}
 

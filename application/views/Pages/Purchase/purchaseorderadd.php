@@ -500,15 +500,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-      {data: 0},
-      {data: 1},
-      {data: 2},
-      {data: 3},
-      {data: 4},
-      {data: 5},
-      {data: 6},
-      {data: 7},
-      {data: 8}
+        {data: 0},
+        {data: 1},
+        {data: 2},
+        {data: 3},
+        {data: 4},
+        {data: 5},
+        {data: 6},
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();
@@ -654,7 +654,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               notif_success(title, message, state);
               check_tempt_data();
               $('#temp-po-list').DataTable().ajax.reload();
-              } else {
+            } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -684,6 +684,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_sub_total.set(0);
             footer_dpp.set(0); 
             footer_total_ppn.set(0);
+            footer_total_ongkir.set(0);
+            footer_total_invoice.set(0);
           }else{
             $("#po_supplier").select2("val", data.supplier);
             $('#po_supplier').prop('disabled', true);
@@ -692,10 +694,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_sub_total.set(data.sub_total);
             footer_dpp.set(data.sub_total); 
             if(data.product_tax == 'PPN'){
-              footer_total_ppn.set(0);
+              var ppn_cal = data.sub_total * 11 / 100;
+              footer_total_ppn.set(ppn_cal);
             }else{
               footer_total_ppn.set(0);
             }
+            footer_total_ongkir.set(data.ongkir);
+            var data_ongkir = parseInt(data.ongkir, 0);
+            var data_sub_total = parseInt(data.sub_total, 0);
+            var data_ppn_cal = parseInt(ppn_cal, 0);
+            var footer_total_invoice_cal = (data_sub_total + data_ppn_cal + data_ongkir);
+            footer_total_invoice.set(footer_total_invoice_cal);
           }
         }
       }
