@@ -306,7 +306,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <input type="text" class="form-control" id="edit_footer_discount_percentage1" name="edit_footer_discount_percentage1" value="0">
                           </div>
                           <div class="col-md-6">
-                            <input type="text" class="form-control" id="edit_footer_discount1" name="edit_footer_discount1" value="0">
+                            <input type="text" class="form-control" id="edit_footer_discount1" name="edit_footer_discount1" value="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -317,7 +317,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <input type="text" class="form-control" id="edit_footer_discount_percentage2" name="edit_footer_discount_percentage2" value="0">
                           </div>
                           <div class="col-md-6">
-                            <input type="text" class="form-control" id="edit_footer_discount2" name="edit_footer_discount2" value="0">
+                            <input type="text" class="form-control" id="edit_footer_discount2" name="edit_footer_discount2" value="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -328,14 +328,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <input type="text" class="form-control" id="edit_footer_discount_percentage3" name="edit_footer_discount_percentage3" value="0">
                           </div>
                           <div class="col-md-6">
-                            <input type="text" class="form-control" id="edit_footer_discount3" name="edit_footer_discount3" value="0">
+                            <input type="text" class="form-control" id="edit_footer_discount3" name="edit_footer_discount3" value="0" readonly>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                      <button type="button" id="btnedit"  class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                      <button type="button" id="btneditdisc"  class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                     </div>
                   </form>
                 </div>
@@ -567,6 +567,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     temp_total.set(temp_total_val);
   })
 
+
+
   $('#temp_delivery_price').on('input', function (event) {
     let temp_qty_val = $('#temp_qty').val();
     if(temp_qty_val == 0){
@@ -587,7 +589,29 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   })
 
-  
+  $('#edit_footer_discount_percentage1').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
+    let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
+    edit_footer_discount1.set(edit_footer_discount1_val);
+  })
+
+  $('#edit_footer_discount_percentage2').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
+    edit_footer_discount2.set(edit_footer_discount2_val);
+  })
+
+  $('#edit_footer_discount_percentage3').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
+    let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
+    edit_footer_discount3.set(edit_footer_discount3_val);
+  })
   
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
@@ -741,6 +765,27 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   }
+
+
+  $('#btneditdisc').click(function(e){
+    e.preventDefault();
+    var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
+    var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
+    var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
+    var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
+    var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
+    var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
+    var footer_sub_total_val                  = parseInt(footer_sub_total.get());
+    var footer_total_ongkir_val               = parseInt(footer_total_ongkir.get());
+    var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
+    footer_total_discount.set(total_disc);
+    footer_dpp.set(footer_sub_total_val - total_disc);
+    footer_total_ppn.set((footer_sub_total_val - total_disc) * 11 / 100);
+    footer_total_invoice.set(((footer_sub_total_val - total_disc) + (footer_sub_total_val - total_disc) * 11 / 100) + footer_total_ongkir_val);
+    $('#footerdiscount').modal('hide')
+  });
+
+  
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
   
