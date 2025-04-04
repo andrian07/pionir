@@ -46,6 +46,35 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	public function search_product_po()
+	{	
+		$supplier_id = $this->input->get('id');
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		/*if($supplier_id == '' || $supplier_id == NULL){
+			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
+		}*/
+		if (!($keyword == '' || $keyword == NULL)) {
+			if($supplier_id == null){
+				$find = $this->global_model->search_product($keyword, $supplier_id);
+			}else{
+				$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
+			}
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row->product_code.' - '.$row->product_name;
+				$find_result[] = [
+					'id'                  => $row->product_id,
+					'value'               => $diplay_text,
+					'product_code'        => $row->product_code
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
+	} 
+
+
 	public function search_product_by_suplier()
 	{	
 		$supplier_id = $this->input->get('id');
@@ -55,7 +84,7 @@ class Purchase extends CI_Controller {
 			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
 		}
 		else if (!($keyword == '' || $keyword == NULL)) {
-			$find = $this->global_model->search_product($keyword); 
+			$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
 			$find_result = [];
 			foreach ($find as $row) {
 				$diplay_text = $row->product_code.' - '.$row->product_name;
@@ -465,11 +494,6 @@ class Purchase extends CI_Controller {
 			$user_id 					= $_SESSION['user_id'];
 
 			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
-			if($check_temp_po_input != null){
-				$msg = 'Data Produk Sudah Di Input';
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
-			}
-
 			$data_insert = array(
 				'temp_submission_id'	=> $submission_id,
 				'temp_product_id'		=> $product_id,
@@ -483,7 +507,11 @@ class Purchase extends CI_Controller {
 				'temp_user_id'			=> $user_id,
 			);	
 			$msg = 'Success Tambah';
-			$this->purchase_model->insert_temp_po($data_insert);
+			if($check_temp_po_input != null){
+				$this->purchase_model->edit_temp_po($product_id, $user_id, $data_insert);
+			}else{
+				$this->purchase_model->insert_temp_po($data_insert);
+			}
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
 			$msg = "No Access";
@@ -510,7 +538,7 @@ class Purchase extends CI_Controller {
 			$no = $_POST['start'];
 			foreach ($list as $field) {
 
-				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit('.$field['temp_po_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit_temp('.$field['temp_po_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
 				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 
 				$no++;
@@ -567,7 +595,7 @@ class Purchase extends CI_Controller {
 	{
 		$user_id 		= $_SESSION['user_id'];
 		$check_temp_po = $this->purchase_model->check_temp_po($user_id);
-		if($check_temp_po != null){
+		if($check_temp_po[0]->sub_total != null){
 			$supplier = $check_temp_po[0]->submission_supplier;
 			$product_tax = $check_temp_po[0]->is_ppn;
 			$sub_total   = $check_temp_po[0]->sub_total;
@@ -585,6 +613,9 @@ class Purchase extends CI_Controller {
 	public function get_edit_temp_po()
 	{
 		$temp_po_id  = $this->input->post('id');
+		$check_edit_temp_po = $this->purchase_model->check_edit_temp_po($temp_po_id);
+		echo json_encode(['code'=>200, 'result'=>$check_edit_temp_po]);
+		die();
 	}
 
 	public function cal_due_date()
@@ -596,6 +627,64 @@ class Purchase extends CI_Controller {
 		$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
 		echo json_encode(['code'=>200, 'result'=>$due_date]);
 		die();
+	}
+
+	public function save_po()
+	{
+
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$po_supplier 								= $this->input->post('po_supplier');
+			$po_tax 									= $this->input->post('po_tax');
+			$po_ekspedisi 								= $this->input->post('po_ekspedisi');
+			$po_top 									= $this->input->post('po_top');
+			$purchase_order_due_date 					= $this->input->post('purchase_order_due_date');
+			$po_payment_method 							= $this->input->post('po_payment_method');
+			$po_warehouse 								= $this->input->post('po_warehouse');
+			$footer_sub_total_submit 					= $this->input->post('footer_sub_total_submit');
+			$footer_total_discount_submit 				= $this->input->post('footer_total_discount_submit');
+			$edit_footer_discount_percentage1_submit 	= $this->input->post('edit_footer_discount_percentage1_submit');
+			$edit_footer_discount_percentage2_submit 	= $this->input->post('edit_footer_discount_percentage2_submit');
+			$edit_footer_discount_percentage3_submit 	= $this->input->post('edit_footer_discount_percentage3_submit');
+			$edit_footer_discount1_submit 				= $this->input->post('edit_footer_discount1_submit');
+			$edit_footer_discount2_submit 				= $this->input->post('edit_footer_discount2_submit');
+			$edit_footer_discount3_submit 				= $this->input->post('edit_footer_discount3_submit');
+			$footer_dpp_val 							= $this->input->post('footer_dpp_val');
+			$footer_total_ppn_val 						= $this->input->post('footer_total_ppn_val');
+			$footer_total_ongkir_val 					= $this->input->post('footer_total_ongkir_val');
+			$footer_total_invoice_val 					= $this->input->post('footer_total_invoice_val');
+			$user_id 									= $_SESSION['user_id'];
+
+			$maxCode  = $this->purchase_model->last_po();
+			$inv_code = 'PJ/'.$submission_product_code.'/'.$submission_warehouse_name.'/'.date("d/m/Y").'/';
+			if ($maxCode == NULL) {
+				$last_code = $inv_code.'000001';
+			} else {
+				$maxCode   = $maxCode[0]->submission_invoice;
+				$last_code = substr($maxCode, -6);
+				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
+			}
+
+			$data_insert = array(
+				'temp_submission_id'	=> $submission_id,
+				'temp_product_id'		=> $product_id,
+				'temp_po_price'			=> $temp_price_val,
+				'temp_po_qty'			=> $temp_qty,
+				'temp_po_weight'		=> $temp_weight,
+				'temp_po_ongkir'		=> $temp_delivery_price_val,
+				'temp_po_total_weight'	=> $temp_total_weight,
+				'temp_po_total_ongkir'	=> $temp_ongkir_val,
+				'temp_po_total'			=> $temp_total_val,
+				'temp_user_id'			=> $user_id,
+			);	
+			
+			$msg = 'Success Tambah';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 	// end purchase order
 }

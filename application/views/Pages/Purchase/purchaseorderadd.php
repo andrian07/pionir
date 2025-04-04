@@ -545,6 +545,39 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+  $('#product_name').autocomplete({ 
+    minLength: 2,
+    source: function(req, add) {
+      $.ajax({
+        url: '<?php echo base_url(); ?>/Purchase/search_product_po?sup_id='+$('#po_supplier').val(),
+        dataType: 'json',
+        type: 'GET',
+        data: req,
+        success: function(res) {
+          if (res.success == true) {
+            add(res.data);
+          }else{
+            $('#submission_inv').val('');
+          }
+        },
+      });
+    },
+    select: function(event, ui) {
+      let id = ui.item.id;
+      let product_name = ui.item.product_name;
+      let product_id = ui.item.product_id;
+      let product_price = ui.item.product_price;
+      let product_weight = ui.item.product_weight;
+      $('#submission_id').val(id);
+      $('#product_name').val(product_name);
+      $('#product_id').val(product_id);
+      temp_price.set(product_price);
+      $('#temp_weight').val(product_weight);
+    },
+  });
+
+  
+
   $('#temp_price').on('input', function (event) {
     let temp_price_val = parseInt(temp_price.get());
     let temp_qty_val = $('#temp_qty').val();
@@ -613,6 +646,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     edit_footer_discount3.set(edit_footer_discount3_val);
   })
   
+
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
     var submission_id           = $("#submission_id").val();
@@ -652,6 +686,48 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   });
 
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var po_supplier                              = $("#po_supplier").val();
+    var po_tax                                   = $("#po_tax").val();
+    var po_ekspedisi                             = $("#po_ekspedisi").val();
+    var po_top                                   = $("#po_top").val();
+    var purchase_order_due_date                  = $("#purchase_order_due_date").val();
+    var po_payment_method                        = $("#po_payment_method").val();
+    var po_warehouse                             = $("#po_warehouse").val();
+    var footer_sub_total_submit                  = parseInt(footer_sub_total.get());
+    var footer_total_discount_submit             = parseInt(footer_total_discount.get());
+    var edit_footer_discount_percentage1_submit  = parseInt(edit_footer_discount_percentage1.get());
+    var edit_footer_discount_percentage2_submit  = parseInt(edit_footer_discount_percentage2.get());
+    var edit_footer_discount_percentage3_submit  = parseInt(edit_footer_discount_percentage3.get());
+    var edit_footer_discount1_submit             = parseInt(edit_footer_discount1.get());
+    var edit_footer_discount2_submit             = parseInt(edit_footer_discount2.get());
+    var edit_footer_discount3_submit             = parseInt(edit_footer_discount3.get());
+    var footer_dpp_val                           = parseInt(footer_dpp.get());
+    var footer_total_ppn_val                     = parseInt(footer_total_ppn.get());
+    var footer_total_ongkir_val                  = parseInt(footer_total_ongkir.get());
+    var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/save_po",
+      dataType: "json",
+      data: {po_supplier:po_supplier, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>/Purchase/po";
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
+
+
   function deletes(id)
   {
     Swal.fire({
@@ -689,6 +765,33 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         });
       }
     })
+  }
+
+
+  function edit_temp(id)
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_po",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          var row = data.result[0];
+          $("#submission_inv").val(row.product_name+'('+row.submission_invoice +')');
+          $("#submission_id").val(row.submission_id);
+          $("#product_name").val(row.product_name);
+          $("#product_id").val(row.submission_product_id);
+          temp_price.set(row.temp_po_price);
+          $("#temp_qty").val(row.temp_po_qty);
+          $("#temp_weight").val(row.temp_po_weight);
+          temp_delivery_price.set(row.temp_po_ongkir);
+          $("#temp_total_weight").val(row.temp_po_total_weight);
+          temp_ongkir.set(row.temp_po_total_ongkir);
+          temp_total.set(row.temp_po_total);
+        }
+      }
+    });  
   }
 
   function check_tempt_data()

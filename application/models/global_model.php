@@ -20,6 +20,13 @@ class global_model extends CI_Model {
         return $result;
     }
 
+    public function search_product_by_supplier($keyword, $supplier_id)
+    {
+        $query = $this->db->query("select * from ms_product a, ms_product_supplier b where a.product_id = b.product_id and (product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' and b.supplier_id = '".$supplier_id."'" );
+        $result = $query->result();
+        return $result;
+    }
+
 }
 
 ?>

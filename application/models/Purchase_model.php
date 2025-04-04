@@ -149,6 +149,14 @@ class purchase_model extends CI_Model {
         $this->db->insert('temp_po', $data_insert);
     }
 
+    public function edit_temp_po($product_id, $user_id, $data_insert)
+    {
+        $this->db->set($data_insert);
+        $this->db->where('temp_product_id ', $product_id);
+        $this->db->where('temp_user_id ', $user_id);
+        $this->db->update('temp_po');
+    }
+
     public function temp_po_list($search, $length, $start)
     {
         $this->db->select('*');
@@ -198,9 +206,23 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
+    public function check_edit_temp_po($temp_po_id)
+    {
+        $query = $this->db->query("select * from temp_po a, submission b, ms_product c where a.temp_submission_id = b.submission_id and a.temp_product_id = c.product_id and temp_po_id  = '".$temp_po_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function check_temp_po_input($product_id, $user_id)
     {
         $query = $this->db->query("select * from temp_po where temp_product_id = '".$product_id."' and temp_user_id = '".$user_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function last_po()
+    {
+        $query = $this->db->query("select hd_po_invoice from hd_po  order by hd_po_id desc limit 1");
         $result = $query->result();
         return $result;
     }

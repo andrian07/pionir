@@ -1264,6 +1264,14 @@ class Masterdata extends CI_Controller {
 
 			$insert = $this->masterdata_model->save_product($data_insert);
 
+			foreach($product_supplier as $row){
+				$insert_supplier = array(
+					'product_id'				=> $insert,
+					'supplier_id'				=> $row
+				);
+				$this->masterdata_model->save_product_supplier($insert_supplier);
+			}	
+
 			$data_insert_master_stock = array(
 				'product_id'				=> $insert,
 				'warehouse_id'				=> 1,
@@ -1271,14 +1279,6 @@ class Masterdata extends CI_Controller {
 			);
 
 			$this->masterdata_model->save_product_stock($data_insert_master_stock);
-
-			foreach($product_supplier as $row){
-				$insert_supplier = array(
-					'product_id'				=> $last_code,
-					'supplier_id'				=> $product_name
-				);
-				$this->masterdata_model->save_product_supplier($insert_supplier);
-			}	
 
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Produk Baru',
