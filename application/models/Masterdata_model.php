@@ -187,6 +187,13 @@ class masterdata_model extends CI_Model {
         $this->db->where('warehouse_id ', $warehouse_id);
         $this->db->update('ms_warehouse');
     }
+
+    public function get_warehouse_code($warehouse_id)
+    {
+        $query = $this->db->query("select warehouse_code from ms_warehouse where warehouse_id = '".$warehouse_id."'");
+        $result = $query->result();
+        return $result;
+    }
     //end warehouse
 
 

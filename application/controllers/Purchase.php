@@ -596,17 +596,18 @@ class Purchase extends CI_Controller {
 		$user_id 		= $_SESSION['user_id'];
 		$check_temp_po = $this->purchase_model->check_temp_po($user_id);
 		if($check_temp_po[0]->sub_total != null){
-			$supplier = $check_temp_po[0]->submission_supplier;
-			$product_tax = $check_temp_po[0]->is_ppn;
-			$sub_total   = $check_temp_po[0]->sub_total;
-			$ongkir      = $check_temp_po[0]->ongkir;
+			$supplier 	 	 = $check_temp_po[0]->submission_supplier;
+			$supplier_code 	 = $check_temp_po[0]->supplier_code;
+			$product_tax 	 = $check_temp_po[0]->is_ppn;
+			$sub_total  	 = $check_temp_po[0]->sub_total;
+			$ongkir     	 = $check_temp_po[0]->ongkir;
 		}else{
 			$supplier     = 0;
 			$product_tax  = 0;
 			$sub_total    = 0;
 			$sub_total    = 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'supplier_code'=>$supplier_code, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
 		die();
 	}
 
@@ -636,6 +637,7 @@ class Purchase extends CI_Controller {
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
 			$po_supplier 								= $this->input->post('po_supplier');
+			$po_supplier_code							= $this->input->post('po_supplier_code');
 			$po_tax 									= $this->input->post('po_tax');
 			$po_ekspedisi 								= $this->input->post('po_ekspedisi');
 			$po_top 									= $this->input->post('po_top');
@@ -656,12 +658,48 @@ class Purchase extends CI_Controller {
 			$footer_total_invoice_val 					= $this->input->post('footer_total_invoice_val');
 			$user_id 									= $_SESSION['user_id'];
 
+			if($po_supplier == null){
+				$msg = 'Silahkan Masukan Supplier';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($po_ekspedisi == null){
+				$msg = 'Silahkan Masukan Ekspedisi';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($po_top == null){
+				$msg = 'Silahkan Masukan Jatuh Tempo';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($po_payment_method == null){
+				$msg = 'Silahkan Masukan Jenis Pembayaran';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($po_warehouse == null){
+				$msg = 'Silahkan Masukan Gudang';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($footer_total_invoice_val <= 0){
+				$msg = 'Silahkan Input Data Terlebih Dahulu';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+
+
+			$warehouse_id = $po_warehouse;
+			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);
+			$warehouse_code = $get_warehouse_code[0]->warehouse_code;
+
 			$maxCode  = $this->purchase_model->last_po();
-			$inv_code = 'PJ/'.$submission_product_code.'/'.$submission_warehouse_name.'/'.date("d/m/Y").'/';
+			$inv_code = 'PO/'.$po_supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
 			} else {
-				$maxCode   = $maxCode[0]->submission_invoice;
+				$maxCode   = $maxCode[0]->hd_po_invoice;
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}

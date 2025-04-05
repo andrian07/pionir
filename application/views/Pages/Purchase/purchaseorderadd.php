@@ -23,7 +23,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="tanggal" class="col-sm-1 col-form-label text-right">T.O.P :</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="po_top" name="po_top">
-                  <option>-- Pilih T.O.P --</option>
+                  <option value="">-- Pilih T.O.P --</option>
                   <option value="0">CBD</option>
                   <option value="7">JT7</option>
                   <option value="15">JT15</option>
@@ -48,6 +48,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
                   <?php } ?>
                 </select>
+                <input id="po_supplier_code" name="po_supplier_code" type="hidden" class="form-control" value="" readonly="">
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
               <div class="col-sm-3">
@@ -56,7 +57,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" id="po_warehouse" name="po_warehouse">
-                  <option>-- Pilih Gudang --</option>
+                  <option value="">-- Pilih Gudang --</option>
                   <?php foreach ($data['warehouse_list'] as $row) { ?>
                     <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
                   <?php } ?>
@@ -75,7 +76,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Metode Bayar :</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" id="po_payment_method" name="po_payment_method">
-                  <option>-- Pilih Metode Bayar --</option>
+                  <option value="">-- Pilih Metode Bayar --</option>
                   <?php foreach ($data['payment_list'] as $row) { ?>
                     <option value="<?php echo $row->payment_id; ?>"><?php echo $row->payment_name; ?></option>  
                   <?php } ?>
@@ -91,7 +92,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
               <div class="col-sm-3">
                 <select class="form-control input-full js-example-basic-single" id="po_ekspedisi" name="po_ekspedisi">
-                  <option>-- Pilih Ekspedisi --</option>
+                  <option value="">-- Pilih Ekspedisi --</option>
                   <?php foreach ($data['ekspedisi_list'] as $row) { ?>
                     <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>  
                   <?php } ?>
@@ -689,6 +690,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#btnsave').click(function(e){
     e.preventDefault();
     var po_supplier                              = $("#po_supplier").val();
+    var po_supplier_code                         = $("#po_supplier_code").val();
     var po_tax                                   = $("#po_tax").val();
     var po_ekspedisi                             = $("#po_ekspedisi").val();
     var po_top                                   = $("#po_top").val();
@@ -712,7 +714,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_po",
       dataType: "json",
-      data: {po_supplier:po_supplier, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
+      data: {po_supplier:po_supplier, po_supplier_code:po_supplier_code, po_supplier_codepo_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Purchase/po";
@@ -806,6 +808,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if(data.supplier == 0){
             $("#po_supplier").select2("val", " ");
             $('#po_supplier').prop('disabled', false);
+            $("#po_supplier_code").val('');
             $('#po_tax').val('');
             $('#po_tax').prop('disabled', false);
             footer_sub_total.set(0);
@@ -816,6 +819,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           }else{
             $("#po_supplier").select2("val", data.supplier);
             $('#po_supplier').prop('disabled', true);
+            $("#po_supplier_code").val(data.supplier_code);
             $('#po_tax').val(data.product_tax);
             $('#po_tax').prop('disabled', true);
             footer_sub_total.set(data.sub_total);
