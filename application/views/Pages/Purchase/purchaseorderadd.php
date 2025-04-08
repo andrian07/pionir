@@ -35,7 +35,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
               <div class="col-sm-3">
-                <input id="purchase_order_date" name="purchase_order_date" type="date" class="form-control" value="2025-03-21" readonly="">
+                <input id="po_date" name="po_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly="">
               </div>
             </div>
 
@@ -564,6 +564,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
+      console.log(ui);
       let id = ui.item.id;
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
@@ -690,7 +691,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#btnsave').click(function(e){
     e.preventDefault();
     var po_supplier                              = $("#po_supplier").val();
-    var po_supplier_code                         = $("#po_supplier_code").val();
+    var po_date                                  = $("#po_date").val();
+    var po_supplier                              = $("#po_supplier").val();
     var po_tax                                   = $("#po_tax").val();
     var po_ekspedisi                             = $("#po_ekspedisi").val();
     var po_top                                   = $("#po_top").val();
@@ -714,7 +716,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_po",
       dataType: "json",
-      data: {po_supplier:po_supplier, po_supplier_code:po_supplier_code, po_supplier_codepo_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
+      data: {po_supplier:po_supplier, po_date:po_date, po_supplier:po_supplier, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Purchase/po";
@@ -780,8 +782,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           var row = data.result[0];
-          $("#submission_inv").val(row.product_name+'('+row.submission_invoice +')');
-          $("#submission_id").val(row.submission_id);
+          if(row.temp_submission_id != 0){
+            $("#submission_inv").val(row.product_name+'('+row.submission_invoice +')');
+            $("#submission_id").val(row.submission_id);
+          }else{
+            $("#submission_inv").val("");
+            $("#submission_id").val(0);
+          }
           $("#product_name").val(row.product_name);
           $("#product_id").val(row.submission_product_id);
           temp_price.set(row.temp_po_price);

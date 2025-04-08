@@ -190,7 +190,7 @@ class masterdata_model extends CI_Model {
 
     public function get_warehouse_code($warehouse_id)
     {
-        $query = $this->db->query("select warehouse_code from ms_warehouse where warehouse_id = '".$warehouse_id."'");
+        $query = $this->db->query("select warehouse_code, warehouse_name from ms_warehouse where warehouse_id = '".$warehouse_id."'");
         $result = $query->result();
         return $result;
     }
@@ -323,6 +323,13 @@ class masterdata_model extends CI_Model {
         $this->db->set('is_active', 'N');
         $this->db->where('supplier_id ', $supplier_id);
         $this->db->update('ms_supplier');
+    }
+
+     public function get_supplier_code($supplier_id)
+    {
+        $query = $this->db->query("select supplier_code, supplier_name from ms_supplier where supplier_id = '".$supplier_id."'");
+        $result = $query->result();
+        return $result;
     }
     //end supplier
 

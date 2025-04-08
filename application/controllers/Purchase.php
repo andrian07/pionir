@@ -19,6 +19,7 @@ class Purchase extends CI_Controller {
 		
 	}
 
+
 	private function check_auth($modul){
 		if(isset($_SESSION['user_name']) == null){
 			redirect('Dashboard', 'refresh');
@@ -45,35 +46,6 @@ class Purchase extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 	}
-
-	public function search_product_po()
-	{	
-		$supplier_id = $this->input->get('id');
-		$keyword = $this->input->get('term');
-		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
-		/*if($supplier_id == '' || $supplier_id == NULL){
-			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
-		}*/
-		if (!($keyword == '' || $keyword == NULL)) {
-			if($supplier_id == null){
-				$find = $this->global_model->search_product($keyword, $supplier_id);
-			}else{
-				$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
-			}
-			$find_result = [];
-			foreach ($find as $row) {
-				$diplay_text = $row->product_code.' - '.$row->product_name;
-				$find_result[] = [
-					'id'                  => $row->product_id,
-					'value'               => $diplay_text,
-					'product_code'        => $row->product_code
-				];
-			}
-			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
-		}
-		echo json_encode($result);
-	} 
-
 
 	public function search_product_by_suplier()
 	{	
@@ -387,7 +359,7 @@ class Purchase extends CI_Controller {
 
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
-					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id '].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_po_id '].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_po_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
 					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
@@ -413,7 +385,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['product_name'];
 				$row[] 	= $tax;
 				$row[] 	= $field['supplier_name'];
-				$row[] 	= 'Rp. '.number_format($field['dt_purchase_price']);
+				$row[] 	= 'Rp. '.number_format($field['dt_po_price']);
 				$row[] 	= 'Rp. '.number_format($field['hd_po_grand_total']);
 				$row[] 	= $hd_po_status;
 				$row[] 	= $field['hd_po_status_delivery'];
@@ -594,13 +566,13 @@ class Purchase extends CI_Controller {
 	public function check_temp_po()
 	{
 		$user_id 		= $_SESSION['user_id'];
-		$check_temp_po = $this->purchase_model->check_temp_po($user_id);
-		if($check_temp_po[0]->sub_total != null){
-			$supplier 	 	 = $check_temp_po[0]->submission_supplier;
-			$supplier_code 	 = $check_temp_po[0]->supplier_code;
-			$product_tax 	 = $check_temp_po[0]->is_ppn;
-			$sub_total  	 = $check_temp_po[0]->sub_total;
-			$ongkir     	 = $check_temp_po[0]->ongkir;
+		$check_temp_po = $this->purchase_model->check_temp_po($user_id)->result_array();;
+		if($check_temp_po[0]['sub_total'] != null){
+			$supplier 	 	 = $check_temp_po[0]['submission_supplier'];
+			$supplier_code 	 = $check_temp_po[0]['supplier_code'];
+			$product_tax 	 = $check_temp_po[0]['is_ppn'];
+			$sub_total  	 = $check_temp_po[0]['sub_total'];
+			$ongkir     	 = $check_temp_po[0]['ongkir'];
 		}else{
 			$supplier     = 0;
 			$product_tax  = 0;
@@ -614,7 +586,7 @@ class Purchase extends CI_Controller {
 	public function get_edit_temp_po()
 	{
 		$temp_po_id  = $this->input->post('id');
-		$check_edit_temp_po = $this->purchase_model->check_edit_temp_po($temp_po_id);
+		$check_edit_temp_po = $this->purchase_model->check_edit_temp_po($temp_po_id)->result_array();
 		echo json_encode(['code'=>200, 'result'=>$check_edit_temp_po]);
 		die();
 	}
@@ -637,7 +609,8 @@ class Purchase extends CI_Controller {
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
 			$po_supplier 								= $this->input->post('po_supplier');
-			$po_supplier_code							= $this->input->post('po_supplier_code');
+			$po_date 									= $this->input->post('po_date');
+			$po_supplier								= $this->input->post('po_supplier');
 			$po_tax 									= $this->input->post('po_tax');
 			$po_ekspedisi 								= $this->input->post('po_ekspedisi');
 			$po_top 									= $this->input->post('po_top');
@@ -693,9 +666,14 @@ class Purchase extends CI_Controller {
 			$warehouse_id = $po_warehouse;
 			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);
 			$warehouse_code = $get_warehouse_code[0]->warehouse_code;
+			$warehouse_name = $get_warehouse_code[0]->warehouse_name;
+
+			$supplier_id = $po_supplier;
+			$get_supplier_code = $this->masterdata_model->get_supplier_code($supplier_id);
+			$supplier_code = $get_supplier_code[0]->supplier_code;
 
 			$maxCode  = $this->purchase_model->last_po();
-			$inv_code = 'PO/'.$po_supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
+			$inv_code = 'PO/'.$supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
 			} else {
@@ -705,18 +683,57 @@ class Purchase extends CI_Controller {
 			}
 
 			$data_insert = array(
-				'temp_submission_id'	=> $submission_id,
-				'temp_product_id'		=> $product_id,
-				'temp_po_price'			=> $temp_price_val,
-				'temp_po_qty'			=> $temp_qty,
-				'temp_po_weight'		=> $temp_weight,
-				'temp_po_ongkir'		=> $temp_delivery_price_val,
-				'temp_po_total_weight'	=> $temp_total_weight,
-				'temp_po_total_ongkir'	=> $temp_ongkir_val,
-				'temp_po_total'			=> $temp_total_val,
-				'temp_user_id'			=> $user_id,
+				'hd_po_invoice'				=> $last_code,
+				'hd_po_date'				=> $po_date,
+				'hd_po_warehouse'			=> $po_warehouse,
+				'hd_po_supplier'			=> $po_supplier,
+				'hd_po_tax'					=> $po_tax,
+				'hd_po_top'					=> $po_top,
+				'hd_po_due_date'			=> $purchase_order_due_date,
+				'hd_po_payment'				=> $po_payment_method,
+				'hd_po_ekspedisi'			=> $po_ekspedisi,
+				'hd_po_sub_total'			=> $footer_sub_total_submit,
+				'hd_po_disc_percentage1'	=> $edit_footer_discount_percentage1_submit,
+				'hd_po_disc_percentage2'	=> $edit_footer_discount_percentage2_submit,
+				'hd_po_disc_percentage3'	=> $edit_footer_discount_percentage3_submit,
+				'hd_po_disc_1'				=> $edit_footer_discount1_submit,
+				'hd_po_disc_2'				=> $edit_footer_discount2_submit,
+				'hd_po_disc_3'				=> $edit_footer_discount3_submit,
+				'hd_po_total_discount'		=> $footer_total_discount_submit,
+				'hd_po_dpp'					=> $footer_dpp_val,
+				'hd_po_ppn'					=> $footer_total_ppn_val,
+				'hd_po_ongkir'				=> $footer_total_ongkir_val,
+				'hd_po_grand_total'			=> $footer_total_invoice_val,
+				'created_by'				=> $user_id
 			);	
 			
+			$save_po = $this->purchase_model->save_po($data_insert);
+
+			$get_temp_po = $this->purchase_model->get_temp_po($user_id)->result_array();
+			foreach($get_temp_po  as $row){
+				$data_insert_detail = array(
+					'hd_po_id'				=> $save_po,
+					'submission_id'			=> $row['temp_submission_id'],
+					'dt_product_id'			=> $row['temp_product_id'],
+					'dt_po_price'			=> $row['temp_po_price'],
+					'dt_po_qty'				=> $row['temp_po_qty'],
+					'dt_po_weight'			=> $row['temp_po_weight'],
+					'dt_po_ongkir'			=> $row['temp_po_ongkir'],
+					'dt_po_total_weight'	=> $row['temp_po_total_weight'],
+					'dt_po_total_ongkir'	=> $row['temp_po_total_ongkir'],
+					'dt_po_total'			=> $row['temp_po_total'],
+				);	
+
+				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
+			}
+			
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah PO Cabang '.$warehouse_name,
+				'activity_table_user'	       => $user_id,
+			);
+
+			$this->global_model->save($data_insert_act);
+
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
@@ -724,6 +741,38 @@ class Purchase extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 	}
+
+
+	public function search_product_po()
+	{	
+		$supplier_id = $this->input->get('id');
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		/*if($supplier_id == '' || $supplier_id == NULL){
+			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
+		}*/
+		if (!($keyword == '' || $keyword == NULL)) {
+			if($supplier_id == null){
+				$find = $this->global_model->search_product($keyword, $supplier_id);
+			}else{
+				$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
+			}
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row->product_code.' - '.$row->product_name;
+				$find_result[] = [
+					'id'                  => '',
+					'value'               => $diplay_text,
+					'product_name'        => $row->product_name,
+					'product_id'          => $row->product_id,
+					'product_price'       => $row->product_price,
+					'product_weight'      => $row->product_weight
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
+	} 
 	// end purchase order
 }
 

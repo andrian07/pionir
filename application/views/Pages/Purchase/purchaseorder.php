@@ -65,7 +65,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Nama Produk</th>
                   <th>Golongan</th>
                   <th>Supplier</th>
-                  <th>Harga</th>
+                  <th>Harga Satuan</th>
                   <th>Total Harga</th>
                   <th>Status</th>
                   <th>Status Pengiriman</th>

@@ -87,6 +87,15 @@ class purchase_model extends CI_Model {
     // start po
 
 
+    public function save_po($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_po', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
     public function po_list($search, $length, $start)
     {
         $this->db->select('*');
@@ -95,6 +104,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_product', 'dt_po.dt_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'hd_po.hd_po_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_supplier', 'hd_po.hd_po_supplier = ms_supplier.supplier_id');
         $this->db->join('ms_user', 'hd_po.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -149,6 +159,11 @@ class purchase_model extends CI_Model {
         $this->db->insert('temp_po', $data_insert);
     }
 
+    public function save_detail_po($data_insert_detail)
+    {
+        $this->db->insert('dt_po', $data_insert_detail);
+    }
+
     public function edit_temp_po($product_id, $user_id, $data_insert)
     {
         $this->db->set($data_insert);
@@ -157,11 +172,24 @@ class purchase_model extends CI_Model {
         $this->db->update('temp_po');
     }
 
+    public function get_temp_po($user_id)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_po');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
+        $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id ', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    
     public function temp_po_list($search, $length, $start)
     {
         $this->db->select('*');
         $this->db->from('temp_po');
-        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id ');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
         $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
@@ -201,16 +229,28 @@ class purchase_model extends CI_Model {
 
     public function check_temp_po($user_id)
     {
-        $query = $this->db->query("select supplier_code, sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, submission_supplier, is_ppn from temp_po a, submission b, ms_product c, ms_supplier d where a.temp_submission_id = b.submission_id and a.temp_product_id = c.product_id and b.submission_supplier = d.supplier_id and temp_user_id = '".$user_id."'");
-        $result = $query->result();
-        return $result;
+        $this->db->select('supplier_code, sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, submission_supplier, is_ppn');
+        $this->db->from('temp_po');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
+        $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        $this->db->join('ms_supplier', 'submission.submission_supplier = ms_supplier.supplier_id', 'left');
+        $this->db->where('temp_user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
     }
+
 
     public function check_edit_temp_po($temp_po_id)
     {
-        $query = $this->db->query("select * from temp_po a, submission b, ms_product c where a.temp_submission_id = b.submission_id and a.temp_product_id = c.product_id and temp_po_id  = '".$temp_po_id."'");
-        $result = $query->result();
-        return $result;
+        $this->db->select('*');
+        $this->db->from('temp_po');
+        $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
+        $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
+        $this->db->where('temp_po_id', $temp_po_id);
+        $query = $this->db->get();
+        return $query;
     }
 
     public function check_temp_po_input($product_id, $user_id)
