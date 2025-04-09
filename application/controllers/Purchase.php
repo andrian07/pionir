@@ -407,6 +407,19 @@ class Purchase extends CI_Controller {
 
 	}
 
+	public function detailpo()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$this->load->view('Pages/Purchase/detailpo');
+			//echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function addpo()
 	{
 		$modul = 'PO';

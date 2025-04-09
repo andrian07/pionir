@@ -26,6 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['base_url']    = 'http://localhost/pionir';
 $config['header'] = "pionir/application/views/pages/header.php";
+$config['headerdetail'] = "pionir/application/views/pages/headerdetail.php";
 $config['footer'] = "pionir/application/views/pages/footer.php";
 
 /*
