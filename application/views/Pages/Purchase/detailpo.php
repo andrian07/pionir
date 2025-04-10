@@ -111,8 +111,8 @@
               <td><?php echo $row->product_name; ?></td>
               <td><?php echo $row->unit_name; ?></td>
               <td><?php echo $row->dt_po_qty; ?></td>
-              <td><?php echo $row->dt_po_total_ongkir; ?></td>
-              <td><?php echo $row->dt_po_total; ?></td>
+              <td><?php echo number_format($row->dt_po_total_ongkir); ?></td>
+              <td><?php echo number_format($row->dt_po_total); ?></td>
             </tr>
           <?php } ?>
         </tbody>

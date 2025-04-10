@@ -96,7 +96,7 @@ class purchase_model extends CI_Model {
         return  $insert_id;
     }
 
-    public function po_list($search, $length, $start)
+    public function po_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)
     {
         $this->db->select('*');
         $this->db->from('hd_po');
@@ -106,6 +106,12 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_po.hd_po_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_supplier', 'hd_po.hd_po_supplier = ms_supplier.supplier_id');
         $this->db->join('ms_user', 'hd_po.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_po_supplier','"'.$supplier_filter_val.'"');
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -120,7 +126,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function po_list_count($search)
+    public function po_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_po');
@@ -129,6 +135,12 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'hd_po.hd_po_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_user', 'hd_po.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_po_supplier','"'.$supplier_filter_val.'"');
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -243,7 +255,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function delete_temmp_po($temp_po_id)
+    public function delete_temp_po($temp_po_id)
     {
         $this->db->where('temp_po_id', $temp_po_id);
         $this->db->delete('temp_po');
@@ -293,6 +305,13 @@ class purchase_model extends CI_Model {
     {
         $this->db->where('temp_user_id', $user_id);
         $this->db->delete('temp_po');
+    }
+
+    public function delete_po($po_id)
+    {
+        $this->db->set('hd_po_status', 'Cancel');
+        $this->db->where('hd_po_id  ', $po_id);
+        $this->db->update('hd_po');
     }
     // end po
 

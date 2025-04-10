@@ -172,7 +172,7 @@ class Purchase extends CI_Controller {
 			$user_id 		= $_SESSION['user_id'];
 			$this->purchase_model->delete_submission($submission_id);
 			$data_insert_act = array(
-				'activity_table_desc'	       => 'Hapus Master Brand',
+				'activity_table_desc'	       => 'Batalkan Pengajuan',
 				'activity_table_user'	       => $user_id,
 			);
 			$this->global_model->save($data_insert_act);
@@ -333,11 +333,21 @@ class Purchase extends CI_Controller {
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
 
+			if($this->input->post('start_date_val') != null){
+				$start_date_val 	 = $this->input->post('start_date_val');
+				$end_date_val 		 = $this->input->post('end_date_val');
+				$supplier_filter_val = $this->input->post('supplier_filter_val');
+			}else{
+				$start_date_val 	 = "";
+				$end_date_val 		 = "";
+				$supplier_filter_val = "";
+			}
+
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->po_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->po_list_count($search)->result_array();
+			$list = $this->purchase_model->po_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
+			$count_list = $this->purchase_model->po_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -365,13 +375,21 @@ class Purchase extends CI_Controller {
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_po_id'].'" data-name="'.$field['hd_po_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					if($field['hd_po_status'] == 'Pending'){
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_po_id'].'" data-name="'.$field['hd_po_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}else{
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_po_id'].'" data-name="'.$field['hd_po_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}
 				}else{
 					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					if($field['hd_po_status'] == 'Pending'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_po_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}else{
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}
 				}else{
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
@@ -573,7 +591,7 @@ class Purchase extends CI_Controller {
 		if($check_auth[0]->delete == 'Y'){
 			$temp_po_id  = $this->input->post('id');
 			$user_id 	 = $_SESSION['user_id'];
-			$this->purchase_model->delete_temmp_po($temp_po_id);
+			$this->purchase_model->delete_temp_po($temp_po_id);
 			$msg = 'Success Delete';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 			die();
@@ -805,6 +823,28 @@ class Purchase extends CI_Controller {
 		}
 		echo json_encode($result);
 	} 
+
+	public function delete_po()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$po_id  		= $this->input->post('id');
+			$user_id 		= $_SESSION['user_id'];
+			$this->purchase_model->delete_po($po_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Batalkan PO',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
 	// end purchase order
 }
 
