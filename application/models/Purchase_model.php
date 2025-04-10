@@ -140,11 +140,26 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
+    public function header_po($po_id)
+    {
+        $query = $this->db->query("select * from hd_po a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_po_warehouse = b.warehouse_id and a.hd_po_supplier = c.supplier_id and a.hd_po_payment = f.payment_id and a.created_by = d.user_id and a.hd_po_ekspedisi = e.ekspedisi_id and hd_po_id  = '".$po_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_po($po_id)
+    {
+        $query = $this->db->query("select * from dt_po a, hd_po b, ms_product c, ms_unit d, ms_user e where a.hd_po_id = b.hd_po_id and a.dt_product_id = c.product_id and c.product_unit = d.unit_id and b.created_by = e.user_id and a.hd_po_id  = '".$po_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function search_submission($search)
     {
         $this->db->select('*');
         $this->db->from('submission');
         $this->db->join('ms_product', 'submission.submission_product_id  = ms_product.product_id');
+        $this->db->where('submission_status','Pending');
         if($search != null){
             $this->db->where('submission_invoice like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -162,6 +177,13 @@ class purchase_model extends CI_Model {
     public function save_detail_po($data_insert_detail)
     {
         $this->db->insert('dt_po', $data_insert_detail);
+    }
+
+    public function update_submission($submission_id_val)
+    {
+        $this->db->set('submission_status', 'Success');
+        $this->db->where('submission_id  ', $submission_id_val);
+        $this->db->update('submission');
     }
 
     public function edit_temp_po($product_id, $user_id, $data_insert)
@@ -265,6 +287,12 @@ class purchase_model extends CI_Model {
         $query = $this->db->query("select hd_po_invoice from hd_po  order by hd_po_id desc limit 1");
         $result = $query->result();
         return $result;
+    }
+
+    public function clear_temp_po($user_id)
+    {
+        $this->db->where('temp_user_id', $user_id);
+        $this->db->delete('temp_po');
     }
     // end po
 

@@ -412,7 +412,11 @@ class Purchase extends CI_Controller {
 		$modul = 'PO';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$this->load->view('Pages/Purchase/detailpo');
+			$po_id = $this->input->get('id');
+			$header_po['header_po'] = $this->purchase_model->header_po($po_id);
+			$detail_po['detail_po'] = $this->purchase_model->detail_po($po_id); 
+			$data['data'] = array_merge($header_po, $detail_po);
+			$this->load->view('Pages/Purchase/detailpo', $data);
 			//echo json_encode($output);
 		}else{
 			$msg = "No Access";
@@ -450,6 +454,7 @@ class Purchase extends CI_Controller {
 				$find_result[] = [
 					'id'                  => $row['submission_id'],
 					'value'               => $diplay_text,
+					'code'                => $row['submission_invoice'],
 					'product_name'        => $row['product_name'],
 					'product_id'          => $row['product_id'],
 					'product_price'       => $row['product_price'],
@@ -468,6 +473,7 @@ class Purchase extends CI_Controller {
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
 			$submission_id 				= $this->input->post('submission_id');
+			$submission_code 			= $this->input->post('submission_code');
 			$product_id 				= $this->input->post('product_id');
 			$temp_price_val 			= $this->input->post('temp_price_val');
 			$temp_qty 					= $this->input->post('temp_qty');
@@ -481,6 +487,7 @@ class Purchase extends CI_Controller {
 			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
 			$data_insert = array(
 				'temp_submission_id'	=> $submission_id,
+				'temp_submission_inv'	=> $submission_code,
 				'temp_product_id'		=> $product_id,
 				'temp_po_price'			=> $temp_price_val,
 				'temp_po_qty'			=> $temp_qty,
@@ -642,6 +649,8 @@ class Purchase extends CI_Controller {
 			$footer_total_ppn_val 						= $this->input->post('footer_total_ppn_val');
 			$footer_total_ongkir_val 					= $this->input->post('footer_total_ongkir_val');
 			$footer_total_invoice_val 					= $this->input->post('footer_total_invoice_val');
+			$purchase_order_remark 						= $this->input->post('purchase_order_remark');
+			
 			$user_id 									= $_SESSION['user_id'];
 
 			if($po_supplier == null){
@@ -717,6 +726,7 @@ class Purchase extends CI_Controller {
 				'hd_po_ppn'					=> $footer_total_ppn_val,
 				'hd_po_ongkir'				=> $footer_total_ongkir_val,
 				'hd_po_grand_total'			=> $footer_total_invoice_val,
+				'hd_po_note'			    => $purchase_order_remark,
 				'created_by'				=> $user_id
 			);	
 			
@@ -727,6 +737,7 @@ class Purchase extends CI_Controller {
 				$data_insert_detail = array(
 					'hd_po_id'				=> $save_po,
 					'submission_id'			=> $row['temp_submission_id'],
+					'submission_inv'		=> $row['temp_submission_inv'],
 					'dt_product_id'			=> $row['temp_product_id'],
 					'dt_po_price'			=> $row['temp_po_price'],
 					'dt_po_qty'				=> $row['temp_po_qty'],
@@ -738,14 +749,22 @@ class Purchase extends CI_Controller {
 				);	
 
 				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
+
+				if($row['temp_submission_id'] > 0 || $row['temp_submission_id'] != ''){
+					$submission_id_val = $row['temp_submission_id'];
+					$update_submission = $this->purchase_model->update_submission($submission_id_val);
+				}
+				
 			}
-			
+
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah PO Cabang '.$warehouse_name,
 				'activity_table_user'	       => $user_id,
 			);
 
 			$this->global_model->save($data_insert_act);
+
+			$this->purchase_model->clear_temp_po($user_id);
 
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);

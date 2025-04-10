@@ -117,7 +117,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="form-group">
                     <label>No Pengajuan:</label>
                     <input id="submission_inv" name="submission_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pengajuan">
-                    <input id="submission_id" type="hidden" name="submission_id" >
+                    <input id="submission_id" type="hidden" name="submission_id">
+                    <input id="submission_code" type="hidden" name="submission_code">
                   </div>
                 </div>
 
@@ -218,7 +219,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>Porduk</th>
                     <th>Satuan</th>
                     <th>Qty</th>
-                    <th>Diskon</th>
                     <th>Ongkir</th>
                     <th>Total</th>
                     <th>Aksi</th>
@@ -508,8 +508,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7},
-        {data: 8}
+        {data: 7}
       ]
     });
     check_tempt_data();
@@ -538,7 +537,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
+      let code = ui.item.code;
       $('#submission_id').val(id);
+      $('#submission_code').val(code);
       $('#product_name').val(product_name);
       $('#product_id').val(product_id);
       temp_price.set(product_price);
@@ -564,13 +565,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
-      console.log(ui);
       let id = ui.item.id;
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
       $('#submission_id').val(id);
+      $('#submission_code').val('');
       $('#product_name').val(product_name);
       $('#product_id').val(product_id);
       temp_price.set(product_price);
@@ -652,6 +653,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
     var submission_id           = $("#submission_id").val();
+    var submission_code         = $("#submission_code").val();
     var product_id              = $("#product_id").val();
     var temp_price_val          = parseInt(temp_price.get());
     var temp_qty                = $("#temp_qty").val();
@@ -666,7 +668,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         type: "POST",
         url: "<?php echo base_url(); ?>Purchase/add_temp_po",
         dataType: "json",
-        data: {submission_id:submission_id, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -711,12 +713,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var footer_total_ppn_val                     = parseInt(footer_total_ppn.get());
     var footer_total_ongkir_val                  = parseInt(footer_total_ongkir.get());
     var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
-
+    var purchase_order_remark                    = $("#purchase_order_remark").val();
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_po",
       dataType: "json",
-      data: {po_supplier:po_supplier, po_date:po_date, po_supplier:po_supplier, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val},
+      data: {po_supplier:po_supplier, po_date:po_date, po_supplier:po_supplier, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_order_remark:purchase_order_remark},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Purchase/po";
@@ -784,9 +786,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           var row = data.result[0];
           if(row.temp_submission_id != 0){
             $("#submission_inv").val(row.product_name+'('+row.submission_invoice +')');
+            $("#submission_code").val(row.submission_invoice );
             $("#submission_id").val(row.submission_id);
           }else{
             $("#submission_inv").val("");
+            $("#submission_code").val("");
             $("#submission_id").val(0);
           }
           $("#product_name").val(row.product_name);
@@ -852,6 +856,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   function clear_input()
   {
     $('#submission_inv').val('');
+    $("#submission_code").val('');
     $('#submission_id').val('');
     $('#product_name').val('');
     $('#product_id').val('');

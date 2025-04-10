@@ -13,34 +13,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
       <div class="col-md-12">
         <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-3">
-                Dari: <input id="start_date" name="start_date" type="date" class="form-control" value="">
-              </div>
-              <div class="col-md-3">
-                Sampai: <input id="end_date" name="end_date" type="date" class="form-control" value="">
-              </div>
-              <div class="col-md-3">
-                Supplier: 
-                <select class="form-control js-example-basic-single" id="supplier_filter" name="supplier_filter">
-                  <option>-- Pilih Supplier --</option>
-                  <?php foreach ($supplier_list as $row) { ?>
-                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                  <?php } ?>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <button type="button" class="btn btn-warning" id="search" style="margin-top:22px;"><i class="fas fa-search"></i> Search</button>
-                <button type="button" class="btn btn-primary" id="search" style="margin-top:22px;"> Clear</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-        <div class="card">
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
@@ -48,7 +20,50 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <a href="<?php echo base_url(); ?>Purchase/addpo"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span> Tambah</button></a>
+                <a href="<?php echo base_url(); ?>Purchase/addpo"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-search" ></i> Filter</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Dari: </label>
+                          <div class="col-md-12 p-0">
+                            <input id="start_date" name="start_date" type="date" class="form-control" value="">
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Sampai: </label>
+                          <div class="col-md-12 p-0">
+                            <input id="end_date" name="end_date" type="date" class="form-control" value="">
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier: </label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control js-example-basic-single" id="supplier_filter" name="supplier_filter">
+                              <option>-- Pilih Supplier --</option>
+                              <?php foreach ($supplier_list as $row) { ?>
+                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" id="btnsave" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
