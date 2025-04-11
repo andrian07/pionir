@@ -846,6 +846,37 @@ class Purchase extends CI_Controller {
 		}
 	}
 	// end purchase order
+
+
+
+	// warehouse input
+
+	public function warehouseinput()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$this->load->view('Pages/Purchase/warehouseinput', $supplier_list);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function addwarehouseinput()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$this->load->view('Pages/Purchase/warehouseinputadd');
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	// end warehouse input
 }
 
 ?>
