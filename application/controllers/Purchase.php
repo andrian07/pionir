@@ -876,27 +876,19 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+
 	public function search_po()
 	{
-		$supplier_id = $this->input->get('id');
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
 		if (!($keyword == '' || $keyword == NULL)) {
-			if($supplier_id == null){
-				$find = $this->global_model->search_product($keyword, $supplier_id);
-			}else{
-				$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
-			}
+			$find = $this->purchase_model->search_po($keyword)->result_array(); 
 			$find_result = [];
 			foreach ($find as $row) {
-				$diplay_text = $row->product_code.' - '.$row->product_name;
+				$diplay_text = $row['hd_po_invoice'];
 				$find_result[] = [
-					'id'                  => '',
+					'id'                  => $row['hd_po_id'],
 					'value'               => $diplay_text,
-					'product_name'        => $row->product_name,
-					'product_id'          => $row->product_id,
-					'product_price'       => $row->product_price,
-					'product_weight'      => $row->product_weight
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];

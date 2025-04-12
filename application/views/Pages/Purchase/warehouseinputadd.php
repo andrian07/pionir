@@ -167,7 +167,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  
+
 
   $(document).ready(function() {
     temppo_table();
@@ -187,20 +187,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7}
       ]
     });
     check_tempt_data();
   }
 
-  $('#purchase_order_invoice').autocomplete({ 
+  $('#po_inv').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
       $.ajax({
@@ -212,24 +212,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if (res.success == true) {
             add(res.data);
           }else{
-            $('#submission_inv').val('');
+            $('#po_inv').val('');
           }
         },
       });
     },
     select: function(event, ui) {
-      let id = ui.item.id;
-      let product_name = ui.item.product_name;
-      let product_id = ui.item.product_id;
-      let product_price = ui.item.product_price;
-      let product_weight = ui.item.product_weight;
-      let code = ui.item.code;
-      $('#submission_id').val(id);
-      $('#submission_code').val(code);
-      $('#product_name').val(product_name);
-      $('#product_id').val(product_id);
-      temp_price.set(product_price);
-      $('#temp_weight').val(product_weight);
+      var po_id = ui.item.id;
+      $.ajax({
+        url: '<?php echo base_url(); ?>/Purchase/copy_po_to_temp?po_id='+po_id,
+        dataType: 'json',
+        type: 'GET',
+        data: req,
+        success: function(res) {
+          if (res.success == true) {
+            add(res.data);
+          }else{
+            $('#submission_inv').val('');
+          }
+        },
+      });
     },
   });
 

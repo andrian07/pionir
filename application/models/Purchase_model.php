@@ -315,6 +315,22 @@ class purchase_model extends CI_Model {
     }
     // end po
 
+    // start warehouse input 
+
+    public function search_po($search)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_po');
+        $this->db->where('hd_po_status','Pending');
+        if($search != null){
+            $this->db->where('hd_po_invoice like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    // end warehouse input 
+
 }
 
 ?>
