@@ -200,11 +200,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     check_tempt_data();
   }
 
-  $('#submission_inv').autocomplete({ 
+  $('#purchase_order_invoice').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_submission',
+        url: '<?php echo base_url(); ?>/Purchase/search_po',
         dataType: 'json',
         type: 'GET',
         data: req,
