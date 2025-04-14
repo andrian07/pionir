@@ -329,6 +329,71 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
+    public function temp_input_stock_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_input_stock');
+        $this->db->join('ms_product', 'temp_input_stock.temp_is_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_input_stock.temp_is_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_input_stock.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function temp_input_stock_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('temp_input_stock');
+        $this->db->join('ms_product', 'temp_input_stock.temp_is_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_input_stock.temp_is_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_input_stock.created_at', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function copy_temp_po($data_copy_temp_po)
+    {
+        $this->db->insert('temp_input_stock', $data_copy_temp_po);
+    }
+
+    public function clear_temp_input_stock($user_id)
+    {
+        $this->db->where('temp_is_user_id', $user_id);
+        $this->db->delete('temp_input_stock');
+    }
+
+    public function check_temp_input_stock($user_id)
+    {
+        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse');
+        $this->db->from('temp_input_stock');
+        $this->db->where('temp_is_user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function check_edit_temp_input_stock($product_id, $user_id)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_input_stock');
+        $this->db->join('ms_product', 'temp_input_stock.temp_is_product_id = ms_product.product_id');
+        $this->db->where('temp_is_product_id', $product_id);
+        $this->db->where('temp_is_user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
     // end warehouse input 
 
 }

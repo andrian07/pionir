@@ -558,7 +558,6 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
 				$row[] 	= $field['temp_po_qty'];
-				$row[] 	= $field['temp_po_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total']);
 				$row[] 	= $edit.$delete;
@@ -869,7 +868,10 @@ class Purchase extends CI_Controller {
 		$modul = 'WarehouseInput';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
-			$this->load->view('Pages/Purchase/warehouseinputadd');
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$data['data'] = array_merge($supplier_list, $warehouse_list);
+			$this->load->view('Pages/Purchase/warehouseinputadd', $data);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -896,6 +898,143 @@ class Purchase extends CI_Controller {
 		echo json_encode($result);
 	}
 
+	public function temp_input_stock_list()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->purchase_model->temp_input_stock_list($search, $length, $start)->result_array();
+			$count_list = $this->purchase_model->temp_input_stock_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit_temp('.$field['temp_is_product_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_is_product_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['product_code'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['unit_name'];
+				$row[] 	= $field['temp_is_qty_order'];
+				$row[] 	= $field['temp_is_qty'];
+				$row[] 	= $edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function copy_po_to_temp()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$po_id 		= $this->input->post('po_id');
+			$user_id 	= $_SESSION['user_id'];
+			$get_detail_po = $this->purchase_model->detail_po($po_id);
+			$this->purchase_model->clear_temp_input_stock($user_id);
+			foreach($get_detail_po as $row)
+			{
+				$data_copy_temp_po = array(
+					'temp_is_product_id'		=> $row->dt_product_id,
+					'temp_is_qty_order'			=> $row->dt_po_qty,
+					'temp_is_qty'				=> $row->dt_po_qty,
+					'temp_is_supplier'			=> $row->hd_po_supplier,
+					'temp_is_warehouse'			=> $row->hd_po_warehouse,
+					'temp_is_user_id'			=> $user_id,
+				);	
+
+				$copy_temp_po = $this->purchase_model->copy_temp_po($data_copy_temp_po);
+			}
+			$msg = "Success Copy";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function check_temp_input_stock()
+	{
+		$user_id 		= $_SESSION['user_id'];
+		$check_temp_input_stock = $this->purchase_model->check_temp_input_stock($user_id)->result_array();;
+		if($check_temp_input_stock[0]['total_item'] != null){
+			$supplier 	 	 = $check_temp_input_stock[0]['temp_is_supplier'];
+			$warehouse 	     = $check_temp_input_stock[0]['temp_is_warehouse'];
+			$total_item  	 = $check_temp_input_stock[0]['total_item'];
+		}else{
+			$supplier     	= 0;
+			$warehouse  	= 0;
+			$total_item    	= 0;
+		}
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
+		die();
+	}
+
+	public function get_edit_temp_input_stock()
+	{
+		$product_id  = $this->input->post('id');
+		$user_id 	 = $_SESSION['user_id'];
+		$check_edit_temp_input_stock = $this->purchase_model->check_edit_temp_input_stock($product_id, $user_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$check_edit_temp_input_stock]);
+		die();
+	}
+
+	public function add_temp_po()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$product_id 				= $this->input->post('product_id');
+			$temp_qty_recive 			= $this->input->post('temp_qty_recive');
+			$user_id 					= $_SESSION['user_id'];
+
+			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
+			$data_insert = array(
+				'temp_submission_id'	=> $submission_id,
+				'temp_submission_inv'	=> $submission_code,
+				'temp_product_id'		=> $product_id,
+				'temp_po_price'			=> $temp_price_val,
+				'temp_po_qty'			=> $temp_qty,
+				'temp_po_weight'		=> $temp_weight,
+				'temp_po_ongkir'		=> $temp_delivery_price_val,
+				'temp_po_total_weight'	=> $temp_total_weight,
+				'temp_po_total_ongkir'	=> $temp_ongkir_val,
+				'temp_po_total'			=> $temp_total_val,
+				'temp_user_id'			=> $user_id,
+			);	
+			$msg = 'Success Tambah';
+			if($check_temp_po_input != null){
+				$this->purchase_model->edit_temp_po($product_id, $user_id, $data_insert);
+			}else{
+				$this->purchase_model->insert_temp_po($data_insert);
+			}
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
 	// end warehouse input
 }
 
