@@ -376,7 +376,7 @@ class purchase_model extends CI_Model {
 
     public function check_temp_input_stock($user_id)
     {
-        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse');
+        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse, temp_is_supplier_code');
         $this->db->from('temp_input_stock');
         $this->db->where('temp_is_user_id', $user_id);
         $query = $this->db->get();
@@ -394,6 +394,20 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
+    public function delete_temp_input_stock($product_id, $user_id)
+    {
+        $this->db->where('temp_is_product_id', $product_id);
+        $this->db->where('temp_is_user_id', $user_id);
+        $this->db->delete('temp_input_stock');
+    }
+
+    public function edit_temp_input_stock($product_id, $user_id, $data_edit)
+    {
+        $this->db->set($data_edit);
+        $this->db->where('temp_is_product_id ', $product_id);
+        $this->db->where('temp_is_user_id ', $user_id);
+        $this->db->update('temp_input_stock');
+    }
     // end warehouse input 
 
 }

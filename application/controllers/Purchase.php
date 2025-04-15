@@ -960,6 +960,7 @@ class Purchase extends CI_Controller {
 					'temp_is_qty_order'			=> $row->dt_po_qty,
 					'temp_is_qty'				=> $row->dt_po_qty,
 					'temp_is_supplier'			=> $row->hd_po_supplier,
+					'temp_is_supplier_code'		=> $row->hd_po_invoice,
 					'temp_is_warehouse'			=> $row->hd_po_warehouse,
 					'temp_is_user_id'			=> $user_id,
 				);	
@@ -980,6 +981,7 @@ class Purchase extends CI_Controller {
 		$check_temp_input_stock = $this->purchase_model->check_temp_input_stock($user_id)->result_array();;
 		if($check_temp_input_stock[0]['total_item'] != null){
 			$supplier 	 	 = $check_temp_input_stock[0]['temp_is_supplier'];
+			$supplier_code 	 = $check_temp_input_stock[0]['temp_is_supplier_code'];
 			$warehouse 	     = $check_temp_input_stock[0]['temp_is_warehouse'];
 			$total_item  	 = $check_temp_input_stock[0]['total_item'];
 		}else{
@@ -987,7 +989,7 @@ class Purchase extends CI_Controller {
 			$warehouse  	= 0;
 			$total_item    	= 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'supplier_code'=>$supplier_code, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
 		die();
 	}
 
@@ -1000,7 +1002,7 @@ class Purchase extends CI_Controller {
 		die();
 	}
 
-	public function add_temp_po()
+	public function add_temp_input_stock()
 	{
 		$modul = 'WarehouseInput';
 		$check_auth = $this->check_auth($modul);
@@ -1009,30 +1011,62 @@ class Purchase extends CI_Controller {
 			$temp_qty_recive 			= $this->input->post('temp_qty_recive');
 			$user_id 					= $_SESSION['user_id'];
 
-			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
-			$data_insert = array(
-				'temp_submission_id'	=> $submission_id,
-				'temp_submission_inv'	=> $submission_code,
-				'temp_product_id'		=> $product_id,
-				'temp_po_price'			=> $temp_price_val,
-				'temp_po_qty'			=> $temp_qty,
-				'temp_po_weight'		=> $temp_weight,
-				'temp_po_ongkir'		=> $temp_delivery_price_val,
-				'temp_po_total_weight'	=> $temp_total_weight,
-				'temp_po_total_ongkir'	=> $temp_ongkir_val,
-				'temp_po_total'			=> $temp_total_val,
-				'temp_user_id'			=> $user_id,
+			$check_temp_input_stock_product = $this->purchase_model->check_edit_temp_input_stock($product_id, $user_id);
+			$data_edit = array(
+				'temp_is_qty'			=> $temp_qty_recive,
+				'temp_is_user_id'		=> $user_id,
 			);	
 			$msg = 'Success Tambah';
-			if($check_temp_po_input != null){
-				$this->purchase_model->edit_temp_po($product_id, $user_id, $data_insert);
-			}else{
-				$this->purchase_model->insert_temp_po($data_insert);
+			if($check_temp_input_stock_product != null){
+				$this->purchase_model->edit_temp_input_stock($product_id, $user_id, $data_edit);
 			}
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+
+	public function delete_temp_input_stock()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$product_id  = $this->input->post('id');
+			$user_id 	 = $_SESSION['user_id'];
+			$this->purchase_model->delete_temp_input_stock($product_id, $user_id);
+			$msg = 'Success Delete';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function save_input_stock()
+	{
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$po_inv_id  = $this->input->post('po_inv_id');
+			$user_id 	= $_SESSION['user_id'];
+
+			$maxCode = $this->purchase_model->last_pur();
+			$inv_code = 'PJ/'.$submission_product_code.'/'.$submission_warehouse_name.'/'.date("d/m/Y").'/';
+			if ($maxCode == NULL) {
+				$last_code = $inv_code.'000001';
+			} else {
+				$maxCode   = $maxCode[0]->submission_invoice;
+				$last_code = substr($maxCode, -6);
+				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
+			}
+
+
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
 		}
 	}
 	// end warehouse input

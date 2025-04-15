@@ -17,8 +17,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="form-group row">
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Invoice :</label>
               <div class="col-sm-3">
-                <input id="purchase_order_invoice" name="purchase_order_invoice" type="text" class="form-control" value="AUTO" readonly="">
-                <input id="purchase_order_id" name="purchase_order_id" type="hidden" class="form-control">
+                <input id="hd_input_stock_invoice" name="hd_input_stock_invoice" type="text" class="form-control" value="AUTO" readonly="">
               </div>
               <div class="col-sm-4"></div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
@@ -31,6 +30,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No PO:</label>
               <div class="col-sm-3">
                 <input id="po_inv" name="po_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih PO">
+                <input id="po_inv_id" name="po_inv_id" type="hidden">
               </div>
               <div class="col-sm-4"></div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
@@ -234,6 +234,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             let state = 'info';
             notif_success(title, message, state);
             $('#temp-input-stock-table').DataTable().ajax.reload();
+            check_tempt_data();
           } else {
             Swal.fire({
               icon: 'error',
@@ -256,15 +257,21 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {},
       success : function(data){
         if (data.code == "200"){
-          if(data.supplier == 0){
+          console.log(data);
+          if(data.supplier == null){
+            $("#po_inv").val(" ");
+            $("#po_inv_id").val("0");
             $("#supplier").select2("val", " ");
             $("#warehouse").select2("val", " ");
             $("#total_qty_item").val("0");
-            footer_total_invoice.set(0);
+            $('#po_inv').prop('disabled', false);
           }else{
+            $("#po_inv").val(data.supplier_code);
+            $("#po_inv_id").val(data.supplier);
             $("#supplier").select2("val", data.supplier);
             $("#warehouse").select2("val", data.warehouse);
             $("#total_qty_item").val(data.total_item);
+            $('#po_inv').prop('disabled', true);
           }
         }
       }
@@ -296,21 +303,53 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     e.preventDefault();
     var product_id              = $("#product_id").val();
     var temp_qty_recive         = $("#temp_qty_recive").val();
+    var temp_qty_po             = $("#temp_qty_po").val();
 
+    if(temp_qty_recive > temp_qty_po){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Qty Terima Tidak Bisa Melebih Qty Pesan',
+      })
+    }else{
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Purchase/add_temp_input_stock",
+        dataType: "json",
+        data: {product_id:product_id, temp_qty_recive:temp_qty_recive},
+        success : function(data){
+          if (data.code == "200"){
+            let title = 'Tambah Data';
+            let message = 'Data Berhasil Di Edit';
+            let state = 'info';
+            notif_success(title, message, state);
+            $('#temp-input-stock-table').DataTable().ajax.reload();
+            check_tempt_data();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.result,
+            })
+          }
+        }
+      });
+    }
+
+  });
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var po_inv_id   = $("#po_inv_id").val();
+  
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/add_temp_input_stock",
+      url: "<?php echo base_url(); ?>Purchase/save_input_stock",
       dataType: "json",
-      data: {product_id:product_id, temp_qty_recive:temp_qty_recive},
+      data: {po_inv_id:po_inv_id},
       success : function(data){
         if (data.code == "200"){
-          let title = 'Tambah Data';
-          let message = 'Data Berhasil Di Edit';
-          let state = 'info';
-          notif_success(title, message, state);
-          $('#temp-po-list').DataTable().ajax.reload();
-          check_tempt_data();
-          clear_input();
+          window.location.href = "<?php echo base_url(); ?>/Purchase/warehouseinput";
         } else {
           Swal.fire({
             icon: 'error',
@@ -322,6 +361,43 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   });
 
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Purchase/delete_temp_input_stock",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+              $('#temp-input-stock-table').DataTable().ajax.reload();
+              check_tempt_data();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.result,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
 
 
 
