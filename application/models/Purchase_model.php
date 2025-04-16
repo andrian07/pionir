@@ -376,7 +376,16 @@ class purchase_model extends CI_Model {
 
     public function check_temp_input_stock($user_id)
     {
-        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse, temp_is_supplier_code');
+        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse, temp_is_po_code, temp_is_po_id');
+        $this->db->from('temp_input_stock');
+        $this->db->where('temp_is_user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_temp_input_stock($user_id)
+    {
+        $this->db->select('*');
         $this->db->from('temp_input_stock');
         $this->db->where('temp_is_user_id', $user_id);
         $query = $this->db->get();
@@ -407,6 +416,77 @@ class purchase_model extends CI_Model {
         $this->db->where('temp_is_product_id ', $product_id);
         $this->db->where('temp_is_user_id ', $user_id);
         $this->db->update('temp_input_stock');
+    }
+
+    public function last_save_input()
+    {
+        $query = $this->db->query("select hd_input_stock_inv from hd_input_stock order by hd_input_stock_id desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function save_input_stock($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_input_stock', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+    public function insert_detail_input_stock($data_insert)
+    {
+        $this->db->insert('dt_input_stock', $data_insert);
+    }
+
+    public function get_last_stock($product_id, $warehouse_id)
+    {
+        $query = $this->db->query("select stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and b.warehouse_id = '".$warehouse_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $warehouse_filter_val)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_input_stock');
+        $this->db->join('dt_input_stock', 'hd_input_stock.hd_input_stock_id   = dt_input_stock.hd_is_id ');
+        $this->db->join('ms_warehouse', 'hd_input_stock.hd_input_stock_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_user', 'hd_input_stock.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_input_stock_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($warehouse_filter_val != null){
+            $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
+        }
+        if($search != null){
+            $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
+        }
+        $this->db->order_by('hd_input_stock.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function warehouseinput_list_count($search, $start_date_val, $end_date_val, $warehouse_filter_val)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_input_stock');
+        $this->db->join('dt_input_stock', 'hd_input_stock.hd_input_stock_id   = dt_input_stock.hd_is_id ');
+        $this->db->join('ms_warehouse', 'hd_input_stock.hd_input_stock_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_user', 'hd_input_stock.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_input_stock_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($warehouse_filter_val != null){
+            $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
+        }
+        if($search != null){
+            $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
     }
     // end warehouse input 
 

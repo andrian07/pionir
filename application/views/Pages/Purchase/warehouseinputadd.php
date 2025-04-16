@@ -135,7 +135,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="purchase_order_remark" name="purchase_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="input_stock_remark" name="input_stock_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -258,7 +258,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           console.log(data);
-          if(data.supplier == null){
+          if(data.po_id == 0){
             $("#po_inv").val(" ");
             $("#po_inv_id").val("0");
             $("#supplier").select2("val", " ");
@@ -266,8 +266,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             $("#total_qty_item").val("0");
             $('#po_inv').prop('disabled', false);
           }else{
-            $("#po_inv").val(data.supplier_code);
-            $("#po_inv_id").val(data.supplier);
+            $("#po_inv").val(data.po_code);
+            $("#po_inv_id").val(data.po_id);
             $("#supplier").select2("val", data.supplier);
             $("#warehouse").select2("val", data.warehouse);
             $("#total_qty_item").val(data.total_item);
@@ -340,13 +340,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var po_inv_id   = $("#po_inv_id").val();
-  
+    var po_inv_id             = $("#po_inv_id").val();
+    var warehouseinput_date   = $("#warehouseinput_date").val();
+    var desc                  = $("#input_stock_remark").val();
+    var warehouse             = $("#warehouse").val();
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_input_stock",
       dataType: "json",
-      data: {po_inv_id:po_inv_id},
+      data: {po_inv_id:po_inv_id, warehouseinput_date:warehouseinput_date, desc:desc, warehouse:warehouse},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Purchase/warehouseinput";

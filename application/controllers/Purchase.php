@@ -850,6 +850,99 @@ class Purchase extends CI_Controller {
 
 	// warehouse input
 
+	public function warehouseinput_list()
+	{
+		
+		$modul = 'WarehouseInput';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($this->input->post('start_date_val') != null){
+				$start_date_val 	 = $this->input->post('start_date_val');
+				$end_date_val 		 = $this->input->post('end_date_val');
+				$supplier_filter_val = $this->input->post('supplier_filter_val');
+			}else{
+				$start_date_val 	 = "";
+				$end_date_val 		 = "";
+				$supplier_filter_val = "";
+			}
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->purchase_model->warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
+			$count_list = $this->purchase_model->warehouseinput_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($field['hd_input_stock_status'] == 'Pending'){
+					$hd_input_stock_status = '<span class="badge badge-primary">Pending</span>';
+				}else if($field['hd_input_stock_status'] == 'Success'){
+					$hd_input_stock_status = '<span class="badge badge-success">Selesai</span>';
+				}else{
+					$hd_input_stock_status = '<span class="badge badge-danger">Batal</span>';
+				}
+
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_input_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_input_stock_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}else{
+					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_input_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					if($field['hd_input_stock_status'] == 'Pending'){
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_input_stock_id'].'" data-name="'.$field['hd_input_stock_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}else{
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_input_stock_id'].'" data-name="'.$field['hd_input_stock_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					if($field['hd_input_stock_status'] == 'Pending'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_input_stock_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}else{
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$date = date_create($field['hd_input_stock_date']); 
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['hd_input_stock_inv'];
+				$row[] 	= $field['warehouse_name'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $hd_input_stock_status;
+				$row[] 	= $field['hd_input_stock_desc'];
+				$row[] 	= $detail.$edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+
+	}
+
+
 	public function warehouseinput()
 	{
 		$modul = 'WarehouseInput';
@@ -960,7 +1053,8 @@ class Purchase extends CI_Controller {
 					'temp_is_qty_order'			=> $row->dt_po_qty,
 					'temp_is_qty'				=> $row->dt_po_qty,
 					'temp_is_supplier'			=> $row->hd_po_supplier,
-					'temp_is_supplier_code'		=> $row->hd_po_invoice,
+					'temp_is_po_id'				=> $row->hd_po_id,
+					'temp_is_po_code'			=> $row->hd_po_invoice,
 					'temp_is_warehouse'			=> $row->hd_po_warehouse,
 					'temp_is_user_id'			=> $user_id,
 				);	
@@ -981,15 +1075,18 @@ class Purchase extends CI_Controller {
 		$check_temp_input_stock = $this->purchase_model->check_temp_input_stock($user_id)->result_array();;
 		if($check_temp_input_stock[0]['total_item'] != null){
 			$supplier 	 	 = $check_temp_input_stock[0]['temp_is_supplier'];
-			$supplier_code 	 = $check_temp_input_stock[0]['temp_is_supplier_code'];
+			$po_code 	     = $check_temp_input_stock[0]['temp_is_po_code'];
+			$po_id 	     	 = $check_temp_input_stock[0]['temp_is_po_id'];
 			$warehouse 	     = $check_temp_input_stock[0]['temp_is_warehouse'];
 			$total_item  	 = $check_temp_input_stock[0]['total_item'];
 		}else{
+			$po_code 		= 0;
+			$po_id 			= 0;
 			$supplier     	= 0;
 			$warehouse  	= 0;
 			$total_item    	= 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'supplier_code'=>$supplier_code, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'po_code'=>$po_code, 'po_id'=>$po_id, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
 		die();
 	}
 
@@ -1010,16 +1107,15 @@ class Purchase extends CI_Controller {
 			$product_id 				= $this->input->post('product_id');
 			$temp_qty_recive 			= $this->input->post('temp_qty_recive');
 			$user_id 					= $_SESSION['user_id'];
-
 			$check_temp_input_stock_product = $this->purchase_model->check_edit_temp_input_stock($product_id, $user_id);
 			$data_edit = array(
 				'temp_is_qty'			=> $temp_qty_recive,
 				'temp_is_user_id'		=> $user_id,
 			);	
-			$msg = 'Success Tambah';
 			if($check_temp_input_stock_product != null){
 				$this->purchase_model->edit_temp_input_stock($product_id, $user_id, $data_edit);
 			}
+			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
 			$msg = "No Access";
@@ -1050,20 +1146,85 @@ class Purchase extends CI_Controller {
 		$modul = 'WarehouseInput';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
-			$po_inv_id  = $this->input->post('po_inv_id');
-			$user_id 	= $_SESSION['user_id'];
+			$po_inv_id  		 = $this->input->post('po_inv_id');
+			$warehouseinput_date = $this->input->post('warehouseinput_date');
+			$warehouse 			 = $this->input->post('warehouse');
+			$desc 				 = $this->input->post('desc');
+			$user_id 			 = $_SESSION['user_id'];
 
-			$maxCode = $this->purchase_model->last_pur();
-			$inv_code = 'PJ/'.$submission_product_code.'/'.$submission_warehouse_name.'/'.date("d/m/Y").'/';
+			$maxCode = $this->purchase_model->last_save_input();
+			$inv_code = 'IS/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
 			} else {
-				$maxCode   = $maxCode[0]->submission_invoice;
+				$maxCode   = $maxCode[0]->hd_input_stock_inv;
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
 
+			//$get_current_stock = $this->purchase_model->get_current_stock($submission_product_id);
+			//$last_stock = $get_current_stock[0]->total_last_stock;
+			$data_insert = array(
+				'hd_input_stock_inv'		=> $last_code,
+				'hd_input_stock_warehouse'  => $warehouse,
+				'hd_po_id'					=> $po_inv_id,
+				'hd_input_stock_date'		=> $warehouseinput_date,
+				'hd_input_stock_desc'		=> $desc,
+				'created_by'				=> $user_id
+			);	
+			$save_input_stock = $this->purchase_model->save_input_stock($data_insert);
 
+			$get_temp_input_stock = $this->purchase_model->get_temp_input_stock($user_id)->result_array();
+			foreach($get_temp_input_stock as $row){
+				$data_insert_detail = array(
+					'hd_is_id'				=> $save_input_stock,
+					'dt_is_product_id'		=> $row['temp_is_product_id'],
+					'dt_is_qty_order'		=> $row['temp_is_qty_order'],
+					'dt_is_qty'				=> $row['temp_is_qty']
+				);	
+				$insert_detail_input_stock = $this->purchase_model->insert_detail_input_stock($data_insert_detail);
+
+				$warehouse_id = $row['temp_is_warehouse'];
+				if($warehouse_id != 1){
+					$product_id 	= $row['temp_is_product_id'];
+					$qty 			= $row['temp_is_qty'];
+					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					if($get_last_stock == null){
+						$insert_product_stock = array(
+							'product_id'		=> $product_id,
+							'warehouse_id'		=> $warehouse_id,
+							'stock'				=> 0,
+						);	
+						$this->global_model->insert_product_stock($insert_product_stock);
+						$last_stock 	= 0;
+					}else{
+						$last_stock 	= $get_last_stock[0]->stock;
+					}
+					$new_stock 		= $last_stock + $qty;
+					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock,
+						'stock_movement_new_stock'		=> $new_stock,
+						'stock_movement_desc'			=> 'Input Stock Pembelian',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Plus',
+						'stock_movement_date'			=> $warehouseinput_date,
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+			}
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Input Stok',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Success Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);

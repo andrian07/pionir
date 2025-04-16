@@ -1,4 +1,4 @@
-<?php 
+  <?php 
 define('DOC_ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 require DOC_ROOT_PATH . $this->config->item('header');
 ?>
@@ -77,15 +77,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
               >
               <thead>
                 <tr>
-                  <th>No PO</th>
-                  <th>Tgl. PO</th>
-                  <th>Nama Produk</th>
-                  <th>Golongan</th>
-                  <th>Supplier</th>
-                  <th>Harga Satuan</th>
-                  <th>Total Harga</th>
-                  <th>Status</th>
-                  <th>Status Pengiriman</th>
+                  <th>No Input Stok</th>
+                  <th>Gudang</th>
+                  <th>Tanggal</th>
+                  <th>Status Pembelian</th>
+                  <th>Keterangan</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -124,7 +120,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/po_list',
+        url: '<?php echo base_url(); ?>Purchase/warehouseinput_list',
         type: 'POST',
         data:  {start_date_val:start_date_val, end_date_val:end_date_val, supplier_filter_val:supplier_filter_val},
       },
@@ -135,11 +131,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 2},
         {data: 3},
         {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8},
-        {data: 9}
+        {data: 5}
       ]
     });
   }

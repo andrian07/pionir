@@ -27,6 +27,24 @@ class global_model extends CI_Model {
         return $result;
     }
 
+    public function update_stock($product_id, $warehouse_id, $new_stock)
+    {
+        $this->db->set('stock', $new_stock);
+        $this->db->where('product_id ', $product_id);
+        $this->db->where('warehouse_id ', $warehouse_id);
+        $this->db->update('ms_product_stock');
+    }
+
+    public function insert_movement_stock($movement_stock)
+    {
+        $this->db->insert('stock_movement', $movement_stock);
+    }
+
+    public function insert_product_stock($insert_product_stock)
+    {
+        $this->db->insert('ms_product_stock', $insert_product_stock);
+    }
+
 }
 
 ?>
