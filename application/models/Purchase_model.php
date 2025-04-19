@@ -451,6 +451,9 @@ class purchase_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('hd_input_stock');
         $this->db->join('dt_input_stock', 'hd_input_stock.hd_input_stock_id   = dt_input_stock.hd_is_id ');
+        $this->db->join('hd_po', 'hd_input_stock.hd_po_id   = hd_po.hd_po_id ');
+        $this->db->join('ms_product', 'dt_input_stock.dt_is_product_id   = ms_product.product_id ');
+        $this->db->join('ms_supplier', 'hd_po.hd_po_supplier   = ms_supplier.supplier_id ');
         $this->db->join('ms_warehouse', 'hd_input_stock.hd_input_stock_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_user', 'hd_input_stock.created_by = ms_user.user_id');
         if($start_date_val != null){
@@ -460,6 +463,7 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
         }
         if($search != null){
+            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
         }
         $this->db->order_by('hd_input_stock.created_at', 'desc');
@@ -474,6 +478,9 @@ class purchase_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_input_stock');
         $this->db->join('dt_input_stock', 'hd_input_stock.hd_input_stock_id   = dt_input_stock.hd_is_id ');
+        $this->db->join('hd_po', 'hd_input_stock.hd_po_id   = hd_po.hd_po_id ');
+        $this->db->join('ms_product', 'dt_input_stock.dt_is_product_id   = ms_product.product_id ');
+        $this->db->join('ms_supplier', 'hd_po.hd_po_supplier   = ms_supplier.supplier_id ');
         $this->db->join('ms_warehouse', 'hd_input_stock.hd_input_stock_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_user', 'hd_input_stock.created_by = ms_user.user_id');
         if($start_date_val != null){
@@ -483,12 +490,168 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
         }
         if($search != null){
+            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
         }
         $query = $this->db->get();
         return $query;
     }
+
+    public function header_input_stock($input_stock_id)
+    {
+        $query = $this->db->query("select * from hd_input_stock a, hd_po b, ms_warehouse c, ms_user d where a.hd_po_id = b.hd_po_id and a.hd_input_stock_warehouse = c.warehouse_id and a.created_by = d.user_id and hd_input_stock_id  = '".$input_stock_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_input_stock($input_stock_id)
+    {
+        $query = $this->db->query("select * from dt_input_stock a, hd_input_stock b, ms_product c, ms_unit d where a.hd_is_id = b.hd_input_stock_id  and a.dt_is_product_id = c.product_id and c.product_unit = d.unit_id and hd_is_id = '".$input_stock_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function delete_warehouse_input($input_stock_id)
+    {
+        $this->db->set('hd_input_stock_status', 'Cancel');
+        $this->db->where('hd_input_stock_id   ', $input_stock_id);
+        $this->db->update('hd_input_stock');
+    }
+
+    public function update_po_status($po_inv_id)
+    {
+        $this->db->set('hd_po_status', 'Success');
+        $this->db->where('hd_po_id ', $po_inv_id);
+        $this->db->update('hd_po');
+    }
+
+    public function search_po_purchase($search)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_po');
+        $this->db->where('hd_po_status','Success');
+        if($search != null){
+            $this->db->where('hd_po_invoice like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function clear_temp_purchase($user_id)
+    {
+        $this->db->where('temp_user_id', $user_id);
+        $this->db->delete('temp_purchase');
+    }
+
+    public function copy_temp_purchase($data_copy_temp)
+    {
+        $this->db->insert('temp_purchase', $data_copy_temp);
+    }
     // end warehouse input 
+
+
+    //purchase
+
+    public function purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_purchase');
+        $this->db->join('dt_purchase', 'hd_purchase.hd_purchase_id  = dt_purchase.hd_purchase_id ');
+        $this->db->join('ms_product', 'dt_purchase.dt_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_warehouse', 'hd_purchase.hd_purchase_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
+        $this->db->join('ms_user', 'hd_purchase.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_purchase_supplier','"'.$supplier_filter_val.'"');
+        }
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('hd_purchase.hd_purchase_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('hd_purchase.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function purchase_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_purchase');
+        $this->db->join('dt_purchase', 'hd_purchase.hd_purchase_id  = dt_purchase.hd_purchase_id ');
+        $this->db->join('ms_product', 'dt_purchase.dt_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_warehouse', 'hd_purchase.hd_purchase_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
+        $this->db->join('ms_user', 'hd_purchase.created_by = ms_user.user_id');
+        if($start_date_val != null){
+            $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_purchase_supplier','"'.$supplier_filter_val.'"');
+        }
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('hd_purchase.hd_purchase_invoice like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+    public function temp_purchase_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_purchase');
+        $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_purchase.created_at', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function temp_purchase_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('temp_purchase');
+        $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');
+        if($search != null){
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+        }
+        $this->db->order_by('temp_purchase.created_at', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+     public function detail_po_purchase($po_id)
+    {
+        $query = $this->db->query("select * from dt_po a, hd_po b, ms_product c, ms_unit d, ms_user e, hd_input_stock f, dt_input_stock g where a.hd_po_id = b.hd_po_id and a.dt_product_id = c.product_id and c.product_unit = d.unit_id and b.hd_po_id = f.hd_po_id and f.hd_input_stock_id  = g.hd_is_id and b.created_by = e.user_id and a.hd_po_id  = '".$po_id."' and hd_input_stock_status = 'Pending'");
+        $result = $query->result();
+        return $result;
+    }
+
+    //end purchase
 
 }
 

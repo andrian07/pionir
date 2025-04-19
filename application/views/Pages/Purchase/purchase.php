@@ -1,4 +1,4 @@
-  <?php 
+<?php 
 define('DOC_ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 require DOC_ROOT_PATH . $this->config->item('header');
 ?>
@@ -16,11 +16,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Input Stock</h3>
+                <h3 class="fw-bold mb-3">Daftar Pembelian</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <a href="<?php echo base_url(); ?>Purchase/addwarehouseinput"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
+                <a href="<?php echo base_url(); ?>Purchase/addpurchase"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="fas fa-search" ></i> Filter</button>
                 <div class="modal fade editmodal" id="exampleModaledit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
@@ -72,19 +72,20 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-body">
             <div class="table-responsive">
               <table
-              id="warehouse-input-list"
+              id="purchase-list"
               class="display table table-striped table-hover"
               >
               <thead>
                 <tr>
-                  <th>No Input Stok</th>
-                  <th>Nama Barang</th>
+                  <th>No Pembelian</th>
+                  <th>Supplier</th>
                   <th>Tanggal</th>
-                  <th>Nama Supplier</th>
-                  <th>No Faktur Supplier</th>
-                  <th>Qty Pesan</th>
-                  <th>Qty Terima</th>
-                  <th>Status</th>
+                  <th>Barang</th>
+                  <th>Golongan</th>
+                  <th>Payment Status</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Catatan</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -116,14 +117,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   var supplier_filter_val = $("#supplier_filter").val();
 
   function purchaseorder_table(){
-    $('#warehouse-input-list').DataTable( {
+    $('#purchase-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/warehouseinput_list',
+        url: '<?php echo base_url(); ?>Purchase/purchase_list',
         type: 'POST',
         data:  {start_date_val:start_date_val, end_date_val:end_date_val, supplier_filter_val:supplier_filter_val},
       },
@@ -137,7 +138,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 5},
         {data: 6},
         {data: 7},
-        {data: 8}
+        {data: 8},
+        {data: 9}
       ]
     });
   }
@@ -146,7 +148,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     Swal.fire({
       title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data Input ?",
+      text: "Apakah Anda Yakin Menghapus Data PO ?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -156,12 +158,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Purchase/delete_warehouse_input",
+          url: "<?php echo base_url(); ?>Purchase/delete_po",
           dataType: "json",
           data: {id:id},
           success : function(data){
             if (data.code == "200"){
-              $('#warehouse-input-list').DataTable().ajax.reload();
+              $('#po-list').DataTable().ajax.reload();
               let title = 'Hapus Data';
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';
