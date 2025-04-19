@@ -4,6 +4,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 ?>
 </div>
 
+
 <div class="container">
   <div class="page-inner">
     <div class="page-header">
@@ -47,12 +48,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </div>
 
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier: </label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Warehouse: </label>
                           <div class="col-md-12 p-0">
-                            <select class="form-control input-full js-example-basic-single" id="supplier_filter" name="supplier_filter">
+                            <select class="form-control input-full js-example-basic-single" id="warehouse_filter" name="warehouse_filter">
                               <option value="">-- Pilih Supplier --</option>
-                              <?php foreach ($supplier_list as $row) { ?>
-                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                              <?php foreach ($warehouse_list as $row) { ?>
+                                <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
                               <?php } ?>
                             </select>
                           </div>
@@ -182,8 +183,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $("#btnsearch").click(function (e) {
     var start_date      = $("#start_date").val();
     var end_date        = $("#end_date").val();
-    var supplier_filter = $("#supplier_filter").val();
-    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&supplier_filter="+supplier_filter;
+    var warehouse_filter = $("#warehouse_filter").val();
+    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&warehouse_filter="+warehouse_filter;
     Swal.fire('Saved!', '', 'success');
   });
 
