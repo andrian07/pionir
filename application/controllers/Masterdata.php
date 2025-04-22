@@ -998,13 +998,14 @@ class Masterdata extends CI_Controller {
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
+			$supplier_code = strtoupper(substr($supplier_name, 0, 2));
 			$maxCode = $this->masterdata_model->get_last_supplier();
 			if ($maxCode == NULL) {
-				$last_code = 'S-00001';
+				$last_code = $supplier_code.'-'.'001';
 			} else {
 				$maxCode = $maxCode[0]->supplier_code;
-				$last_code = substr($maxCode, -5);
-				$last_code = 'S-'.substr('00000' . strval(floatval($last_code) + 1), -5);
+				$last_code = substr($maxCode, -3);
+				$last_code = $supplier_code.'-'.substr('000' . strval(floatval($last_code) + 1), -3);
 			}
 
 			$insert = array(
@@ -1220,11 +1221,11 @@ class Masterdata extends CI_Controller {
 			$product_code = strtoupper(substr($product_name, 0, 3));
 			$maxCode = $this->masterdata_model->last_product_code();
 			if ($maxCode == NULL) {
-				$last_code = $product_code.'001';
+				$last_code = $product_code.'00001';
 			} else {
 				$maxCode = $maxCode[0]->product_code;
-				$last_code = substr($maxCode, -3);
-				$last_code = $product_code.substr('000' . strval(floatval($last_code) + 1), -3);
+				$last_code = substr($maxCode, -5);
+				$last_code = $product_code.substr('00000' . strval(floatval($last_code) + 1), -5);
 			}
 			if($_FILES['screenshoot']['name'] == null){
 				$new_image_name = 'default.png';

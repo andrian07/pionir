@@ -256,7 +256,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td colspan="4"><?php echo $row->product_location; ?></td>
                         </tr>
                         <tr>
-                          <th scope="col" class="productinfo-text-right">Catatan:</th>
+                          <th scope="col" class="productinfo-text-right">Deskripsi:</th>
                           <td colspan="4"><?php echo $row->product_desc; ?></td>
                         </tr>
                       </tbody>

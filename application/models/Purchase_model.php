@@ -613,7 +613,7 @@ class purchase_model extends CI_Model {
     public function temp_purchase_list($search, $length, $start)
     {
         $this->db->select('*');
-        $this->db->from('temp_purchase');
+        $this->db->from('temp_purchases');
         $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');

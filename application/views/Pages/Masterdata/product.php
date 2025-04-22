@@ -428,7 +428,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   
   function setprice(id){
-    window.location.href = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
+    var url = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
+    window.open(url, '_blank').focus();
+    //window.location.href = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
   }
 
   $('#save_product_form').on('submit',(function(e) {

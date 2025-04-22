@@ -307,6 +307,71 @@ require DOC_ROOT_PATH . $this->config->item('header');
       </div>
     </div>
   </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-head-row">
+          <div class="card-title">Faktur Terlewat</div>
+          <div class="card-tools">
+            <ul
+            class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm"
+            id="pills-tab"
+            role="tablist"
+            >
+            <li class="nav-item">
+              <a
+              class="nav-link active"
+              id="pills-week"
+              data-bs-toggle="pill"
+              href="#pills-week"
+              role="tab"
+              aria-selected="false"
+              >See More..</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card-body activity">
+      <div class="d-flex">
+        <div class="flex-1 ms-3 pt-1">
+          <h6 class="text-uppercase fw-bold mb-1">#PJ-0001</h6>
+          <span class="text-muted">Total: Rp. 10.000.000</span>
+        </div>
+        <div class="float-end pt-1">
+          <small class="text-muted">Feb 25, 8:40 PM <br /> <a href="#">Cek: TRF 00011</a></small>
+        </div>
+      </div>
+      <div class="separator-dashed"></div>
+
+
+        <div class="d-flex">
+        <div class="flex-1 ms-3 pt-1">
+          <h6 class="text-uppercase fw-bold mb-1">#PJ-0002</h6>
+          <span class="text-muted">Total: Rp. 10.000.000</span>
+        </div>
+        <div class="float-end pt-1">
+          <small class="text-muted">Feb 25, 8:40 PM <br /> <a href="#">Cek: TRF 00011</a></small>
+        </div>
+      </div>
+      <div class="separator-dashed"></div>
+
+
+        <div class="d-flex">
+        <div class="flex-1 ms-3 pt-1">
+          <h6 class="text-uppercase fw-bold mb-1">#PJ-0003</h6>
+          <span class="text-muted">Total: Rp. 10.000.000</span>
+        </div>
+        <div class="float-end pt-1">
+          <small class="text-muted">Feb 25, 8:40 PM <br /> <a href="#">Cek: TRF 00011</a></small>
+        </div>
+      </div>
+      <div class="separator-dashed"></div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 
