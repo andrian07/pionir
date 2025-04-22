@@ -263,13 +263,12 @@ class purchase_model extends CI_Model {
 
     public function check_temp_po($user_id)
     {
-        $this->db->select('supplier_code, sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, submission_supplier, is_ppn');
+        $this->db->select('sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, is_ppn');
         $this->db->from('temp_po');
         $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
         $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
-        $this->db->join('ms_supplier', 'submission.submission_supplier = ms_supplier.supplier_id', 'left');
         $this->db->where('temp_user_id', $user_id);
         $query = $this->db->get();
         return $query;

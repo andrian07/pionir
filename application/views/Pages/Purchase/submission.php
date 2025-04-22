@@ -89,17 +89,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               </div>
                             </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="submission_supplier" name="submission_supplier">
-                                  <option value="">-- Pilih Supplier --</option>
-                                  <?php foreach ($data['supplier_list'] as $row) { ?>
-                                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
+
 
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
@@ -197,17 +187,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 </select>
                               </div>
                             </div>
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="submission_supplier_edit" name="submission_supplier_edit">
-                                  <option value="">-- Pilih Supplier --</option>
-                                  <?php foreach ($data['supplier_list'] as $row) { ?>
-                                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
+
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
                               <div class="col-md-12 p-0">
@@ -279,6 +259,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+   new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
+   new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
   $(document ).ready(function() {
     submission_table();
   });
@@ -380,7 +362,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier?id='+$('#submission_supplier').val(),
+        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier',
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -388,11 +370,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if (res.success == true) {
             add(res.data);
           }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Silahkan Pilih Supplier Terlebih Dahulu',
-            });
             $('#submission_product_name').val('');
           }
         },
@@ -408,7 +385,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product',
+        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier',
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -416,11 +393,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if (res.success == true) {
             add(res.data);
           }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Silahkan Pilih Supplier Terlebih Dahulu',
-            });
             $('#submission_product_name_edit').val('');
           }
         },
@@ -443,13 +415,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var submission_product_id     = $("#submission_product_id").val();
     var submission_product_code   = $("#submission_product_code").val();
     var submission_qty            = $("#submission_qty").val();
-    var submission_supplier       = $("#submission_supplier").val();
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_submission",
       dataType: "json",
-      data: {submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty, submission_supplier:submission_supplier},
+      data: {submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty},
       success : function(data){
         if (data.code == "200"){
           $('#myModal').modal('hide')
@@ -483,13 +454,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var submission_product_id     = $("#submission_product_id_edit").val();
     var submission_product_code   = $("#submission_product_code_edit").val();
     var submission_qty            = $("#submission_qty_edit").val();
-    var submission_supplier       = $("#submission_supplier_edit").val();
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/edit_submission",
       dataType: "json",
-      data: {submission_id:submission_id, submission_inv:submission_inv, submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty, submission_supplier:submission_supplier},
+      data: {submission_id:submission_id, submission_inv:submission_inv, submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty},
       success : function(data){
         if (data.code == "200"){
          $('#exampleModaledit').modal('hide')
@@ -533,8 +503,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $('#submission_product_id_edit').val(row.product_id);
           $('#submission_product_name_edit').val(row.product_name);
           $('#submission_qty_edit').val(row.submission_qty);
-          $('#submission_supplier_edit').val(row.submission_supplier);
-          $('#submission_supplier_edit').prop('disabled', true);
         } else {
           Swal.fire({
             icon: 'error',

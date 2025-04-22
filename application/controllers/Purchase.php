@@ -281,11 +281,8 @@ class Purchase extends CI_Controller {
 		$supplier_id = $this->input->get('id');
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
-		if($supplier_id == '' || $supplier_id == NULL){
-			$result = ['success' => FALSE, 'message' => 'Masukan Nama Supplier Terlebih Dahulu'];
-		}
-		else if (!($keyword == '' || $keyword == NULL)) {
-			$find = $this->global_model->search_product_by_supplier($keyword, $supplier_id);
+		if (!($keyword == '' || $keyword == NULL)) {
+			$find = $this->global_model->search_product_by_supplier($keyword);
 			$find_result = [];
 			foreach ($find as $row) {
 				$diplay_text = $row->product_code.' - '.$row->product_name;
@@ -428,7 +425,6 @@ class Purchase extends CI_Controller {
 			$submission_product_id 			= $this->input->post('submission_product_id');
 			$submission_product_code 		= $this->input->post('submission_product_code');
 			$submission_qty 				= $this->input->post('submission_qty');
-			$submission_supplier 			= $this->input->post('submission_supplier');
 			$user_id 						= $_SESSION['user_id'];
 
 			$maxCode = $this->purchase_model->last_submission_inv();
@@ -453,7 +449,6 @@ class Purchase extends CI_Controller {
 				'submission_salesman'		=> $submission_salesman,
 				'submission_qty'			=> $submission_qty,
 				'last_stock'				=> $last_stock,
-				'submission_supplier' 		=> $submission_supplier,
 				'submission_desc'			=> $submission_desc,
 				'submission_text'			=> $submission_text,
 				'created_by'				=> $user_id,
@@ -490,7 +485,6 @@ class Purchase extends CI_Controller {
 			$submission_product_id 			= $this->input->post('submission_product_id');
 			$submission_product_code 		= $this->input->post('submission_product_code');
 			$submission_qty 				= $this->input->post('submission_qty');
-			$submission_supplier 			= $this->input->post('submission_supplier');
 			$user_id 						= $_SESSION['user_id'];
 
 			$data_edit = array(
@@ -500,7 +494,6 @@ class Purchase extends CI_Controller {
 				'submission_warehouse'		=> $submission_warehouse,
 				'submission_salesman'		=> $submission_salesman,
 				'submission_qty'			=> $submission_qty,
-				'submission_supplier' 		=> $submission_supplier,
 				'submission_desc'			=> $submission_desc,
 				'submission_text'			=> $submission_text,
 				'created_by'				=> $user_id,
@@ -834,8 +827,6 @@ class Purchase extends CI_Controller {
 		$user_id 		= $_SESSION['user_id'];
 		$check_temp_po = $this->purchase_model->check_temp_po($user_id)->result_array();;
 		if($check_temp_po[0]['sub_total'] != null){
-			$supplier 	 	 = $check_temp_po[0]['submission_supplier'];
-			$supplier_code 	 = $check_temp_po[0]['supplier_code'];
 			$product_tax 	 = $check_temp_po[0]['is_ppn'];
 			$sub_total  	 = $check_temp_po[0]['sub_total'];
 			$ongkir     	 = $check_temp_po[0]['ongkir'];
@@ -845,7 +836,7 @@ class Purchase extends CI_Controller {
 			$sub_total    = 0;
 			$sub_total    = 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'supplier_code'=>$supplier_code, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
+		echo json_encode(['code'=>200, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
 		die();
 	}
 

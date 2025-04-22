@@ -474,6 +474,9 @@ class masterdata_model extends CI_Model {
         $this->db->where('ms_product.is_active', 'y');
         if($searchin_key != null){
             $this->db->where('ms_product.product_name like "%'.$searchin_key.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$searchin_key.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$searchin_key.'%"');
+            $this->db->or_where('ms_product.product_desc like "%'.$searchin_key.'%"');
         }
         $this->db->limit(50);
         $query = $this->db->get();
