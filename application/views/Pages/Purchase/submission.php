@@ -362,7 +362,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier',
+        url: '<?php echo base_url(); ?>/Purchase/search_product',
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -385,7 +385,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_by_suplier',
+        url: '<?php echo base_url(); ?>/Purchase/search_product',
         dataType: 'json',
         type: 'GET',
         data: req,

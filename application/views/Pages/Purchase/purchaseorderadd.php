@@ -547,11 +547,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+
   $('#product_name').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_po?sup_id='+$('#po_supplier').val(),
+        url: '<?php echo base_url(); ?>/Purchase/search_product',
         dataType: 'json',
         type: 'GET',
         data: req,

@@ -276,13 +276,13 @@ class Purchase extends CI_Controller {
 		}
 	}
 
-	public function search_product_by_suplier()
+	public function search_product()
 	{	
 		$supplier_id = $this->input->get('id');
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
 		if (!($keyword == '' || $keyword == NULL)) {
-			$find = $this->global_model->search_product_by_supplier($keyword);
+			$find = $this->global_model->search_product($keyword);
 			$find_result = [];
 			foreach ($find as $row) {
 				$diplay_text = $row->product_code.' - '.$row->product_name;
