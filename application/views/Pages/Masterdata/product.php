@@ -157,6 +157,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
+                              <div class="col-md-12 p-0">
+                                <input type="number" class="form-control input-full" id="product_min_order" name="product_min_order" placeholder="Min Order">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
                               <div class="col-md-12 p-0">
                                 <input type="number" class="form-control input-full" id="product_weight" name="product_weight" placeholder="Berat">
@@ -316,6 +323,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
                               <div class="col-md-12 p-0">
                                 <input type="number" class="form-control input-full" id="product_min_stock_edit" name="product_min_stock_edit" placeholder="Min Stok">
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
+                              <div class="col-md-12 p-0">
+                                <input type="number" class="form-control input-full" id="product_min_order_edit" name="product_min_order_edit" placeholder="Min Order">
                               </div>
                             </div>
 
@@ -672,6 +686,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           modal.find('#product_tax_edit').val(row.is_ppn)
           modal.find('#product_type_edit').val(row.is_package)
           modal.find('#product_min_stock_edit').val(row.product_min_stock)
+          modal.find('#product_min_order_edit').val(row.product_min_order)
           modal.find('#product_weight_edit').val(row.product_weight)
           modal.find('#product_location_edit').val(row.product_location)
           modal.find('#product_description_edit').val(row.product_desc)

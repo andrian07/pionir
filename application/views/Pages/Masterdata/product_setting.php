@@ -240,6 +240,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td colspan="4"><?php echo $row->product_min_stock; ?></td>
                         </tr>
                         <tr>
+                          <th scope="col" class="productinfo-text-right">Min Order:</th>
+                          <td colspan="4"><?php echo $row->product_min_order; ?></td>
+                        </tr>
+                        <tr>
                           <th scope="col" class="productinfo-text-right">Berat:</th>
                           <td colspan="4"><?php echo $row->product_weight; ?> Gram</td>
                         </tr>

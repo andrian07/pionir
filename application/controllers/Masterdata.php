@@ -1210,6 +1210,7 @@ class Masterdata extends CI_Controller {
 			$product_unit 				= $this->input->post('product_unit');
 			$product_type 				= $this->input->post('product_type');
 			$product_min_stock			= $this->input->post('product_min_stock');
+			$product_min_order			= $this->input->post('product_min_order');
 			$product_weight				= $this->input->post('product_weight');
 			$product_location			= $this->input->post('product_location');
 			$product_description		= $this->input->post('product_description');
@@ -1257,6 +1258,7 @@ class Masterdata extends CI_Controller {
 				'is_package'				=> $product_type,
 				'is_ppn'					=> $product_tax,
 				'product_min_stock'			=> $product_min_stock,
+				'product_min_order'			=> $product_min_order,
 				'product_weight'			=> $product_weight,
 				'product_location'			=> $product_location,
 				'product_desc'				=> $product_description,
@@ -1314,6 +1316,7 @@ class Masterdata extends CI_Controller {
 			$product_unit 				= $this->input->post('product_unit_edit');
 			$product_type 				= $this->input->post('product_type_edit');
 			$product_min_stock			= $this->input->post('product_min_stock_edit');
+			$product_min_order			= $this->input->post('product_min_order_edit');
 			$product_weight				= $this->input->post('product_weight_edit');
 			$product_location			= $this->input->post('product_location_edit');
 			$product_description		= $this->input->post('product_description_edit');
@@ -1354,6 +1357,7 @@ class Masterdata extends CI_Controller {
 				'is_package'				=> $product_type,
 				'is_ppn'					=> $product_tax,
 				'product_min_stock'			=> $product_min_stock,
+				'product_min_order'			=> $product_min_order,
 				'product_weight'			=> $product_weight,
 				'product_location'			=> $product_location,
 				'product_desc'				=> $product_description,
