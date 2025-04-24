@@ -818,7 +818,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         if (data.code == "200"){
           if(data.supplier == 0){
             $("#po_supplier").select2("val", " ");
-            $('#po_supplier').prop('disabled', false);
             $("#po_supplier_code").val('');
             $('#po_tax').val('');
             $('#po_tax').prop('disabled', false);
@@ -829,7 +828,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_total_invoice.set(0);
           }else{
             $("#po_supplier").select2("val", data.supplier);
-            $('#po_supplier').prop('disabled', true);
             $("#po_supplier_code").val(data.supplier_code);
             $('#po_tax').val(data.product_tax);
             $('#po_tax').prop('disabled', true);

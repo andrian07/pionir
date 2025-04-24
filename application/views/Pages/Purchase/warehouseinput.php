@@ -79,8 +79,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <thead>
                 <tr>
                   <th>No Input Stok</th>
-                  <th>Nama Barang</th>
                   <th>Tanggal</th>
+                  <th>Nama Barang</th>
                   <th>Nama Supplier</th>
                   <th>No Faktur Supplier</th>
                   <th>Qty Pesan</th>

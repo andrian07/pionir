@@ -625,6 +625,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $tax;
 				$row[] 	= $field['supplier_name'];
 				$row[] 	= 'Rp. '.number_format($field['dt_po_price']);
+				$row[] 	= $field['dt_po_qty'];
 				$row[] 	= 'Rp. '.number_format($field['hd_po_grand_total']);
 				$row[] 	= $hd_po_status;
 				$row[] 	= $field['hd_po_status_delivery'];
@@ -930,6 +931,8 @@ class Purchase extends CI_Controller {
 			$supplier_id = $po_supplier;
 			$get_supplier_code = $this->masterdata_model->get_supplier_code($supplier_id);
 			$supplier_code = $get_supplier_code[0]->supplier_code;
+			$supplier_name = $get_supplier_code[0]->supplier_name;
+			
 
 			$maxCode  = $this->purchase_model->last_po();
 			$inv_code = 'PO/'.$supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
@@ -985,7 +988,27 @@ class Purchase extends CI_Controller {
 					'dt_po_total'			=> $row['temp_po_total'],
 				);	
 
+				$dt_product_id = $row['temp_product_id'];
 				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
+
+				$check_supplier_stock = $this->purchase_model->check_supplier_stock($dt_product_id, $supplier_id);
+				if($check_supplier_stock == null){
+					$insert_supplier = array(
+						'product_id'			=> $dt_product_id,
+						'supplier_id'			=> $supplier_id,
+					);	
+					$this->masterdata_model->save_product_supplier($insert_supplier);
+
+					$get_master_product_supplier = $this->masterdata_model->get_master_product_supplier($dt_product_id);
+					$product_supplier_id_tag = $get_master_product_supplier[0]->product_supplier_id_tag;
+					$product_supplier_tag    = $get_master_product_supplier[0]->product_supplier_tag;
+
+					$product_supplier_id_tag = $product_supplier_id_tag.','.$supplier_id;
+					$product_supplier_tag    = $product_supplier_tag.','.$supplier_name;
+
+					$update_product_tag = $this->purchase_model->update_product_tag($product_supplier_id_tag, $product_supplier_tag, $dt_product_id);
+
+				}
 
 				if($row['temp_submission_id'] > 0 || $row['temp_submission_id'] != ''){
 					$submission_id_val = $row['temp_submission_id'];

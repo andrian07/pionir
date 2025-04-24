@@ -81,7 +81,7 @@
         <thead>
           <tr>
             <th scope="col">SKU</th>
-            <th scope="col">Porduk</th>
+            <th scope="col">Produk</th>
             <th scope="col">Satuan</th>
             <th scope="col">Qty Beli</th>
             <th scope="col">Qty Terima</th>

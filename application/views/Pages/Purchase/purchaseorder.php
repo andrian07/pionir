@@ -83,6 +83,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Golongan</th>
                   <th>Supplier</th>
                   <th>Harga Satuan</th>
+                  <th>Qty</th>
                   <th>Total Harga</th>
                   <th>Status</th>
                   <th>Status Pengiriman</th>
@@ -139,7 +140,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 6},
         {data: 7},
         {data: 8},
-        {data: 9}
+        {data: 9},
+        {data: 10}
       ]
     });
   }

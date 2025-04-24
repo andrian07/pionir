@@ -331,6 +331,13 @@ class masterdata_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
+
+    public function get_master_product_supplier($dt_product_id)
+    {
+        $query = $this->db->query("select product_supplier_id_tag, product_supplier_tag from ms_product where product_id = '".$dt_product_id."'");
+        $result = $query->result();
+        return $result;
+    }
     //end supplier
 
 

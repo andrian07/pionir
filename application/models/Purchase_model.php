@@ -166,6 +166,13 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
+    public function check_supplier_stock($dt_product_id, $supplier_id)
+    {
+        $query = $this->db->query("select * from ms_product_supplier where product_id = '".$dt_product_id."' and supplier_id = '".$supplier_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function search_submission($search)
     {
         $this->db->select('*');
@@ -196,6 +203,14 @@ class purchase_model extends CI_Model {
         $this->db->set('submission_status', 'Success');
         $this->db->where('submission_id  ', $submission_id_val);
         $this->db->update('submission');
+    }
+
+    public function update_product_tag($product_supplier_id_tag, $product_supplier_tag, $dt_product_id)
+    {
+        $this->db->set('product_supplier_id_tag', $product_supplier_id_tag);
+        $this->db->set('product_supplier_tag', $product_supplier_tag);
+        $this->db->where('product_id', $dt_product_id);
+        $this->db->update('ms_product');
     }
 
     public function edit_temp_po($product_id, $user_id, $data_insert)
