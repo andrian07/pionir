@@ -390,7 +390,7 @@ class purchase_model extends CI_Model {
 
     public function check_temp_input_stock($user_id)
     {
-        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse, temp_is_po_code, temp_is_po_id');
+        $this->db->select('temp_is_supplier, sum(temp_is_qty) as total_item, temp_is_warehouse, temp_is_ekspedisi, temp_is_po_code, temp_is_po_id');
         $this->db->from('temp_input_stock');
         $this->db->where('temp_is_user_id', $user_id);
         $query = $this->db->get();
@@ -513,7 +513,7 @@ class purchase_model extends CI_Model {
 
     public function header_input_stock($input_stock_id)
     {
-        $query = $this->db->query("select * from hd_input_stock a, hd_po b, ms_warehouse c, ms_user d where a.hd_po_id = b.hd_po_id and a.hd_input_stock_warehouse = c.warehouse_id and a.created_by = d.user_id and hd_input_stock_id  = '".$input_stock_id."'");
+        $query = $this->db->query("select * from hd_input_stock a, hd_po b, ms_warehouse c, ms_user d, ms_ekspedisi e where a.hd_po_id = b.hd_po_id and a.hd_input_stock_warehouse = c.warehouse_id and a.created_by = d.user_id and b.hd_po_ekspedisi = e.ekspedisi_id and hd_input_stock_id  = '".$input_stock_id."'");
         $result = $query->result();
         return $result;
     }
@@ -627,7 +627,7 @@ class purchase_model extends CI_Model {
     public function temp_purchase_list($search, $length, $start)
     {
         $this->db->select('*');
-        $this->db->from('temp_purchases');
+        $this->db->from('temp_purchase');
         $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');

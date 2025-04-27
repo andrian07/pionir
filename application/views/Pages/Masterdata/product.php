@@ -385,6 +385,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <th width="30%">Nama Produk</th>
                 <th>Brand</th>
                 <th>Kategori</th>
+                <th>Harga Jual</th>
                 <th>Supplier</th>
                 <th>Paket</th>
                 <th>PPN</th>
@@ -435,7 +436,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
   });

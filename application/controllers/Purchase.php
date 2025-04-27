@@ -289,7 +289,9 @@ class Purchase extends CI_Controller {
 				$find_result[] = [
 					'id'                  => $row->product_id,
 					'value'               => $diplay_text,
-					'product_code'        => $row->product_code
+					'product_code'        => $row->product_code,
+					'product_price'       => $row->product_price,
+					'product_weight'      => $row->product_weight,
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
@@ -699,6 +701,7 @@ class Purchase extends CI_Controller {
 					'product_id'          => $row['product_id'],
 					'product_price'       => $row['product_price'],
 					'product_weight'      => $row['product_weight'],
+					'qty'      			  => $row['submission_qty'],
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
@@ -835,7 +838,7 @@ class Purchase extends CI_Controller {
 			$supplier     = 0;
 			$product_tax  = 0;
 			$sub_total    = 0;
-			$sub_total    = 0;
+			$ongkir       = 0;
 		}
 		echo json_encode(['code'=>200, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
 		die();
@@ -1209,7 +1212,8 @@ class Purchase extends CI_Controller {
 		if($check_auth[0]->add == 'Y'){
 			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
 			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
-			$data['data'] = array_merge($supplier_list, $warehouse_list);
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$data['data'] = array_merge($supplier_list, $warehouse_list, $ekspedisi_list);
 			$this->load->view('Pages/Purchase/warehouseinputadd', $data);
 		}else{
 			$msg = "No Access";
@@ -1266,6 +1270,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['unit_name'];
 				$row[] 	= $field['temp_is_qty_order'];
 				$row[] 	= $field['temp_is_qty'];
+				$row[] 	= $field['temp_is_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -1302,6 +1307,7 @@ class Purchase extends CI_Controller {
 					'temp_is_po_id'				=> $row->hd_po_id,
 					'temp_is_po_code'			=> $row->hd_po_invoice,
 					'temp_is_warehouse'			=> $row->hd_po_warehouse,
+					'temp_is_ekspedisi'			=> $row->hd_po_ekspedisi,
 					'temp_is_user_id'			=> $user_id,
 				);	
 
@@ -1324,6 +1330,7 @@ class Purchase extends CI_Controller {
 			$po_code 	     = $check_temp_input_stock[0]['temp_is_po_code'];
 			$po_id 	     	 = $check_temp_input_stock[0]['temp_is_po_id'];
 			$warehouse 	     = $check_temp_input_stock[0]['temp_is_warehouse'];
+			$ekspedisi 	     = $check_temp_input_stock[0]['temp_is_ekspedisi'];
 			$total_item  	 = $check_temp_input_stock[0]['total_item'];
 		}else{
 			$po_code 		= 0;
@@ -1331,8 +1338,9 @@ class Purchase extends CI_Controller {
 			$supplier     	= 0;
 			$warehouse  	= 0;
 			$total_item    	= 0;
+			$ekspedisi     = 0;
 		}
-		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'po_code'=>$po_code, 'po_id'=>$po_id, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
+		echo json_encode(['code'=>200, 'supplier'=>$supplier, 'ekspedisi'=>$ekspedisi, 'po_code'=>$po_code, 'po_id'=>$po_id, 'warehouse'=>$warehouse, 'total_item'=>$total_item]);
 		die();
 	}
 
@@ -1352,10 +1360,12 @@ class Purchase extends CI_Controller {
 		if($check_auth[0]->add == 'Y'){
 			$product_id 				= $this->input->post('product_id');
 			$temp_qty_recive 			= $this->input->post('temp_qty_recive');
+			$input_stock_detail_remark  = $this->input->post('input_stock_detail_remark');
 			$user_id 					= $_SESSION['user_id'];
 			$check_temp_input_stock_product = $this->purchase_model->check_edit_temp_input_stock($product_id, $user_id);
 			$data_edit = array(
 				'temp_is_qty'			=> $temp_qty_recive,
+				'temp_is_note'			=> $input_stock_detail_remark,
 				'temp_is_user_id'		=> $user_id,
 			);	
 			if($check_temp_input_stock_product != null){
@@ -1423,6 +1433,7 @@ class Purchase extends CI_Controller {
 					'hd_is_id'				=> $save_input_stock,
 					'dt_is_product_id'		=> $row['temp_is_product_id'],
 					'dt_is_qty_order'		=> $row['temp_is_qty_order'],
+					'dt_is_note'			=> $row['temp_is_note'],
 					'dt_is_qty'				=> $row['temp_is_qty']
 				);	
 				$insert_detail_input_stock = $this->purchase_model->insert_detail_input_stock($data_insert_detail);

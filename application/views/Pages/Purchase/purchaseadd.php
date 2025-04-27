@@ -213,7 +213,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </form>
 
             <div class="table-responsive">
-              <table id="temp-po-list" class="display table table-striped table-hover" >
+              <table id="temp-purchase-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
                     <th>SKU</th>
@@ -614,7 +614,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_total_ongkir.set(0);
             footer_total_invoice.set(0);
           }else{
-            $("#po_supplier").select2("val", data.supplier);
+            $("#po_supplier").val(data.supplier);
+            $('#po_supplier').trigger('change');
             $('#po_supplier').prop('disabled', true);
             $("#po_supplier_code").val(data.supplier_code);
             $('#po_tax').val(data.product_tax);

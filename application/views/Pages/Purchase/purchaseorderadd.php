@@ -537,13 +537,21 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
+      let qty = ui.item.qty;
       let code = ui.item.code;
       $('#submission_id').val(id);
       $('#submission_code').val(code);
       $('#product_name').val(product_name);
       $('#product_id').val(product_id);
+      $('#temp_qty').val(qty);
       temp_price.set(product_price);
       $('#temp_weight').val(product_weight);
+      let temp_qty_val = $('#temp_qty').val();
+      let temp_weight_val = $('#temp_weight').val();
+      let temp_total_weight_val = temp_qty_val * temp_weight_val;
+      $('#temp_total_weight').val(temp_total_weight_val);
+      let temp_total_val = product_price * qty;
+      temp_total.set(temp_total_val);
     },
   });
 
@@ -566,15 +574,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
+      console.log(ui);
       let id = ui.item.id;
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
-      $('#submission_id').val(id);
-      $('#submission_code').val('');
-      $('#product_name').val(product_name);
-      $('#product_id').val(product_id);
+      //$('#submission_id').val(id);
+      //$('#submission_code').val('');
+      //$('#product_name').val(product_name);
+      $('#product_id').val(id);
       temp_price.set(product_price);
       $('#temp_weight').val(product_weight);
     },
@@ -817,6 +826,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           if(data.supplier == 0){
+
             $("#po_supplier").select2("val", " ");
             $("#po_supplier_code").val('');
             $('#po_tax').val('');
@@ -827,7 +837,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_total_ongkir.set(0);
             footer_total_invoice.set(0);
           }else{
-            $("#po_supplier").select2("val", data.supplier);
+            $("#po_supplier").val(data.supplier);
+            $('#po_supplier').trigger('change');
             $("#po_supplier_code").val(data.supplier_code);
             $('#po_tax').val(data.product_tax);
             $('#po_tax').prop('disabled', true);

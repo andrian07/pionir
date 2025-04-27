@@ -1161,6 +1161,7 @@ class Masterdata extends CI_Controller {
 				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
 				$row[] = $field['brand_name'];
 				$row[] = $field['category_name'];
+				$row[] = number_format($field['product_sell_price_1']);
 				$row[] = $field['product_supplier_tag'];
 				$row[] = $product_package;
 				$row[] = $prodcut_ppn;

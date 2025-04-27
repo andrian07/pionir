@@ -61,6 +61,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
             </div>
 
+            <div class="form-group row">
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
+              <div class="col-sm-3">
+                <select class="form-control input-full js-example-basic-single" id="ekspedisi" name="ekspedisi">
+                  <option value="">-- Pilih Ekspedisi --</option>
+                  <?php foreach ($data['ekspedisi_list'] as $row) { ?>
+                    <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>  
+                  <?php } ?>
+                </select>
+              </div>
+              <div class="col-sm-4"></div>
+            </div>
+
 
 
           </div>
@@ -73,6 +86,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <form id="formaddtemp">
               <div class="row well well-sm input-temp">
                 <input id="item_id" name="item_id" type="hidden" value="">
+
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>SKU</label>
+                    <input id="product_code" name="product_code" type="text" class="form-control" required="" readonly>
+                  </div>
+                </div>
 
                 <div class="col-sm-4">
                   <div class="form-group">
@@ -93,6 +113,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="form-group">
                     <label>Qty Terima</label>
                     <input id="temp_qty_recive" name="temp_qty_recive" type="text" class="form-control text-right" value="0" required="">
+                  </div>
+                </div>
+
+                <div class="col-sm-5">
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Catatan</label>
+                    <input id="input_stock_detail_remark" name="input_stock_detail_remark" type="text" class="form-control">
                   </div>
                 </div>
 
@@ -123,6 +153,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>Satuan</th>
                     <th>Qty Beli</th>
                     <th>Qty Terima</th>
+                    <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -175,6 +206,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     temp_input_stock_table();
     $('#supplier').prop('disabled', true);
     $('#warehouse').prop('disabled', true);
+    $('#ekspedisi').prop('disabled', true);
   });
 
   function temp_input_stock_table(){
@@ -196,7 +228,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 2},
         {data: 3},
         {data: 4},
-        {data: 5}
+        {data: 5},
+        {data: 6}
       ]
     });
     check_tempt_data();
@@ -214,8 +247,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         success: function(res) {
           if (res.success == true) {
             add(res.data);
-          }else{
-            $('#po_inv').val('');
           }
         },
       });
@@ -250,6 +281,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   function check_tempt_data()
   {
+    
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/check_temp_input_stock",
@@ -259,17 +291,22 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         if (data.code == "200"){
           console.log(data);
           if(data.po_id == 0){
-            $("#po_inv").val(" ");
+            $("#po_inv").val("");
             $("#po_inv_id").val("0");
-            $("#supplier").select2("val", " ");
-            $("#warehouse").select2("val", " ");
+            $("#supplier").select2("val", "");
+            $("#warehouse").select2("val", "");
+            $("#ekspedisi").select2("val", "");
             $("#total_qty_item").val("0");
             $('#po_inv').prop('disabled', false);
           }else{
             $("#po_inv").val(data.po_code);
             $("#po_inv_id").val(data.po_id);
-            $("#supplier").select2("val", data.supplier);
-            $("#warehouse").select2("val", data.warehouse);
+            $("#supplier").val(data.supplier);
+            $('#supplier').trigger('change');
+            $('#warehouse').val(data.warehouse);
+            $('#warehouse').trigger('change');
+            $('#ekspedisi').val(data.ekspedisi);
+            $('#ekspedisi').trigger('change');
             $("#total_qty_item").val(data.total_item);
             $('#po_inv').prop('disabled', true);
           }
@@ -288,6 +325,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           var row = data.result[0];
+          $("#product_code").val(row.product_code);
           $("#product_name").val(row.product_name);
           $("#product_id").val(row.temp_is_product_id);
           $("#temp_qty_po").val(row.temp_is_qty_order);
@@ -301,10 +339,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
-    var product_id              = $("#product_id").val();
-    var temp_qty_recive         = $("#temp_qty_recive").val();
-    var temp_qty_po             = $("#temp_qty_po").val();
-
+    var product_id                = $("#product_id").val();
+    var temp_qty_recive           = $("#temp_qty_recive").val();
+    var temp_qty_po               = $("#temp_qty_po").val();
+    var input_stock_detail_remark = $("#input_stock_detail_remark").val();
     if(temp_qty_recive > temp_qty_po){
       Swal.fire({
         icon: 'error',
@@ -316,7 +354,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         type: "POST",
         url: "<?php echo base_url(); ?>Purchase/add_temp_input_stock",
         dataType: "json",
-        data: {product_id:product_id, temp_qty_recive:temp_qty_recive},
+        data: {product_id:product_id, temp_qty_recive:temp_qty_recive, input_stock_detail_remark:input_stock_detail_remark},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';

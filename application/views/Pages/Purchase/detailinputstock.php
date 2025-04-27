@@ -53,6 +53,7 @@
       <div class="col-md-4">
         <p class="detail-invoice"><?php echo $row->hd_input_stock_inv; ?></p>
         <p>No PO: <b><?php echo $row->hd_po_invoice; ?></b></p>
+        <p>Ekspedisi: <b><?php echo $row->ekspedisi_name; ?></b></p>
       </div>
       <div class="col-md-4">
         <p>Status: 
@@ -85,6 +86,7 @@
             <th scope="col">Satuan</th>
             <th scope="col">Qty Beli</th>
             <th scope="col">Qty Terima</th>
+            <th scope="col">Catatan</th>
           </tr>
         </thead>
         <tbody>
@@ -95,6 +97,7 @@
               <td><?php echo $row->unit_name; ?></td>
               <td><?php echo $row->dt_is_qty_order; ?></td>
               <td><?php echo $row->dt_is_qty; ?></td>
+              <td><?php echo $row->dt_is_note; ?></td>
             </tr>
           <?php } ?>
         </tbody>
