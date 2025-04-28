@@ -127,7 +127,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Produk</label>
-                    <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk"required="">
+                    <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk" readonly>
                     <input id="product_id" type="hidden" name="product_id">
                   </div>
                 </div>

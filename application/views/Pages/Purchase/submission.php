@@ -358,6 +358,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
+
   $('#submission_product_name').autocomplete({
     minLength: 2,
     source: function(req, add) {

@@ -15,9 +15,19 @@ class global_model extends CI_Model {
 
     public function search_product($keyword)
     {
-        $query = $this->db->query("select * from ms_product where (product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and is_active = 'Y'" );
-        $result = $query->result();
-        return $result;
+        $this->db->select('*');
+        $this->db->from('ms_product');
+        $this->db->where('ms_product.is_active', 'y');
+        if($keyword != null){
+            $this->db->where('ms_product.product_name like "%'.$keyword.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$keyword.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$keyword.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$keyword.'%"');
+            $this->db->or_where('ms_product.product_desc like "%'.$keyword.'%"');
+        }
+        $this->db->limit(50);
+        $query = $this->db->get();
+        return $query;
     }
 
     public function search_product_by_supplier($keyword)

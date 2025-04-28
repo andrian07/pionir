@@ -181,7 +181,6 @@ class Purchase extends CI_Controller {
 
 				$no++;
 				$row = array();
-				$row[] 	= $field['submission_invoice'];
 				$row[] 	= $field['product_code'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
@@ -282,16 +281,16 @@ class Purchase extends CI_Controller {
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
 		if (!($keyword == '' || $keyword == NULL)) {
-			$find = $this->global_model->search_product($keyword);
+			$find = $this->global_model->search_product($keyword)->result_array();
 			$find_result = [];
 			foreach ($find as $row) {
-				$diplay_text = $row->product_code.' - '.$row->product_name;
+				$diplay_text = $row['product_code'].' - '.$row['product_name'];
 				$find_result[] = [
-					'id'                  => $row->product_id,
+					'id'                  => $row['product_id'],
 					'value'               => $diplay_text,
-					'product_code'        => $row->product_code,
-					'product_price'       => $row->product_price,
-					'product_weight'      => $row->product_weight,
+					'product_code'        => $row['product_code'],
+					'product_price'       => $row['product_price'],
+					'product_weight'      => $row['product_weight'],
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];

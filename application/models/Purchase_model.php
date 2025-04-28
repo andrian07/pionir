@@ -23,7 +23,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_product', 'submission.submission_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
-        $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id');
+        $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
