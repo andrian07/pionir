@@ -38,7 +38,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tgl Faktur :</label>
               <div class="col-sm-3">
-                <input id="faktur_date" name="faktur_date" type="date" class="form-control" />
+                <input id="faktur_date" name="faktur_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
               <div class="col-sm-3">
@@ -74,9 +74,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <?php } ?>
                 </select>
               </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
               <div class="col-sm-3">
-                <input id="po_user_id" name="po_user_id" type="text" class="form-control" value="<?php echo $_SESSION['user_name']; ?>" readonly="">
+                <input id="purchase_due_date" name="purchase_due_date" type="date" class="form-control" value="" readonly="">
               </div>
             </div>
 
@@ -93,7 +93,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">Golongan :</label>
               <div class="col-sm-3">
-                <select class="form-control" id="purchase_tax" name="purchase_tax" readonly="">
+                <select class="form-control" id="purchase_tax" name="purchase_tax">
                   <option value="PPN">BKP</option>
                   <option value="NON PPN">NON BKP</option>
                 </select>
@@ -105,12 +105,18 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
             </div>
 
+
             <div class="form-group row">
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Supplier :</label>
               <div class="col-sm-3">
-                <input id="purchase_due_date" name="purchase_due_date" type="date" class="form-control" value="" readonly="">
+                <select class="form-control input-full js-example-basic-single" id="purchase_supplier" name="purchase_supplier">
+                  <option value="">-- Pilih Supplier --</option>
+                  <?php foreach ($data['supplier_list'] as $row) { ?>
+                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                  <?php } ?>
+                </select>
               </div>
-              <div class="col-sm-8"></div>
+
             </div>
 
 
@@ -360,6 +366,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+  $('#purchase_top').prop('disabled', true);
+  $('#purchase_payment_method').prop('disabled', true);
+  $('#purchase_ekspedisi').prop('disabled', true);
+  $('#purchase_tax').prop('disabled', true);
+  $('#purchase_warehouse').prop('disabled', true);
+  $('#purchase_due_date').prop('disabled', true);
+  $('#po_user_id').prop('disabled', true);
+  $('#purchase_supplier').prop('disabled', true);
+  
+
   let temp_price = new AutoNumeric('#temp_price', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
@@ -513,7 +529,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 6}
       ]
     });
-    //check_tempt_data();
+    check_tempt_data();
   }
 
 
@@ -547,7 +563,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             let message = 'Berhasil Pilih PO';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-input-stock-table').DataTable().ajax.reload();
+            $('#temp-purchase-list').DataTable().ajax.reload();
             check_tempt_data();
           } else {
             Swal.fire({
@@ -597,44 +613,45 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/check_temp_po",
+      url: "<?php echo base_url(); ?>Purchase/check_temp_purchase",
       dataType: "json",
       data: {},
       success : function(data){
         if (data.code == "200"){
-          if(data.supplier == 0){
-            $("#po_supplier").select2("val", " ");
-            $('#po_supplier').prop('disabled', false);
-            $("#po_supplier_code").val('');
-            $('#po_tax').val('');
-            $('#po_tax').prop('disabled', false);
-            footer_sub_total.set(0);
-            footer_dpp.set(0); 
-            footer_total_ppn.set(0);
-            footer_total_ongkir.set(0);
-            footer_total_invoice.set(0);
-          }else{
-            $("#po_supplier").val(data.supplier);
-            $('#po_supplier').trigger('change');
-            $('#po_supplier').prop('disabled', true);
-            $("#po_supplier_code").val(data.supplier_code);
-            $('#po_tax').val(data.product_tax);
-            $('#po_tax').prop('disabled', true);
-            footer_sub_total.set(data.sub_total);
-            footer_dpp.set(data.sub_total); 
-            if(data.product_tax == 'PPN'){
-              var ppn_cal = data.sub_total * 11 / 100;
-              footer_total_ppn.set(ppn_cal);
-            }else{
-              footer_total_ppn.set(0);
-            }
-            footer_total_ongkir.set(data.ongkir);
-            var data_ongkir = parseInt(data.ongkir, 0);
-            var data_sub_total = parseInt(data.sub_total, 0);
-            var data_ppn_cal = parseInt(ppn_cal, 0);
-            var footer_total_invoice_cal = (data_sub_total + data_ppn_cal + data_ongkir);
-            footer_total_invoice.set(footer_total_invoice_cal);
-          }
+          console.log(data.data[0]);
+          let row = data.data[0];
+          footer_sub_total.set(row.sub_total);
+          $('#po_inv').val(row.hd_po_invoice);
+          $('#po_id').val(row.hd_po_id);
+          $('#purchase_top').val(data.hd_po_top_val);
+          $('#purchase_top').trigger('change');
+          $('#purchase_payment_method').val(row.hd_po_payment);
+          $('#purchase_payment_method').trigger('change');
+          $('#purchase_ekspedisi').val(row.hd_po_ekspedisi);
+          $('#purchase_ekspedisi').trigger('change');
+          $('#purchase_tax').val(row.hd_po_tax);
+          $('#purchase_warehouse').val(row.hd_po_warehouse);
+          $('#purchase_warehouse').trigger('change');
+          $('#purchase_supplier').val(row.hd_po_supplier);
+          $('#purchase_supplier').trigger('change');
+        }
+      }
+    });
+  }
+
+  function duedate_cal()
+  {
+    var purchase_top = document.getElementById("purchase_top").value;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/cal_due_date",
+      dataType: "json",
+      data: {po_top:purchase_top},
+      success : function(data){
+        if (data.code == "200"){
+          console.log(data.result);
+          $('#purchase_due_date').val(data.result);
+          $('#purchase_due_date').trigger('change');
         }
       }
     });

@@ -244,6 +244,7 @@ class Purchase extends CI_Controller {
 					'temp_purchase_total_weight' => $row->dt_po_total_weight,
 					'temp_purchase_total_ongkir' => $row->dt_po_total_ongkir,
 					'temp_purchase_total'		 => $row->dt_po_total,
+					'temp_purchase_po_id' 		 => $po_id,
 					'temp_user_id'				 => $user_id
 				);	
 
@@ -255,6 +256,19 @@ class Purchase extends CI_Controller {
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
+	}
+
+	public function check_temp_purchase()
+	{
+		$user_id 		= $_SESSION['user_id'];
+		$check_temp_po  = $this->purchase_model->check_temp_purchase($user_id)->result_array();
+		if($check_temp_po[0]['hd_po_top'] == 'CBD'){
+			$hd_po_top_val = 0;
+		}else{
+			$hd_po_top_val = trim($check_temp_po[0]['hd_po_top'],"JT");
+		}
+		echo json_encode(['code'=>200, 'data'=>$check_temp_po, 'hd_po_top_val'=>$hd_po_top_val]);
+		die();
 	}
 
 	// end purchase
@@ -575,7 +589,7 @@ class Purchase extends CI_Controller {
 			$no = $_POST['start'];
 			foreach ($list as $field) {
 
-				if($field['hd_po_tax'] == 'Y'){
+				if($field['hd_po_tax'] == 'PPN'){
 					$tax = '<span class="badge badge-success">BKP</span>';
 				}else{
 					$tax = '<span class="badge badge-danger">NON BKP</span>';
@@ -890,7 +904,6 @@ class Purchase extends CI_Controller {
 			$footer_total_ongkir_val 					= $this->input->post('footer_total_ongkir_val');
 			$footer_total_invoice_val 					= $this->input->post('footer_total_invoice_val');
 			$purchase_order_remark 						= $this->input->post('purchase_order_remark');
-			
 			$user_id 									= $_SESSION['user_id'];
 
 			if($po_supplier == null){

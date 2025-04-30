@@ -2,6 +2,17 @@
 define('DOC_ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 require DOC_ROOT_PATH . $this->config->item('header');
 ?>
+<style type="text/css">
+  .image-td{
+    width: 15%;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .image-td{
+      width: 35%;
+    }
+  }
+</style>
 </div>
 
 <div class="container">
@@ -71,7 +82,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     success : function(data){
       let text = "";
       for (let i = 0; i < data.length; i++) {
-        text+= '<tr onclick="popupOpen('+data[i].product_id+')"><td width="15%"><img src="<?php echo base_url(); ?>assets/products/'+data[i].product_image+'" width="100%"></img></td><td>'+data[i].product_name+'<br /> <span class="badge badge-primary">'+formatter.format(data[i].product_sell_price_1)+'</span></td><td>50 Pcs</td></tr>';
+        text+= '<tr onclick="popupOpen('+data[i].product_id+')"><td class="image-td"><img src="<?php echo base_url(); ?>assets/products/'+data[i].product_image+'" width="100%"></img></td><td>'+data[i].product_name+'<br /> <span class="badge badge-primary">'+formatter.format(data[i].product_sell_price_1)+'</span></td><td>50 Pcs</td></tr>';
       }       
       document.getElementById("product_list").innerHTML = text;
     }
@@ -87,12 +98,12 @@ $('#key').on('input', function (event) {
 function popupOpen(id) {
   let link = window.location.origin + window.location.pathname + '/detailsearch?id='+id;
   Fancybox.show([
-  {
-    src: link,
-    type: "iframe",
-    preload: false,
-    top:0,
-  },
+    {
+      src: link,
+      type: "iframe",
+      preload: false,
+      top:0,
+    },
   ]);
 }
 

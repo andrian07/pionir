@@ -325,7 +325,7 @@ class masterdata_model extends CI_Model {
         $this->db->update('ms_supplier');
     }
 
-     public function get_supplier_code($supplier_id)
+    public function get_supplier_code($supplier_id)
     {
         $query = $this->db->query("select supplier_code, supplier_name from ms_supplier where supplier_id = '".$supplier_id."'");
         $result = $query->result();
@@ -372,8 +372,9 @@ class masterdata_model extends CI_Model {
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
-            $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_desc like "%'.$search.'%"');
         }
         $this->db->limit($length);
         $this->db->offset($start);
@@ -391,8 +392,9 @@ class masterdata_model extends CI_Model {
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
-            $this->db->or_where('ms_brand.brand_name like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_supplier_tag like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_desc like "%'.$search.'%"');
         }
         $query = $this->db->get();
         return $query;

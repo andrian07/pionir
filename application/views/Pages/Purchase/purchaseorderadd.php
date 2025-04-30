@@ -216,7 +216,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <tr>
                     <th>No Pengajuan</th>
                     <th>SKU</th>
-                    <th>Porduk</th>
+                    <th>Produk</th>
                     <th>Satuan</th>
                     <th>Qty</th>
                     <th>Ongkir</th>
@@ -706,7 +706,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var po_date                                  = $("#po_date").val();
     var po_tax                                   = $("#po_tax").val();
     var po_ekspedisi                             = $("#po_ekspedisi").val();
-    var po_top                                   = $("#po_top").val();
+    var po_top                                   = $("#po_top option:selected" ).text();
     var purchase_order_due_date                  = $("#purchase_order_due_date").val();
     var po_payment_method                        = $("#po_payment_method").val();
     var po_warehouse                             = $("#po_warehouse").val();
@@ -826,9 +826,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           if(data.supplier == 0){
-
-            $("#po_supplier").select2("val", " ");
-            $("#po_supplier_code").val('');
             $('#po_tax').val('');
             $('#po_tax').prop('disabled', false);
             footer_sub_total.set(0);
@@ -848,13 +845,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               var ppn_cal = data.sub_total * 11 / 100;
               footer_total_ppn.set(ppn_cal);
             }else{
-              footer_total_ppn.set(0);
+              var ppn_cal = 0;
+              footer_total_ppn.set(ppn_cal);
             }
             footer_total_ongkir.set(data.ongkir);
             var data_ongkir = parseInt(data.ongkir, 0);
             var data_sub_total = parseInt(data.sub_total, 0);
             var data_ppn_cal = parseInt(ppn_cal, 0);
-            var footer_total_invoice_cal = (data_sub_total + data_ppn_cal + data_ongkir);
+            var footer_total_invoice_cal = (data.ongkir + data.sub_total + data_ppn_cal);
             footer_total_invoice.set(footer_total_invoice_cal);
           }
         }

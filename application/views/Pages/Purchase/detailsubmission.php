@@ -94,11 +94,12 @@
               <td><?php echo $row->user_name; ?></td>
               <td><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y h:i:s"); ?></td>
             </tr>
-          <?php } ?>
+         
           <tr>
             <td style="border-bottom: none;"><b>Catatan:</b></td>
             <td style="border-bottom: none;"><?php echo $row->submission_text; ?></td>
           </tr>
+           <?php } ?>
         </tbody>
       </table>
     </div>

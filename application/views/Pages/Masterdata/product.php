@@ -111,7 +111,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Item Supplier</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" name="product_item_supplier" id="product_item_supplier" placeholder="Item Supplier">
+                                <textarea class="form-control" id="product_item_supplier" name="product_item_supplier" rows="4"></textarea>
                               </div>
                             </div>
 
@@ -282,7 +282,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Item Supplier</label>
                               <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" name="product_item_supplier_edit" id="product_item_supplier_edit" placeholder="Item Supplier">
+                                <textarea class="form-control" id="product_item_supplier_edit" name="product_item_supplier_edit" rows="4"></textarea>
                               </div>
                             </div>
 
