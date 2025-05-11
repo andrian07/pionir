@@ -233,7 +233,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="purchase_order_remark" name="purchase_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="purchase_remark" name="purchase_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>

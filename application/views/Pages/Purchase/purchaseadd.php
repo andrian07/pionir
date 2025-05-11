@@ -693,6 +693,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $("#temp_total_weight").val(row.temp_purchase_total_weight);
           temp_ongkir.set(row.temp_purchase_total_ongkir);
           temp_total.set(row.temp_purchase_total);
+          $("#temp_note").val(row.temp_purchase_note);
         }
       }
     });  
@@ -795,6 +796,52 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         }
       });
     }
+  });
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var po_inv                                   = $("#po_inv").val();
+    var po_id                                    = $("#po_id").val();
+    var purchase_top                             = $("#purchase_top option:selected" ).text();
+    var purchase_payment_method                  = $("#purchase_payment_method").val();
+    var purchase_supplier                        = $("#purchase_supplier").val();
+    var no_faktur_supplier                       = $("#no_faktur_supplier").val();
+    var faktur_date                              = $("#faktur_date").val();
+    var purchase_ekspedisi                       = $("#purchase_ekspedisi").val();
+    var purchase_tax                             = $("#purchase_tax").val();
+    var purchase_date                            = $("#purchase_date").val();
+    var purchase_warehouse                       = $("#purchase_warehouse").val();
+    var purchase_due_date                        = $("#purchase_due_date").val();
+    var footer_sub_total_submit                  = parseInt(footer_sub_total.get());
+    var footer_total_discount_submit             = parseInt(footer_total_discount.get());
+    var edit_footer_discount_percentage1_submit  = parseInt(edit_footer_discount_percentage1.get());
+    var edit_footer_discount_percentage2_submit  = parseInt(edit_footer_discount_percentage2.get());
+    var edit_footer_discount_percentage3_submit  = parseInt(edit_footer_discount_percentage3.get());
+    var edit_footer_discount1_submit             = parseInt(edit_footer_discount1.get());
+    var edit_footer_discount2_submit             = parseInt(edit_footer_discount2.get());
+    var edit_footer_discount3_submit             = parseInt(edit_footer_discount3.get());
+    var footer_dpp_val                           = parseInt(footer_dpp.get());
+    var footer_total_ppn_val                     = parseInt(footer_total_ppn.get());
+    var footer_total_ongkir_val                  = parseInt(footer_total_ongkir.get());
+    var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
+    var purchase_remark                         = $("#purchase_remark").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/save_purchase",
+      dataType: "json",
+      data: {po_inv:po_inv, po_id:po_id, purchase_top:purchase_top, purchase_payment_method:purchase_payment_method, purchase_supplier:purchase_supplier, no_faktur_supplier:no_faktur_supplier, faktur_date:faktur_date, purchase_ekspedisi:purchase_ekspedisi, purchase_tax:purchase_tax, purchase_date:purchase_date, purchase_warehouse:purchase_warehouse, purchase_due_date:purchase_due_date, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_remark:purchase_remark},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>/Purchase/purchase";
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
   });
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
