@@ -852,7 +852,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             var data_ongkir = parseInt(data.ongkir, 0);
             var data_sub_total = parseInt(data.sub_total, 0);
             var data_ppn_cal = parseInt(ppn_cal, 0);
-            var footer_total_invoice_cal = (data.ongkir + data.sub_total + data_ppn_cal);
+            var footer_total_invoice_cal = (data_ongkir + data_sub_total + data_ppn_cal);
             footer_total_invoice.set(footer_total_invoice_cal);
           }
         }

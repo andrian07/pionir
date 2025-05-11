@@ -187,7 +187,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
 
 
-                <div class="col-sm-3">
+                <div class="col-sm-4">
 
                   <!-- text input -->
 
@@ -196,6 +196,26 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <label>Total</label>
 
                     <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
+
+                  </div>
+
+                </div>
+
+                <div class="col-sm-4">
+
+
+
+                </div>
+
+                <div class="col-sm-7">
+
+                  <!-- text input -->
+
+                  <div class="form-group">
+
+                    <label>Catatan</label>
+
+                    <input id="temp_note" name="temp_note" type="text" class="form-control">
 
                   </div>
 
@@ -228,6 +248,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>Qty</th>
                     <th>Ongkir</th>
                     <th>Total</th>
+                    <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -526,7 +547,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 3},
         {data: 4},
         {data: 5},
-        {data: 6}
+        {data: 6},
+        {data: 7}
       ]
     });
     check_tempt_data();
@@ -600,14 +622,81 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
-      $('#submission_id').val(id);
-      $('#submission_code').val('');
       $('#product_name').val(product_name);
       $('#product_id').val(product_id);
       temp_price.set(product_price);
       $('#temp_weight').val(product_weight);
     },
   });
+
+
+  $('#temp_price').on('input', function (event) {
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val);
+  })
+
+  $('#temp_qty').on('input', function (event) {
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val);
+  })
+
+
+
+  $('#temp_delivery_price').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_total_weight_val = $('#temp_total_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val * temp_total_weight_val;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
+  })
+
+  function edit_temp(id)
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_purchase",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          var row = data.result[0];
+          $("#product_name").val(row.product_name);
+          $("#product_id").val(row.temp_product_id);
+          temp_price.set(row.temp_purchase_price);
+          $("#temp_qty").val(row.temp_purchase_qty);
+          $("#temp_weight").val(row.temp_purchase_weight);
+          temp_delivery_price.set(row.temp_purchase_ongkir);
+          $("#temp_total_weight").val(row.temp_purchase_total_weight);
+          temp_ongkir.set(row.temp_purchase_total_ongkir);
+          temp_total.set(row.temp_purchase_total);
+        }
+      }
+    });  
+  }
 
   function check_tempt_data()
   {
@@ -618,7 +707,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {},
       success : function(data){
         if (data.code == "200"){
-          console.log(data.data[0]);
           let row = data.data[0];
           footer_sub_total.set(row.sub_total);
           $('#po_inv').val(row.hd_po_invoice);
@@ -634,6 +722,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $('#purchase_warehouse').trigger('change');
           $('#purchase_supplier').val(row.hd_po_supplier);
           $('#purchase_supplier').trigger('change');
+          edit_footer_discount_percentage1.set(row.hd_po_disc_percentage1);
+          edit_footer_discount_percentage2.set(row.hd_po_disc_percentage2);
+          edit_footer_discount_percentage3.set(row.hd_po_disc_percentage3);
+          edit_footer_discount1.set(row.hd_po_disc_1);
+          edit_footer_discount2.set(row.hd_po_disc_2);
+          edit_footer_discount3.set(row.hd_po_disc_3);
+          footer_total_discount.set(row.hd_po_total_discount);
+          footer_dpp.set(row.hd_po_dpp);
+          footer_total_ppn.set(row.hd_po_ppn);
+          footer_total_ongkir.set(row.hd_po_ongkir);
+          footer_total_invoice.set(row.hd_po_grand_total);
+
+          
+          
         }
       }
     });
@@ -649,7 +751,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {po_top:purchase_top},
       success : function(data){
         if (data.code == "200"){
-          console.log(data.result);
           $('#purchase_due_date').val(data.result);
           $('#purchase_due_date').trigger('change');
         }
@@ -657,6 +758,44 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
+  $('#btnadd_temp').click(function(e){
+    e.preventDefault();
+    var product_id              = $("#product_id").val();
+    var temp_price_val          = parseInt(temp_price.get());
+    var temp_qty                = $("#temp_qty").val();
+    var temp_weight             = $("#temp_weight").val();
+    var temp_delivery_price_val = parseInt(temp_delivery_price.get());
+    var temp_total_weight       = $("#temp_total_weight").val();
+    var temp_ongkir_val         = parseInt(temp_ongkir.get());
+    var temp_total_val          = parseInt(temp_total.get());
+    var temp_note               = $("#temp_note").val();
+
+    if($('#formaddtemp').parsley().validate({force: true})){
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Purchase/add_temp_purchase",
+        dataType: "json",
+        data: {product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val, temp_note:temp_note},
+        success : function(data){
+          if (data.code == "200"){
+            let title = 'Tambah Data';
+            let message = 'Data Berhasil Di Tambah';
+            let state = 'info';
+            notif_success(title, message, state);
+            $('#temp-purchase-list').DataTable().ajax.reload();
+            check_tempt_data();
+            clear_input();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.result,
+            })
+          }
+        }
+      });
+    }
+  });
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
   

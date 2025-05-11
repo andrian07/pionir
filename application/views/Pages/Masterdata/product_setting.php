@@ -49,6 +49,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Satuan</label>
+                              <div class="col-md-12 p-0">
+                                <input type="text" class="form-control input-full" id="item_unit" readonly>
+                              </div>
+                            </div>
+
+                            <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Harga Beli</label>
                               <div class="col-md-12 p-0">
                                 <input type="text" class="form-control input-full" id="item_purchase_price" value="0">
@@ -512,6 +519,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           let row = data.result[0];
           modal.find('#item_code').val(row.product_code)
           modal.find('#item_name').val(row.product_name)
+          modal.find('#item_unit').val(row.unit_name)
           item_purchase_price.set(row.product_price)
           item_hpp.set(row.product_hpp)
           item_price_1.set(row.product_sell_price_1)

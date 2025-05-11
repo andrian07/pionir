@@ -18,6 +18,58 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Produk</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target=".filter" type="button"><span class="btn-label"><i class="fas fa-search"></i></span> Filter </button>
+                <div class="modal fade filter" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+                  <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Filter Pencarian</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="filter_supplier" name="filter_supplier">
+                              <option value="">-- Pilih Supplier --</option>
+                              <?php foreach ($data['supplier_list'] as $row) { ?>
+                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="filter_category" name="filter_category">
+                              <option value="">-- Pilih Kategori --</option>
+                              <?php foreach ($data['category_list'] as $row) { ?>
+                                <option value="<?php echo $row->category_id; ?>"><?php echo $row->category_name; ?></option>  
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="filter_brand" name="filter_brand">
+                              <option value="">-- Pilih Brand --</option>
+                              <?php foreach ($data['brand_list'] as $row) { ?>
+                                <option value="<?php echo $row->brand_id; ?>"><?php echo $row->brand_name; ?></option>  
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button type="button" id="filter" class="btn btn-warning" ><i class="fas fa-search"></i> Cari</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="btn-group dropdown">
                   <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"><span class="btn-label"><i class="fas fa-file-excel"></i></span> Excell</button>
                   <ul class="dropdown-menu" role="menu">
@@ -134,6 +186,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
                                 </select>
                               </div>
                             </div>
+
+                            <div class="form-group form-inline">
+                              <label for="inlineinput" class="col-md-3 col-form-label">Rekap Pembelian</label>
+                              <div class="col-md-12 p-0">
+                                <textarea class="form-control" id="product_purchase_record" name="product_purchase_record" rows="4"></textarea>
+                              </div>
+                            </div>
+
                           </div>
                           <div class="col-md-4">
 
@@ -152,255 +212,264 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             <div class="form-group form-inline">
                               <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
                               <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_min_stock" name="product_min_stock" placeholder="Min Stok">
-                              </div>
-                            </div>
+                               <input type="number" class="form-control input-full" id="product_min_stock" name="product_min_stock" placeholder="Min Stok">
+                             </div>
+                           </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
-                              <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_min_order" name="product_min_order" placeholder="Min Order">
-                              </div>
+                           <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_min_order" name="product_min_order" rows="4"></textarea>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
-                              <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_weight" name="product_weight" placeholder="Berat">
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
+                            <div class="col-md-12 p-0">
+                              <input type="number" class="form-control input-full" id="product_weight" name="product_weight" placeholder="Berat">
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_location" name="product_location" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_location" name="product_location" rows="4"></textarea>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_description" name="product_description" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_description" name="product_description" rows="4"></textarea>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_search_key" name="product_search_key" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_search_key" name="product_search_key" rows="4"></textarea>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="submit" class="btn btn-primary" ><i class="fas fa-save"></i> Simpan</button>
-                      </div>
-                    </form>
-                  </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                      <button type="submit" class="btn btn-primary" ><i class="fas fa-save"></i> Simpan</button>
+                    </div>
+                  </form>
                 </div>
               </div>
+            </div>
 
-              <div class="modal fade bd-example-modal-xl editmodal" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-                <div class="modal-dialog modal-xl" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModaledit">Edit Produk</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form name="edit_product_form" id="edit_product_form" enctype="multipart/form-data" action="<?php echo base_url(); ?>Masterdata/edit_product" method="post">
-                      <div class="modal-body">
-                        <div class="row">
-                          <div class="col-md-4 border-right">
-                            <div class="form-group form-inline">
-                              <div class="proof">
-                                <div class="imgArea_edit" data-title="">
-                                  <input type="file" name="screenshoot_edit" id="screenshoot_edit" hidden accept="image/*" />
-                                  <i class="fa-solid fa-cloud-arrow-up"></i>
-                                  <h4>upload screenshoot</h4>
-                                  <p>image size must be less than <span>2MB</span></p>
-                                  <div id="active-image"></div>
-                                </div>
-                                <button class="selectImage_edit" type="button">Select Image</button>
+            <div class="modal fade bd-example-modal-xl editmodal" id="exampleModaledit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+              <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModaledit">Edit Produk</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form name="edit_product_form" id="edit_product_form" enctype="multipart/form-data" action="<?php echo base_url(); ?>Masterdata/edit_product" method="post">
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md-4 border-right">
+                          <div class="form-group form-inline">
+                            <div class="proof">
+                              <div class="imgArea_edit" data-title="">
+                                <input type="file" name="screenshoot_edit" id="screenshoot_edit" hidden accept="image/*" />
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <h4>upload screenshoot</h4>
+                                <p>image size must be less than <span>2MB</span></p>
+                                <div id="active-image"></div>
                               </div>
+                              <button class="selectImage_edit" type="button">Select Image</button>
                             </div>
                           </div>
-                          <div class="col-md-4">
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
-                              <div class="col-md-12 p-0">
-                                <input type="hidden" class="form-control input-full" name="product_id_edit" id="product_id_edit" value="Auto" readonly>
-                                <input type="text" class="form-control input-full" name="product_code_edit" id="product_code_edit" value="Auto" readonly>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Nama Produk</label>
-                              <div class="col-md-12 p-0">
-                                <input type="text" class="form-control input-full" name="product_name_edit" id="product_name_edit" placeholder="Nama Produk">
-                              </div>
-                            </div>
-
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="product_category_edit" name="product_category_edit">
-                                  <option>-- Pilih Kategori --</option>
-                                  <?php foreach ($data['category_list'] as $row) { ?>
-                                    <option value="<?php echo $row->category_id; ?>"><?php echo $row->category_name; ?></option>  
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="product_brand_edit" name="product_brand_edit">
-                                  <option>-- Pilih Brand --</option>
-                                  <?php foreach ($data['brand_list'] as $row) { ?>
-                                    <option value="<?php echo $row->brand_id; ?>"><?php echo $row->brand_name; ?></option>  
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
-                              <div class="col-md-12 p-0">
-                                <select class=" form-control input-full js-example-basic-multiple js-states" name="product_supplier_edit[]" id="product_supplier_edit" multiple="multiple">
-                                  <option value="">-- Pilih Supplier --</option>
-                                  <?php foreach ($data['supplier_list'] as $row) { ?>
-                                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Item Supplier</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_item_supplier_edit" name="product_item_supplier_edit" rows="4"></textarea>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" name="product_tax_edit" id="product_tax_edit">
-                                  <option value="PPN">Barang Kena Pajak</option>
-                                  <option value="NON PPN">Barang Tidak Kena Pajak</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-select form-control" id="product_type_edit" name="product_type_edit">
-                                  <option value="N">Produk</option>
-                                  <option value="Y">Paket</option>
-                                </select>
-                              </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Kode Produk</label>
+                            <div class="col-md-12 p-0">
+                              <input type="hidden" class="form-control input-full" name="product_id_edit" id="product_id_edit" value="Auto" readonly>
+                              <input type="text" class="form-control input-full" name="product_code_edit" id="product_code_edit" value="Auto" readonly>
                             </div>
                           </div>
-                          <div class="col-md-4">
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Satuan Dasar</label>
-                              <div class="col-md-12 p-0">
-                                <select class="form-control input-full js-example-basic-single" id="product_unit_edit" name="product_unit_edit">
-                                  <option value="">-- Pilih Satuan Dasar --</option>
-                                  <?php foreach ($data['unit_list'] as $row) { ?>
-                                    <option value="<?php echo $row->unit_id; ?>"><?php echo $row->unit_name; ?></option>
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
-                              <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_min_stock_edit" name="product_min_stock_edit" placeholder="Min Stok">
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Nama Produk</label>
+                            <div class="col-md-12 p-0">
+                              <input type="text" class="form-control input-full" name="product_name_edit" id="product_name_edit" placeholder="Nama Produk">
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
-                              <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_min_order_edit" name="product_min_order_edit" placeholder="Min Order">
-                              </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-control input-full js-example-basic-single" id="product_category_edit" name="product_category_edit">
+                                <option>-- Pilih Kategori --</option>
+                                <?php foreach ($data['category_list'] as $row) { ?>
+                                  <option value="<?php echo $row->category_id; ?>"><?php echo $row->category_name; ?></option>  
+                                <?php } ?>
+                              </select>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
-                              <div class="col-md-12 p-0">
-                                <input type="number" class="form-control input-full" id="product_weight_edit" name="product_weight_edit" placeholder="Berat">
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-control input-full js-example-basic-single" id="product_brand_edit" name="product_brand_edit">
+                                <option>-- Pilih Brand --</option>
+                                <?php foreach ($data['brand_list'] as $row) { ?>
+                                  <option value="<?php echo $row->brand_id; ?>"><?php echo $row->brand_name; ?></option>  
+                                <?php } ?>
+                              </select>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_location_edit" name="product_location_edit" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
+                            <div class="col-md-12 p-0">
+                              <select class=" form-control input-full js-example-basic-multiple js-states" name="product_supplier_edit[]" id="product_supplier_edit" multiple="multiple">
+                                <option value="">-- Pilih Supplier --</option>
+                                <?php foreach ($data['supplier_list'] as $row) { ?>
+                                  <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                                <?php } ?>
+                              </select>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_description_edit" name="product_description_edit" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Item Supplier</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_item_supplier_edit" name="product_item_supplier_edit" rows="4"></textarea>
                             </div>
+                          </div>
 
-                            <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
-                              <div class="col-md-12 p-0">
-                                <textarea class="form-control" id="product_search_key_edit" name="product_search_key_edit" rows="4"></textarea>
-                              </div>
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Golongan Produk</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-select form-control" name="product_tax_edit" id="product_tax_edit">
+                                <option value="PPN">Barang Kena Pajak</option>
+                                <option value="NON PPN">Barang Tidak Kena Pajak</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Jenis Produk</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-select form-control" id="product_type_edit" name="product_type_edit">
+                                <option value="N">Produk</option>
+                                <option value="Y">Paket</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Rekap Pembelian</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_purchase_record_edit" name="product_purchase_record_edit" rows="4"></textarea>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Satuan Dasar</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-control input-full js-example-basic-single" id="product_unit_edit" name="product_unit_edit">
+                                <option value="">-- Pilih Satuan Dasar --</option>
+                                <?php foreach ($data['unit_list'] as $row) { ?>
+                                  <option value="<?php echo $row->unit_id; ?>"><?php echo $row->unit_name; ?></option>
+                                <?php } ?>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Min Stok</label>
+                            <div class="col-md-12 p-0">
+                              <input type="number" class="form-control input-full" id="product_min_stock_edit" name="product_min_stock_edit" placeholder="Min Stock">
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Min Order</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_min_order_edit" name="product_min_order_edit" rows="4"></textarea>
+
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Berat</label>
+                            <div class="col-md-12 p-0">
+                              <input type="number" class="form-control input-full" id="product_weight_edit" name="product_weight_edit" placeholder="Berat">
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Lokasi</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_location_edit" name="product_location_edit" rows="4"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Deskripsi</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_description_edit" name="product_description_edit" rows="4"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Kata Kunci</label>
+                            <div class="col-md-12 p-0">
+                              <textarea class="form-control" id="product_search_key_edit" name="product_search_key_edit" rows="4"></textarea>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="submit" class="btn btn-primary" ><i class="fas fa-save"></i> Simpan</button>
-                      </div>
-                    </form>
-                  </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                      <button type="submit" class="btn btn-primary" ><i class="fas fa-save"></i> Simpan</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table
-            id="product-list"
-            class="display table table-striped table-hover"
-            >
-            <thead>
-              <tr>
-                <th width="30%">Nama Produk</th>
-                <th>Brand</th>
-                <th>Kategori</th>
-                <th>Harga Jual</th>
-                <th>Supplier</th>
-                <th>Paket</th>
-                <th>PPN</th>
-                <th width="20%;">Gambar</th>
-                <th width="10%;">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table
+          id="product-list"
+          class="display table table-striped table-hover"
+          >
+          <thead>
+            <tr>
+              <th width="30%">Nama Produk</th>
+              <th>Brand</th>
+              <th>Kategori</th>
+              <th>Harga Jual</th>
+              <th>Supplier</th>
+              <th>Paket</th>
+              <th>PPN</th>
+              <th width="20%;">Gambar</th>
+              <th width="10%;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
 
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
 </div>
 </div>
 </div>
@@ -417,7 +486,24 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
   
   $(document ).ready(function() {
-    $('#product-list').DataTable( {
+    table_product_list();
+    if (window.performance) {
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Masterdata/delete_filter_product",
+        dataType: "json",
+        data: {},
+        success : function(data){
+          if (data.code == "200"){
+            console.log('clear');
+          }
+        }
+      });
+    }
+  });
+
+  function table_product_list(){
+    $('#product-list').DataTable({
       serverSide: true,
       search: true,
       processing: true,
@@ -440,9 +526,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 8}
       ]
     });
-  });
+  }
 
-  
   function setprice(id){
     var url = "<?php echo base_url(); ?>Masterdata/settingproduct?id="+id;
     window.open(url, '_blank').focus();
@@ -507,6 +592,24 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   }));
 
+  $('#filter').click(function(e){
+    e.preventDefault();
+    var filter_supplier = $("#filter_supplier option:selected").text();
+    var filter_category = $("#filter_category").val();
+    var filter_brand    = $("#filter_brand").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Masterdata/insert_filter_product",
+      dataType: "json",
+      data: {filter_supplier:filter_supplier, filter_category:filter_category, filter_brand:filter_brand},
+      success : function(data){
+        if (data.code == "200"){
+          $('#product-list').DataTable().ajax.reload();
+          $('#myModal').modal('toggle');
+        }
+      }
+    });
+  });
 
   $('#edit_product_form').on('submit',(function(e) {
     e.preventDefault();
@@ -692,6 +795,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           modal.find('#product_weight_edit').val(row.product_weight)
           modal.find('#product_location_edit').val(row.product_location)
           modal.find('#product_description_edit').val(row.product_desc)
+          modal.find('#product_purchase_record_edit').val(row.product_purchase_record)
           modal.find('#product_search_key_edit').val(row.product_key)
 
           var elem = document.createElement("img");

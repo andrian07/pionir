@@ -9,13 +9,33 @@ class Search extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-
+		$this->load->model('global_model');
 		$this->load->model('masterdata_model');
 		$this->load->helper(array('url', 'html'));
 	}
 
+
+	private function check_auth($modul){
+		if(isset($_SESSION['user_name']) == null){
+			redirect('Masterdata', 'refresh');
+		}else{
+			$user_role_id = $_SESSION['user_role_id'];
+			$check_access = $this->global_model->check_access($user_role_id, $modul);
+			return($check_access);
+		}
+		/*$access =  $this->uri->segment(2);
+		$permissions = $access.'_'.$permission;
+		print_r($permissions);die();*/
+	}
+
 	public function index(){
-		$this->load->view('Pages/Search/search');
+		$modul = 'Search';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$this->load->view('Pages/Search/search');
+		}else{
+			print_r('Tidak Ada Akses');die();
+		}
 	}
 
 	public function product_list(){

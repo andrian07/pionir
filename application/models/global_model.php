@@ -17,6 +17,7 @@ class global_model extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from('ms_product');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->where('ms_product.is_active', 'y');
         if($keyword != null){
             $this->db->where('ms_product.product_name like "%'.$keyword.'%"');
@@ -32,7 +33,7 @@ class global_model extends CI_Model {
 
     public function search_product_by_supplier($keyword)
     {
-        $query = $this->db->query("select * from ms_product a, ms_product_supplier b where a.product_id = b.product_id and (product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' group by a.product_id" );
+        $query = $this->db->query("select * from ms_product a, ms_product_supplier b, ms_unit c  where a.product_id = b.product_id and a.product_unit = b.unit_id and(product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' group by a.product_id" );
         $result = $query->result();
         return $result;
     }

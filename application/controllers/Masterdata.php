@@ -1124,8 +1124,33 @@ class Masterdata extends CI_Controller {
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->masterdata_model->product_list($search, $length, $start)->result_array();
-			$count_list = $this->masterdata_model->product_list_count($search)->result_array();
+			$user_id = $_SESSION['user_id'];
+			$get_filter_value = $this->masterdata_model->get_filter_value($user_id);
+			if($get_filter_value != null){
+				if($get_filter_value[0]->supplier_filter == 0){
+					$supplier_filter = null;
+				}else{
+					$supplier_filter = $get_filter_value[0]->supplier_filter;
+				}
+
+				if($get_filter_value[0]->category_filter == 0){
+					$category_filter = null;
+				}else{
+					$category_filter = $get_filter_value[0]->category_filter;
+				}
+
+				if($get_filter_value[0]->brand_filter == 0){
+					$brand_filter = null;
+				}else{
+					$brand_filter = $get_filter_value[0]->brand_filter;
+				}
+			}else{	
+				$supplier_filter = null;
+				$category_filter = null;
+				$brand_filter    = null;
+			}
+			$list = $this->masterdata_model->product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter)->result_array();
+			$count_list = $this->masterdata_model->product_list_count($search, $supplier_filter, $category_filter, $brand_filter)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -1210,6 +1235,7 @@ class Masterdata extends CI_Controller {
 			$product_tax 				= $this->input->post('product_tax');
 			$product_unit 				= $this->input->post('product_unit');
 			$product_type 				= $this->input->post('product_type');
+			$product_purchase_record 	= $this->input->post('product_purchase_record');
 			$product_min_stock			= $this->input->post('product_min_stock');
 			$product_min_order			= $this->input->post('product_min_order');
 			$product_weight				= $this->input->post('product_weight');
@@ -1263,6 +1289,7 @@ class Masterdata extends CI_Controller {
 				'product_weight'			=> $product_weight,
 				'product_location'			=> $product_location,
 				'product_desc'				=> $product_description,
+				'product_purchase_record'	=> $product_purchase_record,
 				'product_key'				=> $product_search_key,
 				'product_image'				=> $new_image_name
 			);
@@ -1316,6 +1343,7 @@ class Masterdata extends CI_Controller {
 			$product_tax 				= $this->input->post('product_tax_edit');
 			$product_unit 				= $this->input->post('product_unit_edit');
 			$product_type 				= $this->input->post('product_type_edit');
+			$product_purchase_record 	= $this->input->post('product_purchase_record_edit');
 			$product_min_stock			= $this->input->post('product_min_stock_edit');
 			$product_min_order			= $this->input->post('product_min_order_edit');
 			$product_weight				= $this->input->post('product_weight_edit');
@@ -1362,6 +1390,7 @@ class Masterdata extends CI_Controller {
 				'product_weight'			=> $product_weight,
 				'product_location'			=> $product_location,
 				'product_desc'				=> $product_description,
+				'product_purchase_record'   => $product_purchase_record,
 				'product_key'				=> $product_search_key,
 				'product_image' 			=> $new_image_name
 			);	
@@ -1498,6 +1527,32 @@ class Masterdata extends CI_Controller {
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
+	}
+
+	public function delete_filter_product()
+	{
+		$user_id = $_SESSION['user_id'];
+		$this->masterdata_model->delete_filter_product($user_id);
+	}
+
+	public function insert_filter_product()
+	{
+		$filter_supplier = $this->input->post('filter_supplier');
+		$filter_category = $this->input->post('filter_category');
+		$filter_brand    = $this->input->post('filter_brand');
+		$user_id 		 = $_SESSION['user_id'];
+
+		$this->masterdata_model->delete_filter_product($user_id);
+		
+		$data_insert = array(
+			'supplier_filter' 	=> $filter_supplier,
+			'category_filter'	=> $filter_category,
+			'brand_filter'      => $filter_brand,
+			'user_id'			=> $user_id
+		);
+		$this->masterdata_model->insert_filter_product($data_insert);
+		echo json_encode(['code'=>200]);die();
+
 	}
 
 	//end product

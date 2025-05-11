@@ -65,9 +65,16 @@ class purchase_model extends CI_Model {
 
     public function submission_by_id($id)
     {
-        $query = $this->db->query("select * from submission a, ms_product b, ms_salesman c, ms_warehouse d, ms_user e where a.submission_product_id = b.product_id and a.submission_salesman = c.salesman_id and a.created_by = e.user_id and a.submission_warehouse = d.warehouse_id and submission_id  = '".$id."' ");
-        $result = $query->result();
-        return $result;
+        $this->db->select('*');
+        $this->db->from('submission');
+        $this->db->join('ms_product', 'submission.submission_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
+        $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
+        $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id', 'left');
+        $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
+        $this->db->where('submission_id like "%'.$id.'%"');
+        $query = $this->db->get();
+        return $query;
     }
 
     public function edit_submission($data_edit, $submission_id)
@@ -189,8 +196,12 @@ class purchase_model extends CI_Model {
         $this->db->where('submission_status','Pending');
         if($search != null){
             $this->db->where('submission_invoice like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_desc like "%'.$search.'%"');
+
         }
         $query = $this->db->get();
         return $query;
@@ -682,6 +693,32 @@ class purchase_model extends CI_Model {
         $this->db->where('temp_user_id', $user_id);
         $query = $this->db->get();
         return $query;
+    }
+
+    public function check_edit_temp_purchase($temp_product_id, $temp_user_id)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_purchase');
+        $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
+        $this->db->where('temp_product_id', $temp_product_id);
+        $this->db->where('temp_user_id', $temp_user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function check_temp_purchase_input($product_id, $user_id)
+    {
+        $query = $this->db->query("select * from temp_purchase where temp_product_id = '".$product_id."' and temp_user_id = '".$user_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function edit_temp_purchase($product_id, $user_id, $data_insert)
+    {
+        $this->db->set($data_insert);
+        $this->db->where('temp_product_id ', $product_id);
+        $this->db->where('temp_user_id ', $user_id);
+        $this->db->update('temp_purchase');
     }
     //end purchase
 

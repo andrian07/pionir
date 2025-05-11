@@ -44,10 +44,10 @@
     </div>
     <?php foreach($submission_by_id as $row){ ?>
       <div class="col-md-4 detail-right" >
-        <p class="detail-invoice"><?php echo $row->submission_invoice; ?></p>
-        <p>Tanggal: <b><?php $date = date_create($row->submission_date);  echo date_format($date,"d-M-Y"); ?></b></p>
-        <p>Sales: <b><?php echo $row->salesman_name; ?></b></p>
-        <p>Gudang: <b><?php echo $row->warehouse_name; ?></b></p>
+        <p class="detail-invoice"><?php echo $row['submission_invoice']; ?></p>
+        <p>Tanggal: <b><?php $date = date_create($row['submission_date']);  echo date_format($date,"d-M-Y"); ?></b></p>
+        <p>Sales: <b><?php echo $row['salesman_name']; ?></b></p>
+        <p>Gudang: <b><?php echo $row['warehouse_name']; ?></b></p>
       </div>
     <?php } ?>
   </div>
@@ -67,11 +67,11 @@
         <tbody>
           <?php foreach($submission_by_id as $row){ ?>
             <tr>
-              <td scope="col"><?php echo $row->product_code; ?></td>
-              <td scope="col"><?php echo $row->product_name; ?></td>
-              <td scope="col"><?php echo $row->submission_qty; ?></td>
-              <td scope="col"><?php echo $row->submission_desc; ?></td>
-              <td scope="col"><?php echo $row->submission_status; ?></td>
+              <td scope="col"><?php echo $row['product_code']; ?></td>
+              <td scope="col"><?php echo $row['product_name']; ?></td>
+              <td scope="col"><?php echo $row['submission_qty']; ?></td>
+              <td scope="col"><?php echo $row['submission_desc']; ?></td>
+              <td scope="col"><?php echo $row['submission_status']; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -91,13 +91,13 @@
           <?php foreach($submission_by_id as $row){ ?>
             <tr>
               <td><b>Dibuat</b></td>
-              <td><?php echo $row->user_name; ?></td>
-              <td><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y h:i:s"); ?></td>
+              <td><?php echo $row['user_name']; ?></td>
+              <td><?php $date = date_create($row['created_at']);  echo date_format($date,"d-M-Y h:i:s"); ?></td>
             </tr>
          
           <tr>
             <td style="border-bottom: none;"><b>Catatan:</b></td>
-            <td style="border-bottom: none;"><?php echo $row->submission_text; ?></td>
+            <td style="border-bottom: none;"><?php echo $row['submission_text']; ?></td>
           </tr>
            <?php } ?>
         </tbody>

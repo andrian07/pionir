@@ -187,6 +187,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['temp_purchase_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_purchase_total_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_purchase_total']);
+				$row[] 	= $field['temp_purchase_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -271,6 +272,59 @@ class Purchase extends CI_Controller {
 		die();
 	}
 
+	public function get_edit_temp_purchase()
+	{
+		$temp_product_id  = $this->input->post('id');
+		$temp_user_id  	  = $_SESSION['user_id'];
+		$check_edit_temp_purchase = $this->purchase_model->check_edit_temp_purchase($temp_product_id, $temp_user_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$check_edit_temp_purchase]);
+		die();
+	}
+
+	public function add_temp_purchase()
+	{
+
+		$modul = 'Purchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$product_id 				= $this->input->post('product_id');
+			$temp_price_val 			= $this->input->post('temp_price_val');
+			$temp_qty 					= $this->input->post('temp_qty');
+			$temp_weight 				= $this->input->post('temp_weight');
+			$temp_delivery_price_val 	= $this->input->post('temp_delivery_price_val');
+			$temp_total_weight 			= $this->input->post('temp_total_weight');
+			$temp_ongkir_val 			= $this->input->post('temp_ongkir_val');
+			$temp_total_val 			= $this->input->post('temp_total_val');
+			$temp_note 					= $this->input->post('temp_note');
+			$user_id 					= $_SESSION['user_id'];
+
+			$check_temp_purchase_input = $this->purchase_model->check_temp_purchase_input($product_id, $user_id);
+			$data_insert = array(
+				'temp_product_id'				=> $product_id,
+				'temp_purchase_price'			=> $temp_price_val,
+				'temp_purchase_qty'				=> $temp_qty,
+				'temp_purchase_weight'			=> $temp_weight,
+				'temp_purchase_ongkir'			=> $temp_delivery_price_val,
+				'temp_purchase_total_weight'	=> $temp_total_weight,
+				'temp_purchase_total_ongkir'	=> $temp_ongkir_val,
+				'temp_purchase_total'			=> $temp_total_val,
+				'temp_purchase_note'			=> $temp_note,
+				'temp_user_id'					=> $user_id,
+			);	
+			$msg = 'Success Tambah';
+			if($check_temp_purchase_input != null){
+				$this->purchase_model->edit_temp_purchase($product_id, $user_id, $data_insert);
+			}else{
+				$msg = "Tidak Bisa Tambah Item Di Luar PO";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	// end purchase
 	// submission
 	public function submission()
@@ -298,7 +352,7 @@ class Purchase extends CI_Controller {
 			$find = $this->global_model->search_product($keyword)->result_array();
 			$find_result = [];
 			foreach ($find as $row) {
-				$diplay_text = $row['product_code'].' - '.$row['product_name'];
+				$diplay_text = $row['product_code'].' - '.$row['product_name'].' - '.$row['unit_name'];
 				$find_result[] = [
 					'id'                  => $row['product_id'],
 					'value'               => $diplay_text,
@@ -348,13 +402,21 @@ class Purchase extends CI_Controller {
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['submission_id'].'" data-name="'.$field['submission_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					if($field['submission_status'] == 'Pending'){
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['submission_id'].'" data-name="'.$field['submission_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}else{
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['submission_id'].'" data-name="'.$field['submission_invoice'].'" disabled><i class="fas fa-edit sizing-fa"></i></button> ';
+					}
 				}else{
 					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					if($field['submission_status'] == 'Pending'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}else{
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')" disabled><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}
 				}else{
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
@@ -396,7 +458,7 @@ class Purchase extends CI_Controller {
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
 			$id = $this->input->get('id');
-			$submission_by_id['submission_by_id'] = $this->purchase_model->submission_by_id($id); 
+			$submission_by_id['submission_by_id'] = $this->purchase_model->submission_by_id($id)->result_array(); 
 			$this->load->view('Pages/Purchase/detailsubmission', $submission_by_id);
 		}else{
 			$msg = "No Access";
@@ -514,8 +576,8 @@ class Purchase extends CI_Controller {
 				'created_by'				=> $user_id,
 			);	
 
-			$check_status_submission = $this->purchase_model->submission_by_id($submission_id);
-			if($check_status_submission[0]->submission_status == 'Cancel'){
+			$check_status_submission = $this->purchase_model->submission_by_id($submission_id)->result_array();
+			if($check_status_submission[0]['submission_status'] == 'Cancel'){
 				$msg = "Data Yang Sudah Di Cancel Tidak Bisa Di Edit";
 				echo json_encode(['code'=>0, 'result'=>$msg]);
 			}else{
@@ -537,7 +599,7 @@ class Purchase extends CI_Controller {
 	public function submission_by_id()
 	{
 		$id = $this->input->post('id');
-		$submission_by_id = $this->purchase_model->submission_by_id($id); 
+		$submission_by_id = $this->purchase_model->submission_by_id($id)->result_array();; 
 		echo json_encode(['code'=>200, 'result'=>$submission_by_id]);
 	} 
 	// end submission
@@ -916,7 +978,7 @@ class Purchase extends CI_Controller {
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-			if($po_top == null){
+			if($purchase_order_due_date == null){
 				$msg = 'Silahkan Masukan Jatuh Tempo';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}

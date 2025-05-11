@@ -46,6 +46,10 @@
                   <td colspan="4"><?php echo $row->product_name; ?></td>
                 </tr>
                 <tr>
+                  <th scope="col" class="productinfo-text-right">Satuan:</th>
+                  <td colspan="4"><?php echo $row->unit_name; ?></td>
+                </tr>
+                <tr>
                   <th scope="col" class="productinfo-text-right">Kategori:</th>
                   <td colspan="4"><?php echo $row->category_name; ?></td>
                 </tr>
@@ -81,15 +85,12 @@
                     } ?>
                   </td>
                 </tr>
-                <tr>
-                  <th scope="col" class="productinfo-text-right">Satuan:</th>
-                  <td colspan="4"><?php echo $row->unit_name; ?></td>
-                </tr>
+                
                 <tr>
                   <th scope="col" class="productinfo-text-right">Min Stock:</th>
                   <td colspan="4"><?php echo $row->product_min_stock; ?></td>
                 </tr>
-                 <tr>
+                <tr>
                   <th scope="col" class="productinfo-text-right">Min Order:</th>
                   <td colspan="4"><?php echo $row->product_min_order; ?></td>
                 </tr>
@@ -110,7 +111,7 @@
                   <td colspan="4"><?php echo $row->product_location; ?></td>
                 </tr>
                 <tr>
-                  <th scope="col" class="productinfo-text-right">Catatan:</th>
+                  <th scope="col" class="productinfo-text-right">Deskripsi:</th>
                   <td colspan="4"><?php echo $row->product_desc; ?></td>
                 </tr>
 
