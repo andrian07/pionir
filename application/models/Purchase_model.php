@@ -720,6 +720,14 @@ class purchase_model extends CI_Model {
         $this->db->where('temp_user_id ', $user_id);
         $this->db->update('temp_purchase');
     }
+
+
+    public function last_purchase()
+    {
+        $query = $this->db->query("select hd_purchase_invoice from hd_purchase  order by hd_purchase_id desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
     //end purchase
 
 }

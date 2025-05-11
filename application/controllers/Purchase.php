@@ -359,27 +359,27 @@ class Purchase extends CI_Controller {
 			$purchase_remark 							= $this->input->post('purchase_remark');
 			$user_id 									= $_SESSION['user_id'];
 
-			if($po_supplier == null){
+			if($purchase_supplier == null){
 				$msg = 'Silahkan Masukan Supplier';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-			if($po_ekspedisi == null){
+			if($purchase_ekspedisi == null){
 				$msg = 'Silahkan Masukan Ekspedisi';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-			if($purchase_order_due_date == null){
+			if($purchase_due_date == null){
 				$msg = 'Silahkan Masukan Jatuh Tempo';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-			if($po_payment_method == null){
+			if($purchase_payment_method == null){
 				$msg = 'Silahkan Masukan Jenis Pembayaran';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-			if($po_warehouse == null){
+			if($purchase_warehouse == null){
 				$msg = 'Silahkan Masukan Gudang';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
@@ -391,10 +391,10 @@ class Purchase extends CI_Controller {
 
 
 
-			$warehouse_id = $po_warehouse;
+			$warehouse_id 		= $po_warehouse;
 			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);
-			$warehouse_code = $get_warehouse_code[0]->warehouse_code;
-			$warehouse_name = $get_warehouse_code[0]->warehouse_name;
+			$warehouse_code 	= $get_warehouse_code[0]->warehouse_code;
+			$warehouse_name 	= $get_warehouse_code[0]->warehouse_name;
 
 			$supplier_id = $po_supplier;
 			$get_supplier_code = $this->masterdata_model->get_supplier_code($supplier_id);
@@ -403,7 +403,7 @@ class Purchase extends CI_Controller {
 			
 
 			$maxCode  = $this->purchase_model->last_po();
-			$inv_code = 'PO/'.$supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
+			$inv_code = 'LBM/'.$supplier_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
 			} else {
@@ -413,7 +413,7 @@ class Purchase extends CI_Controller {
 			}
 
 			$data_insert = array(
-				'hd_po_invoice'				=> $last_code,
+				'hd_purchase_invoice'		=> $last_code,
 				'hd_po_date'				=> $po_date,
 				'hd_po_warehouse'			=> $po_warehouse,
 				'hd_po_supplier'			=> $po_supplier,
@@ -458,35 +458,10 @@ class Purchase extends CI_Controller {
 
 				$dt_product_id = $row['temp_product_id'];
 				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
-
-				$check_supplier_stock = $this->purchase_model->check_supplier_stock($dt_product_id, $supplier_id);
-				if($check_supplier_stock == null){
-					$insert_supplier = array(
-						'product_id'			=> $dt_product_id,
-						'supplier_id'			=> $supplier_id,
-					);	
-					$this->masterdata_model->save_product_supplier($insert_supplier);
-
-					$get_master_product_supplier = $this->masterdata_model->get_master_product_supplier($dt_product_id);
-					$product_supplier_id_tag = $get_master_product_supplier[0]->product_supplier_id_tag;
-					$product_supplier_tag    = $get_master_product_supplier[0]->product_supplier_tag;
-
-					$product_supplier_id_tag = $product_supplier_id_tag.','.$supplier_id;
-					$product_supplier_tag    = $product_supplier_tag.','.$supplier_name;
-
-					$update_product_tag = $this->purchase_model->update_product_tag($product_supplier_id_tag, $product_supplier_tag, $dt_product_id);
-
-				}
-
-				if($row['temp_submission_id'] > 0 || $row['temp_submission_id'] != ''){
-					$submission_id_val = $row['temp_submission_id'];
-					$update_submission = $this->purchase_model->update_submission($submission_id_val);
-				}
-				
 			}
 
 			$data_insert_act = array(
-				'activity_table_desc'	       => 'Tambah PO Cabang '.$warehouse_name,
+				'activity_table_desc'	       => 'Tambah Pembelian Cabang '.$warehouse_name,
 				'activity_table_user'	       => $user_id,
 			);
 
