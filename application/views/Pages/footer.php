@@ -107,6 +107,7 @@
     });
   });
 
+
   $('body').on('shown.bs.modal', '.editmodal', function() {
     $(this).find('.js-example-basic-single').each(function() {
       var dropdownParent = $(document.body);

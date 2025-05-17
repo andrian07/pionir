@@ -83,13 +83,13 @@ class Purchase extends CI_Controller {
 
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
-					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_purchase_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_purchase_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					if($field['hd_po_status'] == 'Pending'){
+					if($field['hd_purchase_status'] != 'Cancel'){
 						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_purchase_id'].'" data-name="'.$field['hd_purchase_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
 					}else{
 						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_purchase_id'].'" data-name="'.$field['hd_purchase_invoice'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
@@ -99,7 +99,7 @@ class Purchase extends CI_Controller {
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					if($field['hd_po_status'] == 'Pending'){
+					if($field['hd_purchase_status'] != 'Cancel'){
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_purchase_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}else{
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
@@ -121,8 +121,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['dt_purchase_qty'];
 				$row[] 	= number_format($field['dt_purchase_price']);
 				$row[] 	= number_format($field['dt_purchase_total']);
-				$row[] 	= $field['hd_purchase_note'];
-				$row[] 	= $detail.$edit.$delete;
+				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
 
@@ -389,14 +388,12 @@ class Purchase extends CI_Controller {
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 
-
-
-			$warehouse_id 		= $po_warehouse;
+			$warehouse_id 		= $purchase_warehouse;
 			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);
 			$warehouse_code 	= $get_warehouse_code[0]->warehouse_code;
 			$warehouse_name 	= $get_warehouse_code[0]->warehouse_name;
 
-			$supplier_id = $po_supplier;
+			$supplier_id = $purchase_supplier;
 			$get_supplier_code = $this->masterdata_model->get_supplier_code($supplier_id);
 			$supplier_code = $get_supplier_code[0]->supplier_code;
 			$supplier_name = $get_supplier_code[0]->supplier_name;
@@ -413,52 +410,56 @@ class Purchase extends CI_Controller {
 			}
 
 			$data_insert = array(
-				'hd_purchase_invoice'		=> $last_code,
-				'hd_po_date'				=> $po_date,
-				'hd_po_warehouse'			=> $po_warehouse,
-				'hd_po_supplier'			=> $po_supplier,
-				'hd_po_tax'					=> $po_tax,
-				'hd_po_top'					=> $po_top,
-				'hd_po_due_date'			=> $purchase_order_due_date,
-				'hd_po_payment'				=> $po_payment_method,
-				'hd_po_ekspedisi'			=> $po_ekspedisi,
-				'hd_po_sub_total'			=> $footer_sub_total_submit,
-				'hd_po_disc_percentage1'	=> $edit_footer_discount_percentage1_submit,
-				'hd_po_disc_percentage2'	=> $edit_footer_discount_percentage2_submit,
-				'hd_po_disc_percentage3'	=> $edit_footer_discount_percentage3_submit,
-				'hd_po_disc_1'				=> $edit_footer_discount1_submit,
-				'hd_po_disc_2'				=> $edit_footer_discount2_submit,
-				'hd_po_disc_3'				=> $edit_footer_discount3_submit,
-				'hd_po_total_discount'		=> $footer_total_discount_submit,
-				'hd_po_dpp'					=> $footer_dpp_val,
-				'hd_po_ppn'					=> $footer_total_ppn_val,
-				'hd_po_ongkir'				=> $footer_total_ongkir_val,
-				'hd_po_grand_total'			=> $footer_total_invoice_val,
-				'hd_po_note'			    => $purchase_order_remark,
-				'created_by'				=> $user_id
+				'hd_purchase_invoice'			=> $last_code,
+				'hd_po_id'						=> $po_id,
+				'hd_purchase_faktur'			=> $no_faktur_supplier,
+				'hd_purchase_faktur_date'		=> $faktur_date,
+				'hd_purchase_date'				=> $purchase_date,
+				'hd_purchase_warehouse'			=> $purchase_warehouse,
+				'hd_purchase_supplier'			=> $purchase_supplier,
+				'hd_purchase_tax'				=> $purchase_tax,
+				'hd_purchase_top'				=> $purchase_top,
+				'hd_purchase_due_date'			=> $purchase_due_date,
+				'hd_purchase_payment'			=> $purchase_payment_method,
+				'hd_purchase_ekspedisi'			=> $purchase_ekspedisi,
+				'hd_purchase_sub_total'			=> $footer_sub_total_submit,
+				'hd_purchase_disc_percentage1'	=> $edit_footer_discount_percentage1_submit,
+				'hd_purchase_disc_percentage2'	=> $edit_footer_discount_percentage2_submit,
+				'hd_purchase_disc_percentage3'	=> $edit_footer_discount_percentage3_submit,
+				'hd_purchase_disc_1'			=> $edit_footer_discount1_submit,
+				'hd_purchase_disc_2'			=> $edit_footer_discount2_submit,
+				'hd_purchase_disc_3'			=> $edit_footer_discount3_submit,
+				'hd_purchase_total_discount'	=> $footer_total_discount_submit,
+				'hd_purchase_dpp'				=> $footer_dpp_val,
+				'hd_purchase_ppn'			    => $footer_total_ppn_val,
+				'hd_purchase_ongkir'			=> $footer_total_ongkir_val,
+				'hd_purchase_dp'				=> 0,
+				'hd_purchase_grand_total'		=> $footer_total_invoice_val,
+				'hd_purchase_remaining_debt'	=> $footer_total_invoice_val,
+				'hd_purchase_note'				=> $purchase_remark,
+				'created_by'					=> $user_id
 			);	
-			
-			$save_po = $this->purchase_model->save_po($data_insert);
+			$save_purchase = $this->purchase_model->save_purchase($data_insert);
 
-			$get_temp_po = $this->purchase_model->get_temp_po($user_id)->result_array();
-			foreach($get_temp_po  as $row){
+			$get_temp_purchase = $this->purchase_model->get_temp_purchase($user_id)->result_array();
+			foreach($get_temp_purchase  as $row){
 				$data_insert_detail = array(
-					'hd_po_id'				=> $save_po,
-					'submission_id'			=> $row['temp_submission_id'],
-					'submission_inv'		=> $row['temp_submission_inv'],
-					'dt_product_id'			=> $row['temp_product_id'],
-					'dt_po_price'			=> $row['temp_po_price'],
-					'dt_po_qty'				=> $row['temp_po_qty'],
-					'dt_po_weight'			=> $row['temp_po_weight'],
-					'dt_po_ongkir'			=> $row['temp_po_ongkir'],
-					'dt_po_total_weight'	=> $row['temp_po_total_weight'],
-					'dt_po_total_ongkir'	=> $row['temp_po_total_ongkir'],
-					'dt_po_total'			=> $row['temp_po_total'],
-				);	
+					'hd_purchase_id'			=> $save_purchase,
+					'dt_product_id'				=> $row['temp_product_id'],
+					'dt_purchase_price'			=> $row['temp_purchase_price'],
+					'dt_purchase_qty'			=> $row['temp_purchase_qty'],
+					'dt_purchase_weight'		=> $row['temp_purchase_weight'],
+					'dt_purchase_ongkir'		=> $row['temp_purchase_ongkir'],
+					'dt_purchase_total_weight'	=> $row['temp_purchase_total_weight'],
+					'dt_purchase_total_ongkir'	=> $row['temp_purchase_total_ongkir'],
+					'dt_purchase_total'			=> $row['temp_purchase_total'],
+					'dt_purchase_note'			=> $row['temp_purchase_note'],
+				);
 
-				$dt_product_id = $row['temp_product_id'];
-				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
+				$save_detail_purchase = $this->purchase_model->save_detail_purchase($data_insert_detail);
 			}
+
+			$this->purchase_model->update_purchase_po($po_id);
 
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Pembelian Cabang '.$warehouse_name,
@@ -467,10 +468,27 @@ class Purchase extends CI_Controller {
 
 			$this->global_model->save($data_insert_act);
 
-			$this->purchase_model->clear_temp_po($user_id);
+			$this->purchase_model->clear_temp_purchase($user_id);
 
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function detailpurchase()
+	{
+		$modul = 'Purchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$purchase_id = $this->input->get('id');
+			$header_purchase['header_purchase'] = $this->purchase_model->header_purchase($purchase_id);
+			$detail_purchase['detail_purchase'] = $this->purchase_model->detail_purchase($purchase_id); 
+			$data['data'] = array_merge($header_purchase, $detail_purchase);
+			$this->load->view('Pages/Purchase/detailpurchase', $data);
+			//echo json_encode($output);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -1149,8 +1167,6 @@ class Purchase extends CI_Controller {
 				$msg = 'Silahkan Input Data Terlebih Dahulu';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
-
-
 
 			$warehouse_id = $po_warehouse;
 			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);

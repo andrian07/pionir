@@ -85,7 +85,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Payment Status</th>
                   <th>Qty</th>
                   <th>Harga</th>
-                  <th>Catatan</th>
+                  <th>Total</th>
                   <th>Aksi</th>
                 </tr>
               </thead>

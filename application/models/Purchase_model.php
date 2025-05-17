@@ -563,27 +563,22 @@ class purchase_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('hd_po');
         $this->db->where('hd_po_status','Success');
+        $this->db->where('hd_po_purchase_status','Pending');
         if($search != null){
             $this->db->where('hd_po_invoice like "%'.$search.'%"');
         }
         $query = $this->db->get();
         return $query;
     }
+    // end warehouse input 
 
-    public function clear_temp_purchase($user_id)
-    {
-        $this->db->where('temp_user_id', $user_id);
-        $this->db->delete('temp_purchase');
-    }
+
+    //purchase
 
     public function copy_temp_purchase($data_copy_temp)
     {
         $this->db->insert('temp_purchase', $data_copy_temp);
     }
-    // end warehouse input 
-
-
-    //purchase
 
     public function purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)
     {
@@ -725,6 +720,61 @@ class purchase_model extends CI_Model {
     public function last_purchase()
     {
         $query = $this->db->query("select hd_purchase_invoice from hd_purchase  order by hd_purchase_id desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+
+    public function save_purchase($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_purchase', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+
+    public function get_temp_purchase($user_id)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_purchase');
+        $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
+        $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id ', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function save_detail_purchase($data_insert_detail)
+    {
+        $this->db->insert('dt_purchase', $data_insert_detail);
+    }
+
+
+    public function update_purchase_po($po_id)
+    {
+        $this->db->set('hd_po_purchase_status', 'Success');
+        $this->db->where('hd_po_id', $po_id);
+        $this->db->update('hd_po');
+    }
+
+    public function clear_temp_purchase($user_id)
+    {
+        $this->db->where('temp_user_id', $user_id);
+        $this->db->delete('temp_purchase');
+    }
+
+    public function header_purchase($purchase_id)
+    {
+        $query = $this->db->query("select * from hd_purchase a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_purchase_warehouse = b.warehouse_id and a.hd_purchase_supplier = c.supplier_id and a.hd_purchase_payment = f.payment_id and a.created_by = d.user_id and a.hd_purchase_ekspedisi = e.ekspedisi_id and hd_purchase_id  = '".$purchase_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_purchase($purchase_id)
+    {
+        $query = $this->db->query("select * from dt_purchase a, hd_purchase b, ms_product c, ms_unit d, ms_user e where a.hd_purchase_id = b.hd_purchase_id and a.dt_product_id = c.product_id and c.product_unit = d.unit_id and b.created_by = e.user_id and a.hd_purchase_id  = '".$purchase_id."'");
         $result = $query->result();
         return $result;
     }
