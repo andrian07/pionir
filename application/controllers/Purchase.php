@@ -929,6 +929,7 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+
 	public function search_submission()
 	{
 		$keyword = $this->input->get('term');

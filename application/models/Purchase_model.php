@@ -196,12 +196,11 @@ class purchase_model extends CI_Model {
         $this->db->where('submission_status','Pending');
         if($search != null){
             $this->db->where('submission_invoice like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
-            $this->db->or_where('ms_product.product_desc like "%'.$search.'%"');
-
+            $this->db->or_where('ms_product.product_name like "%'.$search.'%" and submission_status = "Pending"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%" and submission_status = "Pending"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%" and submission_status = "Pending"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%" and submission_status = "Pending"');
+            $this->db->or_where('ms_product.product_desc like "%'.$search.'%" and submission_status = "Pending"');
         }
         $query = $this->db->get();
         return $query;
@@ -474,7 +473,7 @@ class purchase_model extends CI_Model {
 
     public function get_last_stock($product_id, $warehouse_id)
     {
-        $query = $this->db->query("select stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and b.warehouse_id = '".$warehouse_id."'");
+        $query = $this->db->query("select stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and b.warehouse_id = '".$warehouse_id."' and b.product_id = '".$product_id."'");
         $result = $query->result();
         return $result;
     }

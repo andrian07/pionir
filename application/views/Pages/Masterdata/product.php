@@ -19,6 +19,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target=".filter" type="button"><span class="btn-label"><i class="fas fa-search"></i></span> Filter </button>
+                <?php /*
                 <div class="modal fade filter" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                   <div class="modal-dialog modal-md">
                     <div class="modal-content">
@@ -69,7 +70,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>*/?>
                 <div class="btn-group dropdown">
                   <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"><span class="btn-label"><i class="fas fa-file-excel"></i></span> Excell</button>
                   <ul class="dropdown-menu" role="menu">
