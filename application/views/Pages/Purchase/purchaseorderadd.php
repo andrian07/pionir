@@ -574,7 +574,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
-      console.log(ui);
       let id = ui.item.id;
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
@@ -903,10 +902,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
     var footer_sub_total_val                  = parseInt(footer_sub_total.get());
     var footer_total_ongkir_val               = parseInt(footer_total_ongkir.get());
+    var po_tax                                = $('#po_tax').val();
     var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
     footer_total_discount.set(total_disc);
     footer_dpp.set(footer_sub_total_val - total_disc);
-    footer_total_ppn.set((footer_sub_total_val - total_disc) * 11 / 100);
+    if(po_tax == 'PPN'){
+      footer_total_ppn.set((footer_sub_total_val - total_disc) * 11 / 100);
+    }
     footer_total_invoice.set(((footer_sub_total_val - total_disc) + (footer_sub_total_val - total_disc) * 11 / 100) + footer_total_ongkir_val);
     $('#footerdiscount').modal('hide')
   });

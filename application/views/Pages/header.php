@@ -200,12 +200,12 @@
               <div class="collapse" id="sales">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                    <a href="<?php echo base_url(); ?>Sales/salesorder">
                       <span class="sub-item">Sales Order</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                    <a href="<?php echo base_url(); ?>Sales">
                       <span class="sub-item">Penjualan</span>
                     </a>
                   </li>

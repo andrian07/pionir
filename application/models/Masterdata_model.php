@@ -544,6 +544,17 @@ class masterdata_model extends CI_Model {
         return $result;
     }
     // end payment type
+
+    //user 
+
+    public function user_list()
+    {
+        $query = $this->db->query("select * from ms_user where is_active = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+
+    // end user
 }
 
 ?>
