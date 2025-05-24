@@ -66,6 +66,13 @@ class Sales extends CI_Controller {
 		$get_rate   = $this->sales_model->get_rate($product_id);
 		echo json_encode(['code'=>200, 'result'=>$get_rate]);
 	}
+
+	public function get_customer_rate()
+	{
+		$customer_id = $this->input->post('customer_id');
+		$get_customer_rate   = $this->sales_model->get_customer_rate($customer_id);
+		echo json_encode(['code'=>200, 'result'=>$get_customer_rate]);
+	}
 	// end search produk && Rate//
 
 	// sales order //
@@ -158,6 +165,7 @@ class Sales extends CI_Controller {
 				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
+
 
 			$output = array(
 				"draw" => $_POST['draw'],

@@ -843,8 +843,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   $('#ppnchecked').on('change', function (event) {
-    const checked = $(this).is(':checked'); 
-    console.log(checked);
+    const checked = $(this).is(':checked');
     if (checked == true) {
       let footer_sub_total_val = parseInt(footer_sub_total.get());
       let footer_total_discount_val = parseInt(footer_total_discount.get());
@@ -858,7 +857,29 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   })
 
+  $('#footer_dp').on('input', function (event) {
+   let footer_dp_val =  parseInt(footer_dp.get());
+   let footer_total_invoice_val = parseInt(footer_total_invoice.get());
+   footer_remaining_debt.set(footer_total_invoice_val - footer_dp_val);
+ })
 
+
+  $('#sales_order_customer').on('change', function (event) {
+    let customer_id = this.value;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Sales/get_customer_rate",
+      dataType: "json",
+      data: {customer_id:customer_id},
+      success : function(data){
+        if (data.code == "200"){
+
+        }
+      }
+    });
+  })
+  
+  
 
   function check_tempt_data()
   {

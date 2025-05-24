@@ -116,6 +116,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   var end_date_val        = $("#end_date").val();
   var supplier_filter_val = $("#supplier_filter").val();
 
+
   function purchaseorder_table(){
     $('#purchase-list').DataTable( {
       serverSide: true,

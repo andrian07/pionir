@@ -13,6 +13,13 @@ class sales_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
+
+    public function get_customer_rate($product_id)
+    {
+        $query = $this->db->query("select * from ");
+        $result = $query->result();
+        return $result;
+    }
     // sales order
 
     public function sales_order_list($search, $length, $start)
@@ -131,6 +138,7 @@ class sales_model extends CI_Model {
         $query = $this->db->get();
         return $query;
     }
+
 
     //end sales order
 
