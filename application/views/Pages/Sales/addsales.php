@@ -10,19 +10,19 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
     </div>
     <div class="row">
-      <h3 class="fw-bold mb-3">Tambah Sales Order </h3>
+      <h3 class="fw-bold mb-3">Tambah Penjualan </h3>
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
             <div class="form-group row">
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Invoice :</label>
               <div class="col-sm-3">
-                <input id="sales_order_invoice" name="purchase_order_invoice" type="text" class="form-control" value="AUTO" readonly="">
-                <input id="sales_order_id" name="sales_order_id" type="hidden" class="form-control">
+                <input id="sales_invoice" name="sales_invoice" type="text" class="form-control" value="AUTO" readonly="">
+                <input id="sales_id" name="sales_id" type="hidden" class="form-control">
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">T.O.P :</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="sales_order_top" name="sales_order_top">
+                <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="sales_top" name="sales_top">
                   <option value="">-- Pilih T.O.P --</option>
                   <option value="0">CBD</option>
                   <option value="7">JT7</option>
@@ -35,14 +35,36 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
               <div class="col-sm-3">
-                <input id="sales_order_date" name="sales_order_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly>
+                <input id="sales_date" name="sales_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly>
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Customer:</label>
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Sales Order:</label>
               <div class="col-sm-3">
-               <select class="form-control input-full js-example-basic-single" id="sales_order_customer" name="sales_order_customer">
+                <input id="sales_inv_order" name="sales_inv_order" type="text" class="form-control ui-autocomplete-input" placeholder="No Sales Order" value="" required="" autocomplete="off">
+                <input id="sales_id" type="hidden" name="sales_id">
+              </div>
+
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Jth Tempo :</label>
+              <div class="col-sm-3">
+                <input id="sales_due_date" name="sales_due_date" type="date" class="form-control">
+              </div>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
+              <div class="col-sm-3">
+                <select class="form-control input-full js-example-basic-single" id="sales_warehouse" name="sales_warehouse">
+                  <option value="">-- Pilih Gudang --</option>
+                  <?php foreach ($data['warehouse_list'] as $row) { ?>
+                    <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Customer:</label>
+             <div class="col-sm-3">
+               <select class="form-control input-full js-example-basic-single" id="sales_customer" name="sales_customer">
                 <option value="">-- Pilih Customer --</option>
                 <?php foreach ($data['customer_list'] as $row) { ?>
                   <option value="<?php echo $row->customer_id; ?>"><?php echo $row->customer_name; ?></option>  
@@ -51,42 +73,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
             <label for="tanggal" class="col-sm-1 col-form-label text-right">Sales :</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_salesman" name="sales_order_salesman">
+              <select class="form-control input-full js-example-basic-single" id="sales_salesman" name="sales_salesman">
                 <option value="">-- Pilih Sales --</option>
                 <?php foreach ($data['salesman_list'] as $row) { ?>
                   <option value="<?php echo $row->salesman_id; ?>"><?php echo $row->salesman_name; ?></option>  
                 <?php } ?>
               </select>
             </div>
-            <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
-            <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_warehouse" name="sales_order_warehouse">
-                <option value="">-- Pilih Gudang --</option>
-                <?php foreach ($data['warehouse_list'] as $row) { ?>
-                  <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
-                <?php } ?>
-              </select>
-            </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Rate Customer:</label>
-            <div class="col-sm-3">
-              <input id="sales_order_rate_customer" name="sales_order_rate_customer" type="text" class="form-control" readonly="">
-            </div>
-
-            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
-            <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_prepare" name="sales_order_prepare">
-                <option value="">-- Pilih User --</option>
-                <?php foreach ($data['user_list'] as $row) { ?>
-                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
-                <?php } ?>
-              </select>
-            </div>
             <label for="tanggal" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_ekspedisi" name="sales_order_ekspedisi">
+              <select class="form-control input-full js-example-basic-single" id="sales_ekspedisi" name="sales_ekspedisi">
                 <option value="">-- Pilih Ekspedisi --</option>
                 <?php foreach ($data['ekspedisi_list'] as $row) { ?>
                   <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>  
@@ -95,21 +92,20 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
           </div>
 
-
           <div class="form-group row">
-            <label for="tanggal" class="col-sm-1 col-form-label text-right">Metode Bayar :</label>
+            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Rate Customer:</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_payment" name="sales_order_payment">
-                <option value="">-- Pilih Metode Bayar --</option>
-                <?php foreach ($data['payment_list'] as $row) { ?>
-                  <option value="<?php echo $row->payment_id; ?>"><?php echo $row->payment_name; ?></option>  
-                <?php } ?>
-              </select>
+              <input id="sales_rate_customer" name="sales_rate_customer" type="text" class="form-control" readonly="">
             </div>
 
-            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Jumlah Colly :</label>
+            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
             <div class="col-sm-3">
-              <input id="sales_order_colly" name="sales_order_colly" type="text" class="form-control">
+              <select class="form-control input-full js-example-basic-single" id="sales_prepare" name="sales_prepare">
+                <option value="">-- Pilih User --</option>
+                <?php foreach ($data['user_list'] as $row) { ?>
+                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
+                <?php } ?>
+              </select>
             </div>
 
             <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
@@ -119,9 +115,20 @@ require DOC_ROOT_PATH . $this->config->item('header');
           </div>
 
           <div class="form-group row">
-            <label for="tanggal" class="col-sm-1 col-form-label text-right">Jth Tempo :</label>
+            <label for="tanggal" class="col-sm-1 col-form-label text-right">Metode Bayar :</label>
             <div class="col-sm-3">
-              <input id="sales_order_due_date" name="sales_order_due_date" type="date" class="form-control">
+              <select class="form-control input-full js-example-basic-single" id="sales_payment" name="sales_payment">
+                <option value="">-- Pilih Metode Bayar --</option>
+                <?php foreach ($data['payment_list'] as $row) { ?>
+                  <option value="<?php echo $row->payment_id; ?>"><?php echo $row->payment_name; ?></option>  
+                <?php } ?>
+              </select>
+            </div>
+
+
+            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Jumlah Colly :</label>
+            <div class="col-sm-3">
+              <input id="sales_colly" name="sales_colly" type="text" class="form-control">
             </div>
           </div>
 
@@ -210,7 +217,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           </form>
 
           <div class="table-responsive">
-            <table id="temp-salesorder-list" class="display table table-striped table-hover" >
+            <table id="temp-sales-list" class="display table table-striped table-hover" >
               <thead>
                 <tr>
                   <th>SKU</th>
@@ -232,7 +239,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="col-lg-6">
               <div class="form-group">
                 <div class="col-sm-12">
-                  <textarea id="sales_order_remark" name="sales_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                  <textarea id="sales_remark" name="sales_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                 </div>
               </div>
             </div>
@@ -490,18 +497,19 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 
   $(document).ready(function() {
-    temppurchase_table();
+    tempsales_table();
+    check_So_data();
   });
 
-  function temppurchase_table(){
-    $('#temp-salesorder-list').DataTable( {
+  function tempsales_table(){
+    $('#temp-sales-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Sales/temp_salesorder_list',
+        url: '<?php echo base_url(); ?>Sales/temp_sales_list',
         type: 'POST',
         data:  {},
       },
@@ -595,6 +603,84 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+  $('#sales_inv_order').autocomplete({ 
+    minLength: 2,
+    source: function(req, add) {
+      $.ajax({
+        url: '<?php echo base_url(); ?>/Sales/search_so',
+        dataType: 'json',
+        type: 'GET',
+        data: req,
+        success: function(res) {
+          if (res.success == true) {
+            add(res.data);
+          }
+        },
+      });
+    },
+    select: function(event, ui) {
+      let id = ui.item.id;
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Sales/get_header_so",
+        dataType: "json",
+        data: {id:id},
+        success : function(data){
+          if (data.code == "200"){
+            var row = data.data[0];
+            $('#sales_id').val(row.hd_sales_order_id );
+            $('#sales_customer').val(row.hd_sales_order_customer);
+            $('#sales_customer').trigger('change');
+            $('#sales_rate_customer').val(row.customer_rate);
+            $('#sales_payment').val(row.hd_sales_order_payment);
+            $('#sales_payment').trigger('change');
+            $('#sales_top').val(row.hd_sales_order_top_id);
+            $('#sales_top').trigger('change');
+            //$('#sales_due_date').val(row.hd_sales_order_top);
+            $('#sales_salesman').val(row.hd_sales_order_salesman);
+            $('#sales_salesman').trigger('change');
+            $('#sales_prepare').val(row.hd_sales_order_prepare_id);
+            $('#sales_prepare').trigger('change');
+            $('#sales_colly').val(row.hd_sales_order_colly);
+            $('#sales_warehouse').val(row.hd_sales_order_warehouse);
+            $('#sales_warehouse').trigger('change');
+            $('#sales_ekspedisi').val(row.hd_sales_order_ekspedisi);
+            $('#sales_ekspedisi').trigger('change');
+            $('#footerdiscount').on('show.bs.modal', function (event) {
+              edit_footer_discount_percentage1.set(row.hd_sales_order_percentage1);
+              edit_footer_discount_percentage2.set(row.hd_sales_order_percentage2);
+              edit_footer_discount_percentage3.set(row.hd_sales_order_percentage3);
+              edit_footer_discount1.set(row.hd_sales_order_disc1);
+              edit_footer_discount2.set(row.hd_sales_order_disc2);
+              edit_footer_discount3.set(row.hd_sales_order_disc3);
+            })
+            footer_total_discount.set(row.hd_sales_order_total_discount);
+            footer_total_ppn.set(row.hd_sales_order_ppn);
+            if(row.hd_sales_order_ppn > 0){
+              $("#ppnchecked").prop("checked", true);
+            }
+            footer_total_invoice.set(row.hd_sales_order_total);
+            footer_dp.set(row.hd_sales_order_dp);
+            footer_remaining_debt.set(row.hd_sales_order_remaining_debt);
+            $('#sales_remark').val(row.hd_sales_order_note);
+            let title = 'Pilih Sales Order';
+            let message = 'Sales Order Berhasil Di Pilih';
+            let state = 'info';
+            notif_success(title, message, state);
+            $('#temp-sales-list').DataTable().ajax.reload();
+            check_tempt_data();
+            clear_input();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.result,
+            })
+          }
+        }
+      });
+    },
+  });
 
   function change_rate()
   {
@@ -680,7 +766,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/get_edit_temp_so",
+      url: "<?php echo base_url(); ?>Sales/get_edit_temp_sales",
       dataType: "json",
       data: {id:id},
       success : function(data){
@@ -688,12 +774,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           var row = data.result[0];
           $("#product_name").val(row.product_name);
           $("#product_id").val(row.temp_product_id);
-          $('#temp_rate').val(row.temp_so_rate);
+          $('#temp_rate').val(row.temp_sales_rate);
           $('#temp_rate').trigger('change');
-          temp_price.set(row.temp_so_price);
-          $("#temp_qty").val(row.temp_so_qty);
-          temp_discount.set(row.temp_so_discount);
-          temp_total.set(row.temp_so_total);
+          temp_price.set(row.temp_sales_price);
+          $("#temp_qty").val(row.temp_sales_qty);
+          temp_discount.set(row.temp_sales_discount);
+          temp_total.set(row.temp_sales_total);
         }
       }
     });  
@@ -702,7 +788,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   function duedate_cal()
   {
-    var purchase_top = document.getElementById("sales_order_top").value;
+    var purchase_top = document.getElementById("sales_top").value;
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/cal_due_date",
@@ -710,7 +796,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {po_top:purchase_top},
       success : function(data){
         if (data.code == "200"){
-          $('#sales_order_due_date').val(data.result);
+          $('#sales_due_date').val(data.result);
         }
       }
     });
@@ -730,7 +816,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
-    var warehouse_id            = $("#sales_order_warehouse").val();
+    var warehouse_id            = $("#sales_warehouse").val();
     var product_id              = $("#product_id").val();
     var temp_rate               = $("#temp_rate").val();
     var temp_price_val          = parseInt(temp_price.get());
@@ -741,7 +827,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Sales/add_temp_sales_order",
+        url: "<?php echo base_url(); ?>Sales/add_temp_sales",
         dataType: "json",
         data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val},
         success : function(data){
@@ -750,7 +836,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-salesorder-list').DataTable().ajax.reload();
+            $('#temp-sales-list').DataTable().ajax.reload();
             check_tempt_data();
             clear_input();
           } else {
@@ -767,17 +853,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var sales_order_customer                     = $("#sales_order_customer").val();
-    var sales_order_rate_customer                = $("#sales_order_rate_customer").val();
-    var sales_order_payment                      = $("#sales_order_payment").val();
-    var sales_order_top                          = $("#sales_order_top option:selected").text();
-    var sales_order_top_id                       = $("#sales_order_top").val()
-    var sales_order_salesman                     = $("#sales_order_salesman").val();
-    var sales_order_prepare                      = $("#sales_order_prepare option:selected").text();
-    var sales_order_prepare_id                   = $("#sales_order_prepare").val();
-    var sales_order_colly                        = $("#sales_order_colly").val();
-    var sales_order_warehouse                    = $("#sales_order_warehouse").val();
-    var sales_order_ekspedisi                    = $("#sales_order_ekspedisi").val();
+    var sales_customer                           = $("#sales_customer").val();
+    var sales_id                                 = $("#sales_id").val();       
+    var sales_rate_customer                      = $("#sales_rate_customer").val();
+    var sales_payment                            = $("#sales_payment").val();
+    var sales_top                                = $("#sales_top option:selected").text();
+    var sales_salesman                           = $("#sales_salesman").val();
+    var sales_prepare                            = $("#sales_prepare option:selected").text()
+    var sales_colly                              = $("#sales_colly").val();
+    var sales_warehouse                          = $("#sales_warehouse").val();
+    var sales_ekspedisi                          = $("#sales_ekspedisi").val();
     var footer_sub_total_submit                  = parseInt(footer_sub_total.get());
     var footer_total_discount_submit             = parseInt(footer_total_discount.get());
     var edit_footer_discount_percentage1_submit  = parseInt(edit_footer_discount_percentage1.get());
@@ -790,17 +875,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
     var footer_dp_val                            = parseInt(footer_dp.get());
     var footer_remaining_debt_val                = parseInt(footer_remaining_debt.get());
-    var sales_order_remark                       = $("#sales_order_remark").val();
-    var sales_order_due_date                     = $("#sales_order_due_date").val();
-    var sales_order_date                         = $("#sales_order_date").val();
+    var sales_remark                             = $("#sales_remark").val();
+    var sales_due_date                           = $("#sales_due_date").val();
+    var sales_date                               = $("#sales_date").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/save_salesorder",
+      url: "<?php echo base_url(); ?>Sales/save_sales",
       dataType: "json",
-      data: {sales_order_customer:sales_order_customer, sales_order_rate_customer:sales_order_rate_customer, sales_order_payment:sales_order_payment, sales_order_top:sales_order_top, sales_order_top_id:sales_order_top_id, sales_order_salesman:sales_order_salesman, sales_order_prepare:sales_order_prepare, sales_order_prepare_id:sales_order_prepare_id, sales_order_colly:sales_order_colly, sales_order_warehouse:sales_order_warehouse, sales_order_ekspedisi:sales_order_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_order_remark:sales_order_remark, sales_order_due_date:sales_order_due_date, sales_order_date:sales_order_date},
+      data: {sales_customer:sales_customer, sales_id:sales_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
+          window.location.href = "<?php echo base_url(); ?>/Sales/salespage";
         } else {
           Swal.fire({
             icon: 'error',
@@ -874,7 +959,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
  })
 
 
-  $('#sales_order_customer').on('change', function (event) {
+  $('#sales_customer').on('change', function (event) {
     let customer_id = this.value;
     $.ajax({
       type: "POST",
@@ -883,7 +968,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {customer_id:customer_id},
       success : function(data){
         if (data.code == "200"){
-          $('#sales_order_rate_customer').val(data.result[0].customer_rate)
+          $('#sales_rate_customer').val(data.result[0].customer_rate)
         }
       }
     });
@@ -895,19 +980,81 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/check_temp_so",
+      url: "<?php echo base_url(); ?>Sales/check_temp_sales",
       dataType: "json",
       data: {},
       success : function(data){
         if (data.code == "200"){
           let sub_total = data.data[0].sub_total;
-          $("#sales_id").val(data.data[0].temp_so_id);
           footer_sub_total.set(sub_total);
           footer_total_invoice.set(sub_total);
           footer_remaining_debt.set(sub_total);
         }
       }
     });
+  }
+
+  function check_So_data()
+  {
+    var id = $("#sales_id").val();
+    if(id != null){
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Sales/refresh_header_so",
+        dataType: "json",
+        data: {id:id},
+        success : function(data){
+          if (data.code == "200"){
+            var row = data.data[0];
+            $('#sales_id').val(row.hd_sales_order_id );
+            $('#sales_inv_order').val(row.hd_sales_order_inv);
+            $('#sales_customer').val(row.hd_sales_order_customer);
+            $('#sales_customer').trigger('change');
+            $('#sales_rate_customer').val(row.customer_rate);
+            $('#sales_payment').val(row.hd_sales_order_payment);
+            $('#sales_payment').trigger('change');
+            $('#sales_top').val(row.hd_sales_order_top_id);
+            $('#sales_top').trigger('change');
+            //$('#sales_due_date').val(row.hd_sales_order_top);
+            $('#sales_salesman').val(row.hd_sales_order_salesman);
+            $('#sales_salesman').trigger('change');
+            $('#sales_prepare').val(row.hd_sales_order_prepare_id);
+            $('#sales_prepare').trigger('change');
+            $('#sales_colly').val(row.hd_sales_order_colly);
+            $('#sales_warehouse').val(row.hd_sales_order_warehouse);
+            $('#sales_warehouse').trigger('change');
+            $('#sales_ekspedisi').val(row.hd_sales_order_ekspedisi);
+            $('#sales_ekspedisi').trigger('change');
+            $('#footerdiscount').on('show.bs.modal', function (event) {
+              edit_footer_discount_percentage1.set(row.hd_sales_order_percentage1);
+              edit_footer_discount_percentage2.set(row.hd_sales_order_percentage2);
+              edit_footer_discount_percentage3.set(row.hd_sales_order_percentage3);
+              edit_footer_discount1.set(row.hd_sales_order_disc1);
+              edit_footer_discount2.set(row.hd_sales_order_disc2);
+              edit_footer_discount3.set(row.hd_sales_order_disc3);
+            })
+            footer_total_discount.set(row.hd_sales_order_total_discount);
+            footer_total_ppn.set(row.hd_sales_order_ppn);
+            if(row.hd_sales_order_ppn > 0){
+              $("#ppnchecked").prop("checked", true);
+            }
+            footer_total_invoice.set(row.hd_sales_order_total);
+            footer_dp.set(row.hd_sales_order_dp);
+            footer_remaining_debt.set(row.hd_sales_order_remaining_debt);
+            $('#sales_remark').val(row.hd_sales_order_note)
+            $('#temp-sales-list').DataTable().ajax.reload();
+            check_tempt_data();
+            clear_input();
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.result,
+            })
+          }
+        }
+      });
+    }
   }
 
   function deletes(id)
@@ -924,12 +1071,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Sales/delete_temp_so",
+          url: "<?php echo base_url(); ?>Sales/delete_temp_sales",
           dataType: "json",
           data: {id:id},
           success : function(data){
             if (data.code == "200"){
-              $('#temp-salesorder-list').DataTable().ajax.reload();
+              $('#temp-sales-list').DataTable().ajax.reload();
               let title = 'Hapus Data';
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';
@@ -966,7 +1113,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         success : function(data){
           if (data.code == "200"){
            window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
-          }else {
+         }else {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -980,5 +1127,5 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
-  
+
 </script>

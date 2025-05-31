@@ -16,18 +16,18 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Sales Order</h3>
+                <h3 class="fw-bold mb-3">Daftar Penjualan</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <a href="<?php echo base_url(); ?>Sales/addsalesorder"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
+                <a href="<?php echo base_url(); ?>Sales/addsales"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
               </div>
             </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table
-              id="po-list"
+              id="sales-list"
               class="display table table-striped table-hover"
               >
               <thead>
@@ -70,14 +70,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 
   function purchaseorder_table(){
-    $('#po-list').DataTable( {
+    $('#sales-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Sales/sales_order_list',
+        url: '<?php echo base_url(); ?>Sales/sales_list',
         type: 'POST',
         data:  {},
       },
@@ -113,7 +113,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Sales/delete_sales_order",
+          url: "<?php echo base_url(); ?>Sales/delete_sales",
           dataType: "json",
           data: {id:id},
           success : function(data){

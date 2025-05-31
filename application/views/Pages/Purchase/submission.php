@@ -445,7 +445,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#btnedit').click(function(e){
     e.preventDefault();
     var submission_id             = $("#submission_id_edit").val();
-    var submission_inv            = $("#submission_inv_edit").val();
+    var submission_inv            = $("#submission_invoice_edit").val();
     var submission_date           = $("#submission_date_edit").val();
     var submission_warehouse      = $("#submission_warehouse_edit").val();
     var submission_warehouse_name = $("#submission_warehouse_edit option:selected").text();

@@ -92,6 +92,13 @@ class masterdata_model extends CI_Model {
         return $result;
     }
 
+    public function get_customer_code($customer_id)
+    {
+        $query = $this->db->query("select customer_code, customer_name from ms_customer where customer_id = '".$customer_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function delete_customer($customer_id)
     {
         $this->db->set('is_active', 'N');

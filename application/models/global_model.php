@@ -31,6 +31,19 @@ class global_model extends CI_Model {
         return $query;
     }
 
+    public function search_purchase_inv($keyword, $supplier_id)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_purchase');
+        $this->db->where('hd_purchase.hd_purchase_supplier', $supplier_id);
+        if($keyword != null){
+            $this->db->where('hd_purchase.hd_purchase_invoice like "%'.$keyword.'%"');
+        }
+        $this->db->limit(50);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function search_product_by_supplier($keyword)
     {
         $query = $this->db->query("select * from ms_product a, ms_product_supplier b, ms_unit c  where a.product_id = b.product_id and a.product_unit = b.unit_id and(product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' group by a.product_id" );

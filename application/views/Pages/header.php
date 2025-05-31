@@ -183,7 +183,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/product">
+                    <a href="<?php echo base_url(); ?>Purchase/returpurchase">
                       <span class="sub-item">Retur Pembelian</span>
                     </a>
                   </li>
@@ -205,13 +205,18 @@
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Sales">
+                    <a href="<?php echo base_url(); ?>Sales/salespage">
                       <span class="sub-item">Penjualan</span>
                     </a>
                   </li>
                   <li>
                     <a href="<?php echo base_url(); ?>Masterdata/expedisi">
                       <span class="sub-item">Revisi Penjualan</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="<?php echo base_url(); ?>Sales/retursales">
+                      <span class="sub-item">Retur Penjualan</span>
                     </a>
                   </li>
                 </ul>

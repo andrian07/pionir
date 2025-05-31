@@ -16,33 +16,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Sales Order</h3>
+                <h3 class="fw-bold mb-3">Daftar Retur Pembelian</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <a href="<?php echo base_url(); ?>Sales/addsalesorder"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
+                <a href="<?php echo base_url(); ?>Purchase/addreturpurchase"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
               </div>
             </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table
-              id="po-list"
+              id="retur-purchase-list"
               class="display table table-striped table-hover"
               >
               <thead>
                 <tr>
                   <th>No Invoice</th>
                   <th>Tanggal</th>
-                  <th>Customer</th>
-                  <th>Produk</th>
-                  <th>Rate</th>
-                  <th>Total Harga</th>
-                  <th>Status Pembayaran</th>
-                  <th>Status Pesanan</th>
-                  <th>Sisa Pembayaran</th>
-                  <th>Salesman</th>
-                  <th>Status</th>
+                  <th>Barang</th>
+                  <th>Supplier</th>
+                  <th>Total Transaksi</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -65,19 +59,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 <script>
 
   $(document).ready(function() {
-    purchaseorder_table();
+    returpurchase_table();
   });
 
-
-  function purchaseorder_table(){
-    $('#po-list').DataTable( {
+  function returpurchase_table(){
+    $('#retur-purchase-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Sales/sales_order_list',
+        url: '<?php echo base_url(); ?>Purchase/retur_purchase_list',
         type: 'POST',
         data:  {},
       },
@@ -88,13 +81,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 2},
         {data: 3},
         {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8},
-        {data: 9},
-        {data: 10},
-        {data: 11}
+        {data: 5}
       ]
     });
   }
@@ -113,7 +100,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Sales/delete_sales_order",
+          url: "<?php echo base_url(); ?>Purchase/delete_po",
           dataType: "json",
           data: {id:id},
           success : function(data){
@@ -135,14 +122,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     })
   }
-
-  $("#btnsearch").click(function (e) {
-    var start_date      = $("#start_date").val();
-    var end_date        = $("#end_date").val();
-    var supplier_filter = $("#supplier_filter").val();
-    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&supplier_filter="+supplier_filter;
-    Swal.fire('Saved!', '', 'success');
-  });
 
   
 </script>
