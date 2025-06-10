@@ -203,6 +203,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td colspan="4"><?php echo $row->product_name; ?></td>
                         </tr>
                         <tr>
+                          <th scope="col" class="productinfo-text-right">Satuan:</th>
+                          <td colspan="4"><?php echo $row->unit_name; ?></td>
+                        </tr>
+                        <tr>
                           <th scope="col" class="productinfo-text-right">Kategori:</th>
                           <td colspan="4"><?php echo $row->category_name; ?></td>
                         </tr>
@@ -237,10 +241,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               echo '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
                             } ?>
                           </td>
-                        </tr>
-                        <tr>
-                          <th scope="col" class="productinfo-text-right">Satuan:</th>
-                          <td colspan="4"><?php echo $row->unit_name; ?></td>
                         </tr>
                         <tr>
                           <th scope="col" class="productinfo-text-right">Min Stock:</th>

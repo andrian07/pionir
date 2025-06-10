@@ -8,6 +8,24 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/plugins.min.css" />
   <link rel="stylesheet" href="<?php echo base_url(); ?>dist/css/kaiadmin.min.css" />
+    <script src="<?php echo base_url(); ?>dist/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["<?php echo base_url(); ?>dist/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
   <style type="text/css">
     .title-detail{
       text-align: right;
@@ -100,11 +118,11 @@
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">HPP:</th>
-                  <td colspan="4"><?php echo number_format($row->product_hpp); ?></td>
+                  <td colspan="4"><span class="badge badge-danger"><?php echo number_format($row->product_hpp); ?></span></td>
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Harga Beli:</th>
-                  <td colspan="4"><?php echo number_format($row->product_price); ?></td>
+                  <td colspan="4"><span class="badge badge-danger"><?php echo number_format($row->product_price); ?></span></td>
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
@@ -138,7 +156,7 @@
               </tr>
               <tr>
                 <td><?php echo $row->product_sell_percentage_1; ?> %</td>
-                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_1); ?></span></td>
+                <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_1); ?></span></td>
                 <td><?php echo $row->product_disc_percentage; ?> %</td>
                 <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_1 - ($row->product_sell_price_1 * $row->product_disc_percentage / 100)); ?></span></td>
               </tr>
@@ -151,7 +169,7 @@
               </tr>
               <tr>
                 <td><?php echo $row->product_sell_percentage_2; ?> %</td>
-                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_2); ?></span></td>
+                <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_2); ?></span></td>
                 <td><?php echo $row->product_disc_percentage; ?> %</td>
                 <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_2 - ($row->product_sell_price_2 * $row->product_disc_percentage / 100)); ?></span></td>
               </tr>
@@ -164,7 +182,7 @@
               </tr>
               <tr>
                 <td><?php echo $row->product_sell_percentage_3; ?> %</td>
-                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_3); ?></span></td>
+                <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_3); ?></span></td>
                 <td><?php echo $row->product_disc_percentage; ?> %</td>
                 <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_3 - ($row->product_sell_price_3 * $row->product_disc_percentage / 100)); ?></span></td>
               </tr>
@@ -177,7 +195,7 @@
               </tr>
               <tr>
                 <td><?php echo $row->product_sell_percentage_4; ?> %</td>
-                <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_4); ?></span></td>
+                <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_4); ?></span></td>
                 <td><?php echo $row->product_disc_percentage; ?> %</td>
                 <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_4 - ($row->product_sell_price_4 * $row->product_disc_percentage / 100)); ?></span></td>
               </tr>

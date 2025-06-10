@@ -149,7 +149,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     Swal.fire({
       title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data PO ?",
+      text: "Apakah Anda Yakin Menghapus Data Pembelian ?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -159,7 +159,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Purchase/delete_po",
+          url: "<?php echo base_url(); ?>Purchase/delete_purchase",
           dataType: "json",
           data: {id:id},
           success : function(data){

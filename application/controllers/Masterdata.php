@@ -1180,13 +1180,15 @@ class Masterdata extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				$product_sell_price_1 = '<span class="badge badge-primary">'.number_format($field['product_sell_price_1']).'</span>';
+
 				$url_image = base_url().'assets/products/'.$field['product_image'];
 				$no++;
 				$row = array();
 				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
 				$row[] = $field['brand_name'];
 				$row[] = $field['category_name'];
-				$row[] = number_format($field['product_sell_price_1']);
+				$row[] = $product_sell_price_1;
 				$row[] = $field['product_supplier_tag'];
 				$row[] = $product_package;
 				$row[] = $prodcut_ppn;

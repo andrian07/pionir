@@ -35,8 +35,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>No Invoice</th>
                   <th>Tanggal</th>
                   <th>Barang</th>
+                  <th>Qty Retur</th>
                   <th>Supplier</th>
                   <th>Total Transaksi</th>
+                  <th>Status</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -81,7 +83,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 2},
         {data: 3},
         {data: 4},
-        {data: 5}
+        {data: 5},
+        {data: 6},
+        {data: 7}
       ]
     });
   }
@@ -90,7 +94,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     Swal.fire({
       title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data PO ?",
+      text: "Apakah Anda Yakin Menghapus Data Retur Pembelian ?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -100,12 +104,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Purchase/delete_po",
+          url: "<?php echo base_url(); ?>Purchase/delete_retur_purchase",
           dataType: "json",
           data: {id:id},
           success : function(data){
             if (data.code == "200"){
-              $('#po-list').DataTable().ajax.reload();
+              $('#retur-purchase-list').DataTable().ajax.reload();
               let title = 'Hapus Data';
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';

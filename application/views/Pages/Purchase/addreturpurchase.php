@@ -503,7 +503,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {retur_purchase_supplier:retur_purchase_supplier, retur_purchase_date:retur_purchase_date, footer_total_invoice_val:footer_total_invoice_val, purchase_retur_remark:purchase_retur_remark},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/returpurchase";
+          window.location.href = "<?php echo base_url(); ?>/Purchase/returpurchase";
         } else {
           Swal.fire({
             icon: 'error',

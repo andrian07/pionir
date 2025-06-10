@@ -1744,12 +1744,15 @@ class Purchase extends CI_Controller {
 			$input_stock_id = $this->input->post('id');
 			$user_id 		= $_SESSION['user_id'];
 			$get_input_warehouse_code 	= $this->purchase_model->get_input_warehouse_code($input_stock_id);
-			$hd_input_stock_inv 	= $get_po_code[0]->hd_input_stock_inv;
+			$hd_input_stock_inv 	= $get_input_warehouse_code[0]->hd_input_stock_inv;
 			$get_dt_input_stock     = $this->purchase_model->detail_input_stock($input_stock_id);
+
+			$date 					= date("d/m/Y");
 			foreach($get_dt_input_stock as $row){
+				$warehouse_id  	= $row->hd_input_stock_warehouse;
 				if($warehouse_id != 1){
-					$product_id 	= $row['temp_product_id'];
-					$qty 			= $row['temp_sales_qty'];
+					$product_id 	= $row->dt_is_product_id;
+					$qty 			= $row->dt_is_qty;
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
 					$last_stock 	= $get_last_stock[0]->stock;
 					$new_stock 		= $last_stock - $qty;
@@ -1760,10 +1763,10 @@ class Purchase extends CI_Controller {
 						'stock_movement_qty'			=> $qty,
 						'stock_movement_before_stock'	=> $last_stock,
 						'stock_movement_new_stock'		=> $new_stock,
-						'stock_movement_desc'			=> 'Penjualan',
-						'stock_movement_inv'			=> $last_code,
+						'stock_movement_desc'			=> 'Batal Input Stock',
+						'stock_movement_inv'			=> $hd_input_stock_inv,
 						'stock_movement_calculate'		=> 'Minus',
-						'stock_movement_date'			=> $sales_date,
+						'stock_movement_date'			=> $date,
 						'stock_movement_creted_by'		=> $user_id,	
 					);	
 					$this->global_model->insert_movement_stock($movement_stock);
@@ -1833,6 +1836,7 @@ class Purchase extends CI_Controller {
 			if($search != null){
 				$search = $search['value'];
 			}
+
 			$list = $this->purchase_model->returpurchase_list($search, $length, $start)->result_array();
 			$count_list = $this->purchase_model->returpurchase_list_count($search)->result_array();
 			$total_row = $count_list[0]['total_row'];
@@ -1842,32 +1846,25 @@ class Purchase extends CI_Controller {
 
 				if($field['hd_retur_purchase_status'] == 'Success'){
 					$hd_retur_purchase_status = '<span class="badge badge-success">Success</span>';
+				}else if($field['hd_retur_purchase_status'] == 'Pending'){
+					$hd_retur_purchase_status = '<span class="badge badge-primary">Pending</span>';
 				}else{
 					$hd_retur_purchase_status = '<span class="badge badge-danger multi-badge">Cancel</span>';
 				}
 
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
-					$detail = '<a href="'.base_url().'Purchase/detailsubmission?id='.$field['hd_retur_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_retur_purchase_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Purchase/detailreturpurchase?id='.$field['hd_retur_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_retur_purchase_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$detail = '<a href="'.base_url().'Purchase/detailsubmission?id='.$field['hd_retur_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Purchase/detailreturpurchase?id='.$field['hd_retur_purchase_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
-				if($check_auth[0]->edit == 'Y'){
-					if($field['submission_status'] == 'Pending'){
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_retur_purchase_id'].'" data-name="'.$field['hd_retur_purchase_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
-					}else{
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_retur_purchase_id'].'" data-name="'.$field['hd_retur_purchase_inv'].'" disabled><i class="fas fa-edit sizing-fa"></i></button> ';
-					}
-				}else{
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
-				}
 
 				if($check_auth[0]->delete == 'Y'){
-					if($field['submission_status'] == 'Pending'){
-						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					if($field['hd_retur_purchase_status'] == 'Pending'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_retur_purchase_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}else{
-						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['submission_id'].')" disabled><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_retur_purchase_id'].')" disabled><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}
 				}else{
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
@@ -1880,9 +1877,11 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['hd_retur_purchase_inv'];
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['product_name'];
+				$row[] 	= $field['dt_retur_purchase_qty'];
 				$row[] 	= $field['supplier_name'];
-				$row[] 	= $field['hd_retur_purchase_total'];
-				$row[] 	= $detail.$edit.$delete;
+				$row[] 	= 'Rp. '.number_format($field['hd_retur_purchase_total']);
+				$row[]  = $hd_retur_purchase_status;
+				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
 
@@ -1967,6 +1966,17 @@ class Purchase extends CI_Controller {
 			$temp_note 					= $this->input->post('temp_note');
 			$supplier_id 				= $this->input->post('supplier_id');
 			$user_id 					= $_SESSION['user_id'];
+
+			$check_total_item_retur = $this->purchase_model->check_total_item_retur($purchase_id, $product_id);
+
+			$total_qty_retur = $check_total_item_retur[0]->total_qty_retur;
+
+			$total_qty_retur_count = $total_qty_retur + $temp_qty;
+
+			if($total_qty_retur_count > $temp_qty_buy){
+				$msg = "Qty Retur Tidak Bisa Lebih Besar Dari Qty Beli";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
 
 			$check_temp_retur_purchase_input = $this->purchase_model->check_temp_retur_purchase_input($purchase_id, $product_id, $user_id);
 			$data_insert = array(
@@ -2124,8 +2134,8 @@ class Purchase extends CI_Controller {
 			);	
 			$save_retur_purchase = $this->purchase_model->save_retur_purchase($data_insert);
 
-			$get_temp_purchase = $this->purchase_model->get_temp_purchase($user_id)->result_array();
-			foreach($get_temp_purchase  as $row){
+			$get_temp_retur_purchase = $this->purchase_model->get_temp_retur_purchase($user_id)->result_array();
+			foreach($get_temp_retur_purchase  as $row){
 				$data_insert_detail = array(
 					'hd_retur_purchase_id'				=> $save_retur_purchase,
 					'dt_retur_purchase_b_id'			=> $row['temp_retur_purchase_b_id'],
@@ -2140,11 +2150,10 @@ class Purchase extends CI_Controller {
 
 				$save_detail_retur_purchase = $this->purchase_model->save_detail_retur_purchase($data_insert_detail);
 
+				$warehouse_id 	= $row['temp_retur_purchase_warehouse_id'];
 				if($warehouse_id != 1){
 					$product_id 	= $row['temp_retur_purchase_product_id'];
 					$qty 			= $row['temp_retur_purchase_qty'];
-					$warehouse_id 	= $row['temp_retur_purchase_warehouse_id'];
-
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
 					$last_stock 	= $get_last_stock[0]->stock;
 					$new_stock 		= $last_stock - $qty;
@@ -2166,7 +2175,7 @@ class Purchase extends CI_Controller {
 			}
 
 			$data_insert_act = array(
-				'activity_table_desc'	       => 'Tambah Retur Pembelian Ke '.$supplier_name.' Ref: '.$last_code,
+				'activity_table_desc'	       => 'Tambah Retur Pembelian Ref: '.$last_code,
 				'activity_table_ref'		   => $last_code,
 				'activity_table_user'	       => $user_id,
 			);
@@ -2177,6 +2186,73 @@ class Purchase extends CI_Controller {
 
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function detailreturpurchase()
+	{
+		$modul = 'ReturPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$retur_purchase_id = $this->input->get('id');
+			$header_retur_purchase['header_retur_purchase'] = $this->purchase_model->header_retur_purchase($retur_purchase_id);
+			$detail_retur_purchase['detail_retur_purchase'] = $this->purchase_model->detail_retur_purchase($retur_purchase_id); 
+			$data['data'] = array_merge($header_retur_purchase, $detail_retur_purchase);
+			$this->load->view('Pages/Purchase/detailreturpurchase', $data);
+			//echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function delete_retur_purchase()
+	{
+		$modul = 'ReturPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$retur_purchase_id = $this->input->post('id');
+			$detail_retur_purchase = $this->purchase_model->detail_retur_purchase_delete($retur_purchase_id);
+			$user_id 	= $_SESSION['user_id'];
+			foreach($detail_retur_purchase as $row)
+			{
+				$warehouse_id = $row->warehouse_id;
+				if($warehouse_id != 1){
+					$last_code 	    = $row->hd_retur_purchase_inv;
+					$product_id 	= $row->dt_retur_purchase_product_id;
+					$qty 			= $row->dt_retur_purchase_qty;
+					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					$last_stock 	= $get_last_stock[0]->stock;
+					$new_stock 		= $last_stock + $qty;
+					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock,
+						'stock_movement_new_stock'		=> $new_stock,
+						'stock_movement_desc'			=> 'Batal Retur Pembelian',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Plus',
+						'stock_movement_date'			=> date("Y/m/d"),
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+			}
+			$last_code 	    = $detail_retur_purchase[0]->hd_retur_purchase_inv;
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Batal Retur Pembelian Ref: '.$last_code,
+				'activity_table_ref'		   => $last_code,
+				'activity_table_user'	       => $user_id,
+			);
+
+			$this->global_model->save($data_insert_act);
+
+			$this->purchase_model->delete_retur_purchase($retur_purchase_id);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
