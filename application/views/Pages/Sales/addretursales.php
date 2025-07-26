@@ -10,30 +10,30 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
     </div>
     <div class="row">
-      <h3 class="fw-bold mb-3">Tambah Retur Pembelian </h3>
+      <h3 class="fw-bold mb-3">Tambah Retur Penjualan </h3>
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
             <div class="form-group row">
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Invoice :</label>
               <div class="col-sm-3">
-                <input id="retur_purchase_invoice" name="retur_purchase_invoice" type="text" class="form-control" value="AUTO" readonly="">
-                <input id="retur_purchase_id" name="retur_purchase_id" type="hidden" class="form-control">
+                <input id="purchase_order_invoice" name="purchase_order_invoice" type="text" class="form-control" value="AUTO" readonly="">
+                <input id="purchase_order_id" name="purchase_order_id" type="hidden" class="form-control">
               </div>
               <div class="col-md-4"></div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
               <div class="col-sm-3">
-                <input id="retur_purchase_date" name="retur_purchase_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                <input id="retur_sales_date" name="retur_sales_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Supplier:</label>
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Customer:</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="purchase_supplier" name="purchase_supplier">
-                  <option value="">-- Pilih Supplier --</option>
-                  <?php foreach ($data['supplier_list'] as $row) { ?>
-                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                <select class="form-control input-full js-example-basic-single" id="sales_customer" name="sales_customer">
+                  <option value="">-- Pilih Customer --</option>
+                  <?php foreach ($data['customer_list'] as $row) { ?>
+                    <option value="<?php echo $row->customer_id; ?>"><?php echo $row->customer_name; ?></option>  
                   <?php } ?>
                 </select>
               </div>
@@ -55,9 +55,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>No Invoice Pembelian</label>
-                    <input id="purchase_inv" name="purchase_inv" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan No Invoice" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
-                    <input id="purchase_id" type="hidden" name="purchase_id">
+                    <label>No Invoice Penjualan</label>
+                    <input id="sales_inv" name="sales_inv" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan No Invoice" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
+                    <input id="sales_id" type="hidden" name="sales_id">
                   </div>
                 </div>
 
@@ -69,43 +69,27 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                   <div class="form-group">
-                    <label>Gudang</label>
-                    <select class="form-control input-full js-example-basic-single" id="purchase_warehouse" name="purchase_warehouse">
-                      <option value="">-- Pilih Gudang --</option>
-                      <?php foreach ($data['warehouse_list'] as $row) { ?>
-                        <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="col-sm-2">
-                  <div class="form-group">
-                    <label>Harga</label>
+                    <label>Harga Jual</label>
                     <input id="temp_price" name="temp_price" type="text" class="form-control text-right" value="0" required="">
                   </div>
                 </div>
 
                 <div class="col-sm-1">
+                </div>
+
+                <div class="col-sm-2">
                   <div class="form-group">
                     <label>Qty Retur</label>
                     <input id="temp_qty" name="temp_qty" type="text" class="form-control" value="0" data-parsley-min="1" data-parsley-min-message="*qty harus lebih besar dari 0" required="">
                   </div>
                 </div>
 
-                <div class="col-sm-1">
-                  <div class="form-group">
-                    <label>Qty Beli</label>
-                    <input id="temp_qty_buy" name="temp_qty_buy" type="text" class="form-control" value="0" data-parsley-min="1" data-parsley-min-message="*qty harus lebih besar dari 0" required="" readonly>
-                  </div>
-                </div>
-
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <label>Ongkir</label>
-                    <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" required="">
+                    <label>Qty Jual</label>
+                    <input id="temp_qty_sell" name="temp_qty_sell" type="text" class="form-control" value="0" data-parsley-min="1" data-parsley-min-message="*qty harus lebih besar dari 0" required="" readonly>
                   </div>
                 </div>
 
@@ -141,14 +125,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </form>
 
             <div class="table-responsive">
-              <table id="temp-retur-purchase-list" class="display table table-striped table-hover" >
+              <table id="temp-retur-sales-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
                     <th>SKU</th>
                     <th>Porduk</th>
                     <th>Satuan</th>
                     <th>Qty</th>
-                    <th>Ongkir</th>
                     <th>Total</th>
                     <th>Catatan</th>
                     <th>Aksi</th>
@@ -163,7 +146,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="purchase_retur_remark" name="purchase_retur_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="sales_retur_remark" name="sales_retur_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -196,8 +179,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  
-  
   $('#purchase_warehouse').prop('disabled', true);
 
   let temp_price = new AutoNumeric('#temp_price', {
@@ -209,13 +190,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
 
-  let temp_ongkir = new AutoNumeric('#temp_ongkir', {
-    currencySymbol : 'Rp. ',
-    decimalCharacter : ',',
-    decimalPlaces: 0,
-    decimalPlacesShownOnFocus: 0,
-    digitGroupSeparator : '.',
-  });
 
   let temp_total = new AutoNumeric('#temp_total', {
     currencySymbol : 'Rp. ',
@@ -238,11 +212,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     temp_retur_purchase_table();
   });
 
-  $('#purchase_inv').autocomplete({ 
+  $('#sales_inv').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_purchase_inv?id='+$('#purchase_supplier').val(),
+        url: '<?php echo base_url(); ?>/Sales/search_sales_inv?id='+$('#sales_customer').val(),
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -255,14 +229,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               title: 'Oops...',
               text: res.message,
             })
-            $("#purchase_inv").val("");
+            $("#sales_inv").val("");
           }
         },
       });
     },
     select: function(event, ui) {
       let id = ui.item.id;
-      $("#purchase_id").val(id);
+      $("#sales_inv").val(id);
+      $("#sales_id").val(id);
     },
   });
 
@@ -271,7 +246,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_retur?id='+$('#purchase_id').val(),
+        url: '<?php echo base_url(); ?>/Sales/search_product_retur?id='+$('#sales_id').val(),
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -290,16 +265,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
     select: function(event, ui) {
       let id = ui.item.id;
-      purchase_warehouse = ui.item.warehouse;
-      purchase_price     = ui.item.purchase_price;
-      purchase_qty_buy   = ui.item.purchase_qty;
-      purchase_ongkir    = ui.item.purchase_ongkir;
+      sales_price     = ui.item.sales_price;
+      sales_qty       = ui.item.sales_qty;
       $("#product_id").val(id);
-      $('#purchase_warehouse').val(purchase_warehouse);
-      $('#purchase_warehouse').trigger('change');
-      temp_price.set(purchase_price);
-      $('#temp_qty_buy').val(purchase_qty_buy);
-      temp_ongkir.set(purchase_ongkir);
+      temp_price.set(sales_price);
+      $('#temp_qty_sell').val(sales_qty);
     },
   });
 
@@ -312,47 +282,41 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     calculation_temp();
   })
 
-  $('#temp_ongkir').on('input', function (event) {
-    calculation_temp();
-  })
 
   function calculation_temp()
   {
     let temp_price_val  = parseInt(temp_price.get());
     let temp_qty_val    = $('#temp_qty').val();
-    let temp_ongkir_val = parseInt(temp_ongkir.get());
-    let temp_total_val  = temp_price_val * temp_qty_val + temp_ongkir_val;
+    let temp_total_val  = temp_price_val * temp_qty_val ;
     temp_total.set(temp_total_val);
   }
 
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
-    var purchase_id          = $("#purchase_id").val();
-    var purchase_inv         = $("#purchase_inv").val();
+    var sales_id             = $("#sales_id").val();
+    var sales_inv            = $("#sales_inv").val();
     var product_id           = $("#product_id").val();
     var product_name         = $("#product_name").val();
-    var purchase_warehouse   = $("#purchase_warehouse").val();
     var temp_price_submit    = parseInt(temp_price.get());
     var temp_qty             = $("#temp_qty").val();
-    var temp_qty_buy         = $("#temp_qty_buy").val();
-    var temp_ongkir_submit   = parseInt(temp_ongkir.get());
+    var temp_qty_sell        = $("#temp_qty_sell").val();
     var temp_total_submit    = parseInt(temp_total.get());
     var temp_note            = $("#temp_note").val();
-    var supplier_id          = $('#purchase_supplier').val();
+    var customer_id          = $('#sales_customer').val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Purchase/add_temp_retur_purchase",
+        url: "<?php echo base_url(); ?>Sales/add_temp_retur_sales",
         dataType: "json",
-        data: {purchase_id:purchase_id, purchase_inv:purchase_inv, product_id:product_id, product_name:product_name, purchase_warehouse:purchase_warehouse, temp_price_submit:temp_price_submit, temp_qty:temp_qty, temp_qty_buy:temp_qty_buy, temp_ongkir_submit:temp_ongkir_submit, temp_total_submit:temp_total_submit, temp_note:temp_note, supplier_id:supplier_id},
+        data: {sales_id:sales_id, sales_inv:sales_inv, product_id:product_id, product_name:product_name, temp_price_submit:temp_price_submit, temp_qty:temp_qty, temp_qty_sell:temp_qty_sell, temp_total_submit:temp_total_submit, temp_note:temp_note, customer_id:customer_id},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-retur-purchase-list').DataTable().ajax.reload();
+            $('#temp-retur-sales-list').DataTable().ajax.reload();
             check_tempt_data();
             clear_input();
           } else {
@@ -371,15 +335,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/check_temp_retur_purchase",
+      url: "<?php echo base_url(); ?>Sales/check_temp_retur_sales",
       dataType: "json",
       data: {},
       success : function(data){
         if (data.code == "200"){
           let row = data.data[0];
           footer_total_invoice.set(row.sub_total);
-          $('#purchase_supplier').val(row.supplier);
-          $('#purchase_supplier').trigger('change');
+          $('#sales_customer').val(row.customer);
+          $('#sales_customer').trigger('change');
         }
       }
     });
@@ -387,55 +351,51 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   function clear_input()
   {
-    $("#purchase_id").val("");
-    $("#purchase_inv").val("");
+    $("#sales_id").val("");
+    $("#sales_inv").val("");
     $("#product_id").val("");
     $("#product_name").val("");
-    $("#purchase_warehouse").val("");
     temp_price.set(0);
     $("#temp_qty").val(0);
-    $("#temp_qty_buy").val(0);
-    temp_ongkir.set(0);
+    $("#temp_qty_sell").val(0);
     temp_total.set(0);
     $("#temp_note").val("");
   }
 
-  function edit_temp(id, purchase_id)
+  function edit_temp(id, sales_id)
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_retur_purchase",
+      url: "<?php echo base_url(); ?>Sales/get_edit_temp_retur_sales",
       dataType: "json",
-      data: {id:id, purchase_id:purchase_id},
+      data: {id:id, sales_id:sales_id},
       success : function(data){
+        console.log("asdasd");
         if (data.code == "200"){
           let row = data.result[0];
-          $("#purchase_inv").val(row.temp_retur_purchase_b_inv);
-          $("#purchase_id").val(row.temp_retur_purchase_b_id);
-          $("#product_name").val(row.temp_retur_purchase_product_name);
-          $("#product_id").val(row.temp_retur_purchase_product_id);
-          $("#purchase_warehouse").val(row.temp_retur_purchase_warehouse_id);
-          $('#purchase_warehouse').trigger('change');
-          temp_price.set(row.temp_retur_purchase_price);
-          $("#temp_qty").val(row.temp_retur_purchase_qty);
-          $("#temp_qty_buy").val(row.temp_retur_purchase_qty_buy);
-          temp_ongkir.set(row.temp_retur_purchase_ongkir);
-          temp_total.set(row.temp_retur_purchase_total);
-          $("#temp_note").val(row.temp_retur_purchase_note);
+          $("#sales_inv").val(row.temp_retur_sales_b_inv);
+          $("#sales_id").val(row.temp_retur_sales_b_id);
+          $("#product_name").val(row.temp_retur_sales_product_name);
+          $("#product_id").val(row.temp_retur_sales_product_id);
+          temp_price.set(row.temp_retur_sales_price);
+          $("#temp_qty").val(row.temp_retur_sales_qty);
+          $("#temp_qty_sell").val(row.temp_retur_sales_qty_sales);
+          temp_total.set(row.temp_retur_sales_total);
+          $("#temp_note").val(row.temp_retur_sales_note);
         }
       }
     });
   }
 
   function temp_retur_purchase_table(){
-    $('#temp-retur-purchase-list').DataTable( {
+    $('#temp-retur-sales-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/temp_retur_purchase_list',
+        url: '<?php echo base_url(); ?>Sales/temp_retur_sales_list',
         type: 'POST',
         data:  {},
       },
@@ -447,14 +407,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 3},
         {data: 4},
         {data: 5},
-        {data: 6},
-        {data: 7}
+        {data: 6}
       ]
     });
     check_tempt_data();
   }
 
-  function deletes(id, purchase_id)
+  function deletes(id)
   {
     Swal.fire({
       title: 'Konfirmasi?',
@@ -468,9 +427,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Purchase/delete_temp_retur_purchase",
+          url: "<?php echo base_url(); ?>Sales/delete_temp_retur_sales",
           dataType: "json",
-          data: {id:id, purchase_id:purchase_id},
+          data: {id:id},
           success : function(data){
             if (data.code == "200"){
               let title = 'Hapus Data';
@@ -478,7 +437,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               let state = 'danger';
               notif_success(title, message, state);
               check_tempt_data();
-              $('#temp-retur-purchase-list').DataTable().ajax.reload();
+              $('#temp-retur-sales-list').DataTable().ajax.reload();
             } else {
               Swal.fire({
                 icon: 'error',
@@ -494,18 +453,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var retur_purchase_supplier                  = $("#purchase_supplier").val();
-    var retur_purchase_date                      = $("#retur_purchase_date").val();
+    var retur_sales_customer                     = $("#sales_customer").val();
+    var retur_sales_date                         = $("#retur_sales_date").val();
     var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
-    var purchase_retur_remark                    = $("#purchase_retur_remark").val();
+    var sales_retur_remark                       = $("#sales_retur_remark").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/save_retur_purchase",
+      url: "<?php echo base_url(); ?>Sales/save_retur_sales",
       dataType: "json",
-      data: {retur_purchase_supplier:retur_purchase_supplier, retur_purchase_date:retur_purchase_date, footer_total_invoice_val:footer_total_invoice_val, purchase_retur_remark:purchase_retur_remark},
+      data: {retur_sales_customer:retur_sales_customer, retur_sales_date:retur_sales_date, footer_total_invoice_val:footer_total_invoice_val, sales_retur_remark:sales_retur_remark},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Purchase/returpurchase";
+          window.location.href = "<?php echo base_url(); ?>/Sales/retursales";
         } else {
           Swal.fire({
             icon: 'error',

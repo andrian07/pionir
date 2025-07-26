@@ -164,12 +164,12 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
-
+			$user 				= $_SESSION['user_id'];
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->temp_purchase_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->temp_purchase_list_count($search)->result_array();
+			$list = $this->purchase_model->temp_purchase_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->purchase_model->temp_purchase_list_count($search, $user)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -970,6 +970,7 @@ class Purchase extends CI_Controller {
 		if($check_auth[0]->add == 'Y'){
 			$submission_id 				= $this->input->post('submission_id');
 			$submission_code 			= $this->input->post('submission_code');
+			$po_supplier 			    = $this->input->post('po_supplier');
 			$product_id 				= $this->input->post('product_id');
 			$temp_price_val 			= $this->input->post('temp_price_val');
 			$temp_qty 					= $this->input->post('temp_qty');
@@ -984,6 +985,7 @@ class Purchase extends CI_Controller {
 			$data_insert = array(
 				'temp_submission_id'	=> $submission_id,
 				'temp_submission_inv'	=> $submission_code,
+				'temp_supplier_id'		=> $po_supplier,
 				'temp_product_id'		=> $product_id,
 				'temp_po_price'			=> $temp_price_val,
 				'temp_po_qty'			=> $temp_qty,
@@ -1015,12 +1017,12 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
-
+			$user 				= $_SESSION['user_id'];
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->temp_po_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->temp_po_list_count($search)->result_array();
+			$list = $this->purchase_model->temp_po_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->purchase_model->temp_po_list_count($search, $user)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -1071,6 +1073,7 @@ class Purchase extends CI_Controller {
 		die();
 	}
 
+
 	public function check_temp_po()
 	{
 		$user_id 		= $_SESSION['user_id'];
@@ -1079,13 +1082,15 @@ class Purchase extends CI_Controller {
 			$product_tax 	 = $check_temp_po[0]['is_ppn'];
 			$sub_total  	 = $check_temp_po[0]['sub_total'];
 			$ongkir     	 = $check_temp_po[0]['ongkir'];
+			$supplier_id     = $check_temp_po[0]['temp_supplier_id'];
 		}else{
 			$supplier     = 0;
 			$product_tax  = 0;
 			$sub_total    = 0;
 			$ongkir       = 0;
+			$supplier_id  = 0;
 		}
-		echo json_encode(['code'=>200, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir]);
+		echo json_encode(['code'=>200, 'product_tax'=>$product_tax, 'sub_total'=>$sub_total, 'ongkir' => $ongkir, 'supplier_id' => $supplier_id]);
 		die();
 	}
 
@@ -1100,10 +1105,14 @@ class Purchase extends CI_Controller {
 	public function cal_due_date()
 	{	
 		$po_top = $this->input->post('po_top');
-		if($po_top != 0){
-			$po_top = $po_top - 1;
+		if($po_top == null){
+			$due_date = null;
+		}else{
+			if($po_top != 0){
+				$po_top = $po_top - 1;
+				$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
+			}
 		}
-		$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
 		echo json_encode(['code'=>200, 'result'=>$due_date]);
 		die();
 	}
@@ -1485,12 +1494,12 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
-
+			$user 				= $_SESSION['user_id'];
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->temp_input_stock_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->temp_input_stock_count($search)->result_array();
+			$list = $this->purchase_model->temp_input_stock_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->purchase_model->temp_input_stock_count($search, $user)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -1870,6 +1879,16 @@ class Purchase extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				if($check_auth[0]->edit == 'Y'){
+					if($field['hd_retur_purchase_status'] == 'Pending'){
+						$payment = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="'.$field['hd_retur_purchase_id'].'" data-inv="'.$field['hd_retur_purchase_inv'].'" data-total="'.$field['hd_retur_purchase_total'].'" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="fas fa-money-bill-wave sizing-fa"></i></button>';
+					}else{
+						$payment = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="'.$field['hd_retur_purchase_id'].'" data-inv="'.$field['hd_retur_purchase_inv'].'" data-total="'.$field['hd_retur_purchase_total'].'" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="fas fa-money-bill-wave sizing-fa"></i></button>';
+					}
+				}else{
+					$payment = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn edit" data-id="'.$field['hd_retur_purchase_id'].'" data-inv="'.$field['hd_retur_purchase_inv'].'" data-total="'.$field['hd_retur_purchase_total'].'" data-bs-toggle="modal" data-bs-target="#exampleModaledit" disabled="disabled"><i class="fas fa-money-bill-wave sizing-fa"></i></button>';
+				}
+
 				$date = date_create($field['hd_retur_purchase_date']); 
 
 				$no++;
@@ -1881,7 +1900,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['supplier_name'];
 				$row[] 	= 'Rp. '.number_format($field['hd_retur_purchase_total']);
 				$row[]  = $hd_retur_purchase_status;
-				$row[] 	= $detail.$delete;
+				$row[] 	= $detail.$delete.$payment;
 				$data[] = $row;
 			}
 
@@ -2015,12 +2034,13 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
+			$user 			  	= $_SESSION['user_id'];
 
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->temp_retur_purchase_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->temp_retur_purchase_list_count($search)->result_array();
+			$list = $this->purchase_model->temp_retur_purchase_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->purchase_model->temp_retur_purchase_list_count($search, $user)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -2150,7 +2170,7 @@ class Purchase extends CI_Controller {
 
 				$save_detail_retur_purchase = $this->purchase_model->save_detail_retur_purchase($data_insert_detail);
 
-				$warehouse_id 	= $row['temp_retur_purchase_warehouse_id'];
+				/*$warehouse_id 	= $row['temp_retur_purchase_warehouse_id'];
 				if($warehouse_id != 1){
 					$product_id 	= $row['temp_retur_purchase_product_id'];
 					$qty 			= $row['temp_retur_purchase_qty'];
@@ -2167,11 +2187,12 @@ class Purchase extends CI_Controller {
 						'stock_movement_desc'			=> 'Retur Pembelian',
 						'stock_movement_inv'			=> $last_code,
 						'stock_movement_calculate'		=> 'Minus',
-						'stock_movement_date'			=> $retur_purchase_date,
+						'stock_movement_date'			=> $sse_date,
 						'stock_movement_creted_by'		=> $user_id,	
 					);	
 					$this->global_model->insert_movement_stock($movement_stock);
 				}
+				*/
 			}
 
 			$data_insert_act = array(
@@ -2186,6 +2207,53 @@ class Purchase extends CI_Controller {
 
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function edit_retur_purchase()
+	{
+		$modul = 'ReturPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$user_id 					= $_SESSION['user_id'];
+			$retur_purchase_id 			= $this->input->post('retur_purchase_id');
+			$payment_type 			    = $this->input->post('payment_type');
+			$retur_purchase_invoice     = $this->input->post('retur_purchase_invoice');
+			
+			$get_detail_retur_purchase_data = $this->purchase_model->get_detail_retur_purchase_data($retur_purchase_id);
+			foreach ($get_detail_retur_purchase_data as $row)
+			{
+				$warehouse_id 	= $row->dt_retur_warehouse_id;
+				if($warehouse_id != 1){
+					$product_id 	= $row->dt_retur_purchase_product_id;
+					$qty 			= $row->dt_retur_purchase_qty;
+					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					$last_stock 	= $get_last_stock[0]->stock;
+					$new_stock 		= $last_stock - $qty;
+					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock,
+						'stock_movement_new_stock'		=> $new_stock,
+						'stock_movement_desc'			=> 'Confirm Retur Pembelian',
+						'stock_movement_inv'			=> $retur_purchase_invoice,
+						'stock_movement_calculate'		=> 'Minus',
+						'stock_movement_date'			=> date("Y/m/d"),
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+			}
+
+			$update_retur_purchase = $this->purchase_model->update_retur_purchase($retur_purchase_id, $payment_type);
+
+			$msg = "Success Edit";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -2217,7 +2285,7 @@ class Purchase extends CI_Controller {
 			$retur_purchase_id = $this->input->post('id');
 			$detail_retur_purchase = $this->purchase_model->detail_retur_purchase_delete($retur_purchase_id);
 			$user_id 	= $_SESSION['user_id'];
-			foreach($detail_retur_purchase as $row)
+			/*foreach($detail_retur_purchase as $row)
 			{
 				$warehouse_id = $row->warehouse_id;
 				if($warehouse_id != 1){
@@ -2242,7 +2310,7 @@ class Purchase extends CI_Controller {
 					);	
 					$this->global_model->insert_movement_stock($movement_stock);
 				}
-			}
+			}*/
 			$last_code 	    = $detail_retur_purchase[0]->hd_retur_purchase_inv;
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Batal Retur Pembelian Ref: '.$last_code,
@@ -2253,6 +2321,9 @@ class Purchase extends CI_Controller {
 			$this->global_model->save($data_insert_act);
 
 			$this->purchase_model->delete_retur_purchase($retur_purchase_id);
+
+			$msg = "Berhasil Hapus";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();

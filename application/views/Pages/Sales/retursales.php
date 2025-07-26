@@ -16,11 +16,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-header">
             <div class="d-flex align-items-left">
               <div>
-                <h3 class="fw-bold mb-3">Daftar Retur Pembelian</h3>
+                <h3 class="fw-bold mb-3">Daftar Retur Penjualan</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
-                <a href="<?php echo base_url(); ?>Purchase/addreturpurchase"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
+                <a href="<?php echo base_url(); ?>Sales/addretursales"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
               </div>
             </div>
           </div>
@@ -29,7 +29,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="modal-dialog modal-md" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Pembayaran Retur Pembelian</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Pembayaran Retur Penjualan</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -39,15 +39,15 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       <div class="form-group form-inline">
                         <label for="inlineinput" class="col-md-3 col-form-label">Nomor Invoice</label>
                         <div class="col-md-12 p-0">
-                          <input type="hidden" class="form-control input-full" id="retur_purchase_id" readonly>
-                          <input type="text" class="form-control input-full" id="retur_purchase_invoice" readonly>
+                          <input type="hidden" class="form-control input-full" id="retur_sales_id" readonly>
+                          <input type="text" class="form-control input-full" id="retur_sales_invoice" readonly>
                         </div>
                       </div>
 
                       <div class="form-group form-inline">
                         <label for="inlineinput" class="col-md-3 col-form-label">Total Bayar</label>
                         <div class="col-md-12 p-0">
-                          <input type="text" class="form-control input-full" id="retur_purchase_total" readonly>
+                          <input type="text" class="form-control input-full" id="retur_sales_total" readonly>
                         </div>
                       </div>
 
@@ -76,7 +76,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-body">
             <div class="table-responsive">
               <table
-              id="retur-purchase-list"
+              id="retur-sales-list"
               class="display table table-striped table-hover"
               >
               <thead>
@@ -85,7 +85,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Tanggal</th>
                   <th>Barang</th>
                   <th>Qty Retur</th>
-                  <th>Supplier</th>
+                  <th>Customer</th>
                   <th>Total Transaksi</th>
                   <th>Status</th>
                   <th>Aksi</th>
@@ -115,7 +115,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     returpurchase_table();
   });
 
-  let retur_purchase_total = new AutoNumeric('#retur_purchase_total', {
+  let retur_sales_total = new AutoNumeric('#retur_sales_total', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -124,14 +124,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   function returpurchase_table(){
-    $('#retur-purchase-list').DataTable( {
+    $('#retur-sales-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/retur_purchase_list',
+        url: '<?php echo base_url(); ?>Sales/retur_sales_list',
         type: 'POST',
         data:  {},
       },
@@ -153,7 +153,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     Swal.fire({
       title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data Retur Pembelian ?",
+      text: "Apakah Anda Yakin Menghapus Data Retur Penjualan ?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -163,12 +163,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "<?php echo base_url(); ?>Purchase/delete_retur_purchase",
+          url: "<?php echo base_url(); ?>Sales/delete_retur_sales",
           dataType: "json",
           data: {id:id},
           success : function(data){
             if (data.code == "200"){
-              $('#retur-purchase-list').DataTable().ajax.reload();
+              $('#retur-sales-list').DataTable().ajax.reload();
               let title = 'Hapus Data';
               let message = 'Data Berhasil Di Batalkan';
               let state = 'danger';
@@ -192,29 +192,29 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var inv   = button.data('inv')
     var total_retur = button.data('total')
     var modal = $(this)
-    modal.find('#retur_purchase_id').val(id)
-    modal.find('#retur_purchase_invoice').val(inv)
-    retur_purchase_total.set(total_retur);
+    modal.find('#retur_sales_id').val(id)
+    modal.find('#retur_sales_invoice').val(inv)
+    retur_sales_total.set(total_retur);
   })
 
 
   $('#btnedit').click(function(e){
     e.preventDefault();
-    var retur_purchase_id         = $("#retur_purchase_id").val();
+    var retur_sales_id         = $("#retur_sales_id").val();
     var payment_type              = $("#payment_type").val();
-    var retur_purchase_invoice    = $("#retur_purchase_invoice").val();
+    var retur_sales_invoice    = $("#retur_sales_invoice").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/edit_retur_purchase",
+      url: "<?php echo base_url(); ?>Sales/edit_retur_sales",
       dataType: "json",
-      data: {retur_purchase_id:retur_purchase_id, payment_type:payment_type, retur_purchase_invoice:retur_purchase_invoice},
+      data: {retur_sales_id:retur_sales_id, payment_type:payment_type, retur_sales_invoice:retur_sales_invoice},
       success : function(data){
         if (data.code == "200"){
           let title = 'Perbarui Data';
           let message = 'Data Berhasil Di Perbarui';
           let state = 'success';
           notif_success(title, message, state);
-          $('#retur-purchase-list').DataTable().ajax.reload();
+          $('#retur-sales-list').DataTable().ajax.reload();
           $('#exampleModaledit').modal('hide');
         } else {
           Swal.fire({
@@ -226,6 +226,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   });
-  
+
   
 </script>

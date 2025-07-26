@@ -664,6 +664,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var submission_id           = $("#submission_id").val();
     var submission_code         = $("#submission_code").val();
     var product_id              = $("#product_id").val();
+    var po_supplier             = $("#po_supplier").val();
     var temp_price_val          = parseInt(temp_price.get());
     var temp_qty                = $("#temp_qty").val();
     var temp_weight             = $("#temp_weight").val();
@@ -677,7 +678,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         type: "POST",
         url: "<?php echo base_url(); ?>Purchase/add_temp_po",
         dataType: "json",
-        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, po_supplier:po_supplier, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -815,6 +816,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });  
   }
 
+
   function check_tempt_data()
   {
     $.ajax({
@@ -833,7 +835,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             footer_total_ongkir.set(0);
             footer_total_invoice.set(0);
           }else{
-            $("#po_supplier").val(data.supplier);
+            $("#po_supplier").val(data.supplier_id);
             $('#po_supplier').trigger('change');
             $("#po_supplier_code").val(data.supplier_code);
             $('#po_tax').val(data.product_tax);

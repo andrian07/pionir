@@ -387,14 +387,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  $('#purchase_top').prop('disabled', true);
-  $('#purchase_payment_method').prop('disabled', true);
-  $('#purchase_ekspedisi').prop('disabled', true);
+  //$('#purchase_top').prop('disabled', true);
+  //$('#purchase_payment_method').prop('disabled', true);
+  //$('#purchase_ekspedisi').prop('disabled', true);
   $('#purchase_tax').prop('disabled', true);
-  $('#purchase_warehouse').prop('disabled', true);
+  //$('#purchase_warehouse').prop('disabled', true);
   $('#purchase_due_date').prop('disabled', true);
   $('#po_user_id').prop('disabled', true);
-  $('#purchase_supplier').prop('disabled', true);
+  //$('#purchase_supplier').prop('disabled', true);
   
 
   let temp_price = new AutoNumeric('#temp_price', {

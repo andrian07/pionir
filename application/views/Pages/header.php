@@ -232,12 +232,12 @@
               <div class="collapse" id="payment">
                 <ul class="nav nav-collapse">
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/brand">
+                    <a href="<?php echo base_url(); ?>Payment/debt">
                       <span class="sub-item">Pelunasan Hutang</span>
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/customer">
+                    <a href="<?php echo base_url(); ?>Payment/receivable">
                       <span class="sub-item">Pelunasan Piutang</span>
                     </a>
                   </li>

@@ -39,6 +39,21 @@ class global_model extends CI_Model {
         if($keyword != null){
             $this->db->where('hd_purchase.hd_purchase_invoice like "%'.$keyword.'%"');
         }
+        $this->db->group_by('hd_purchase_invoice');
+        $this->db->limit(50);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function search_sales_inv($keyword, $customer_id)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_sales');
+        $this->db->where('hd_sales.hd_sales_customer', $customer_id);
+        if($keyword != null){
+            $this->db->where('hd_sales.hd_sales_inv like "%'.$keyword.'%"');
+        }
+        $this->db->group_by('hd_sales_inv');
         $this->db->limit(50);
         $query = $this->db->get();
         return $query;

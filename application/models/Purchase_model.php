@@ -259,7 +259,7 @@ class purchase_model extends CI_Model {
     }
 
 
-    public function temp_po_list($search, $length, $start)
+    public function temp_po_list($search, $length, $start, $user)
     {
         $this->db->select('*');
         $this->db->from('temp_po');
@@ -267,6 +267,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -278,7 +279,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function temp_po_list_count($search)
+    public function temp_po_list_count($search, $user)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('temp_po');
@@ -286,6 +287,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_po.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -303,7 +305,7 @@ class purchase_model extends CI_Model {
 
     public function check_temp_po($user_id)
     {
-        $this->db->select('sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, is_ppn');
+        $this->db->select('sum(temp_po_total) as sub_total, sum(temp_po_total_ongkir) as ongkir, is_ppn, temp_supplier_id');
         $this->db->from('temp_po');
         $this->db->join('submission', 'temp_po.temp_submission_id  = submission.submission_id', 'left');
         $this->db->join('ms_product', 'temp_po.temp_product_id = ms_product.product_id');
@@ -376,13 +378,14 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function temp_input_stock_list($search, $length, $start)
+    public function temp_input_stock_list($search, $length, $start, $user)
     {
         $this->db->select('*');
         $this->db->from('temp_input_stock');
         $this->db->join('ms_product', 'temp_input_stock.temp_is_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_input_stock.temp_is_user_id = ms_user.user_id');
+        $this->db->where('temp_is_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -394,13 +397,14 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function temp_input_stock_count($search)
+    public function temp_input_stock_count($search, $user)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('temp_input_stock');
         $this->db->join('ms_product', 'temp_input_stock.temp_is_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_input_stock.temp_is_user_id = ms_user.user_id');
+        $this->db->where('temp_is_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -659,13 +663,14 @@ class purchase_model extends CI_Model {
     }
 
 
-    public function temp_purchase_list($search, $length, $start)
+    public function temp_purchase_list($search, $length, $start, $user)
     {
         $this->db->select('*');
         $this->db->from('temp_purchase');
         $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -677,13 +682,15 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function temp_purchase_list_count($search)
+    public function temp_purchase_list_count($search, $user)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('temp_purchase');
         $this->db->join('ms_product', 'temp_purchase.temp_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_purchase.temp_user_id = ms_user.user_id');
+        $this->db->where('ms_product.product_name like "%'.$search.'%"');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -895,13 +902,14 @@ class purchase_model extends CI_Model {
         $this->db->insert('temp_retur_purchase', $data_insert);
     }
 
-    public function temp_retur_purchase_list($search, $length, $start)
+    public function temp_retur_purchase_list($search, $length, $start, $user)
     {
         $this->db->select('*');
         $this->db->from('temp_retur_purchase');
         $this->db->join('ms_product', 'temp_retur_purchase.temp_retur_purchase_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_retur_purchase.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -913,13 +921,14 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function temp_retur_purchase_list_count($search)
+    public function temp_retur_purchase_list_count($search, $user)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('temp_retur_purchase');
         $this->db->join('ms_product', 'temp_retur_purchase.temp_retur_purchase_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_user', 'temp_retur_purchase.temp_user_id = ms_user.user_id');
+        $this->db->where('temp_user_id', $user);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -996,12 +1005,20 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
+    public function get_detail_retur_purchase_data($retur_purchase_id)
+    {
+        $query = $this->db->query("select * from dt_retur_purchase where hd_retur_purchase_id = '".$retur_purchase_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     public function header_retur_purchase($retur_purchase_id)
     {
         $query = $this->db->query("select * from hd_retur_purchase a, ms_supplier c, ms_user d where a.hd_retur_purchase_supplier_id = c.supplier_id and a.created_by = d.user_id and hd_retur_purchase_id  = '".$retur_purchase_id."'");
         $result = $query->result();
         return $result;
     }
+
 
     public function detail_retur_purchase($retur_purchase_id)
     {
@@ -1024,6 +1041,13 @@ class purchase_model extends CI_Model {
         $this->db->update('hd_retur_purchase');
     }
 
+    public function update_retur_purchase($retur_purchase_id, $payment_type)
+    {
+        $this->db->set('hd_retur_purchase_payment_type', $payment_type);
+        $this->db->set('hd_retur_purchase_status', 'Success');
+        $this->db->where('hd_retur_purchase_id ', $retur_purchase_id);
+        $this->db->update('hd_retur_purchase');
+    }
     // end retur purchase
 }
 
