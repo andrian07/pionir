@@ -48,6 +48,16 @@ class payment_model extends CI_Model {
         return $query;
     }
 
+    public function get_footer_debt_pay($user_id)
+    {
+        $this->db->select('count(*) as total_nota, sum(temp_payment_debt_nominal) as total_payment_debt, sum(temp_payment_debt_retur) as total_retur_debt');
+        $this->db->from('temp_payment_debt');
+        $this->db->where('temp_payment_debt_user_id', $user_id);
+        $this->db->where('temp_payment_debt_is_edited', 'Y');
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function get_purchase_debt($supplier_id)
     {
         $this->db->select('*');
@@ -118,6 +128,14 @@ class payment_model extends CI_Model {
         $this->db->where('temp_payment_debt_user_id', $user);
         $query = $this->db->get();
         return $query;
+    }
+
+    public function edit_temp_debt($purchase_id, $user_id, $data_update)
+    {
+        $this->db->set($data_update);
+        $this->db->where('temp_payment_debt_purchase_id ', $purchase_id);
+        $this->db->where('temp_payment_debt_user_id ', $user_id);
+        $this->db->update('temp_payment_debt');
     }
     // end debt
 

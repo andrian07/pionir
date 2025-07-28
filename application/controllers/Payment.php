@@ -143,6 +143,14 @@ class Payment extends CI_Controller {
 		die();
 	}
 
+	public function get_footer_debt_pay()
+	{
+		$user_id 	= $_SESSION['user_id'];
+		$get_footer_debt_pay = $this->payment_model->get_footer_debt_pay($user_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$get_footer_debt_pay]);
+		die();
+	}
+
 	public function temp_debt_list(){
 		$modul = 'DebtPayment';
 		$check_auth = $this->check_auth($modul);
@@ -161,7 +169,7 @@ class Payment extends CI_Controller {
 			$data = array();
 			$no = $_POST['start'];
 			foreach ($list as $field) {
-			
+
 				if($check_auth[0]->add == 'Y'){
 					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit('.$field['hd_purchase_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
 				}else{
@@ -182,8 +190,9 @@ class Payment extends CI_Controller {
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= number_format($field['hd_purchase_remaining_debt']);
 				$row[] 	= number_format($field['temp_payment_debt_discount']);
+				$row[] 	= number_format($field['temp_payment_debt_retur']);
 				$row[] 	= number_format($field['temp_payment_debt_nominal']);
-				$row[] 	= number_format($field['hd_purchase_remaining_debt'] - $field['temp_payment_debt_nominal']);
+				$row[] 	= number_format($field['hd_purchase_remaining_debt'] - $field['temp_payment_debt_nominal'] - $field['temp_payment_debt_retur']);
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -208,6 +217,66 @@ class Payment extends CI_Controller {
 		$get_debt_temp_by_id = $this->payment_model->get_debt_temp_by_id($id, $user)->result_array();
 		echo json_encode(['code'=>200, 'result'=>$get_debt_temp_by_id]);die();
 
+	}
+
+	public function add_temp_debt()
+	{
+		$modul = 'DebtPayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$purchase_id 				= $this->input->post('purchase_id');
+			$purchase_invoice_date 		= $this->input->post('purchase_invoice_date');
+			$debt_desc 					= $this->input->post('debt_desc');
+			$debt_payment_val 			= $this->input->post('debt_payment_val');
+			$debt_disc_val 				= $this->input->post('debt_disc_val');
+			$new_remaining_debt_val 	= $this->input->post('new_remaining_debt_val');
+			$user_id 					= $_SESSION['user_id'];
+
+			$data_update = array(
+				'temp_payment_debt_discount'		=> $debt_disc_val,
+				'temp_payment_debt_nominal'			=> $debt_payment_val,
+				'temp_payment_debt_desc'			=> $debt_desc,
+				'temp_payment_debt_new_remaining'	=> $new_remaining_debt_val,
+				'temp_payment_debt_is_edited'		=> 'Y'
+			);	
+			$msg = 'Success Tambah';
+			$this->payment_model->edit_temp_debt($purchase_id, $user_id, $data_update);
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function save_debt()
+	{
+		$modul = 'DebtPayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$supplier_id 			= $this->input->post('supplier_id');
+			$repayment_date 		= $this->input->post('repayment_date');
+			$payment_method_id 		= $this->input->post('payment_method_id');
+			$footer_total_pay_val 	= $this->input->post('footer_total_pay_val');
+			$footer_total_nota 		= $this->input->post('footer_total_nota');
+			$user_id 				= $_SESSION['user_id'];
+
+			$data_update = array(
+				'payment_debt_invoice'			=> $debt_disc_val,
+				'payment_debt_supplier_id'		=> $debt_payment_val,
+				'payment_debt_total_invoice'	=> $debt_desc,
+				'payment_debt_total_pay'		=> $new_remaining_debt_val,
+				'payment_debt_method_id'		=> $debt_disc_val,
+				'payment_debt_method_name'		=> $debt_payment_val,
+				'payment_debt_date'				=> $debt_desc,
+				'user_id'						=> $new_remaining_debt_val,
+			);	
+			$msg = 'Success Tambah';
+			$this->payment_model->edit_temp_debt($purchase_id, $user_id, $data_update);
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 	//end debt
 

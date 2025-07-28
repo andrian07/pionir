@@ -152,6 +152,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>Tgl Invoice</th>
                     <th>Saldo Hutang</th>
                     <th>Pembulatan/Disc</th>
+                    <th>Total Retur</th>
                     <th>Pembayaran</th>
                     <th>Sisa Hutang</th>
                     <th>Aksi</th>
@@ -176,6 +177,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Total Pembayaran:</label>
                   <div class="col-sm-5">
                     <input id="footer_total_pay" name="footer_total_pay" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                 <div class="form-group row">
+                  <label for="footer_total_retur" class="col-sm-7 col-form-label text-right:">Total Retur:</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_retur" name="footer_total_retur" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -257,8 +264,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
+  let footer_total_pay = new AutoNumeric('#footer_total_pay', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let footer_total_retur = new AutoNumeric('#footer_total_retur', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+
   $(document).ready(function() {
     get_header_debt_pay();
+    get_footer_debt_pay();
     tempdebt_table();
   });
 
@@ -276,13 +301,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-      {data: 0},
-      {data: 1},
-      {data: 2},
-      {data: 3},
-      {data: 4},
-      {data: 5},
-      {data: 6}
+        {data: 0},
+        {data: 1},
+        {data: 2},
+        {data: 3},
+        {data: 4},
+        {data: 5},
+        {data: 6},
+        {data: 7}
       ]
     });
   }
@@ -299,6 +325,29 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           let data_result = data.result[0];
           $("#supplier_name").val(data_result.supplier_name);
           supplier_total_debt.set(data_result.total_hutang);
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  }
+
+  function get_footer_debt_pay() {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Payment/get_footer_debt_pay",
+      dataType: "json",
+      data: {},
+      success : function(data){
+        if (data.code == "200"){
+          let data_result = data.result[0];
+          footer_total_pay.set(data_result.total_payment_debt);
+          footer_total_retur.set(data_result.total_retur_debt);
+          $("#footer_total_nota").val(data_result.total_nota);
         } else {
           Swal.fire({
             icon: 'error',
@@ -357,33 +406,28 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
-    var purchase_id          = $("#purchase_id").val();
-    var purchase_invoice_date         = $("#purchase_invoice_date").val();
-    var debt_desc           = $("#debt_desc").val();
-    var debt_nominal         = $("#debt_nominal").val();
-    var purchase_warehouse   = $("#purchase_warehouse").val();
-    var temp_price_submit    = parseInt(temp_price.get());
-    var temp_qty             = $("#temp_qty").val();
-    var temp_qty_buy         = $("#temp_qty_buy").val();
-    var temp_ongkir_submit   = parseInt(temp_ongkir.get());
-    var temp_total_submit    = parseInt(temp_total.get());
-    var temp_note            = $("#temp_note").val();
-    var supplier_id          = $('#purchase_supplier').val();
+    var purchase_id             = $("#purchase_id").val();
+    var purchase_invoice_date   = $("#purchase_invoice_date").val();
+    var debt_desc               = $("#debt_desc").val();
+    var debt_payment_val        = parseInt(debt_payment.get());
+    var debt_disc_val           = parseInt(debt_disc.get());
+    var new_remaining_debt_val  = parseInt(new_remaining_debt.get());
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Purchase/add_temp_retur_purchase",
+        url: "<?php echo base_url(); ?>Payment/add_temp_debt",
         dataType: "json",
-        data: {purchase_id:purchase_id, purchase_inv:purchase_inv, product_id:product_id, product_name:product_name, purchase_warehouse:purchase_warehouse, temp_price_submit:temp_price_submit, temp_qty:temp_qty, temp_qty_buy:temp_qty_buy, temp_ongkir_submit:temp_ongkir_submit, temp_total_submit:temp_total_submit, temp_note:temp_note, supplier_id:supplier_id},
+        data: {purchase_id:purchase_id, purchase_invoice_date:purchase_invoice_date, debt_desc:debt_desc, debt_payment_val:debt_payment_val, debt_disc_val:debt_disc_val, new_remaining_debt_val:new_remaining_debt_val},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-retur-purchase-list').DataTable().ajax.reload();
-            check_tempt_data();
+            $('#temp-debt-list').DataTable().ajax.reload();
+            get_header_debt_pay();
+            get_footer_debt_pay();
             clear_input();
           } else {
             Swal.fire({
@@ -396,5 +440,49 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     }
   });
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var supplier_id             = $("#supplier_id").val();
+    var repayment_date          = $("#repayment_date").val();
+    var payment_method_id       = $("#payment_method_id").val();
+    var footer_total_pay_val    = parseInt(footer_total_pay.get());
+    var footer_total_nota       = $("#footer_total_nota").val();
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Payment/add_temp_debt",
+      dataType: "json",
+      data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>/Payment/debt";
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
+
+  
+
+  function clear_input()
+  {
+    $("#purchase_inv").val("");
+    $("#purchase_id").val("");
+    $("#purchase_invoice_date").val("");
+    $("#debt_desc").val("");
+    debt_nominal.set(0);
+    debt_retur.set(0);
+    debt_payment.set(0);
+    debt_disc.set(0);
+    new_remaining_debt.set(0);
+  }
+
+
 
 </script>
