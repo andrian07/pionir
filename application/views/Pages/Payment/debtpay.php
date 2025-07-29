@@ -37,7 +37,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <!-- text input -->
                   <div class="form-group">
                     <label>Metode Pembayaran</label>
-                    <select id="payment_method_id" name="payment_method_id" class="form-control select2-hidden-accessible" data-select2-id="payment_method_id" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-payment_method_id-container"><span class="select2-selection__rendered" id="select2-payment_method_id-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">-- Pilih Jenis Pembayaran --</span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                    <select class="form-control input-full js-example-basic-single" id="payment_method_id" name="payment_method_id">
+                      <option value="">-- Pilih Metode Bayar --</option>
+                      <?php foreach ($payment_list as $row) { ?>
+                        <option value="<?php echo $row->payment_id; ?>"><?php echo $row->payment_name; ?></option>  
+                      <?php } ?>
+                    </select>
+
                   </div>
                 </div>
 
@@ -179,7 +185,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <input id="footer_total_pay" name="footer_total_pay" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
-                 <div class="form-group row">
+                <div class="form-group row">
                   <label for="footer_total_retur" class="col-sm-7 col-form-label text-right:">Total Retur:</label>
                   <div class="col-sm-5">
                     <input id="footer_total_retur" name="footer_total_retur" type="text" class="form-control text-right" value="0" readonly="">
@@ -451,12 +457,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Payment/add_temp_debt",
+      url: "<?php echo base_url(); ?>Payment/save_debt",
       dataType: "json",
       data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Payment/debt";
+          //window.location.href = "<?php echo base_url(); ?>/Payment/debt";
         } else {
           Swal.fire({
             icon: 'error',

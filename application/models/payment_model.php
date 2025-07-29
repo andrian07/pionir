@@ -137,6 +137,82 @@ class payment_model extends CI_Model {
         $this->db->where('temp_payment_debt_user_id ', $user_id);
         $this->db->update('temp_payment_debt');
     }
+
+    public function last_debt()
+    {
+        $query = $this->db->query("select payment_debt_invoice from hd_payment_debt  order by payment_debt_id  desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function save_debt($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_payment_debt', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+    public function save_detail_debt($data_insert_detail)
+    {
+        $this->db->insert('dt_payment_debt', $data_insert_detail);
+    }
+
+    public function get_temp_debt($user_id)
+    {
+        $query = $this->db->query("select * from temp_payment_debt where temp_payment_debt_user_id = '".$user_id."' and temp_payment_debt_is_edited = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function update_retur_purchase($purchase_id)
+    {
+        $this->db->set('dt_retur_purchase_process', 'Y');
+        $this->db->where('hd_retur_purchase_id ', $purchase_id);
+        $this->db->update('dt_retur_purchase');
+    }
+
+    public function update_remaining_debt($purchase_id, $new_remaining_debt)
+    {
+        $this->db->set('hd_purchase_remaining_debt', $new_remaining_debt);
+        $this->db->where('hd_purchase_id  ', $purchase_id);
+        $this->db->update('hd_purchase');
+    }
+
+    public function history_debt_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_payment_debt');
+        $this->db->join('ms_supplier', 'hd_payment_debt.payment_debt_supplier_id = ms_supplier.supplier_id');
+        $this->db->join('ms_payment', 'hd_payment_debt.payment_debt_method_id = ms_payment.payment_id');
+        if($search != null){
+            $this->db->or_where('ms_supplier.supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_supplier.supplier_code like "%'.$search.'%"');
+            $this->db->or_where('ms_supplier.payment_debt_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('payment_debt_id ', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function history_debt_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_payment_debt');
+        $this->db->join('ms_supplier', 'hd_payment_debt.payment_debt_supplier_id = ms_supplier.supplier_id');
+        $this->db->join('ms_payment', 'hd_payment_debt.payment_debt_method_id = ms_payment.payment_id');
+        if($search != null){
+            $this->db->or_where('ms_supplier.supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_supplier.supplier_code like "%'.$search.'%"');
+            $this->db->or_where('ms_supplier.payment_debt_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('payment_debt_id ', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
     // end debt
 
 }

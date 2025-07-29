@@ -53,7 +53,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
               <div class="tab-pane fade" id="line-history" role="tabpanel" aria-labelledby="line-profile-tab">
                <div class="table-responsive">
-                <table id="history-debt-list" class="display table table-striped table-hover">
+                <table id="history-debt-list" class="display table table-striped table-hover" style="width:100%;">
                   <thead>
                     <tr>
                       <th>No Transaksi</th>
@@ -90,6 +90,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $(document).ready(function() {
     //new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) ;
     debtlist();
+    historydebtlist();
   });
 
 
@@ -117,6 +118,33 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ]
     });
   }
+
+  function historydebtlist(){
+    $('#history-debt-list').DataTable( {
+      serverSide: true,
+      search: true,
+      processing: true,
+      ordering: false,
+      retrieve: true,
+      ajax: {
+        url: '<?php echo base_url(); ?>Payment/history_debt_list',
+        type: 'POST',
+        data:  {},
+      },
+      columns: 
+      [
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      ]
+    });
+  }
+
 
 
   $(".delete").click(function (e) {
