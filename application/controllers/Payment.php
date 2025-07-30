@@ -135,7 +135,7 @@ class Payment extends CI_Controller {
 
 				if($check_auth[0]->delete == 'Y'){
 					if($field['status'] != 'Cancel'){
-						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_purchase_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['payment_debt_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}else{
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}
@@ -155,7 +155,7 @@ class Payment extends CI_Controller {
 				$row[] 	= $field['payment_debt_total_nota'];
 				$row[] 	= number_format($field['payment_debt_total_pay']);
 				$row[] 	= $status;
-				$row[] 	= $detail;
+				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
 
