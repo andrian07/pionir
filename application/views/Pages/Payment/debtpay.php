@@ -462,7 +462,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
       success : function(data){
         if (data.code == "200"){
-          //window.location.href = "<?php echo base_url(); ?>/Payment/debt";
+          window.location.href = "<?php echo base_url(); ?>/Payment/debt";
         } else {
           Swal.fire({
             icon: 'error',

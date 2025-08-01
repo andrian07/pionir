@@ -169,7 +169,7 @@ class payment_model extends CI_Model {
     public function update_retur_purchase($purchase_id)
     {
         $this->db->set('dt_retur_purchase_process', 'Y');
-        $this->db->where('hd_retur_purchase_id ', $purchase_id);
+        $this->db->where('dt_retur_purchase_b_id ', $purchase_id);
         $this->db->update('dt_retur_purchase');
     }
 
@@ -212,6 +212,13 @@ class payment_model extends CI_Model {
         $this->db->order_by('payment_debt_id ', 'desc');
         $query = $this->db->get();
         return $query;
+    }
+
+    public function header_debt_payment($payment_debt_id)
+    {
+        $query = $this->db->query("select * from hd_payment_debt a, ms_supplier b where a.payment_debt_supplier_id = b.supplier_id and payment_debt_id  = '".$payment_debt_id."'");
+        $result = $query->result();
+        return $result;
     }
     // end debt
 

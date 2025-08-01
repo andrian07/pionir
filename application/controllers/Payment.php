@@ -172,6 +172,22 @@ class Payment extends CI_Controller {
 		}
 	}
 
+	public function detaildebt()
+	{
+		$modul = 'DebtPayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$payment_debt_id  = $this->input->get('id');
+			$header_debt_payment['header_debt_payment'] = $this->payment_model->header_debt_payment($payment_debt_id);
+			$detail_debt_payment['detail_debt_payment'] = $this->payment_model->detail_debt_payment($payment_debt_id); 
+			$data['data'] = array_merge($header_debt_payment, $detail_debt_payment);
+			$this->load->view('Pages/Payment/detailpaymentdebt', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function copy_debt_to_temp()
 	{
 		$modul = 'DebtPayment';
