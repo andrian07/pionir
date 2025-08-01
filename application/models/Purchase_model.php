@@ -856,19 +856,16 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function search_product_retur($keyword)
+    public function search_product_retur($keyword, $purchase_id)
     {
         $this->db->select('*');
         $this->db->from('hd_purchase');
         $this->db->join('dt_purchase', 'hd_purchase.hd_purchase_id = dt_purchase.hd_purchase_id');
         $this->db->join('ms_product', 'dt_purchase.dt_product_id = ms_product.product_id');
         if($keyword != null){
-            $this->db->where('ms_product.product_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_code like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_supplier_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_key like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_desc like "%'.$keyword.'%"');
+            $this->db->or_where('(ms_product.product_name like "%'.$keyword.'%" or ms_product.product_code like "%'.$keyword.'%" or ms_product.product_supplier_name like "%'.$keyword.'%" or ms_product.product_key like "%'.$keyword.'%" or ms_product.product_desc like "%'.$keyword.'%")' );
         }
+        $this->db->where('hd_purchase.hd_purchase_id', $purchase_id);
         $this->db->limit(50);
         $query = $this->db->get();
         return $query;

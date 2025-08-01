@@ -1948,7 +1948,7 @@ class Purchase extends CI_Controller {
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
 		if (!($keyword == '' || $keyword == NULL)) {
-			$find = $this->purchase_model->search_product_retur($keyword)->result_array(); 
+			$find = $this->purchase_model->search_product_retur($keyword, $purchase_id)->result_array(); 
 			$find_result = [];
 			foreach ($find as $row) {
 				$diplay_text = $row['product_name'];

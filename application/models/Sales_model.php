@@ -150,7 +150,7 @@ class sales_model extends CI_Model {
 
     public function check_temp_so($user_id)
     {
-        $this->db->select('sum(temp_so_total) as sub_total, temp_so_id');
+        $this->db->select('sum(temp_so_total) as sub_total');
         $this->db->from('temp_sales_order');
         $this->db->where('temp_user_id', $user_id);
         $query = $this->db->get();
