@@ -423,6 +423,231 @@ class Payment extends CI_Controller {
 	}
 	//end debt
 
+
+	//receivable
+
+	public function receivable()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+			$check_auth['check_auth'] = $check_auth;
+			$data['data'] = array_merge($check_auth, $customer_list);
+			$this->load->view('Pages/Payment/receivable', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function receivable_list()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+
+			$list = $this->payment_model->receivable_list($search, $length, $start)->result_array();
+			$count_list = $this->payment_model->receivable_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($check_auth[0]->add == 'Y'){
+					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="payment('.$field['customer_id'].')"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+				}else{
+					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+				}
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['customer_code'];
+				$row[] 	= $field['customer_name'];
+				$row[] 	= $field['customer_address'];
+				$row[] 	= $field['customer_phone'];
+				$row[] 	= number_format($field['total_nota']);
+				$row[] 	= 'Rp. '.number_format($field['total_hutang']);
+				$row[] 	= $add;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function history_receivable_list()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+
+			$list = $this->payment_model->history_receivable_list($search, $length, $start)->result_array();
+			$count_list = $this->payment_model->history_receivable_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($check_auth[0]->add == 'Y'){
+					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="payment('.$field['customer_id'].')"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+				}else{
+					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+				}
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['customer_code'];
+				$row[] 	= $field['customer_name'];
+				$row[] 	= $field['customer_address'];
+				$row[] 	= $field['customer_phone'];
+				$row[] 	= number_format($field['total_nota']);
+				$row[] 	= 'Rp. '.number_format($field['total_hutang']);
+				$row[] 	= $add;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+
+	public function copy_receivable_to_temp()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$customer_id	   = $this->input->get('id');
+			$user_id 		   = $_SESSION['user_id'];
+			$get_sales_receivable = $this->payment_model->get_sales_receivable($customer_id)->result_array();
+			$this->payment_model->clear_temp_receivable($user_id);
+			foreach($get_sales_receivable as $row){
+				$sales_id = $row['hd_sales_id'];
+				$get_retur_sales_total = $this->payment_model->get_retur_sales_total($sales_id)->result_array();
+				$total_retur = $get_retur_sales_total[0]['total_retur'];
+				if($total_retur == null){
+					$total_retur = 0;
+				}
+				$data_insert = array(
+					'temp_sales_nominal'						=> $row['hd_sales_total'],
+					'temp_payment_receivable_sales_id'			=> $sales_id,
+					'temp_payment_receivable_discount'			=> 0,
+					'temp_payment_receivable_nominal'			=> 0,
+					'temp_payment_receivable_retur'				=> $total_retur,
+					'temp_payment_receivable_new_remaining'   	=> $row['hd_sales_total'] - $total_retur,
+					'temp_payment_receivable_user_id'			=> $user_id
+				);
+				$save_temp_receivable = $this->payment_model->save_temp_receivable($data_insert);
+			}
+			$this->receivablepayview();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function receivablepayview()
+	{
+		$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+		$this->load->view('Pages/Payment/receivablepay', $payment_list);
+	}
+
+	public function temp_receivable_list()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+			$user 				= $_SESSION['user_id'];
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->payment_model->temp_receivable_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->payment_model->temp_receivable_list_count($search, $user)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($check_auth[0]->add == 'Y'){
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit('.$field['hd_sales_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
+				if($check_auth[0]->add == 'Y'){
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_sales_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$date = date_create($field['hd_sales_date']); 
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['hd_sales_inv'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= number_format($field['hd_sales_remaining_debt']);
+				$row[] 	= number_format($field['temp_payment_receivable_discount']);
+				$row[] 	= number_format($field['temp_payment_receivable_retur']);
+				$row[] 	= number_format($field['temp_payment_receivable_nominal']);
+				$row[] 	= number_format($field['hd_sales_remaining_debt'] - $field['temp_payment_receivable_nominal'] - $field['temp_payment_receivable_retur']);
+				$row[] 	= $edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+
+
+	//end receivable
+
 }
 
 ?>

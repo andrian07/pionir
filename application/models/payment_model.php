@@ -63,6 +63,7 @@ class payment_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('hd_purchase');
         $this->db->where('hd_purchase.hd_purchase_supplier', $supplier_id);
+        $this->db->where('hd_purchase.hd_purchase_remaining_debt > 0');
         $query = $this->db->get();
         return $query;
     }
@@ -221,6 +222,137 @@ class payment_model extends CI_Model {
         return $result;
     }
     // end debt
+
+
+    // receivable
+
+    public function receivable_list($search, $length, $start)
+    {
+        $this->db->select('*, count(*) as total_nota, sum(hd_sales_remaining_debt) as total_hutang');
+        $this->db->from('hd_sales');
+        $this->db->join('ms_customer', 'hd_sales.hd_sales_customer = ms_customer.customer_id');
+        if($search != null){
+            $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');
+        }
+        $this->db->group_by('hd_sales.hd_sales_customer');
+        $this->db->order_by('ms_customer.customer_name', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function receivable_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_sales');
+        $this->db->join('ms_customer', 'hd_sales.hd_sales_customer = ms_customer.customer_id');
+        if($search != null){
+            $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');
+        }
+        $this->db->group_by('hd_sales.hd_sales_customer');
+        $this->db->order_by('ms_customer.customer_name', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function history_receivable_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_payment_receivable');
+        $this->db->join('ms_customer', 'hd_payment_receivable.payment_receivable_customer_id = ms_customer.customer_id');
+        $this->db->join('ms_payment', 'hd_payment_receivable.payment_receivable_method_id = ms_payment.payment_id');
+        if($search != null){
+            $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.payment_receivable_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('payment_receivable_id', 'desc');
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function history_receivable_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('hd_payment_receivable');
+        $this->db->join('ms_customer', 'hd_payment_receivable.payment_receivable_customer_id = ms_customer.customer_id');
+        $this->db->join('ms_payment', 'hd_payment_receivable.payment_receivable_method_id = ms_payment.payment_id');
+        if($search != null){
+            $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');
+            $this->db->or_where('ms_customer.payment_receivable_invoice like "%'.$search.'%"');
+        }
+        $this->db->order_by('payment_receivable_id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_sales_receivable($customer_id)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_sales');
+        $this->db->where('hd_sales.hd_sales_customer', $customer_id);
+        $this->db->where('hd_sales.hd_sales_remaining_debt > 0');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function clear_temp_receivable($user_id)
+    {
+        $this->db->where('temp_payment_receivable_user_id', $user_id);
+        $this->db->delete('temp_payment_receivable');
+    }
+
+    public function get_retur_sales_total($sales_id)
+    {
+        $this->db->select('sum(dt_retur_sales_total) as total_retur');
+        $this->db->from('dt_retur_sales');
+        $this->db->join('hd_retur_sales', 'dt_retur_sales.hd_retur_sales_id = hd_retur_sales.hd_retur_sales_id');
+        $this->db->where('dt_retur_sales_b_id', $sales_id);
+        $this->db->where('dt_retur_sales_process', 'N');
+        $this->db->where('hd_retur_sales_payment_type', 'PN');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function save_temp_receivable($data_insert)
+    {
+        $this->db->insert('temp_payment_receivable', $data_insert);
+    }
+
+    public function temp_receivable_list($search, $length, $start, $user)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_payment_receivable');
+        $this->db->join('hd_sales', 'temp_payment_receivable.temp_payment_receivable_sales_id = hd_sales.hd_sales_id');
+        if($search != null){
+            $this->db->where('hd_sales.hd_sales_invoice like "%'.$search.'%"');
+        }
+        $this->db->where('temp_payment_receivable.temp_payment_receivable_user_id', $user);
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function temp_receivable_list_count($search, $user)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('temp_payment_receivable');
+        $this->db->join('hd_sales', 'temp_payment_receivable.temp_payment_receivable_sales_id = hd_sales.hd_sales_id');
+        if($search != null){
+            $this->db->where('hd_sales.hd_sales_invoice like "%'.$search.'%"');
+        }
+        $this->db->where('temp_payment_receivable.temp_payment_receivable_user_id', $user);
+        $query = $this->db->get();
+        return $query;
+    }
+    // end receivable
 
 }
 
