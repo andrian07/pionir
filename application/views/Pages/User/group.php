@@ -267,16 +267,43 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if(data[i].delete == 'Y'){var deletes = 'Hapus';}else{var deletes = '';}
 
           text_temp += 
-          '<tr><td>'+data[i].module_name+'</td><td class="'+data[i].module_name+'" onclick="tdclick(this)"><a href="#" id="'+data[i].module_name+'title" class"'+data[i].module_name+'-title">'+view+''+add+''+edit+''+deletes+'</a><div id="'+data[i].module_name+'" class="hide-permission">'+
-          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />'+
-          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />'+
-          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />'+
-          '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />'+
-          '</div></td>'+
+          '<tr><td>'+data[i].module_title+'</td><td class="'+data[i].module_name+'" onclick="tdclick(this)"><a href="#" id="'+data[i].module_name+'title" class"'+data[i].module_name+'-title">'+view+''+add+''+edit+''+deletes+'</a><div id="'+data[i].module_name+'" class="hide-permission">';
+          if(data[i].view == 'Y'){
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaulta'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
+          }else{
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaulta'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
+          }
+
+          if(data[i].add == 'Y'){
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
+          }else{
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
+          }
+
+          if(data[i].edit == 'Y'){
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
+          }else{
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
+          }
+          if(data[i].delete == 'Y'){
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
+          }else{
+            text_temp += 
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
+          }
+          text_temp += '</div></td>'+
           '<td><a href="#" class="'+data[i].module_name+'" id="'+data[i].module_name+'cancel" onclick="hide(this)" style="display:none;">Batal</a></td>'+
-          '</tr>'
+          '</tr>';
         }
         document.getElementById("temp").innerHTML = text_temp;
+
       }
     });
   })

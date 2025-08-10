@@ -511,6 +511,13 @@ class Payment extends CI_Controller {
 			$data = array();
 			$no = $_POST['start'];
 			foreach ($list as $field) {
+				
+				if($field['status'] == 'Success'){
+					$status = '<span class="badge badge-success">Success</span>';
+				}else{
+					$status = '<span class="badge badge-danger">Cancel</span>';
+				}
+
 
 				if($check_auth[0]->add == 'Y'){
 					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="payment('.$field['customer_id'].')"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
@@ -524,8 +531,9 @@ class Payment extends CI_Controller {
 				$row[] 	= $field['customer_name'];
 				$row[] 	= $field['customer_address'];
 				$row[] 	= $field['customer_phone'];
-				$row[] 	= number_format($field['total_nota']);
-				$row[] 	= 'Rp. '.number_format($field['total_hutang']);
+				$row[] 	= $field['payment_receivable_total_nota'];
+				$row[] 	= number_format($field['payment_receivable_total_pay']);
+				$row[] 	= $status;
 				$row[] 	= $add;
 				$data[] = $row;
 			}
@@ -645,6 +653,138 @@ class Payment extends CI_Controller {
 	}
 
 
+	public function get_footer_receivable_pay()
+	{
+		$user_id 	= $_SESSION['user_id'];
+		$get_footer_receivable_pay = $this->payment_model->get_footer_receivable_pay($user_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$get_footer_receivable_pay]);
+		die();
+	}
+
+	public function get_header_receivable_pay()
+	{
+		$customer_id 	= $this->input->post('customer_id');
+		$get_header_receivable_pay = $this->payment_model->get_header_receivable_pay($customer_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$get_header_receivable_pay]);
+		die();
+	}
+
+	public function get_receivable_temp_by_id()
+	{
+		$id   = $this->input->post('id');
+		$user = $_SESSION['user_id'];
+		$get_receivable_temp_by_id = $this->payment_model->get_receivable_temp_by_id($id, $user)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$get_receivable_temp_by_id]);die();
+	}
+
+	public function add_temp_receivable()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$sales_id 						= $this->input->post('sales_id');
+			$sales_invoice_date 			= $this->input->post('sales_invoice_date');
+			$receivable_desc 				= $this->input->post('receivable_desc');
+			$receivable_payment_val 		= $this->input->post('receivable_payment_val');
+			$receivable_disc_val 			= $this->input->post('receivable_disc_val');
+			$new_remaining_receivable_val 	= $this->input->post('new_remaining_receivablet_val');
+			$user_id 						= $_SESSION['user_id'];
+
+			$data_update = array(
+				'temp_payment_receivable_discount'		=> $receivable_disc_val,
+				'temp_payment_receivable_nominal'		=> $receivable_payment_val,
+				'temp_payment_receivable_desc'			=> $receivable_desc,
+				'temp_payment_receivable_new_remaining'	=> $new_remaining_receivable_val,
+				'temp_payment_receivable_is_edited'		=> 'Y'
+			);	
+			$msg = 'Success Tambah';
+			$this->payment_model->edit_temp_receivable($sales_id, $user_id, $data_update);
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function save_receivable()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$customer_id 			= $this->input->post('customer_id');
+			$repayment_date 		= $this->input->post('repayment_date');
+			$payment_method_id 		= $this->input->post('payment_method_id');
+			$footer_total_pay_val 	= $this->input->post('footer_total_pay_val');
+			$footer_total_nota 		= $this->input->post('footer_total_nota');
+			$user_id 				= $_SESSION['user_id'];
+
+			if($payment_method_id == null){
+				$msg = "Silahkan Pilih Jenis Pembayaran";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$get_customer_code = $this->masterdata_model->get_customer_code($customer_id);
+			$customer_code = $get_customer_code[0]->customer_code;
+
+			$maxCode  = $this->payment_model->last_recivable();
+			$inv_code = 'PP/'.$customer_code.'/'.date("d/m/Y").'/';
+			if ($maxCode == NULL) {
+				$last_code = $inv_code.'000001';
+			} else {
+				$maxCode   = $maxCode[0]->payment_receivable_invoice;
+				$last_code = substr($maxCode, -6);
+				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
+			}
+
+			$data_insert = array(
+				'payment_receivable_invoice'		=> $last_code,
+				'payment_receivable_customer_id'	=> $customer_id,
+				'payment_receivable_total_pay'		=> $footer_total_pay_val,
+				'payment_receivable_total_nota'		=> $footer_total_nota,
+				'payment_receivable_method_id'		=> $payment_method_id,
+				'payment_receivable_date'			=> $repayment_date,
+				'user_id'							=> $user_id,
+			);	
+			$save_receivable = $this->payment_model->save_receivable($data_insert);
+
+			$get_temp_receivable = $this->payment_model->get_temp_receivable($user_id);
+			foreach($get_temp_receivable  as $row){
+				$data_insert_detail = array(
+					'payment_receivable_id'				=> $save_receivable,
+					'dt_payment_receivable_sales_id'	=> $row->temp_payment_receivable_sales_id,
+					'dt_payment_receivable_discount'	=> $row->temp_payment_receivable_discount,
+					'dt_payment_receivable_retur'		=> $row->temp_payment_receivable_retur,
+					'dt_payment_receivable_desc'		=> $row->temp_payment_receivable_desc,
+					'dt_payment_receivable_nominal'		=> $row->temp_payment_receivable_nominal,
+				);
+
+				$save_detail_receivable = $this->payment_model->save_detail_receivable($data_insert_detail);
+				$sales_id = $row->temp_payment_receivable_sales_id;
+				if($row->temp_payment_receivable_retur > 0){
+					$update_retur_sales = $this->payment_model->update_retur_sales($sales_id);
+				}
+				
+				$new_remaining_receivable 		= $row->temp_payment_receivable_new_remaining;
+				$update_remaining_receivable  	= $this->payment_model->update_remaining_receivable($sales_id, $new_remaining_receivable); 
+			}
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Pelunasan Piutang Ref: '.$last_code,
+				'activity_table_ref'		   => $last_code,
+				'activity_table_user'	       => $user_id,
+			);
+
+			$this->global_model->save($data_insert_act);
+
+			$this->payment_model->clear_temp_receivable($user_id);	
+
+			$msg = 'Success Tambah';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
 
 	//end receivable
 

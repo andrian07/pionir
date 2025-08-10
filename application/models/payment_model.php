@@ -217,7 +217,14 @@ class payment_model extends CI_Model {
 
     public function header_debt_payment($payment_debt_id)
     {
-        $query = $this->db->query("select * from hd_payment_debt a, ms_supplier b where a.payment_debt_supplier_id = b.supplier_id and payment_debt_id  = '".$payment_debt_id."'");
+        $query = $this->db->query("select * from hd_payment_debt a, ms_supplier b, ms_payment c where a.payment_debt_supplier_id = b.supplier_id and payment_debt_id  = '".$payment_debt_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_debt_payment($payment_debt_id)
+    {
+        $query = $this->db->query("select * from dt_payment_debt a, hd_purchase b where a.dt_payment_debt_purchase_id = b.hd_purchase_id and payment_debt_id  = '".$payment_debt_id."'");
         $result = $query->result();
         return $result;
     }
@@ -352,6 +359,90 @@ class payment_model extends CI_Model {
         $query = $this->db->get();
         return $query;
     }
+
+    public function get_footer_receivable_pay($user_id)
+    {
+        $this->db->select('count(*) as total_nota, sum(temp_payment_receivable_nominal) as total_payment_receivable, sum(temp_payment_receivable_discount) as total_payment_discount, sum(temp_payment_receivable_retur) as total_retur_receivable');
+        $this->db->from('temp_payment_receivable');
+        $this->db->where('temp_payment_receivable_user_id', $user_id);
+        $this->db->where('temp_payment_receivable_is_edited', 'Y');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_header_receivable_pay($customer_id)
+    {
+        $this->db->select('customer_name, sum(hd_sales_remaining_debt) as total_hutang');
+        $this->db->from('hd_sales');
+        $this->db->join('ms_customer', 'hd_sales.hd_sales_customer = ms_customer.customer_id');
+        $this->db->where('hd_sales.hd_sales_customer', $customer_id);
+        $this->db->group_by('hd_sales.hd_sales_customer');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_receivable_temp_by_id($id, $user)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_payment_receivable');
+        $this->db->join('hd_sales', 'temp_payment_receivable.temp_payment_receivable_sales_id = hd_sales.hd_sales_id');
+        $this->db->where('temp_payment_receivable_sales_id', $id);
+        $this->db->where('temp_payment_receivable_user_id', $user);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function edit_temp_receivable($sales_id, $user_id, $data_update)
+    {
+        $this->db->set($data_update);
+        $this->db->where('temp_payment_receivable_sales_id ', $sales_id);
+        $this->db->where('temp_payment_receivable_user_id ', $user_id);
+        $this->db->update('temp_payment_receivable');
+    }
+
+    public function save_receivable($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_payment_receivable', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+    public function get_temp_receivable($user_id)
+    {
+        $query = $this->db->query("select * from temp_payment_receivable where temp_payment_receivable_user_id = '".$user_id."' and temp_payment_receivable_is_edited = 'Y'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function save_detail_receivable($data_insert_detail)
+    {
+        $this->db->insert('dt_payment_receivable', $data_insert_detail);
+    }
+
+    public function update_retur_sales($sales_id)
+    {
+        $this->db->set('dt_retur_sales_process', 'Y');
+        $this->db->where('dt_retur_sales_b_id ', $sales_id);
+        $this->db->update('dt_retur_sales');
+    }
+
+
+    public function update_remaining_receivable($sales_id, $new_remaining_receivable)
+    {
+        $this->db->set('hd_sales_remaining_debt', $new_remaining_receivable);
+        $this->db->where('hd_sales_id  ', $sales_id);
+        $this->db->update('hd_sales');
+    }
+
+    public function last_recivable()
+    {
+        $query = $this->db->query("select payment_receivable_invoice from hd_payment_receivable  order by payment_receivable_id   desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
     // end receivable
 
 }

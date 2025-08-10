@@ -246,14 +246,14 @@
             </li>
 
             <li class="nav-item">
-              <a href="<?php echo base_url(); ?>Dashboard">
+              <a href="<?php echo base_url(); ?>Opname">
                 <i class="fas fa-box"></i>
                 <p>Stock Opname</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="<?php echo base_url(); ?>Dashboard">
+              <a href="<?php echo base_url(); ?>Transferstock">
                 <i class="fas fa-exchange-alt"></i>
                 <p>Transfer Stock</p>
               </a>

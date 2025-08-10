@@ -17,12 +17,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="form-group row">
               <div class="row">
                 <div class="col-sm-12 col-md-3">
-                  <input id="supplier_id" name="supplier_id" type="hidden" class="form-control text-right" value="<?php echo $_GET['id']; ?>" readonly="">
+                  <input id="customer_id" name="customer_id" type="hidden" class="form-control text-right" value="<?php echo $_GET['id']; ?>" readonly="">
 
                   <!-- text input -->
                   <div class="form-group">
                     <label>Nama Supplier</label>
-                    <input id="supplier_name" name="supplier_name" type="text" class="form-control" readonly="">
+                    <input id="customer_name" name="customer_name" type="text" class="form-control" readonly="">
                   </div>
                 </div>
                 <div class="col-sm-12 col-md-2">
@@ -59,7 +59,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <!-- text input -->
                   <div class="form-group">
                     <label>Total Hutang</label>
-                    <input id="supplier_total_debt" name="supplier_total_debt" type="text" class="form-control text-right" value="0" readonly="">
+                    <input id="supplier_total_receivable" name="supplier_total_receivable" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
               </div>
@@ -77,22 +77,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>No Invoice Pembelian</label>
-                    <input id="purchase_inv" name="purchase_inv" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan No Invoice" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
-                    <input id="purchase_id" type="hidden" name="purchase_id">
+                    <input id="sales_inv" name="sales_inv" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan No Invoice" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
+                    <input id="sales_id" type="hidden" name="sales_id">
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Tgl Invoice</label>
-                    <input id="purchase_invoice_date" name="purchase_invoice_date" type="date" class="form-control ui-autocomplete-input">
+                    <input id="sales_invoice_date" name="sales_invoice_date" type="date" class="form-control ui-autocomplete-input">
                   </div>
                 </div>
 
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>Keterangan</label>
-                    <input id="debt_desc" name="debt_desc" type="text" class="form-control">
+                    <input id="receivable_desc" name="receivable_desc" type="text" class="form-control">
                   </div>
                 </div>
 
@@ -100,35 +100,35 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Saldo Hutang</label>
-                    <input id="debt_nominal" name="debt_nominal" type="text" class="form-control text-right" value="0" readonly>
+                    <input id="receivable_nominal" name="receivable_nominal" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Total Retur</label>
-                    <input id="debt_retur" name="debt_retur" type="text" class="form-control text-right" value="0" readonly>
+                    <input id="receivable_retur" name="receivable_retur" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Pembayaran</label>
-                    <input id="debt_payment" name="debt_payment" type="text" class="form-control text-right" value="0">
+                    <input id="receivable_payment" name="receivable_payment" type="text" class="form-control text-right" value="0">
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Pembulatan / Disc</label>
-                    <input id="debt_disc" name="debt_disc" type="text" class="form-control text-right" value="0">
+                    <input id="receivable_disc" name="receivable_disc" type="text" class="form-control text-right" value="0">
                   </div>
                 </div>
 
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>Remaining Debt</label>
-                    <input id="new_remaining_debt" name="new_remaining_debt" type="text" class="form-control text-right" value="0" readonly>
+                    <label>Remaining receivable</label>
+                    <input id="new_remaining_receivable" name="new_remaining_receivable" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
@@ -151,7 +151,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </form>
 
             <div class="table-responsive">
-              <table id="temp-debt-list" class="display table table-striped table-hover" >
+              <table id="temp-receivable-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
                     <th>No Invoice</th>
@@ -173,7 +173,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="purchase_retur_remark" name="purchase_retur_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="sales_retur_remark" name="sales_retur_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -183,6 +183,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Total Pembayaran:</label>
                   <div class="col-sm-5">
                     <input id="footer_total_pay" name="footer_total_pay" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Total Discount:</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_discount" name="footer_total_discount" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -220,9 +226,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 
 
-  $('#purchase_warehouse').prop('disabled', true);
+  $('#sales_warehouse').prop('disabled', true);
 
-  let supplier_total_debt = new AutoNumeric('#supplier_total_debt', {
+  let supplier_total_receivable = new AutoNumeric('#supplier_total_receivable', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -230,7 +236,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  let debt_nominal = new AutoNumeric('#debt_nominal', {
+  let receivable_nominal = new AutoNumeric('#receivable_nominal', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -238,7 +244,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  let debt_payment = new AutoNumeric('#debt_payment', {
+  let receivable_payment = new AutoNumeric('#receivable_payment', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -246,7 +252,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  let debt_retur = new AutoNumeric('#debt_retur', {
+  let receivable_retur = new AutoNumeric('#receivable_retur', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -254,7 +260,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  let debt_disc = new AutoNumeric('#debt_disc', {
+  let receivable_disc = new AutoNumeric('#receivable_disc', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -262,7 +268,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  let new_remaining_debt = new AutoNumeric('#new_remaining_debt', {
+  let new_remaining_receivable = new AutoNumeric('#new_remaining_receivable', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
     decimalPlaces: 0,
@@ -286,15 +292,24 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
+  let footer_total_discount = new AutoNumeric('#footer_total_discount', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+  
+
 
   $(document).ready(function() {
-    get_header_debt_pay();
-    get_footer_debt_pay();
-    tempdebt_table();
+    get_header_receivable_pay();
+    get_footer_receivable_pay();
+    tempreceivable_table();
   });
 
-  function tempdebt_table(){
-    $('#temp-debt-list').DataTable( {
+  function tempreceivable_table(){
+    $('#temp-receivable-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
@@ -319,18 +334,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  function get_header_debt_pay() {
-    let supplier_id = $("#supplier_id").val();
+  function get_header_receivable_pay() {
+    let customer_id = $("#customer_id").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Payment/get_header_debt_pay",
+      url: "<?php echo base_url(); ?>Payment/get_header_receivable_pay",
       dataType: "json",
-      data: {supplier_id:supplier_id},
+      data: {customer_id:customer_id},
       success : function(data){
         if (data.code == "200"){
           let data_result = data.result[0];
-          $("#supplier_name").val(data_result.supplier_name);
-          supplier_total_debt.set(data_result.total_hutang);
+          $("#customer_name").val(data_result.customer_name);
+          supplier_total_receivable.set(data_result.total_hutang);
         } else {
           Swal.fire({
             icon: 'error',
@@ -342,17 +357,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  function get_footer_debt_pay() {
+  function get_footer_receivable_pay() {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Payment/get_footer_debt_pay",
+      url: "<?php echo base_url(); ?>Payment/get_footer_receivable_pay",
       dataType: "json",
       data: {},
       success : function(data){
         if (data.code == "200"){
           let data_result = data.result[0];
-          footer_total_pay.set(data_result.total_payment_debt);
-          footer_total_retur.set(data_result.total_retur_debt);
+          footer_total_pay.set(data_result.total_payment_receivable);
+          footer_total_discount.set(data_result.total_payment_discount);
+          footer_total_retur.set(data_result.total_retur_receivable);
           $("#footer_total_nota").val(data_result.total_nota);
         } else {
           Swal.fire({
@@ -368,21 +384,21 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   function edit(id){
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Payment/get_debt_temp_by_id",
+      url: "<?php echo base_url(); ?>Payment/get_receivable_temp_by_id",
       dataType: "json",
       data: {id:id},
       success : function(data){
         if (data.code == "200"){
           let data_row = data.result[0];
-          $("#purchase_inv").val(data_row.hd_purchase_invoice);
-          $("#purchase_id").val(data_row.hd_purchase_id);
-          $("#purchase_invoice_date").val(data_row.hd_purchase_date);
-          $("#debt_desc").val(data_row.temp_payment_debt_desc);
-          debt_nominal.set(data_row.hd_purchase_remaining_debt);
-          debt_payment.set(data_row.temp_payment_debt_nominal);
-          debt_retur.set(data_row.temp_payment_debt_retur);
-          debt_disc.set(data_row.temp_payment_debt_discount);
-          new_remaining_debt.set(data_row.temp_payment_debt_new_remaining);
+          $("#sales_inv").val(data_row.hd_sales_inv);
+          $("#sales_id").val(data_row.hd_sales_id);
+          $("#sales_invoice_date").val(data_row.hd_sales_date);
+          $("#receivable_desc").val(data_row.temp_payment_receivable_desc);
+          receivable_nominal.set(data_row.hd_sales_remaining_debt);
+          receivable_payment.set(data_row.temp_payment_receivable_nominal);
+          receivable_retur.set(data_row.temp_payment_receivable_retur);
+          receivable_disc.set(data_row.temp_payment_receivable_discount);
+          new_remaining_receivable.set(data_row.temp_payment_receivable_new_remaining);
         } else {
           Swal.fire({
             icon: 'error',
@@ -394,46 +410,46 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  $('#debt_payment').on('input', function (event) {
-    debt_nominal_val = parseInt(debt_nominal.get());
-    debt_retur_val   = parseInt(debt_retur.get());
-    debt_payment_val = parseInt(debt_payment.get());
-    debt_disc_val    = parseInt(debt_disc.get());    
-    new_remaining_debt.set(debt_nominal_val - debt_retur_val - debt_payment_val - debt_disc_val);
+  $('#receivable_payment').on('input', function (event) {
+    receivable_nominal_val = parseInt(receivable_nominal.get());
+    receivable_retur_val   = parseInt(receivable_retur.get());
+    receivable_payment_val = parseInt(receivable_payment.get());
+    receivable_disc_val    = parseInt(receivable_disc.get());    
+    new_remaining_receivable.set(receivable_nominal_val - receivable_retur_val - receivable_payment_val - receivable_disc_val);
   })
 
-  $('#debt_disc').on('input', function (event) {
-    debt_nominal_val = parseInt(debt_nominal.get());
-    debt_retur_val   = parseInt(debt_retur.get());
-    debt_payment_val = parseInt(debt_payment.get());
-    debt_disc_val    = parseInt(debt_disc.get());    
-    new_remaining_debt.set(debt_nominal_val - debt_retur_val - debt_payment_val - debt_disc_val);
+  $('#receivable_disc').on('input', function (event) {
+    receivable_nominal_val = parseInt(receivable_nominal.get());
+    receivable_retur_val   = parseInt(receivable_retur.get());
+    receivable_payment_val = parseInt(receivable_payment.get());
+    receivable_disc_val    = parseInt(receivable_disc.get());    
+    new_remaining_receivable.set(receivable_nominal_val - receivable_retur_val - receivable_payment_val - receivable_disc_val);
   })
   
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
-    var purchase_id             = $("#purchase_id").val();
-    var purchase_invoice_date   = $("#purchase_invoice_date").val();
-    var debt_desc               = $("#debt_desc").val();
-    var debt_payment_val        = parseInt(debt_payment.get());
-    var debt_disc_val           = parseInt(debt_disc.get());
-    var new_remaining_debt_val  = parseInt(new_remaining_debt.get());
+    var sales_id                      = $("#sales_id").val();
+    var sales_invoice_date            = $("#sales_invoice_date").val();
+    var receivable_desc               = $("#receivable_desc").val();
+    var receivable_payment_val        = parseInt(receivable_payment.get());
+    var receivable_disc_val           = parseInt(receivable_disc.get());
+    var new_remaining_receivable_val  = parseInt(new_remaining_receivable.get());
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Payment/add_temp_debt",
+        url: "<?php echo base_url(); ?>Payment/add_temp_receivable",
         dataType: "json",
-        data: {purchase_id:purchase_id, purchase_invoice_date:purchase_invoice_date, debt_desc:debt_desc, debt_payment_val:debt_payment_val, debt_disc_val:debt_disc_val, new_remaining_debt_val:new_remaining_debt_val},
+        data: {sales_id:sales_id, sales_invoice_date:sales_invoice_date, receivable_desc:receivable_desc, receivable_payment_val:receivable_payment_val, receivable_disc_val:receivable_disc_val, new_remaining_receivable_val:new_remaining_receivable_val},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-debt-list').DataTable().ajax.reload();
-            get_header_debt_pay();
-            get_footer_debt_pay();
+            $('#temp-receivable-list').DataTable().ajax.reload();
+            get_header_receivable_pay();
+            get_footer_receivable_pay();
             clear_input();
           } else {
             Swal.fire({
@@ -449,7 +465,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var supplier_id             = $("#supplier_id").val();
+    var customer_id             = $("#customer_id").val();
     var repayment_date          = $("#repayment_date").val();
     var payment_method_id       = $("#payment_method_id").val();
     var footer_total_pay_val    = parseInt(footer_total_pay.get());
@@ -457,12 +473,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Payment/save_debt",
+      url: "<?php echo base_url(); ?>Payment/save_receivable",
       dataType: "json",
-      data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
+      data: {customer_id:customer_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Payment/debt";
+          window.location.href = "<?php echo base_url(); ?>/Payment/receivable";
         } else {
           Swal.fire({
             icon: 'error',
@@ -478,15 +494,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   function clear_input()
   {
-    $("#purchase_inv").val("");
-    $("#purchase_id").val("");
-    $("#purchase_invoice_date").val("");
-    $("#debt_desc").val("");
-    debt_nominal.set(0);
-    debt_retur.set(0);
-    debt_payment.set(0);
-    debt_disc.set(0);
-    new_remaining_debt.set(0);
+    $("#sales_inv").val("");
+    $("#sales_id").val("");
+    $("#sales_invoice_date").val("");
+    $("#receivable_desc").val("");
+    receivable_nominal.set(0);
+    receivable_retur.set(0);
+    receivable_payment.set(0);
+    receivable_disc.set(0);
+    new_remaining_receivable.set(0);
   }
 
 
