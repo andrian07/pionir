@@ -59,20 +59,15 @@
         <p>Status: 
           <b>
             <?php 
-            if($row->hd_purchase_status == 'Pending'){
-              echo '<span class="badge badge-primary">Pending</span>';
-            }else if($row->hd_purchase_status == 'Success'){
-              echo '<span class="badge badge-success">Success</span>';
+            if($row->status == 'Success'){
+              echo '<span class="badge badge-primary">Success</span>';
             }else{
               echo '<span class="badge badge-danfer">Cancel</span>';
             }
             ?>
           </b>
         </p>
-        <p>Tanggal: <b><?php $date = date_create($row->hd_purchase_date);  echo date_format($date,"d-M-Y"); ?></b></p>
-        <p>T.O.P: <b><?php echo $row->hd_purchase_top; ?></b></p>
-        <p>Jth Tempo: <b><?php $date = date_create($row->hd_purchase_due_date);  echo date_format($date,"d-M-Y"); ?></b></p>
-        <p>Gudang: <b><?php echo $row->warehouse_name; ?></b></p>
+        <p>Tanggal: <b><?php $date = date_create($row->payment_debt_date);  echo date_format($date,"d-M-Y"); ?></b></p>
       </div>
     </div>
   <?php } ?>
@@ -82,23 +77,21 @@
       <table class="table table-striped mt-3" style="border:none !important; font-weight:500;">
         <thead>
           <tr>
-            <th scope="col">SKU</th>
-            <th scope="col">Porduk</th>
-            <th scope="col">Satuan</th>
-            <th scope="col">Qty</th>
-            <th scope="col">Ongkir</th>
-            <th scope="col">Total</th>
+            <th scope="col">No Invoice Pembelian</th>
+            <th scope="col">Tgl</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Potongan Retur</th>
+            <th scope="col">Nominal Bayar</th>
           </tr>
         </thead>
         <tbody>
-          <?php foreach($data['detail_purchase'] as $row){ ?>
+          <?php foreach($data['detail_debt_payment'] as $row){ ?>
             <tr>
-              <td><?php echo $row->product_code; ?></td>
-              <td><?php echo $row->product_name; ?></td>
-              <td><?php echo $row->unit_name; ?></td>
-              <td><?php echo $row->dt_purchase_qty; ?></td>
-              <td><?php echo number_format($row->dt_purchase_total_ongkir); ?></td>
-              <td><?php echo number_format($row->dt_purchase_total); ?></td>
+              <td><?php echo $row->hd_purchase_invoice; ?></td>
+              <td><?php $date = date_create($row->hd_purchase_date);  echo date_format($date,"d-M-Y"); ?></td>
+              <td><?php echo number_format($row->dt_payment_debt_discount); ?></td>
+              <td><?php echo number_format($row->dt_payment_debt_retur); ?></td>
+              <td><?php echo number_format($row->dt_payment_debt_nominal); ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -110,7 +103,7 @@
     <div class="col-md-4">
       <table class="table table-hover" style="border:none !important;">
         <tbody>
-          <?php foreach($data['header_purchase'] as $row){ ?>
+          <?php foreach($data['header_debt_payment'] as $row){ ?>
             <tr>
               <td scope="col"><b>Action</b></td>
               <td scope="col"><b>User</b></td>
@@ -120,10 +113,6 @@
               <td scope="col"><b>Dibuat</b></td>
               <td scope="col"><b><?php echo $row->user_name; ?></b></td>
               <td scope="col"><b><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y"); ?></b></td>
-            </tr>
-            <tr>
-              <td style="border-bottom: none;"><b>Catatan:</b></td>
-              <td style="border-bottom: none;"><?php echo $row->hd_purchase_note; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -137,30 +126,22 @@
     <div class="col-md-4">
       <table class="table" style="border:none !important; text-align:right;">
         <tbody>
-          <?php foreach($data['header_purchase'] as $row){ ?>
+          <?php foreach($data['header_debt_payment'] as $row){ ?>
             <tr>
-              <td scope="col"><b>Sub Total: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_sub_total); ?></td>
+              <td scope="col"><b>Total Pembayaran: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->payment_debt_total_pay); ?></td>
             </tr>
             <tr>
-              <td scope="col"><b>Diskon: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_total_discount); ?></td>
+              <td scope="col"><b>Total Diskon: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->payment_debt_total_discount); ?></td>
             </tr>
             <tr>
-              <td scope="col"><b>DPP: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_dpp); ?></td>
+              <td scope="col"><b>Total Retur: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->payment_debt_total_retur); ?></td>
             </tr>
             <tr>
-              <td scope="col"><b>PPN 11%: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_ppn); ?></td>
-            </tr>
-            <tr>
-              <td scope="col"><b>Ongkir: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_ongkir); ?></td>
-            </tr>
-            <tr>
-              <td scope="col"><b>Grand Total: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_grand_total); ?></td>
+              <td scope="col"><b>Total Nota: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->payment_debt_total_nota); ?></td>
             </tr>
           <?php } ?>
         </tbody>

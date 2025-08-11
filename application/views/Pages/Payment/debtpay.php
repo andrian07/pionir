@@ -177,12 +177,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
               </div>
-
               <div class="col-lg-6 text-right">
                 <div class="form-group row">
                   <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Total Pembayaran:</label>
                   <div class="col-sm-5">
                     <input id="footer_total_pay" name="footer_total_pay" type="text" class="form-control text-right" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Total Discount:</label>
+                  <div class="col-sm-5">
+                    <input id="footer_total_discount" name="footer_total_discount" type="text" class="form-control text-right" value="0" readonly="">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -286,6 +291,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
+  let footer_total_discount = new AutoNumeric('#footer_total_discount', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
 
   $(document).ready(function() {
     get_header_debt_pay();
@@ -352,6 +364,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         if (data.code == "200"){
           let data_result = data.result[0];
           footer_total_pay.set(data_result.total_payment_debt);
+          footer_total_discount.set(data_result.total_payment_discount);
           footer_total_retur.set(data_result.total_retur_debt);
           $("#footer_total_nota").val(data_result.total_nota);
         } else {
@@ -449,17 +462,19 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var supplier_id             = $("#supplier_id").val();
-    var repayment_date          = $("#repayment_date").val();
-    var payment_method_id       = $("#payment_method_id").val();
-    var footer_total_pay_val    = parseInt(footer_total_pay.get());
-    var footer_total_nota       = $("#footer_total_nota").val();
+    var supplier_id                  = $("#supplier_id").val();
+    var repayment_date               = $("#repayment_date").val();
+    var payment_method_id            = $("#payment_method_id").val();
+    var footer_total_pay_val         = parseInt(footer_total_pay.get());
+    var footer_total_discount_val    = parseInt(footer_total_discount.get());
+    var footer_total_retur_val       = parseInt(footer_total_retur.get());
+    var footer_total_nota            = $("#footer_total_nota").val();
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Payment/save_debt",
       dataType: "json",
-      data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_nota:footer_total_nota},
+      data: {supplier_id:supplier_id, repayment_date:repayment_date, payment_method_id:payment_method_id, footer_total_pay_val:footer_total_pay_val, footer_total_discount_val:footer_total_discount_val, footer_total_retur_val:footer_total_retur_val, footer_total_nota:footer_total_nota},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Payment/debt";

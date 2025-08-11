@@ -50,7 +50,7 @@ class payment_model extends CI_Model {
 
     public function get_footer_debt_pay($user_id)
     {
-        $this->db->select('count(*) as total_nota, sum(temp_payment_debt_nominal) as total_payment_debt, sum(temp_payment_debt_retur) as total_retur_debt');
+        $this->db->select('count(*) as total_nota, sum(temp_payment_debt_nominal) as total_payment_debt, sum(temp_payment_debt_retur) as total_retur_debt, sum(temp_payment_debt_discount) as total_payment_discount');
         $this->db->from('temp_payment_debt');
         $this->db->where('temp_payment_debt_user_id', $user_id);
         $this->db->where('temp_payment_debt_is_edited', 'Y');
@@ -217,7 +217,7 @@ class payment_model extends CI_Model {
 
     public function header_debt_payment($payment_debt_id)
     {
-        $query = $this->db->query("select * from hd_payment_debt a, ms_supplier b, ms_payment c where a.payment_debt_supplier_id = b.supplier_id and payment_debt_id  = '".$payment_debt_id."'");
+        $query = $this->db->query("select * from hd_payment_debt a, ms_supplier b, ms_payment c, ms_user d where a.payment_debt_supplier_id = b.supplier_id and  a.payment_debt_method_id = c.payment_id and a.user_id = d.user_id and payment_debt_id  = '".$payment_debt_id."'");
         $result = $query->result();
         return $result;
     }

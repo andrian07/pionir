@@ -178,6 +178,7 @@ class Payment extends CI_Controller {
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
 			$payment_debt_id  = $this->input->get('id');
+
 			$header_debt_payment['header_debt_payment'] = $this->payment_model->header_debt_payment($payment_debt_id);
 			$detail_debt_payment['detail_debt_payment'] = $this->payment_model->detail_debt_payment($payment_debt_id); 
 			$data['data'] = array_merge($header_debt_payment, $detail_debt_payment);
@@ -347,12 +348,14 @@ class Payment extends CI_Controller {
 		$modul = 'DebtPayment';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
-			$supplier_id 			= $this->input->post('supplier_id');
-			$repayment_date 		= $this->input->post('repayment_date');
-			$payment_method_id 		= $this->input->post('payment_method_id');
-			$footer_total_pay_val 	= $this->input->post('footer_total_pay_val');
-			$footer_total_nota 		= $this->input->post('footer_total_nota');
-			$user_id 				= $_SESSION['user_id'];
+			$supplier_id 				= $this->input->post('supplier_id');
+			$repayment_date 			= $this->input->post('repayment_date');
+			$payment_method_id 			= $this->input->post('payment_method_id');
+			$footer_total_discount_val  = $this->input->post('footer_total_discount_val');
+			$footer_total_retur_val  	= $this->input->post('footer_total_retur_val');
+			$footer_total_pay_val 		= $this->input->post('footer_total_pay_val');
+			$footer_total_nota 			= $this->input->post('footer_total_nota');
+			$user_id 					= $_SESSION['user_id'];
 
 			if($payment_method_id == null){
 				$msg = "Silahkan Pilih Jenis Pembayaran";
@@ -376,6 +379,8 @@ class Payment extends CI_Controller {
 				'payment_debt_invoice'			=> $last_code,
 				'payment_debt_supplier_id'		=> $supplier_id,
 				'payment_debt_total_pay'		=> $footer_total_pay_val,
+				'payment_debt_total_retur'		=> $footer_total_retur_val,
+				'payment_debt_total_discount'	=> $footer_total_discount_val,
 				'payment_debt_total_nota'		=> $footer_total_nota,
 				'payment_debt_method_id'		=> $payment_method_id,
 				'payment_debt_date'				=> $repayment_date,
@@ -519,10 +524,21 @@ class Payment extends CI_Controller {
 				}
 
 
-				if($check_auth[0]->add == 'Y'){
-					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="payment('.$field['customer_id'].')"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'payment/detailreceivable?id='.$field['payment_receivable_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['payment_receivable_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$add = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-money-bill-wave sizing-fa"></i></button> ';
+					$detail = '<a href="'.base_url().'payment/detailreceivable?id='.$field['payment_receivable_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					if($field['status'] != 'Cancel'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['payment_receivable_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}else{
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
 				$no++;
@@ -534,7 +550,7 @@ class Payment extends CI_Controller {
 				$row[] 	= $field['payment_receivable_total_nota'];
 				$row[] 	= number_format($field['payment_receivable_total_pay']);
 				$row[] 	= $status;
-				$row[] 	= $add;
+				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
 
@@ -786,6 +802,23 @@ class Payment extends CI_Controller {
 		}
 	}
 
+
+	public function detailreceivable()
+	{
+		$modul = 'ReceivablePayment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$payment_debt_id  = $this->input->get('id');
+
+			$header_debt_payment['header_debt_payment'] = $this->payment_model->header_debt_payment($payment_debt_id);
+			$detail_debt_payment['detail_debt_payment'] = $this->payment_model->detail_debt_payment($payment_debt_id); 
+			$data['data'] = array_merge($header_debt_payment, $detail_debt_payment);
+			$this->load->view('Pages/Payment/detailpaymentdebt', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
 	//end receivable
 
 }

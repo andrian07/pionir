@@ -29,10 +29,10 @@ class Transferstock extends CI_Controller {
 	}
 
 	public function index(){
-		$modul = 'Search';
+		$modul = 'TransferStock';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$this->load->view('Pages/Search/search');
+			$this->load->view('Pages/Transferstock/transferstock');
 		}else{
 			print_r('Tidak Ada Akses');die();
 		}
