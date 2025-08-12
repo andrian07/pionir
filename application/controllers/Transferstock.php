@@ -11,6 +11,7 @@ class Transferstock extends CI_Controller {
 		$this->load->library('session');
 		$this->load->model('global_model');
 		$this->load->model('masterdata_model');
+		$this->load->model('transferstock_model');
 		$this->load->helper(array('url', 'html'));
 	}
 
@@ -23,33 +24,235 @@ class Transferstock extends CI_Controller {
 			$check_access = $this->global_model->check_access($user_role_id, $modul);
 			return($check_access);
 		}
-		/*$access =  $this->uri->segment(2);
-		$permissions = $access.'_'.$permission;
-		print_r($permissions);die();*/
 	}
 
-	public function index(){
+	public function index()
+	{
 		$modul = 'TransferStock';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$this->load->view('Pages/Transferstock/transferstock');
+			$check_auth['check_auth'] = $check_auth;
+			$this->load->view('Pages/Transferstock/transferstock', $check_auth);
 		}else{
 			print_r('Tidak Ada Akses');die();
 		}
 	}
 
-	public function product_list(){
-		$searchin_key = $this->input->post('key');
-		$product_list = $this->masterdata_model->search_product_list($searchin_key)->result_array();
-		echo json_encode($product_list);
+	public function transfer_stock_list()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list = $this->transferstock_model->transferstock_list($search, $length, $start)->result_array();
+			$count_list = $this->transferstock_model->transferstock_list_count($search)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+				
+				if($check_auth[0]->view == 'Y'){
+					$url = base_url();
+					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_transfer_stock_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}else{
+					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					if($field['hd_purchase_status'] != 'Cancel'){
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_transfer_stock_id'].'" data-name="'.$field['hd_transfer_stock_code'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}else{
+						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_transfer_stock_id'].'" data-name="'.$field['hd_transfer_stock_code'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+					}
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					if($field['hd_purchase_status'] != 'Cancel'){
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_transfer_stock_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}else{
+						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+					}
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$date = date_create($field['hd_transfer_stock_date']); 
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['hd_transfer_stock_code'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['dt_transfer_stock_qty'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $detail.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
-	public function detailsearch(){
-		$id = $this->input->get('id');
-		$get_product_by_id['get_product_by_id'] = $this->masterdata_model->settingproduct($id);
-		$product_stock['product_stock'] = $this->masterdata_model->product_stock($id);
-		$data['data'] = array_merge($get_product_by_id, $product_stock);
-		$this->load->view('Pages/Search/detailsearch', $data);
+
+	public function addtransferstock()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$check_auth['check_auth'] = $check_auth;
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$data['data'] = array_merge($check_auth, $warehouse_list);
+			$this->load->view('Pages/Transferstock/addtransferstock', $data);
+		}else{
+			print_r('Tidak Ada Akses');die();
+		}
+	}
+
+	public function search_product()
+	{
+		$purchase_id = $this->input->get('id');
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		if (!($keyword == '' || $keyword == NULL)) {
+			$find = $this->global_model->search_product($keyword)->result_array(); 
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row['product_name'];
+				$find_result[] = [
+					'id'                  => $row['product_id'],
+					'value'               => $diplay_text
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
+	}
+
+	public function check_temp_transfer_stock()
+	{
+		$user_id 				    = $_SESSION['user_id'];
+		$check_temp_transfer_stock  = $this->transferstock_model->check_temp_transfer_stock($user_id)->result_array();
+		if($check_temp_po[0]['hd_po_top'] == 'CBD'){
+			$hd_po_top_val = 0;
+		}else{
+			$hd_po_top_val = trim($check_temp_po[0]['hd_po_top'],"JT");
+		}
+		echo json_encode(['code'=>200, 'data'=>$check_temp_po, 'hd_po_top_val'=>$hd_po_top_val]);
+		die();
+	}
+
+	public function temp_transfer_stock_list()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+			$user 			  	= $_SESSION['user_id'];
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$list 		= $this->transferstock_model->temp_transfer_stock_list($search, $length, $start, $user)->result_array();
+			$count_list = $this->transferstock_model->temp_transfer_stock_list_count($search, $user)->result_array();
+			$total_row 	= $count_list[0]['total_row'];
+			$data 		= array();
+			$no 		= $_POST['start'];
+			foreach ($list as $field) {
+
+				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit_temp('.$field['temp_retur_purchase_product_id'].', '.$field['temp_retur_purchase_b_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_retur_purchase_product_id'].', '.$field['temp_retur_purchase_b_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+
+				$no++;
+				$row = array();
+				$row[] 	= $field['product_code'];
+				$row[] 	= $field['product_name'];
+				$row[] 	= $field['unit_name'];
+				$row[] 	= $field['temp_retur_purchase_qty'];
+				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_ongkir']);
+				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_total']);
+				$row[] 	= $field['temp_retur_purchase_supplier'];
+				$row[] 	= $edit.$delete;
+				$data[] = $row;
+			}
+
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function add_temp_transferstock()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$product_id 				= $this->input->post('product_id');
+			$transfer_from 				= $this->input->post('transfer_from');
+			$transfer_to 				= $this->input->post('transfer_to');
+			$temp_qty 					= $this->input->post('temp_qty');
+			$temp_note 					= $this->input->post('temp_note');
+			$user_id 					= $_SESSION['user_id'];
+
+			if($transfer_from == $transfer_to){
+				$msg = "Transfer Stock Tidak Bisa Ke Tujuan Yang Sama";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($temp_qty < 1){
+				$msg = "Jumlah Qty Harus Lebih Besar Dari 1";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			
+			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id);
+			$data_insert = array(
+				'temp_transfer_stock_product_id'	 => $product_id,
+				'temp_transfer_stock_qty'			 => $temp_qty,
+				'temp_transfer_stock_warehouse_from' => $transfer_from,
+				'temp_transfer_stock_warehouse_to'	 => $transfer_to,
+				'temp_transfer_stock_note'			 => $temp_note,
+				'user_id'							 => $user_id,
+			);	
+			$msg = 'Success Tambah';
+			if($check_temp_transfer_stock_input != null){
+				$this->transferstock_model->edit_temp_transfer_stock($product_id, $user_id, $data_insert);
+			}else{
+				$this->transferstock_model->add_temp_transfer_stock($data_insert);
+				$msg = "Tidak Bisa Tambah Item Di Luar PO";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
 }
