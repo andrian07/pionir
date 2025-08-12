@@ -209,27 +209,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var transfer_to          = $("#transfer_to").val();
     var qty                  = $("#temp_qty").val();
     var temp_note            = $("#temp_note").val();
-    var temp_price_submit    = parseInt(temp_price.get());
-    var temp_qty             = $("#temp_qty").val();
-    var temp_qty_buy         = $("#temp_qty_buy").val();
-    var temp_ongkir_submit   = parseInt(temp_ongkir.get());
-    var temp_total_submit    = parseInt(temp_total.get());
-    var temp_note            = $("#temp_note").val();
-    var supplier_id          = $('#purchase_supplier').val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Purchase/add_temp_retur_purchase",
+        url: "<?php echo base_url(); ?>Transferstock/add_temp_transferstock",
         dataType: "json",
-        data: {purchase_id:purchase_id, purchase_inv:purchase_inv, product_id:product_id, product_name:product_name, purchase_warehouse:purchase_warehouse, temp_price_submit:temp_price_submit, temp_qty:temp_qty, temp_qty_buy:temp_qty_buy, temp_ongkir_submit:temp_ongkir_submit, temp_total_submit:temp_total_submit, temp_note:temp_note, supplier_id:supplier_id},
+        data: {product_id:product_id, transfer_from:transfer_from, transfer_to:transfer_to, qty:qty, temp_note:temp_note},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-retur-purchase-list').DataTable().ajax.reload();
+            $('#temp-transfer-stock-list').DataTable().ajax.reload();
             check_tempt_data();
             clear_input();
           } else {
@@ -262,16 +255,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   function clear_input()
   {
-    $("#purchase_id").val("");
-    $("#purchase_inv").val("");
-    $("#product_id").val("");
     $("#product_name").val("");
-    $("#purchase_warehouse").val("");
-    temp_price.set(0);
-    $("#temp_qty").val(0);
-    $("#temp_qty_buy").val(0);
-    temp_ongkir.set(0);
-    temp_total.set(0);
+    $("#product_id").val("");
+    $("#transfer_from").val("");
+    $("#transfer_to").val("");
+    $("#temp_qty").val("");
     $("#temp_note").val("");
   }
 

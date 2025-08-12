@@ -62,6 +62,7 @@ class transferstock_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('temp_transfer_stock');
         $this->db->join('ms_product', 'temp_transfer_stock.temp_transfer_stock_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse AS from', 'temp_transfer_stock.temp_transfer_stock_warehouse_from = from.warehouse_id');
         $this->db->join('ms_warehouse AS to', 'temp_transfer_stock.temp_transfer_stock_warehouse_to = to.warehouse_id');
         $this->db->join('ms_user', 'temp_transfer_stock.user_id = ms_user.user_id');
@@ -82,6 +83,7 @@ class transferstock_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('temp_transfer_stock');
         $this->db->join('ms_product', 'temp_transfer_stock.temp_transfer_stock_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse AS from', 'temp_transfer_stock.temp_transfer_stock_warehouse_from = from.warehouse_id');
         $this->db->join('ms_warehouse AS to', 'temp_transfer_stock.temp_transfer_stock_warehouse_to = to.warehouse_id');
         $this->db->join('ms_user', 'temp_transfer_stock.user_id = ms_user.user_id');

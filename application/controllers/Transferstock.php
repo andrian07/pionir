@@ -174,24 +174,25 @@ class Transferstock extends CI_Controller {
 				$search = $search['value'];
 			}
 			$list 		= $this->transferstock_model->temp_transfer_stock_list($search, $length, $start, $user)->result_array();
+			print_r($list);die();
 			$count_list = $this->transferstock_model->temp_transfer_stock_list_count($search, $user)->result_array();
 			$total_row 	= $count_list[0]['total_row'];
 			$data 		= array();
 			$no 		= $_POST['start'];
 			foreach ($list as $field) {
 
-				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit_temp('.$field['temp_retur_purchase_product_id'].', '.$field['temp_retur_purchase_b_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
-				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_retur_purchase_product_id'].', '.$field['temp_retur_purchase_b_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="edit_temp('.$field['temp_transfer_stock_product_id'].', '.$field['user_id'].')"><i class="fas fa-edit sizing-fa"></i></button> ';
+				$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['temp_transfer_stock_product_id'].', '.$field['user_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 
 				$no++;
 				$row = array();
 				$row[] 	= $field['product_code'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
-				$row[] 	= $field['temp_retur_purchase_qty'];
-				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_ongkir']);
-				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_total']);
+				$row[] 	= $field['temp_transfer_stock_qty'];
+				$row[] 	= $field['from.warehouse_name'];
 				$row[] 	= $field['temp_retur_purchase_supplier'];
+				$row[] 	= $field['temp_transfer_stock_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -209,6 +210,7 @@ class Transferstock extends CI_Controller {
 		}
 	}
 
+
 	public function add_temp_transferstock()
 	{
 		$modul = 'TransferStock';
@@ -217,7 +219,7 @@ class Transferstock extends CI_Controller {
 			$product_id 				= $this->input->post('product_id');
 			$transfer_from 				= $this->input->post('transfer_from');
 			$transfer_to 				= $this->input->post('transfer_to');
-			$temp_qty 					= $this->input->post('temp_qty');
+			$temp_qty 					= $this->input->post('qty');
 			$temp_note 					= $this->input->post('temp_note');
 			$user_id 					= $_SESSION['user_id'];
 
@@ -240,13 +242,13 @@ class Transferstock extends CI_Controller {
 				'temp_transfer_stock_note'			 => $temp_note,
 				'user_id'							 => $user_id,
 			);	
-			$msg = 'Success Tambah';
+
 			if($check_temp_transfer_stock_input != null){
-				$this->transferstock_model->edit_temp_transfer_stock($product_id, $user_id, $data_insert);
-			}else{
 				$this->transferstock_model->add_temp_transfer_stock($data_insert);
-				$msg = "Tidak Bisa Tambah Item Di Luar PO";
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				$msg = 'Success Tambah';
+			}else{
+				$this->transferstock_model->edit_temp_transfer_stock($product_id, $user_id, $data_insert);
+				$msg = 'Success Edit';
 			}
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
