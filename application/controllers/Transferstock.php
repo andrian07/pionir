@@ -174,7 +174,6 @@ class Transferstock extends CI_Controller {
 				$search = $search['value'];
 			}
 			$list 		= $this->transferstock_model->temp_transfer_stock_list($search, $length, $start, $user)->result_array();
-			print_r($list);die();
 			$count_list = $this->transferstock_model->temp_transfer_stock_list_count($search, $user)->result_array();
 			$total_row 	= $count_list[0]['total_row'];
 			$data 		= array();
@@ -190,8 +189,8 @@ class Transferstock extends CI_Controller {
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
 				$row[] 	= $field['temp_transfer_stock_qty'];
-				$row[] 	= $field['from.warehouse_name'];
-				$row[] 	= $field['temp_retur_purchase_supplier'];
+				$row[] 	= $field['from'];
+				$row[] 	= $field['to'];
 				$row[] 	= $field['temp_transfer_stock_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;

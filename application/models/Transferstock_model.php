@@ -59,7 +59,7 @@ class transferstock_model extends CI_Model {
 
     public function temp_transfer_stock_list($search, $length, $start, $user)
     {
-        $this->db->select('*');
+        $this->db->select('*, from.warehouse_name as from, to.warehouse_name as to');
         $this->db->from('temp_transfer_stock');
         $this->db->join('ms_product', 'temp_transfer_stock.temp_transfer_stock_product_id = ms_product.product_id');
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
