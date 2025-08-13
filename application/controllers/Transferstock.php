@@ -256,6 +256,11 @@ class Transferstock extends CI_Controller {
 		}
 	}
 
+	public function get_edit_temp_transfer_stock()
+	{
+		
+	}
+
 }
 
 ?>

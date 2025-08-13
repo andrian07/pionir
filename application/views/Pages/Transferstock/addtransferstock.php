@@ -272,7 +272,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_retur_purchase",
+      url: "<?php echo base_url(); ?>Transferstock/get_edit_temp_transfer_stock",
       dataType: "json",
       data: {id:id, purchase_id:purchase_id},
       success : function(data){
