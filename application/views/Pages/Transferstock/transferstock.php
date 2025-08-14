@@ -51,6 +51,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
         </div>
       </div>
     </div>
+    
   </div>
 </div>
 

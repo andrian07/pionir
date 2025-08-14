@@ -5,7 +5,7 @@ class transferstock_model extends CI_Model {
 
     public function transferstock_list($search, $length, $start)
     {
-        $this->db->select('*');
+        $this->db->select('*, from.warehouse_name as from, to.warehouse_name as to');
         $this->db->from('hd_transfer_stock');
         $this->db->join('dt_transfer_stock', 'hd_transfer_stock.hd_transfer_stock_id = dt_transfer_stock.hd_transfer_stock_id');
         $this->db->join('ms_product', 'dt_transfer_stock.dt_transfer_stock_product_id = ms_product.product_id');
@@ -173,6 +173,12 @@ class transferstock_model extends CI_Model {
         $query = $this->db->query("select stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and b.warehouse_id = '".$warehouse_id."' and b.product_id = '".$product_id."'");
         $result = $query->result();
         return $result;
+    }
+
+    public function clear_transfer_stock($user_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('temp_transfer_stock');
     }
 }   
 

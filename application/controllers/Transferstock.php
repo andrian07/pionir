@@ -57,7 +57,6 @@ class Transferstock extends CI_Controller {
 			$data = array();
 			$no = $_POST['start'];
 			foreach ($list as $field) {
-				
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
 					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_transfer_stock_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
@@ -66,7 +65,7 @@ class Transferstock extends CI_Controller {
 				}
 
 				if($check_auth[0]->edit == 'Y'){
-					if($field['hd_purchase_status'] != 'Cancel'){
+					if($field['hd_transfer_stock_status'] != 'Cancel'){
 						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_transfer_stock_id'].'" data-name="'.$field['hd_transfer_stock_code'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
 					}else{
 						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_transfer_stock_id'].'" data-name="'.$field['hd_transfer_stock_code'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
@@ -76,7 +75,7 @@ class Transferstock extends CI_Controller {
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					if($field['hd_purchase_status'] != 'Cancel'){
+					if($field['hd_transfer_stock_status'] != 'Cancel'){
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_transfer_stock_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}else{
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
@@ -93,8 +92,8 @@ class Transferstock extends CI_Controller {
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['dt_transfer_stock_qty'];
-				$row[] 	= $field['product_name'];
-				$row[] 	= $field['product_name'];
+				$row[] 	= $field['from'];
+				$row[] 	= $field['to'];
 				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
@@ -225,6 +224,18 @@ class Transferstock extends CI_Controller {
 			if($temp_qty < 1){
 				$msg = "Jumlah Qty Harus Lebih Besar Dari 1";
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$get_last_stock_from 	= $this->transferstock_model->get_last_stock($product_id, $transfer_from);
+			if($get_last_stock_from == null){
+				$msg = "Stock Tidak Ada di Gudang";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}else{
+				$last_stock_from  = $get_last_stock_from[0]->stock;
+				if($last_stock_from < $temp_qty){
+					$msg = "Stock Gudang Tidak Cukup";
+					echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				}
 			}
 			
 			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id)->result_array();
@@ -379,6 +390,7 @@ class Transferstock extends CI_Controller {
 					$this->global_model->insert_movement_stock($movement_stock);
 				}
 			}
+			$this->transferstock_model->clear_transfer_stock($user_id);
 			$msg = 'Success Tambah';
 			echo json_encode(['code'=>200, 'result'=>$msg]);
 		}else{
