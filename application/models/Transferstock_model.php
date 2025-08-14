@@ -107,6 +107,15 @@ class transferstock_model extends CI_Model {
         return $query;
     }
 
+    public function temp_transfer_stock($user_id)
+    {
+        $this->db->select('*');
+        $this->db->from('temp_transfer_stock');
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function add_temp_transfer_stock($data_insert)
     {
         $this->db->insert('temp_transfer_stock', $data_insert);
@@ -115,9 +124,55 @@ class transferstock_model extends CI_Model {
     public function edit_temp_transfer_stock($product_id, $user_id, $data_insert)
     {
         $this->db->set($data_insert);
-        $this->db->where('temp_transfer_stock_product_id ', $product_id);
+        $this->db->where('temp_transfer_stock_product_id', $product_id);
         $this->db->where('user_id', $user_id);
         $this->db->update('temp_transfer_stock');
+    }
+
+    public function check_edit_temp_transfer_stock($product_id, $user_id)
+    {
+        $this->db->select('temp_transfer_stock.*, product_name');
+        $this->db->from('temp_transfer_stock');
+        $this->db->join('ms_product', 'temp_transfer_stock.temp_transfer_stock_product_id = ms_product.product_id');
+        $this->db->where('temp_transfer_stock_product_id', $product_id);
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function delete_temp_transfer_stock($product_id, $user_id)
+    {
+        $this->db->where('temp_transfer_stock_product_id', $product_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->delete('temp_transfer_stock');
+    }
+
+    public function save_detail_transfer_stock($data_insert_detail)
+    {
+        $this->db->insert('dt_transfer_stock', $data_insert_detail);
+    }
+
+    public function last_transfer_stock()
+    {
+        $query = $this->db->query("select hd_transfer_stock_code from hd_transfer_stock  order by hd_transfer_stock_id   desc limit 1");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function save_transfer_stock($data_insert)
+    {
+        $this->db->trans_start();
+        $this->db->insert('hd_transfer_stock', $data_insert);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return  $insert_id;
+    }
+
+    public function get_last_stock($product_id, $warehouse_id)
+    {
+        $query = $this->db->query("select stock from ms_product a, ms_product_stock b where a.product_id = b.product_id and b.warehouse_id = '".$warehouse_id."' and b.product_id = '".$product_id."'");
+        $result = $query->result();
+        return $result;
     }
 }   
 

@@ -151,12 +151,7 @@ class Transferstock extends CI_Controller {
 	{
 		$user_id 				    = $_SESSION['user_id'];
 		$check_temp_transfer_stock  = $this->transferstock_model->check_temp_transfer_stock($user_id)->result_array();
-		if($check_temp_po[0]['hd_po_top'] == 'CBD'){
-			$hd_po_top_val = 0;
-		}else{
-			$hd_po_top_val = trim($check_temp_po[0]['hd_po_top'],"JT");
-		}
-		echo json_encode(['code'=>200, 'data'=>$check_temp_po, 'hd_po_top_val'=>$hd_po_top_val]);
+		echo json_encode(['code'=>200, 'data'=>$check_temp_transfer_stock]);
 		die();
 	}
 
@@ -232,7 +227,7 @@ class Transferstock extends CI_Controller {
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
 			
-			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id);
+			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id)->result_array();
 			$data_insert = array(
 				'temp_transfer_stock_product_id'	 => $product_id,
 				'temp_transfer_stock_qty'			 => $temp_qty,
@@ -242,7 +237,7 @@ class Transferstock extends CI_Controller {
 				'user_id'							 => $user_id,
 			);	
 
-			if($check_temp_transfer_stock_input != null){
+			if($check_temp_transfer_stock_input == null){
 				$this->transferstock_model->add_temp_transfer_stock($data_insert);
 				$msg = 'Success Tambah';
 			}else{
@@ -258,7 +253,134 @@ class Transferstock extends CI_Controller {
 
 	public function get_edit_temp_transfer_stock()
 	{
-		
+		$product_id  = $this->input->post('product_id');
+		$user_id  	 = $this->input->post('user_id');
+		$check_edit_temp_transfer_stock = $this->transferstock_model->check_edit_temp_transfer_stock($product_id, $user_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$check_edit_temp_transfer_stock]);
+		die();
+	}
+
+	public function delete_temp_transfer_stock()
+	{
+		$product_id  = $this->input->post('product_id');
+		$user_id 	 = $_SESSION['user_id'];
+		$this->transferstock_model->delete_temp_transfer_stock($product_id, $user_id);
+		$msg = 'Success Delete';
+		echo json_encode(['code'=>200, 'result'=>$msg]);
+		die();
+	}
+
+
+	public function save_transfer_stock()
+	{
+
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$footer_total  			= $this->input->post('footer_total');
+			$transfer_stock_remark  = $this->input->post('transfer_stock_remark');
+			$transfer_stock_date    = $this->input->post('transfer_stock_date');
+			$user_id 				= $_SESSION['user_id'];
+
+			if($footer_total < 1){
+				$msg = "Silahkan Isi Data Terlebih Dahulu";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			
+			$maxCode  = $this->transferstock_model->last_transfer_stock();
+			$inv_code = 'TS/'.$user_id.'/'.date("d/m/Y").'/';
+			if ($maxCode == NULL) {
+				$last_code = $inv_code.'000001';
+			} else {
+				$maxCode   = $maxCode[0]->hd_transfer_stock_code;
+				$last_code = substr($maxCode, -6);
+				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
+			}
+
+			$data_insert = array(
+				'hd_transfer_stock_code'	=> $last_code,
+				'hd_transfer_stock_date'	=> $transfer_stock_date,
+				'hd_transfer_stock_qty' 	=> $footer_total,
+				'hd_transfer_stock_desc'	=> $transfer_stock_remark,
+				'user_id'	 				=> $user_id
+			);
+			$save_transfer_stock = $this->transferstock_model->save_transfer_stock($data_insert);
+
+			$get_temp_transfer_stock = $this->transferstock_model->temp_transfer_stock($user_id)->result_array();
+
+			foreach($get_temp_transfer_stock as $row)
+			{
+				$data_insert_detail = array(
+					'hd_transfer_stock_id'	 			 => $save_transfer_stock,
+					'dt_transfer_stock_product_id'		 => $row['temp_transfer_stock_product_id'],
+					'dt_transfer_stock_qty' 			 => $row['temp_transfer_stock_qty'],
+					'dt_transfer_stock_warehouse_from'	 => $row['temp_transfer_stock_warehouse_from'],
+					'dt_transfer_stock_warehouse_to'	 => $row['temp_transfer_stock_warehouse_to'],
+					'dt_transfer_stock_note'			 => $row['temp_transfer_stock_note']
+				);
+
+				$this->transferstock_model->save_detail_transfer_stock($data_insert_detail);
+
+				$warehouse_from 	= $row['temp_transfer_stock_warehouse_from'];
+				$warehouse_to 	 	= $row['temp_transfer_stock_warehouse_to'];
+
+				if($warehouse_from != 1){
+					$product_id 		= $row['temp_transfer_stock_product_id'];
+					$qty 				= $row['temp_transfer_stock_qty'];
+
+					$get_last_stock_from 	= $this->transferstock_model->get_last_stock($product_id, $warehouse_from);
+					$last_stock_from 		= $get_last_stock_from[0]->stock;
+					$new_stock_from 		= $last_stock_from - $qty;
+					$this->global_model->update_stock($product_id, $warehouse_from, $new_stock_from);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock_from,
+						'stock_movement_new_stock'		=> $new_stock_from,
+						'stock_movement_desc'			=> 'Transfer Stock',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Minus',
+						'stock_movement_date'			=> $transfer_stock_date,
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+
+
+				if($warehouse_to != 1){
+					$product_id 		= $row['temp_transfer_stock_product_id'];
+					$qty 				= $row['temp_transfer_stock_qty'];	
+
+					$get_last_stock_to = $this->transferstock_model->get_last_stock($product_id, $warehouse_to);
+					if($get_last_stock_to == null){
+						
+					}
+					$last_stock_to 		= $get_last_stock_to[0]->stock;
+					$new_stock_to 		= $last_stock_to + $qty;
+					$this->global_model->update_stock($product_id, $warehouse_to, $new_stock_to);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock_from,
+						'stock_movement_new_stock'		=> $new_stock_from,
+						'stock_movement_desc'			=> 'Transfer Stock',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Plus',
+						'stock_movement_date'			=> $transfer_stock_date,
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+			}
+			$msg = 'Success Tambah';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+
 	}
 
 }
