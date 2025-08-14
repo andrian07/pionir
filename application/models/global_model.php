@@ -84,6 +84,11 @@ class global_model extends CI_Model {
         $this->db->insert('ms_product_stock', $insert_product_stock);
     }
 
+    public function insert_master_stock($insert_master_stock)
+    {
+        $this->db->insert('ms_product_stock', $insert_master_stock);
+    }
+
 }
 
 ?>

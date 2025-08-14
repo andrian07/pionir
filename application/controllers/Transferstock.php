@@ -354,12 +354,17 @@ class Transferstock extends CI_Controller {
 
 					$get_last_stock_to = $this->transferstock_model->get_last_stock($product_id, $warehouse_to);
 					if($get_last_stock_to == null){
-						
+						$insert_master_stock = array(
+							'product_id '	=> $product_id,
+							'warehouse_id'	=> $warehouse_to,
+							'stock'			=> $qty,
+						);	
+						$this->global_model->insert_master_stock($insert_master_stock);
+					}else{
+						$last_stock_to 		= $get_last_stock_to[0]->stock;
+						$new_stock_to 		= $last_stock_to + $qty;
+						$this->global_model->update_stock($product_id, $warehouse_to, $new_stock_to);
 					}
-					$last_stock_to 		= $get_last_stock_to[0]->stock;
-					$new_stock_to 		= $last_stock_to + $qty;
-					$this->global_model->update_stock($product_id, $warehouse_to, $new_stock_to);
-
 					$movement_stock = array(
 						'stock_movement_product_id'		=> $product_id,
 						'stock_movement_qty'			=> $qty,
