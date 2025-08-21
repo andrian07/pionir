@@ -238,7 +238,7 @@ class Transferstock extends CI_Controller {
 				}
 			}
 			
-			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id)->result_array();
+			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id, $transfer_to)->result_array();
 			$data_insert = array(
 				'temp_transfer_stock_product_id'	 => $product_id,
 				'temp_transfer_stock_qty'			 => $temp_qty,

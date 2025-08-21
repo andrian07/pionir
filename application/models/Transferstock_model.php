@@ -97,12 +97,13 @@ class transferstock_model extends CI_Model {
         return $query;
     }
 
-    public function check_temp_transfer_stock_input($product_id, $user_id)
+    public function check_temp_transfer_stock_input($product_id, $user_id, $transfer_to)
     {
         $this->db->select('*');
         $this->db->from('temp_transfer_stock');
         $this->db->where('user_id', $user_id);
         $this->db->where('temp_transfer_stock_product_id', $product_id);
+        $this->db->where('temp_transfer_stock_warehouse_to', $transfer_to);
         $query = $this->db->get();
         return $query;
     }

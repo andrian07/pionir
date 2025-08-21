@@ -1583,6 +1583,30 @@ class Sales extends CI_Controller {
 	}
 
 	//
+
+
+	// Revisi Sales
+
+	public function Revisisalespage()
+	{
+		$modul = 'Sales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$user_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
+			$this->load->view('Pages/Sales/sales', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	// End Revisi Sales
 }	
 
 ?>
