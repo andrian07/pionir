@@ -653,6 +653,39 @@ class Sales extends CI_Controller {
 		}
 	}
 
+	public function delete_sales()
+	{
+		$modul = 'Sales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$sales_id  			= $this->input->post('id');
+			$header_sales 		= $this->sales_model->header_sales($sales_id);
+			$detail_sales 		= $this->sales_model->detail_sales($sales_id);
+			$inv 				= $header_sales[0]->hd_sales_inv;
+			$user_id 			= $_SESSION['user_id'];
+
+			$this->sales_model->delete_sales($sales_id);
+
+			foreach($detail_sales as $row)
+			{
+				$product_id = $row['dt_sales_product_id'];
+				$qty_sell 	= $row['dt_sales_qty'];
+			}
+			
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Batalkan Penjualan '.$inv,
+				'activity_table_user'	       => $user_id
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Delete";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
 	public function detailsales()
 	{
 		$modul = 'Sales';

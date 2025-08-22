@@ -103,7 +103,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   {
     Swal.fire({
       title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data PO ?",
+      text: "Apakah Anda Yakin Menghapus Data Penjualan ?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

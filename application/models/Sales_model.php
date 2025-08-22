@@ -423,6 +423,13 @@ class sales_model extends CI_Model {
         $this->db->where('temp_user_id', $user_id);
         $this->db->delete('temp_sales');
     }
+
+    public function delete_sales($sales_id)
+    {
+        $this->db->set('hd_sales_status', 'Cancel');
+        $this->db->where('hd_sales_id', $sales_id);
+        $this->db->update('hd_sales');
+    }
     // end sales
 
     // retur sales
