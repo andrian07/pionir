@@ -79,7 +79,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ajax: {
         url: '<?php echo base_url(); ?>Sales/sales_list',
         type: 'POST',
-        data:  {},
+        data:  {cat:'SALES'},
       },
       columns: 
       [

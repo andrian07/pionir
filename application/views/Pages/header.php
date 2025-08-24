@@ -210,7 +210,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="<?php echo base_url(); ?>Masterdata/expedisi">
+                    <a href="<?php echo base_url(); ?>Sales/revisisalespage">
                       <span class="sub-item">Revisi Penjualan</span>
                     </a>
                   </li>

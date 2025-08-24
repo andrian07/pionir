@@ -44,6 +44,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-sm-3">
                 <input id="sales_inv_order" name="sales_inv_order" type="text" class="form-control ui-autocomplete-input" placeholder="No Sales Order" value="" required="" autocomplete="off">
                 <input id="sales_id" type="hidden" name="sales_id">
+                <input id="hd_sales_type" name="hd_sales_type" type="hidden" value="SALES">
               </div>
 
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Jth Tempo :</label>
@@ -854,6 +855,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $('#btnsave').click(function(e){
     e.preventDefault();
     var sales_customer                           = $("#sales_customer").val();
+    var sales_type                               = $("#hd_sales_type").val();
     var sales_id                                 = $("#sales_id").val();       
     var sales_rate_customer                      = $("#sales_rate_customer").val();
     var sales_payment                            = $("#sales_payment").val();
@@ -882,7 +884,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/save_sales",
       dataType: "json",
-      data: {sales_customer:sales_customer, sales_id:sales_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
+      data: {sales_customer:sales_customer, sales_type:sales_type, sales_id:sales_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/salespage";

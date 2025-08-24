@@ -59,6 +59,19 @@ class global_model extends CI_Model {
         return $query;
     }
 
+    public function search_sales_inv_ref($keyword)
+    {
+        $this->db->select('*');
+        $this->db->from('hd_sales');
+        if($keyword != null){
+            $this->db->where('hd_sales.hd_sales_inv like "%'.$keyword.'%"');
+        }
+        $this->db->group_by('hd_sales_inv');
+        $this->db->limit(50);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function search_product_by_supplier($keyword)
     {
         $query = $this->db->query("select * from ms_product a, ms_product_supplier b, ms_unit c  where a.product_id = b.product_id and a.product_unit = b.unit_id and(product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' group by a.product_id" );

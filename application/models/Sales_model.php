@@ -222,7 +222,7 @@ class sales_model extends CI_Model {
 
     // start sales
 
-    public function sales_list($search, $length, $start)
+    public function sales_list($search, $cat, $length, $start)
     {
         $this->db->select('*');
         $this->db->from('hd_sales');
@@ -233,6 +233,7 @@ class sales_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_sales.hd_sales_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'hd_sales.hd_sales_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_user', 'hd_sales.created_by = ms_user.user_id');
+        $this->db->where('hd_sales_type', $cat);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -247,7 +248,7 @@ class sales_model extends CI_Model {
         return $query;
     }
 
-    public function sales_list_count($search)
+    public function sales_list_count($search, $cat)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_sales');
@@ -258,6 +259,7 @@ class sales_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_sales.hd_sales_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'hd_sales.hd_sales_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_user', 'hd_sales.created_by = ms_user.user_id');
+        $this->db->where('hd_sales_type', $cat);
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -387,7 +389,7 @@ class sales_model extends CI_Model {
 
     public function last_sales_inv()
     {
-        $query = $this->db->query("select hd_sales_inv from hd_sales order by hd_sales_order_id desc limit 1");
+        $query = $this->db->query("select hd_sales_inv from hd_sales where hd_sales_type = 'SALES' order by hd_sales_order_id desc limit 1");
         $result = $query->result();
         return $result;
     }

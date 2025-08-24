@@ -252,6 +252,7 @@ class Sales extends CI_Controller {
 		$modul = 'SalesOrder';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->add == 'Y'){
+			$sales_type									= $this->input->post('sales_type');
 			$sales_order_customer 						= $this->input->post('sales_order_customer');
 			$sales_order_payment						= $this->input->post('sales_order_payment');
 			$sales_order_top 							= $this->input->post('sales_order_top');
@@ -361,6 +362,7 @@ class Sales extends CI_Controller {
 				'hd_sales_order_dp'					=> $footer_dp_val,
 				'hd_sales_order_remaining_debt'		=> $footer_remaining_debt_val,
 				'hd_sales_order_note'				=> $sales_order_remark,
+				'hd_sales_type'						=> $sales_type,
 				'created_by'						=> $user_id
 			);	
 			$save_purchase = $this->sales_model->save_sales_order($data_insert);
@@ -465,14 +467,17 @@ class Sales extends CI_Controller {
 				$msg = "Silahkan Pilih Gudang / Cabang Terlebih Dahulu";
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
-			$check_stock  = $this->sales_model->check_stock($product_id, $warehouse_id);
-			if($check_stock == null){
-				$msg = "Stock Tidak Ada Di Gudang";
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
-			}else if($check_stock[0]->stock < $temp_qty)
-			{
-				$msg = "Stock Tidak Cukup";
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+
+			if($warehouse_id != 1){
+				$check_stock  = $this->sales_model->check_stock($product_id, $warehouse_id);
+				if($check_stock == null){
+					$msg = "Stock Tidak Ada Di Gudang";
+					echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				}else if($check_stock[0]->stock < $temp_qty)
+				{
+					$msg = "Stock Tidak Cukup";
+					echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				}
 			}
 
 			$check_temp_so_input = $this->sales_model->check_temp_so_input($product_id, $user_id);
@@ -570,12 +575,13 @@ class Sales extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
+			$cat 			  	= $this->input->post('cat');
 
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->sales_model->sales_list($search, $length, $start)->result_array();
-			$count_list = $this->sales_model->sales_list_count($search)->result_array();
+			$list = $this->sales_model->sales_list($search, $cat, $length, $start,)->result_array();
+			$count_list = $this->sales_model->sales_list_count($search,$cat)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -788,16 +794,18 @@ class Sales extends CI_Controller {
 				$msg = "Silahkan Pilih Gudang / Cabang Terlebih Dahulu";
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
-			$check_stock  = $this->sales_model->check_stock($product_id, $warehouse_id);
-			if($check_stock  == null){
-				$msg = "Stock Tidak Ada Di Gudang";
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
-			}
 
-			if($check_stock[0]->stock < $temp_qty)
-			{
-				$msg = "Stock Tidak Cukup";
-				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+
+			if($warehouse_id != 1){
+				$check_stock  = $this->sales_model->check_stock($product_id, $warehouse_id);
+				if($check_stock == null){
+					$msg = "Stock Tidak Ada Di Gudang";
+					echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				}else if($check_stock[0]->stock < $temp_qty)
+				{
+					$msg = "Stock Tidak Cukup";
+					echo json_encode(['code'=>0, 'result'=>$msg]);die();
+				}
 			}
 
 			$check_temp_sales_input = $this->sales_model->check_temp_sales_input($product_id, $user_id);
@@ -1620,9 +1628,9 @@ class Sales extends CI_Controller {
 
 	// Revisi Sales
 
-	public function Revisisalespage()
+	public function revisisalespage()
 	{
-		$modul = 'Sales';
+		$modul = 'RevisiSales';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
 			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
@@ -1632,11 +1640,51 @@ class Sales extends CI_Controller {
 			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
 			$user_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
 			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
-			$this->load->view('Pages/Sales/sales', $data);
+			$this->load->view('Pages/Sales/revisisales', $data);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
+	}
+
+
+	public function addrevisisales()
+	{
+		$modul = 'RevisiSales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$user_list['user_list'] = $this->masterdata_model->user_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
+			$this->load->view('Pages/Sales/addrevisisales', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+
+	public function search_sales_inv_ref()
+	{
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		if (!($keyword == '' || $keyword == NULL)) {
+			$find = $this->global_model->search_sales_inv_ref($keyword)->result_array();
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row['hd_sales_inv'];
+				$find_result[] = [
+					'id'                  => $row['hd_sales_id'],
+					'value'               => $diplay_text
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
 	}
 
 	// End Revisi Sales
