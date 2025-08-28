@@ -43,7 +43,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">Sales Invoice:</label>
               <div class="col-sm-3">
                 <input id="sales_inv_sales" name="sales_inv_sales" type="text" class="form-control ui-autocomplete-input" placeholder="No Penjualan" value="" required="" autocomplete="off">
-                <input id="sales_id" type="hidden" name="sales_id">
+                <input id="sales_inv_id" type="hidden" name="sales_inv_id">
                 <input id="hd_sales_type" name="hd_sales_type" type="hidden" value="REVISI">
               </div>
 
@@ -499,7 +499,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $(document).ready(function() {
     tempsales_table();
-    check_So_data();
+    //check_So_data();
   });
 
   function tempsales_table(){
@@ -629,41 +629,41 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         success : function(data){
           if (data.code == "200"){
             var row = data.data[0];
-            $('#sales_id').val(row.hd_sales_order_id );
-            $('#sales_customer').val(row.hd_sales_order_customer);
+            $('#sales_inv_id').val(row.hd_sales_id);
+            $('#sales_customer').val(row.hd_sales_customer);
             $('#sales_customer').trigger('change');
             $('#sales_rate_customer').val(row.customer_rate);
-            $('#sales_payment').val(row.hd_sales_order_payment);
+            $('#sales_payment').val(row.hd_sales_payment);
             $('#sales_payment').trigger('change');
-            $('#sales_top').val(row.hd_sales_order_top_id);
+            $('#sales_top').val(row.hd_sales_top_id);
             $('#sales_top').trigger('change');
-            //$('#sales_due_date').val(row.hd_sales_order_top);
-            $('#sales_salesman').val(row.hd_sales_order_salesman);
+            //$('#sales_due_date').val(row.hd_sales_top);
+            $('#sales_salesman').val(row.hd_sales_salesman);
             $('#sales_salesman').trigger('change');
-            $('#sales_prepare').val(row.hd_sales_order_prepare_id);
+            $('#sales_prepare').val(row.hd_sales_prepare_id);
             $('#sales_prepare').trigger('change');
-            $('#sales_colly').val(row.hd_sales_order_colly);
-            $('#sales_warehouse').val(row.hd_sales_order_warehouse);
+            $('#sales_colly').val(row.hd_sales_colly);
+            $('#sales_warehouse').val(row.hd_sales_warehouse);
             $('#sales_warehouse').trigger('change');
-            $('#sales_ekspedisi').val(row.hd_sales_order_ekspedisi);
+            $('#sales_ekspedisi').val(row.hd_sales_ekspedisi);
             $('#sales_ekspedisi').trigger('change');
             $('#footerdiscount').on('show.bs.modal', function (event) {
-              edit_footer_discount_percentage1.set(row.hd_sales_order_percentage1);
-              edit_footer_discount_percentage2.set(row.hd_sales_order_percentage2);
-              edit_footer_discount_percentage3.set(row.hd_sales_order_percentage3);
-              edit_footer_discount1.set(row.hd_sales_order_disc1);
-              edit_footer_discount2.set(row.hd_sales_order_disc2);
-              edit_footer_discount3.set(row.hd_sales_order_disc3);
+              edit_footer_discount_percentage1.set(row.hd_sales_percentage1);
+              edit_footer_discount_percentage2.set(row.hd_sales_percentage2);
+              edit_footer_discount_percentage3.set(row.hd_sales_percentage3);
+              edit_footer_discount1.set(row.hd_sales_disc1);
+              edit_footer_discount2.set(row.hd_sales_disc2);
+              edit_footer_discount3.set(row.hd_sales_disc3);
             })
-            footer_total_discount.set(row.hd_sales_order_total_discount);
-            footer_total_ppn.set(row.hd_sales_order_ppn);
-            if(row.hd_sales_order_ppn > 0){
+            footer_total_discount.set(row.hd_sales_total_discount);
+            footer_total_ppn.set(row.hd_sales_ppn);
+            if(row.hd_sales_ppn > 0){
               $("#ppnchecked").prop("checked", true);
             }
-            footer_total_invoice.set(row.hd_sales_order_total);
-            footer_dp.set(row.hd_sales_order_dp);
-            footer_remaining_debt.set(row.hd_sales_order_remaining_debt);
-            $('#sales_remark').val(row.hd_sales_order_note);
+            footer_total_invoice.set(row.hd_sales_total);
+            footer_dp.set(row.hd_sales_dp);
+            footer_remaining_debt.set(row.hd_sales_remaining_debt);
+            $('#sales_remark').val(row.hd_sales_note);
             let title = 'Pilih Sales Order';
             let message = 'Sales Order Berhasil Di Pilih';
             let state = 'info';
@@ -671,6 +671,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             $('#temp-sales-list').DataTable().ajax.reload();
             check_tempt_data();
             clear_input();
+
+
           }else{
             Swal.fire({
               icon: 'error',
@@ -856,12 +858,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     e.preventDefault();
     var sales_customer                           = $("#sales_customer").val();
     var sales_type                               = $("#hd_sales_type").val();
-    var sales_id                                 = $("#sales_id").val();       
+    var sales_inv_sales                          = $("#sales_inv_sales").val();
+    var sales_inv_id                             = $("#sales_inv_id").val();       
     var sales_rate_customer                      = $("#sales_rate_customer").val();
     var sales_payment                            = $("#sales_payment").val();
+    var sales_top_id                             = $("#sales_top").val();
     var sales_top                                = $("#sales_top option:selected").text();
     var sales_salesman                           = $("#sales_salesman").val();
-    var sales_prepare                            = $("#sales_prepare option:selected").text()
+    var sales_prepare                            = $("#sales_prepare option:selected").text();
+    var sales_prepare_id                         = $("#sales_prepare").val();
     var sales_colly                              = $("#sales_colly").val();
     var sales_warehouse                          = $("#sales_warehouse").val();
     var sales_ekspedisi                          = $("#sales_ekspedisi").val();
@@ -882,12 +887,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_date                               = $("#sales_date").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/save_sales",
+      url: "<?php echo base_url(); ?>Sales/save_sales_revisi",
       dataType: "json",
-      data: {sales_customer:sales_customer, sales_type:sales_type, sales_id:sales_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
+      data: {sales_customer:sales_customer, sales_type:sales_type, sales_inv_sales:sales_inv_sales, sales_inv_id:sales_inv_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_prepare_id:sales_prepare_id, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Sales/salespage";
+          window.location.href = "<?php echo base_url(); ?>/Sales/revisisalespage";
         } else {
           Swal.fire({
             icon: 'error',
@@ -996,7 +1001,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  function check_So_data()
+ /* function check_So_data()
   {
     var id = $("#sales_id").val();
     if(id != null){
@@ -1057,7 +1062,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         }
       });
     }
-  }
+  }*/
 
   function deletes(id)
   {

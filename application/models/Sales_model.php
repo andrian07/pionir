@@ -709,6 +709,31 @@ class sales_model extends CI_Model {
         return $result;
     }
     // end retur sales
+
+
+    // start revisi sales 
+
+    public function get_sales_dt($sales_id)
+    {
+        $query = $this->db->query("select * from dt_sales where hd_sales_id = '".$sales_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function get_hd_sales($sales_id)
+    {
+        $query = $this->db->query("select * from hd_sales where hd_sales_id  = '".$sales_id."'");
+        $result = $query->result();
+        return $result;
+    }
+    
+    public function get_sales_id_inv($sales_id)
+    {
+       $query = $this->db->query("select hd_sales_inv from hd_sales where hd_sales_id  = '".$sales_id."'");
+       $result = $query->result();
+       return $result;
+    }
+    // end revisi sales
 }   
 
 ?>

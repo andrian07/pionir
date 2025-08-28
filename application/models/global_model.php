@@ -63,6 +63,7 @@ class global_model extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from('hd_sales');
+        $this->db->where('hd_sales.hd_sales_status', 'Cancel');
         if($keyword != null){
             $this->db->where('hd_sales.hd_sales_inv like "%'.$keyword.'%"');
         }

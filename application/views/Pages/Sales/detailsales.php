@@ -78,9 +78,7 @@
             <p>Status: 
               <b>
                 <?php 
-                  if($row->hd_sales_status == 'Pending'){
-                    echo '<span class="badge badge-primary">Pending</span>';
-                  }else if($row->hd_sales_order_status == 'Success'){
+                  if($row->hd_sales_status == 'Success'){
                     echo '<span class="badge badge-success">Success</span>';
                   }else{
                     echo '<span class="badge badge-danger">Cancel</span>';

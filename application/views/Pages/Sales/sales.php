@@ -118,11 +118,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           data: {id:id},
           success : function(data){
             if (data.code == "200"){
-              $('#po-list').DataTable().ajax.reload();
+              $('#sales-list').DataTable().ajax.reload();
               let title = 'Hapus Data';
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';
               notif_success(title, message, state);
+              
             } else {
               Swal.fire({
                 icon: 'error',
