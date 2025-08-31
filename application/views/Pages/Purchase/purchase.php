@@ -127,7 +127,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ajax: {
         url: '<?php echo base_url(); ?>Purchase/purchase_list',
         type: 'POST',
-        data:  {start_date_val:start_date_val, end_date_val:end_date_val, supplier_filter_val:supplier_filter_val},
+        data:  {start_date_val:start_date_val, end_date_val:end_date_val, supplier_filter_val:supplier_filter_val, purchase_type:"PURCHASE"},
       },
       columns: 
       [
@@ -145,7 +145,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  function deletes(id)
+  function deletese(id)
   {
     Swal.fire({
       title: 'Konfirmasi?',

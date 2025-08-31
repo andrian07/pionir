@@ -603,20 +603,11 @@ class Sales extends CI_Controller {
 
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
-					$detail = '<a href="'.base_url().'Sales/detailsales?id='.$field['hd_sales_order_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Sales/detailsales?id='.$field['hd_sales_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$detail = '<a href="'.base_url().'Sales/detailsales?id='.$field['hd_sales_order_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Sales/detailsales?id='.$field['hd_sales_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
-				if($check_auth[0]->edit == 'Y'){
-					if($field['hd_sales_status'] != 'Cancel'){
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_sales_order_id'].'" data-name="'.$field['hd_sales_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
-					}else{
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_sales_order_id'].'" data-name="'.$field['hd_sales_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
-					}
-				}else{
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
-				}
 
 				if($check_auth[0]->delete == 'Y'){
 					if($field['hd_sales_status'] != 'Cancel'){
@@ -642,7 +633,11 @@ class Sales extends CI_Controller {
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_remaining_debt']);
 				$row[] 	= $field['salesman_name'];
 				$row[]  = $hd_sales_status;
-				$row[] 	= $detail.$delete;
+				if($field['hd_sales_type'] == 'REVISI'){
+					$row[] 	= $detail;
+				}else{
+					$row[] 	= $detail.$delete;
+				}
 				$data[] = $row;
 			}
 
@@ -994,6 +989,26 @@ class Sales extends CI_Controller {
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
 
+			$get_temp_sales_check_stock = $this->sales_model->get_temp_sales($user_id)->result_array();
+			if($warehouse_id != 1){
+				foreach($get_temp_sales_check_stock as $row){
+					$product_id 			= $row['temp_product_id'];
+					$qty 					= $row['temp_sales_qty'];
+					$product_name 			= $row['product_name'];
+					$get_last_stock_check 	= $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					if($get_last_stock_check == null){
+						$msg = "Tidak Ada Stock ".$product_name." Di Gudang";
+						echo json_encode(['code'=>0, 'result'=>$msg]);die();
+					}else{
+						$stock_now          = $get_last_stock_check[0]->stock;
+						if($stock_now < $qty){
+							$msg = "Stock ".$product_name." Tidak Cukup";
+							echo json_encode(['code'=>0, 'result'=>$msg]);die();
+						}
+					}	
+				}
+			}
+
 			$get_temp_sales = $this->sales_model->get_temp_sales($user_id)->result_array();
 			$data_insert = array(
 				'hd_sales_inv'            	=> $last_code,
@@ -1043,10 +1058,7 @@ class Sales extends CI_Controller {
 					$product_id 	= $row['temp_product_id'];
 					$qty 			= $row['temp_sales_qty'];
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
-					
-					if($get_last_stock == null){
 
-					}	
 					$last_stock 	= $get_last_stock[0]->stock;
 					$new_stock 		= $last_stock - $qty;
 					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
@@ -1800,6 +1812,26 @@ class Sales extends CI_Controller {
 			$maxCode   = $this->sales_model->get_sales_id_inv($sales_id);
 			$maxCode   = $maxCode[0]->hd_sales_inv;
 			$last_code = str_replace("PJ","RPJ", $maxCode);
+
+			$get_temp_sales_check_stock = $this->sales_model->get_temp_sales($user_id)->result_array();
+			if($warehouse_id != 1){
+				foreach($get_temp_sales_check_stock as $row){
+					$product_id 			= $row['temp_product_id'];
+					$qty 					= $row['temp_sales_qty'];
+					$product_name 			= $row['product_name'];
+					$get_last_stock_check 	= $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					if($get_last_stock_check == null){
+						$msg = "Tidak Ada Stock ".$product_name." Di Gudang";
+						echo json_encode(['code'=>0, 'result'=>$msg]);die();
+					}else{
+						$stock_now          = $get_last_stock_check[0]->stock;
+						if($stock_now < $qty){
+							$msg = "Stock ".$product_name." Tidak Cukup";
+							echo json_encode(['code'=>0, 'result'=>$msg]);die();
+						}
+					}	
+				}
+			}
 
 			$get_temp_sales = $this->sales_model->get_temp_sales($user_id)->result_array();
 			$data_insert = array(

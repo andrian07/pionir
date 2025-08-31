@@ -30,15 +30,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
           <div class="card-body">
             <div class="table-responsive">
-              <table id="transfer-list" class="display table table-striped table-hover" >
+              <table id="opname-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
-                    <th>Kode Transfer</th>
+                    <th>Kode Opname</th>
                     <th>Tanggal</th>
-                    <th>Barang</th>
-                    <th>Qty</th>
-                    <th>Dari</th>
-                    <th>Tujuan</th>
+                    <th>Diopname Oleh</th>
+                    <th>Total Opname</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -67,14 +65,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   function transferlist_table(){
-    $('#transfer-list').DataTable( {
+    $('#opname-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Transferstock/transfer_stock_list',
+        url: '<?php echo base_url(); ?>Opname/opname_list',
         type: 'POST',
         data:  {},
       },
@@ -84,9 +82,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 1},
         {data: 2},
         {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6}
+        {data: 4}
       ]
     });
   }

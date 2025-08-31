@@ -42,6 +42,13 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	public function clear_temp_purchase()
+	{
+		$user_id 		= $_SESSION['user_id'];
+		$this->purchase_model->clear_temp_purchase($user_id);
+		echo json_encode(['code'=>200, 'data'=>"Cler Success"]);
+	}
+
 	public function purchase_list(){
 		$modul = 'Purchase';
 		$check_auth = $this->check_auth($modul);
@@ -49,6 +56,7 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
+			$purchase_type 		= $this->input->post('purchase_type');
 
 			if($this->input->post('start_date_val') != null){
 				$start_date_val 	 = $this->input->post('start_date_val');
@@ -63,8 +71,8 @@ class Purchase extends CI_Controller {
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
-			$count_list = $this->purchase_model->purchase_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
+			$list = $this->purchase_model->purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val, $purchase_type)->result_array();
+			$count_list = $this->purchase_model->purchase_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val, $purchase_type)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -204,6 +212,24 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+
+	public function delete_temp_purchase()
+	{
+		$modul = 'Purchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$product_id  = $this->input->post('id');
+			$user_id 	 = $_SESSION['user_id'];
+			$this->purchase_model->delete_temp_purchase($product_id, $user_id);
+			$msg = 'Success Delete';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
 	public function search_po_purchase()
 	{
 		$keyword = $this->input->get('term');
@@ -334,6 +360,7 @@ class Purchase extends CI_Controller {
 			$po_inv 									= $this->input->post('po_inv');
 			$po_id 										= $this->input->post('po_id');
 			$purchase_top								= $this->input->post('purchase_top');
+			$purchase_top_id 							= $this->input->post('purchase_top_id');
 			$purchase_payment_method 					= $this->input->post('purchase_payment_method');
 			$purchase_supplier 							= $this->input->post('purchase_supplier');
 			$no_faktur_supplier 						= $this->input->post('no_faktur_supplier');
@@ -419,6 +446,7 @@ class Purchase extends CI_Controller {
 				'hd_purchase_supplier'			=> $purchase_supplier,
 				'hd_purchase_tax'				=> $purchase_tax,
 				'hd_purchase_top'				=> $purchase_top,
+				'hd_purchase_top_id'			=> $purchase_top_id,
 				'hd_purchase_due_date'			=> $purchase_due_date,
 				'hd_purchase_payment'			=> $purchase_payment_method,
 				'hd_purchase_ekspedisi'			=> $purchase_ekspedisi,
@@ -2330,6 +2358,108 @@ class Purchase extends CI_Controller {
 		}
 	}
 	// end retur purchase
+
+
+
+	// revisi purchase
+
+	public function purchaserevisi(){
+		$modul = 'RevisiPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $supplier_list);
+			$this->load->view('Pages/Purchase/revisipurchase', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function addpurchaserevisi()
+	{
+		$modul = 'RevisiPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$data['data'] = array_merge($supplier_list, $ekspedisi_list, $payment_list, $warehouse_list);
+			$this->load->view('Pages/Purchase/purchaseaddrevisi', $data);
+			//echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function search_purchase()
+	{
+		$supplier_id = $this->input->get('id');
+		$keyword = $this->input->get('term');
+		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
+		if (!($keyword == '' || $keyword == NULL)) {
+			$find = $this->global_model->search_purchase($keyword, $supplier_id)->result_array();
+			$find_result = [];
+			foreach ($find as $row) {
+				$diplay_text = $row['hd_purchase_invoice'];
+				$find_result[] = [
+					'id'                  => $row['hd_purchase_id'],
+					'value'               => $diplay_text
+				];
+			}
+			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
+		}
+		echo json_encode($result);
+	}
+
+
+	public function copy_purchase_to_temp_purchase()
+	{
+		$modul = 'RevisiPurchase';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$purchase_id 			= $this->input->post('purchase_id');
+			$user_id 				= $_SESSION['user_id'];
+			$get_hd_purcahse 		= $this->purchase_model->header_purchase($purchase_id);
+			$get_detail_purcahse 	= $this->purchase_model->detail_purchase($purchase_id);
+			$this->purchase_model->clear_temp_purchase($user_id);
+			foreach($get_detail_purcahse as $row)
+			{
+				$data_copy_temp = array(
+					'temp_product_id'			 => $row->dt_product_id,
+					'temp_purchase_price'		 => $row->dt_purchase_price,
+					'temp_purchase_qty'			 => $row->dt_purchase_qty,
+					'temp_purchase_weight'		 => $row->dt_purchase_weight,
+					'temp_purchase_ongkir'		 => $row->dt_purchase_ongkir,
+					'temp_purchase_total_weight' => $row->dt_purchase_total_weight,
+					'temp_purchase_total_ongkir' => $row->dt_purchase_total_ongkir,
+					'temp_purchase_total'		 => $row->dt_purchase_total,
+					'temp_user_id'				 => $user_id
+				);	
+
+				$copy_temp_purchase = $this->purchase_model->copy_temp_purchase($data_copy_temp);
+			}
+			$msg = "Success Copy";
+			echo json_encode(['code'=>200, 'data'=>$get_hd_purcahse]);die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function check_temp_purchase_revisi()
+	{
+		$user_id 			= $_SESSION['user_id'];
+		$check_temp_po  	= $this->purchase_model->check_temp_purchase_revisi($user_id)->result_array();
+		echo json_encode(['code'=>200, 'data'=>$check_temp_po]);
+		die();
+	}
+
+	// end revisi purchase
 }
 
 ?>

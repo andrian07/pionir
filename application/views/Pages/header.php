@@ -177,11 +177,13 @@
                       <span class="sub-item">Pembelian</span>
                     </a>
                   </li>
+                  <?php /* 
                   <li>
                     <a href="<?php echo base_url(); ?>Purchase/purchaserevisi">
                       <span class="sub-item">Revisi Pembelian</span>
                     </a>
                   </li>
+                  */ ?>
                   <li>
                     <a href="<?php echo base_url(); ?>Purchase/returpurchase">
                       <span class="sub-item">Retur Pembelian</span>

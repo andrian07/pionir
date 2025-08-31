@@ -605,7 +605,7 @@ class purchase_model extends CI_Model {
         $this->db->insert('temp_purchase', $data_copy_temp);
     }
 
-    public function purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)
+    public function purchase_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val, $purchase_type)
     {
         $this->db->select('*');
         $this->db->from('hd_purchase');
@@ -615,6 +615,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_purchase.hd_purchase_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
         $this->db->join('ms_user', 'hd_purchase.created_by = ms_user.user_id');
+        $this->db->where('hd_purchase_type', $purchase_type);
         if($start_date_val != null){
             $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
         }
@@ -635,7 +636,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function purchase_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)
+    public function purchase_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val, $purchase_type)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_purchase');
@@ -645,6 +646,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_purchase.hd_purchase_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
         $this->db->join('ms_user', 'hd_purchase.created_by = ms_user.user_id');
+        $this->db->where('hd_purchase_type', $purchase_type);
         if($start_date_val != null){
             $this->db->where('hd_po_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
         }
@@ -702,11 +704,18 @@ class purchase_model extends CI_Model {
 
     public function detail_po_purchase($po_id)
     {
-        $query = $this->db->query("select * from dt_po a, hd_po b, ms_product c, ms_unit d, ms_user e, hd_input_stock f, dt_input_stock g where a.hd_po_id = b.hd_po_id and a.dt_product_id = c.product_id and c.product_unit = d.unit_id and b.hd_po_id = f.hd_po_id and f.hd_input_stock_id  = g.hd_is_id and b.created_by = e.user_id and a.hd_po_id  = '".$po_id."' and hd_input_stock_status = 'Pending'");
+        $query = $this->db->query("select * from dt_po a, hd_po b, ms_product c, ms_unit d, ms_user e, hd_input_stock f, dt_input_stock g where a.hd_po_id = b.hd_po_id and a.dt_product_id = c.product_id and c.product_unit = d.unit_id and b.hd_po_id = f.hd_po_id and f.hd_input_stock_id  = g.hd_is_id and b.created_by = e.user_id and a.hd_po_id  = '".$po_id."' and hd_input_stock_status = 'Pending' group by dt_po_id");
         $result = $query->result();
         return $result;
     }
 
+
+    public function delete_temp_purchase($product_id, $user_id)
+    {
+        $this->db->where('temp_product_id', $product_id);
+        $this->db->where('temp_user_id', $user_id);
+        $this->db->delete('temp_purchase');
+    }
 
     public function check_temp_purchase($user_id)
     {
@@ -1044,6 +1053,15 @@ class purchase_model extends CI_Model {
         $this->db->set('hd_retur_purchase_status', 'Success');
         $this->db->where('hd_retur_purchase_id ', $retur_purchase_id);
         $this->db->update('hd_retur_purchase');
+    }
+
+    public function check_temp_purchase_revisi($user_id)
+    {
+        $this->db->select('*, sum(temp_purchase_total) as sub_total, sum(temp_purchase_total_ongkir) as ongkir');
+        $this->db->from('temp_purchase');
+        $this->db->where('temp_user_id', $user_id);
+        $query = $this->db->get();
+        return $query;
     }
     // end retur purchase
 }

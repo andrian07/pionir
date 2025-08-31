@@ -599,6 +599,43 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Purchase/delete_temp_purchase",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              $('#temp-purchase-list').DataTable().ajax.reload();
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.msg,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
   $('#product_name').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
@@ -734,9 +771,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           footer_total_ppn.set(row.hd_po_ppn);
           footer_total_ongkir.set(row.hd_po_ongkir);
           footer_total_invoice.set(row.hd_po_grand_total);
-
-          
-          
         }
       }
     });
@@ -803,6 +837,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var po_inv                                   = $("#po_inv").val();
     var po_id                                    = $("#po_id").val();
     var purchase_top                             = $("#purchase_top option:selected" ).text();
+    var purchase_top_id                          = $("#purchase_top").val();
     var purchase_payment_method                  = $("#purchase_payment_method").val();
     var purchase_supplier                        = $("#purchase_supplier").val();
     var no_faktur_supplier                       = $("#no_faktur_supplier").val();
@@ -829,7 +864,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_purchase",
       dataType: "json",
-      data: {po_inv:po_inv, po_id:po_id, purchase_top:purchase_top, purchase_payment_method:purchase_payment_method, purchase_supplier:purchase_supplier, no_faktur_supplier:no_faktur_supplier, faktur_date:faktur_date, purchase_ekspedisi:purchase_ekspedisi, purchase_tax:purchase_tax, purchase_date:purchase_date, purchase_warehouse:purchase_warehouse, purchase_due_date:purchase_due_date, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_remark:purchase_remark},
+      data: {po_inv:po_inv, po_id:po_id, purchase_top:purchase_top, purchase_top_id:purchase_top_id, purchase_payment_method:purchase_payment_method, purchase_supplier:purchase_supplier, no_faktur_supplier:no_faktur_supplier, faktur_date:faktur_date, purchase_ekspedisi:purchase_ekspedisi, purchase_tax:purchase_tax, purchase_date:purchase_date, purchase_warehouse:purchase_warehouse, purchase_due_date:purchase_due_date, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_remark:purchase_remark},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Purchase";
@@ -842,6 +877,39 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         }
       }
     });
+  });
+
+
+  $("#btncancel").click(function (e) {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Membatalkan Inputan",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+       $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Purchase/clear_temp_purchase",
+        dataType: "json",
+        data: {},
+        success : function(data){
+          if (data.code == "200"){
+           window.location.href = "<?php echo base_url(); ?>/Purchase";
+         }else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+     }
+   })
   });
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
