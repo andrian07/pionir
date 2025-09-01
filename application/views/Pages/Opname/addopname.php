@@ -22,7 +22,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-md-4"></div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
               <div class="col-sm-3">
-                <input id="retur_sales_date" name="retur_sales_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                <input id="opname_date" name="opname_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
               </div>
             </div>
 
@@ -84,6 +84,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Selisih HPP</label>
+                    <input id="hpp" name="hpp" type="hidden" class="form-control text-right" value="0" readonly>
                     <input id="hpp_diferent" name="hpp_diferent" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
@@ -93,7 +94,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="col-sm-8">
                   <div class="form-group">
                     <label>Catatan</label>
-                    <input id="temp_note" name="temp_note" type="text" class="form-control text-left">
+                    <input id="temp_note" name="temp_note" type="text" class="form-control text-right">
                   </div>
                 </div>
 
@@ -123,6 +124,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>Stok Sistem</th>
                     <th>Stok Fisik</th>
                     <th>Selisih</th>
+                    <th>Selisih Rupiah</th>
                     <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
@@ -179,7 +181,24 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
+  let hpp = new AutoNumeric('#hpp', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  let total_opname = new AutoNumeric('#total_opname', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
   $(document).ready(function() {
+    check_tempt_data();
     temp_opname();
   });
 
@@ -206,24 +225,23 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
     select: function(event, ui) {
       let id = ui.item.id;
-      sales_price     = ui.item.sales_price;
-      sales_qty       = ui.item.sales_qty;
+      let stock = ui.item.stock;
+      let hpp_val = ui.item.product_hpp;
       $("#product_id").val(id);
-      temp_price.set(sales_price);
-      $('#temp_qty_sell').val(sales_qty);
+      $('#system_stock').val(stock);
+      hpp.set(hpp_val);
     },
   });
 
 
-  $('#temp_qty').on('input', function (event) {
-    calculation_temp();
+  $('#fisik_stock').on('input', function (event) {
+    let system_stock_val    =  $("#system_stock").val();
+    let fisik_stock_val     =  $("#fisik_stock").val();
+    let hpp_val_cal         = parseInt(hpp.get());
+    let stock_diferent_val  =  Number(system_stock_val)  - Number(fisik_stock_val);
+    $("#stock_diferent").val(stock_diferent_val);
+    hpp_diferent.set(hpp_val_cal * Number(stock_diferent_val));
   })
-
-  $('#temp_price').on('input', function (event) {
-    calculation_temp();
-  })
-
-
 
   function temp_opname(){
     $('#temp-opname').DataTable( {
@@ -245,12 +263,172 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 3},
         {data: 4},
         {data: 5},
-        {data: 6}
+        {data: 6},
+        {data: 7}
       ]
     });
     check_tempt_data();
   }
 
 
+  $('#btnadd_temp').click(function(e){
+    e.preventDefault();
+    var warehouse               = $("#warehouse").val();
+    var product_id              = $("#product_id").val();
+    var system_stock            = $("#system_stock").val();
+    var fisik_stock             = $("#fisik_stock").val();
+    var stock_diferent          = $("#stock_diferent").val();
+    var hpp_submit              = parseInt(hpp.get());
+    var hpp_diferent_submit     = parseInt(hpp_diferent.get());
+    var temp_note               = $("#temp_note").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Opname/add_temp_opname",
+      dataType: "json",
+      data: {warehouse:warehouse, product_id:product_id, system_stock:system_stock, fisik_stock:fisik_stock, stock_diferent:stock_diferent, hpp_submit:hpp_submit, hpp_diferent_submit:hpp_diferent_submit, temp_note:temp_note},
+      success : function(data){
+        if (data.code == "200"){
+          let title = 'Tambah Data';
+          let message = 'Data Berhasil Di Tambah';
+          let state = 'info';
+          notif_success(title, message, state);
+          $('#temp-opname').DataTable().ajax.reload();
+          check_tempt_data();
+          clear_input();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
+
+  function clear_input()
+  {
+    $("#product_name").val("");
+    $("#product_id").val("");
+    $("#system_stock").val(0);
+    $("#fisik_stock").val(0);
+    $("#stock_diferent").val(0);
+    hpp.set(0);
+    hpp_diferent.set(0);
+    $("#temp_note").val("");
+  }
+
+
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Opname/delete_temp_opname",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+              $('#temp-opname').DataTable().ajax.reload();
+              check_tempt_data();
+              clear_input();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.result,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
+  function edit_temp(id, sales_id)
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Opname/get_edit_temp_opname",
+      dataType: "json",
+      data: {id:id, sales_id:sales_id},
+      success : function(data){
+        if (data.code == "200"){
+          let row = data.result[0];
+          $("#product_name").val(row.product_name);
+          $("#product_id").val(row.temp_opname_product_id);
+          $("#system_stock").val(row.temp_opname_system_stock);
+          $("#fisik_stock").val(row.temp_opname_fisik_stock);
+          $("#stock_diferent").val(row.temp_opname_diferent_stock);
+          hpp.set(row.product_hpp);;
+          hpp_diferent.set(row.temp_opname_diferent_hpp);
+          $("#temp_note").val(row.temp_opname_note);
+        }
+      }
+    });
+  }
+
+  function check_tempt_data()
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Opname/check_temp_opname",
+      dataType: "json",
+      data: {},
+      success : function(data){
+        if (data.code == "200"){
+          if(data.data.length > 0){
+            let row = data.data[0];
+            $("#warehouse").val(row.temp_opname_warehouse_id);
+            $('#warehouse').trigger('change');
+            $('#warehouse').prop('disabled', true);
+            total_opname.set(row.total_diff);
+          }else{
+            $("#warehouse").val("");
+            $('#warehouse').trigger('change');
+            $('#warehouse').prop('disabled', false);
+            total_opname.set(0);
+          }
+        }
+      }
+    });
+  }
+
+  $('#btnsave').click(function(e){
+    e.preventDefault();
+    var warehouse               = $("#warehouse").val();
+    var opname_date             = $("#opname_date").val();
+    var total_opname            = $("#total_opname").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Opname/save_opname",
+      dataType: "json",
+      data: {warehouse:warehouse, opname_date:opname_date, total_opname:total_opname},
+      success : function(data){
+        if (data.code == "200"){
+          window.location.href = "<?php echo base_url(); ?>/Opname/saveopname";
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data.result,
+          })
+        }
+      }
+    });
+  });
 
 </script>

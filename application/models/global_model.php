@@ -31,6 +31,22 @@ class global_model extends CI_Model {
         return $query;
     }
 
+    public function search_product_opname($keyword, $warehouse)
+    {
+        $this->db->select('*');
+        $this->db->from('ms_product');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
+        $this->db->join('ms_product_stock', 'ms_product.product_id = ms_product_stock.product_id');
+        $this->db->where('ms_product.is_active', 'y');
+       
+        if($keyword != null){
+            $this->db->where('(ms_product.product_name like "%'.$keyword.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") AND ms_product_stock.warehouse_id = '.$warehouse.'');
+        }
+        $this->db->limit(50);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function search_purchase_inv($keyword, $supplier_id)
     {
         $this->db->select('*');
@@ -45,7 +61,7 @@ class global_model extends CI_Model {
         return $query;
     }
 
-     public function search_purchase($keyword)
+    public function search_purchase($keyword)
     {
         $this->db->select('*');
         $this->db->from('hd_purchase');
