@@ -235,10 +235,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 
   $('#fisik_stock').on('input', function (event) {
-    let system_stock_val    =  $("#system_stock").val();
-    let fisik_stock_val     =  $("#fisik_stock").val();
+    let system_stock_val    = $("#system_stock").val();
+    let fisik_stock_val     = $("#fisik_stock").val();
     let hpp_val_cal         = parseInt(hpp.get());
-    let stock_diferent_val  =  Number(system_stock_val)  - Number(fisik_stock_val);
+    let stock_diferent_val  = Number(fisik_stock_val) - Number(system_stock_val);
     $("#stock_diferent").val(stock_diferent_val);
     hpp_diferent.set(hpp_val_cal * Number(stock_diferent_val));
   })
@@ -394,13 +394,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           if(data.data.length > 0){
             let row = data.data[0];
             $("#warehouse").val(row.temp_opname_warehouse_id);
-            $('#warehouse').trigger('change');
-            $('#warehouse').prop('disabled', true);
+            $('#warehouse').trigger('change');            
             total_opname.set(row.total_diff);
           }else{
             $("#warehouse").val("");
             $('#warehouse').trigger('change');
-            $('#warehouse').prop('disabled', false);
             total_opname.set(0);
           }
         }
@@ -412,13 +410,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     e.preventDefault();
     var warehouse               = $("#warehouse").val();
     var opname_date             = $("#opname_date").val();
-    var total_opname            = $("#total_opname").val();
+    var total_opname_val        = parseInt(total_opname.get());
     var opname_remark           = $("#opname_remark").val();
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Opname/save_opname",
       dataType: "json",
-      data: {warehouse:warehouse, opname_date:opname_date, total_opname:total_opname, opname_remark:opname_remark},
+      data: {warehouse:warehouse, opname_date:opname_date, total_opname:total_opname_val, opname_remark:opname_remark},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Opname";

@@ -270,7 +270,7 @@ class Opname extends CI_Controller {
 			$total_opname   = $this->input->post('total_opname');
 			$user_id 		= $_SESSION['user_id'];
 
-			if($total_opname < 1){
+			if($total_opname == 0){
 				$msg = 'Silahkan Isi Data Terlebih Dahulu';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
 			}
@@ -281,6 +281,7 @@ class Opname extends CI_Controller {
 			$warehouse_name 	= $get_warehouse_code[0]->warehouse_name;
 
 			$maxCode  = $this->opname_model->last_opname();
+
 			$inv_code = 'OP/'.$warehouse_code.'/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
@@ -289,7 +290,6 @@ class Opname extends CI_Controller {
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
-
 			$data_insert = array(
 				'opname_code'			=> $last_code,
 				'opname_warehouse'		=> $warehouse,
@@ -303,14 +303,14 @@ class Opname extends CI_Controller {
 			foreach($get_temp_opname  as $row){
 				$status_stock 	= $row['temp_opname_diferent_stock'];
 				if($status_stock < 0){
-					$status == 'Minus';
+					$status = 'Minus';
 				}else{
-					$status == 'Plus';
+					$status = 'Plus';
 				}
 
 				$data_insert_detail = array(
 					'opname_id'							=> $save_opname,
-					'dt_opname_product_id'				=> $row['temp_opname_product_id '],
+					'dt_opname_product_id'				=> $row['temp_opname_product_id'],
 					'dt_opname_stock_awal'				=> $row['temp_opname_system_stock'],
 					'dt_opname_stock_akhir'				=> $row['temp_opname_fisik_stock'],
 					'dt_opname_stock_difference'		=> $row['temp_opname_diferent_stock'],
@@ -322,7 +322,7 @@ class Opname extends CI_Controller {
 
 				if($warehouse_id != 1){
 					$product_id 	= $row['temp_opname_product_id'];
-					$qty 			= $row['temp_is_qty'];
+					$qty 			= $row['temp_opname_fisik_stock'];
 					$last_stock 	= $row['temp_opname_system_stock'];
 					$new_stock 		= $row['temp_opname_fisik_stock'];
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
