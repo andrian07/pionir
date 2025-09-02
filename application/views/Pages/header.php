@@ -124,6 +124,11 @@
                     </a>
                   </li>
                   <li>
+                    <a href="<?php echo base_url(); ?>Masterdata/payment">
+                      <span class="sub-item">Pembayaran</span>
+                    </a>
+                  </li>
+                  <li>
                     <a href="<?php echo base_url(); ?>Masterdata/salesman">
                       <span class="sub-item">Salesman</span>
                     </a>

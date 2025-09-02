@@ -550,6 +550,18 @@ class masterdata_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
+
+    public function save_payment($insert)
+    {
+        $this->db->insert('ms_payment', $insert);
+    }
+
+    public function update_payment($update, $payment_id)
+    {
+        $this->db->set($update);
+        $this->db->where('payment_id ', $payment_id);
+        $this->db->update('ms_payment');
+    }
     // end payment type
 
     //user 

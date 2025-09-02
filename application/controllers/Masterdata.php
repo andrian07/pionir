@@ -1562,7 +1562,186 @@ class Masterdata extends CI_Controller {
 
 	// payment type
 
+	public function payment()
+	{
+		$modul = 'Payment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$check_auth['check_auth'] 			= $check_auth;
+			$payment_list['payment_list'] 		= $this->masterdata_model->payment_list();
+			$data['data'] = array_merge($check_auth, $payment_list);
+			$this->load->view('Pages/Masterdata/payment', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}	
 
+	public function save_payment()
+	{
+		$modul = 'Payment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->add == 'Y'){
+			$payment_name 	= $this->input->post('payment_name');
+			$payment_rek 	= $this->input->post('payment_rek');
+			$user_id 		= $_SESSION['user_id'];
+			if($payment_name == null){
+				$msg = "Nama Pembayaran Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			$insert = array(
+				'payment_name'	       => $payment_name,
+				'payment_rek'	       => $payment_rek,
+			);
+			$this->masterdata_model->save_payment($insert);
+
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Tambah Master Pembayaran',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Input";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}
+	}
+
+	public function edit_payment()
+	{
+		$modul = 'Payment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$payment_id 	= $this->input->post('payment_id');
+			$payment_name 	= $this->input->post('payment_name');
+			$payment_rek 	= $this->input->post('payment_rek');
+			$user_id 		= $_SESSION['user_id'];
+
+			if($payment_name == null){
+				$msg = "Nama Pembayaran Harus Di isi";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$update = array(
+				'payment_name'	       => $payment_name,
+				'payment_no_rek'	   => $payment_rek,
+			);
+
+			$this->masterdata_model->update_payment($update, $payment_id);
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Ubah Master Payment',
+				'activity_table_user'	       => $user_id,
+			);
+			$this->global_model->save($data_insert_act);
+			$msg = "Succes Update";
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+			die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);
+		}	
+	}
+
+	public function payment_list()
+	{
+		
+		$modul = 'Payment';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$search 			= $this->input->post('search');
+			$length 			= $this->input->post('length');
+			$start 			  	= $this->input->post('start');
+
+			if($search != null){
+				$search = $search['value'];
+			}
+			$user_id = $_SESSION['user_id'];
+			$get_filter_value = $this->masterdata_model->get_filter_value($user_id);
+			if($get_filter_value != null){
+				if($get_filter_value[0]->supplier_filter == 0){
+					$supplier_filter = null;
+				}else{
+					$supplier_filter = $get_filter_value[0]->supplier_filter;
+				}
+
+				if($get_filter_value[0]->category_filter == 0){
+					$category_filter = null;
+				}else{
+					$category_filter = $get_filter_value[0]->category_filter;
+				}
+
+				if($get_filter_value[0]->brand_filter == 0){
+					$brand_filter = null;
+				}else{
+					$brand_filter = $get_filter_value[0]->brand_filter;
+				}
+			}else{	
+				$supplier_filter = null;
+				$category_filter = null;
+				$brand_filter    = null;
+			}
+			$list = $this->masterdata_model->product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter)->result_array();
+			$count_list = $this->masterdata_model->product_list_count($search, $supplier_filter, $category_filter, $brand_filter)->result_array();
+			$total_row = $count_list[0]['total_row'];
+			$data = array();
+			$no = $_POST['start'];
+			foreach ($list as $field) {
+
+				if($field['is_ppn'] == 'PPN'){
+					$prodcut_ppn = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				}else{
+					$prodcut_ppn = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+				}
+
+				if($field['is_package'] == 'Y'){
+					$product_package = '<span class="badge badge-success"><i class="fas fa-check-circle"></i></span>';
+				}else{
+					$product_package = '<span class="badge badge-danger multi-badge"><i class="fas fa-times-circle"></i></span>';
+				}
+
+				if($check_auth[0]->edit == 'Y'){
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['product_id'].'" data-name="'.$field['product_name'].'"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn btnprice" onclick="setprice('.$field['product_id'].')""><i class="fas fa-cog sizing-fa"></i></button> ';
+				}else{
+					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-cog sizing-fa"></i></button> ';
+				}
+
+				if($check_auth[0]->delete == 'Y'){
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['product_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}else{
+					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				$product_sell_price_1 = '<span class="badge badge-primary">'.number_format($field['product_sell_price_1']).'</span>';
+
+				$url_image = base_url().'assets/products/'.$field['product_image'];
+				$no++;
+				$row = array();
+				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
+				$row[] = $field['brand_name'];
+				$row[] = $field['category_name'];
+				$row[] = $product_sell_price_1;
+				$row[] = $field['product_supplier_tag'];
+				$row[] = $product_package;
+				$row[] = $prodcut_ppn;
+				$row[] = '<img src="'.$url_image.'" width="50%">';
+				$row[] = $edit.$delete;
+				$data[] = $row;
+			}
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $total_row,
+				"recordsFiltered" => $total_row,
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+
+	}	
 	// End payment type
 }	
 
