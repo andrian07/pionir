@@ -34,12 +34,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <table id="debt-list" class="display table table-striped table-hover">
                     <thead>
                       <tr>
-                        <th>Kode Supplier</th>
-                        <th>Nama Supplier</th>
-                        <th>Alamat</th>
-                        <th>No Telp</th>
-                        <th>Jlh. Nota</th>
-                        <th>Total Hutang</th>
+                        <th>Kode Opname</th>
+                        <th>Gudang</th>
+                        <th>Tanggal</th>
+                        <th>Total</th>
                         <th>Aksi</th>
                       </tr>
                     </thead>
@@ -89,40 +87,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 1},
         {data: 2},
         {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6}
+        {data: 4}
       ]
     });
   }
-
-  function historydebtlist(){
-    $('#history-debt-list').DataTable( {
-      serverSide: true,
-      search: true,
-      processing: true,
-      ordering: false,
-      retrieve: true,
-      ajax: {
-        url: '<?php echo base_url(); ?>Payment/history_debt_list',
-        type: 'POST',
-        data:  {},
-      },
-      columns: 
-      [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-      ]
-    });
-  }
-
-
 
   $(".delete").click(function (e) {
     var id = $(this).attr("data-id");

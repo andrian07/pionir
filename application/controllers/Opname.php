@@ -11,6 +11,7 @@ class Opname extends CI_Controller {
 		$this->load->model('masterdata_model');
 		$this->load->model('global_model');
 		$this->load->model('opname_model');
+		$this->load->model('purchase_model');
 		$this->load->library('session');
 		$this->load->helper(array('url', 'html'));
 	}
@@ -257,7 +258,7 @@ class Opname extends CI_Controller {
 		die();
 	}
 
-	public function saveopname()
+	public function save_opname()
 	{
 		
 
@@ -299,7 +300,7 @@ class Opname extends CI_Controller {
 			$save_opname = $this->opname_model->save_opname($data_insert);
 
 			$get_temp_opname = $this->opname_model->get_temp_opname($user_id)->result_array();
-			foreach($get_temp_purchase  as $row){
+			foreach($get_temp_opname  as $row){
 				$status_stock 	= $row['temp_opname_diferent_stock'];
 				if($status_stock < 0){
 					$status == 'Minus';
@@ -318,6 +319,30 @@ class Opname extends CI_Controller {
 				);
 
 				$save_detail_opname = $this->opname_model->save_detail_opname($data_insert_detail);
+
+				if($warehouse_id != 1){
+					$product_id 	= $row['temp_opname_product_id'];
+					$qty 			= $row['temp_is_qty'];
+					$last_stock 	= $row['temp_opname_system_stock'];
+					$new_stock 		= $row['temp_opname_fisik_stock'];
+					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
+					$new_stock 		= $last_stock + $qty;
+					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock,
+						'stock_movement_new_stock'		=> $new_stock,
+						'stock_movement_desc'			=> 'Opname Stock',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> $status,
+						'stock_movement_date'			=> $opname_date,
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+
 			}
 
 			$data_insert_act = array(

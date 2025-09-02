@@ -138,7 +138,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="sales_retur_remark" name="sales_retur_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="opname_remark" name="opname_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -390,6 +390,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {},
       success : function(data){
         if (data.code == "200"){
+          console.log(data.data);
           if(data.data.length > 0){
             let row = data.data[0];
             $("#warehouse").val(row.temp_opname_warehouse_id);
@@ -412,14 +413,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var warehouse               = $("#warehouse").val();
     var opname_date             = $("#opname_date").val();
     var total_opname            = $("#total_opname").val();
+    var opname_remark           = $("#opname_remark").val();
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Opname/save_opname",
       dataType: "json",
-      data: {warehouse:warehouse, opname_date:opname_date, total_opname:total_opname},
+      data: {warehouse:warehouse, opname_date:opname_date, total_opname:total_opname, opname_remark:opname_remark},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Opname/saveopname";
+          window.location.href = "<?php echo base_url(); ?>/Opname";
         } else {
           Swal.fire({
             icon: 'error',
