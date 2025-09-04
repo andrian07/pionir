@@ -1182,20 +1182,40 @@ class Masterdata extends CI_Controller {
 
 				$product_sell_price_1 = '<span class="badge badge-primary">'.number_format($field['product_sell_price_1']).'</span>';
 
+				if($field['product_po_status'] > 0){
+					$intransit   = 'Intransit';
+				}else{
+					$intransit   = 'None';
+				}
+
+
+				if($field['product_status'] == 'Aktif'){
+					$product_status = '<span class="badge badge-success">Aktif</span>';
+				}else if($field['product_status'] == 'Tidak Aktif'){
+					$product_status = '<span class="badge badge-danger">Tidak Aktif</span>';
+				}else{
+					$product_status = '<span class="badge badge-warning">Discontinue</span>';
+				}
+
+
 				$url_image = base_url().'assets/products/'.$field['product_image'];
 				$no++;
 				$row = array();
 				$row[] = '<h2 class="table-product">'.$field['product_code'].'</h3><p>'.$field['product_name'].'</p>';
+				$row[] = $field['unit_name'];
 				$row[] = $field['brand_name'];
 				$row[] = $field['category_name'];
 				$row[] = $product_sell_price_1;
 				$row[] = $field['product_supplier_tag'];
+				$row[] = $product_status;
+				$row[] = $intransit;
 				$row[] = $product_package;
 				$row[] = $prodcut_ppn;
 				$row[] = '<img src="'.$url_image.'" width="50%">';
 				$row[] = $edit.$delete;
 				$data[] = $row;
 			}
+
 			$output = array(
 				"draw" => $_POST['draw'],
 				"recordsTotal" => $total_row,
@@ -1352,6 +1372,7 @@ class Masterdata extends CI_Controller {
 			$product_location			= $this->input->post('product_location_edit');
 			$product_description		= $this->input->post('product_description_edit');
 			$product_search_key			= $this->input->post('product_search_key_edit');
+			$product_status				= $this->input->post('product_status_edit');
 			$user_id 					= $_SESSION['user_id'];
 			$product_supplier_id_tag 	= implode(",",$product_supplier);
 
@@ -1394,7 +1415,8 @@ class Masterdata extends CI_Controller {
 				'product_desc'				=> $product_description,
 				'product_purchase_record'   => $product_purchase_record,
 				'product_key'				=> $product_search_key,
-				'product_image' 			=> $new_image_name
+				'product_image' 			=> $new_image_name,
+				'product_status'			=> $product_status
 			);	
 
 
@@ -1545,7 +1567,7 @@ class Masterdata extends CI_Controller {
 		$user_id 		 = $_SESSION['user_id'];
 
 		$this->masterdata_model->delete_filter_product($user_id);
-		
+
 		$data_insert = array(
 			'supplier_filter' 	=> $filter_supplier,
 			'category_filter'	=> $filter_category,
@@ -1646,7 +1668,7 @@ class Masterdata extends CI_Controller {
 
 	public function payment_list()
 	{
-		
+
 		$modul = 'Payment';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){

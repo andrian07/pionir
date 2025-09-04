@@ -181,6 +181,33 @@ class transferstock_model extends CI_Model {
         $this->db->where('user_id', $user_id);
         $this->db->delete('temp_transfer_stock');
     }
+
+    public function header_transfer_stock($hd_transfer_id)
+    {   
+        $query = $this->db->query("select * from hd_transfer_stock a, ms_user b where a.user_id = b.user_id and hd_transfer_stock_id   = '".$hd_transfer_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_transfer_stock($hd_transfer_id)
+    {
+        $this->db->select('*, from.warehouse_name as from, to.warehouse_name as to');
+        $this->db->from('dt_transfer_stock');
+        $this->db->join('ms_product', 'dt_transfer_stock.dt_transfer_stock_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
+        $this->db->join('ms_warehouse AS from', 'dt_transfer_stock.dt_transfer_stock_warehouse_from = from.warehouse_id');
+        $this->db->join('ms_warehouse AS to', 'dt_transfer_stock.dt_transfer_stock_warehouse_to = to.warehouse_id');
+        $this->db->where('hd_transfer_stock_id', $hd_transfer_id);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function update_transfer_stock($hd_transfer_id)
+    {
+        $this->db->set('hd_transfer_stock_status', 'Cancel');
+        $this->db->where('hd_transfer_stock_id', $hd_transfer_id);
+        $this->db->update('hd_transfer_stock');
+    }
 }   
 
 ?>

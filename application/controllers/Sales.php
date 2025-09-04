@@ -633,11 +633,7 @@ class Sales extends CI_Controller {
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_remaining_debt']);
 				$row[] 	= $field['salesman_name'];
 				$row[]  = $hd_sales_status;
-				if($field['hd_sales_type'] == 'REVISI'){
-					$row[] 	= $detail;
-				}else{
-					$row[] 	= $detail.$delete;
-				}
+				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
 

@@ -59,9 +59,9 @@ class Transferstock extends CI_Controller {
 			foreach ($list as $field) {
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
-					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_transfer_stock_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Transferstock/detailtransfer?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_transfer_stock_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}else{
-					$detail = '<a href="'.base_url().'Purchase/detailpurchase?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
+					$detail = '<a href="'.base_url().'Transferstock/detailtransfer?id='.$field['hd_transfer_stock_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
 				if($check_auth[0]->edit == 'Y'){
@@ -74,6 +74,7 @@ class Transferstock extends CI_Controller {
 					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
 				}
 
+
 				if($check_auth[0]->delete == 'Y'){
 					if($field['hd_transfer_stock_status'] != 'Cancel'){
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_transfer_stock_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
@@ -82,6 +83,12 @@ class Transferstock extends CI_Controller {
 					}
 				}else{
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
+				}
+
+				if($field['hd_transfer_stock_status'] == 'Success'){
+					$status = '<span class="badge badge-success">Success</span>';
+				}else{
+					$status = '<span class="badge badge-danger multi-badge">Cancel</span>';
 				}
 
 				$date = date_create($field['hd_transfer_stock_date']); 
@@ -94,6 +101,7 @@ class Transferstock extends CI_Controller {
 				$row[] 	= $field['dt_transfer_stock_qty'];
 				$row[] 	= $field['from'];
 				$row[] 	= $field['to'];
+				$row[] 	= $status;
 				$row[] 	= $detail.$delete;
 				$data[] = $row;
 			}
@@ -123,6 +131,22 @@ class Transferstock extends CI_Controller {
 			$this->load->view('Pages/Transferstock/addtransferstock', $data);
 		}else{
 			print_r('Tidak Ada Akses');die();
+		}
+	}
+
+	public function detailtransfer()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$hd_transfer_id  = $this->input->get('id');
+			$header_transfer['header_transfer'] = $this->transferstock_model->header_transfer_stock($hd_transfer_id);
+			$detail_transfer['detail_transfer'] = $this->transferstock_model->detail_transfer_stock($hd_transfer_id)->result_array(); 
+			$data['data'] = array_merge($header_transfer, $detail_transfer); 
+			$this->load->view('Pages/Transferstock/detailtransfer', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 	}
 
@@ -379,8 +403,8 @@ class Transferstock extends CI_Controller {
 					$movement_stock = array(
 						'stock_movement_product_id'		=> $product_id,
 						'stock_movement_qty'			=> $qty,
-						'stock_movement_before_stock'	=> $last_stock_from,
-						'stock_movement_new_stock'		=> $new_stock_from,
+						'stock_movement_before_stock'	=> $last_stock_to,
+						'stock_movement_new_stock'		=> $new_stock_to,
 						'stock_movement_desc'			=> 'Transfer Stock',
 						'stock_movement_inv'			=> $last_code,
 						'stock_movement_calculate'		=> 'Plus',
@@ -398,6 +422,81 @@ class Transferstock extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 
+	}
+
+	public function delete_transfer_stock()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->delete == 'Y'){
+			$hd_transfer_id  	= $this->input->post('id');
+			$user_id 		 	= $_SESSION['user_id'];
+			$header_transfer 	= $this->transferstock_model->header_transfer_stock($hd_transfer_id);
+			$detail_transfer 	= $this->transferstock_model->detail_transfer_stock($hd_transfer_id)->result_array();
+			$last_code          = $header_transfer[0]->hd_transfer_stock_code;
+			foreach($detail_transfer as $row)
+			{
+				$product_id 		= $row['dt_transfer_stock_product_id'];
+				$qty 				= $row['dt_transfer_stock_qty'];
+				$warehouse_to 		= $row['dt_transfer_stock_warehouse_to'];
+				$warehouse_from 	= $row['dt_transfer_stock_warehouse_from'];
+
+				if($warehouse_from != 1){
+					$get_last_stock_from = $this->transferstock_model->get_last_stock($product_id, $warehouse_from);
+					$last_stock_from 	 = $get_last_stock_from[0]->stock;
+					$new_stock_from 	 = $last_stock_from + $qty;
+					$this->global_model->update_stock($product_id, $warehouse_from, $new_stock_from);
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock_from,
+						'stock_movement_new_stock'		=> $new_stock_from,
+						'stock_movement_desc'			=> 'Batal Transfer Stock',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Plus',
+						'stock_movement_date'			=> date('Y-m-d'),
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+
+
+				if($warehouse_to != 1){
+
+					$get_last_stock_to	 = $this->transferstock_model->get_last_stock($product_id, $warehouse_to);
+					$last_stock_to 		 = $get_last_stock_to[0]->stock;
+					$new_stock_to 		 = $last_stock_to - $qty;
+					$this->global_model->update_stock($product_id, $warehouse_to, $new_stock_to);
+					$movement_stock = array(
+						'stock_movement_product_id'		=> $product_id,
+						'stock_movement_qty'			=> $qty,
+						'stock_movement_before_stock'	=> $last_stock_to,
+						'stock_movement_new_stock'		=> $new_stock_to,
+						'stock_movement_desc'			=> 'Batal Transfer Stock',
+						'stock_movement_inv'			=> $last_code,
+						'stock_movement_calculate'		=> 'Minus',
+						'stock_movement_date'			=> date('Y-m-d'),
+						'stock_movement_creted_by'		=> $user_id,	
+					);	
+					$this->global_model->insert_movement_stock($movement_stock);
+				}
+
+			}
+			
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Batal Transfer Stok Ref: '.$last_code,
+				'activity_table_ref'		   => $last_code,
+				'activity_table_user'	       => $user_id,
+			);
+			$this->transferstock_model->update_transfer_stock($hd_transfer_id);
+			$this->global_model->save($data_insert_act);
+
+			$msg = "Berhasil Hapus";
+			echo json_encode(['code'=>200, 'result'=>$msg]);die();
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
 	}
 
 }

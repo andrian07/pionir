@@ -92,64 +92,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
-  $(".delete").click(function (e) {
-    var id = $(this).attr("data-id");
-    var name = $(this).attr("data-name");
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus '"+name+"' ?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "POST",
-          url: "<?php echo base_url(); ?>Masterdata/delete_brand",
-          dataType: "json",
-          data: {id:id},
-          success : function(data){
-            if (data.code == "200"){
-              location.reload();
-              Swal.fire('Saved!', '', 'success'); 
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data.msg,
-              })
-            }
-          }
-        });
-      }
-    })
-  });
-
-  $('#btnsave').click(function(e){
-    e.preventDefault();
-    var brand_name  = $("#brand_name").val();
-    var brand_desc  = $("#brand_desc").val();
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Masterdata/save_brand",
-      dataType: "json",
-      data: {brand_name:brand_name, brand_desc:brand_desc},
-      success : function(data){
-        if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Masterdata/brand";
-          Swal.fire('Saved!', '', 'success');
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
-        }
-      }
-    });
-  });
 
   function payment(id) {
     window.location.href = "<?php echo base_url(); ?>Payment/copy_debt_to_temp?id="+id;

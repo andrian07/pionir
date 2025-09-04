@@ -326,7 +326,6 @@ class Opname extends CI_Controller {
 					$last_stock 	= $row['temp_opname_system_stock'];
 					$new_stock 		= $row['temp_opname_fisik_stock'];
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
-					$new_stock 		= $last_stock + $qty;
 					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
 
 					$movement_stock = array(

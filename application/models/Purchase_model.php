@@ -362,6 +362,20 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
+    public function last_product_po_status($dt_product_id)
+    {
+        $query = $this->db->query("select product_po_status from ms_product  where product_id   = '".$dt_product_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function update_product_po_status($dt_product_id, $new_product_po_status_number)
+    {
+        $this->db->set('product_po_status', $new_product_po_status_number);
+        $this->db->where('product_id', $dt_product_id);
+        $this->db->update('ms_product');
+    }
+
     // end po
 
     // start warehouse input 

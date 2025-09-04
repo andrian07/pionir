@@ -188,7 +188,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                             </div>
 
                             <div class="form-group form-inline">
-                              <label for="inlineinput" class="col-md-3 col-form-label">Rekap Pembelian</label>
+                              <label for="inlineinput" class="col-md-3 col-form-label">Catatan Penting</label>
                               <div class="col-md-12 p-0">
                                 <textarea class="form-control" id="product_purchase_record" name="product_purchase_record" rows="4"></textarea>
                               </div>
@@ -285,6 +285,18 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <button class="selectImage_edit" type="button">Select Image</button>
                             </div>
                           </div>
+
+                          <div class="form-group form-inline">
+                            <label for="inlineinput" class="col-md-3 col-form-label">Status</label>
+                            <div class="col-md-12 p-0">
+                              <select class="form-control input-full js-example-basic-single" id="product_status_edit" name="product_status_edit">
+                                <option>-- Pilih Status --</option>
+                                <option value="Aktif">Aktif</option>
+                                <option value="Tidak Aktif">Tidak Aktif</option>
+                                <option value="Discontinue">Discontinue</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group form-inline">
@@ -367,7 +379,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </div>
 
                           <div class="form-group form-inline">
-                            <label for="inlineinput" class="col-md-3 col-form-label">Rekap Pembelian</label>
+                            <label for="inlineinput" class="col-md-3 col-form-label">Catatan Penting</label>
                             <div class="col-md-12 p-0">
                               <textarea class="form-control" id="product_purchase_record_edit" name="product_purchase_record_edit" rows="4"></textarea>
                             </div>
@@ -445,17 +457,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table
-          id="product-list"
-          class="display table table-striped table-hover"
-          >
+          <table id="product-list" class="display table table-striped table-hover">
           <thead>
             <tr>
               <th width="30%">Nama Produk</th>
+              <th>Satuan</th>
               <th>Brand</th>
               <th>Kategori</th>
               <th>Harga Jual</th>
               <th>Supplier</th>
+              <th>Status</th>
+              <th>In Transit</th>
               <th>Paket</th>
               <th>PPN</th>
               <th width="20%;">Gambar</th>
@@ -523,7 +535,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 5},
         {data: 6},
         {data: 7},
-        {data: 8}
+        {data: 8},
+        {data: 9},
+        {data: 10},
+        {data: 11}
       ]
     });
   }
@@ -797,6 +812,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           modal.find('#product_description_edit').val(row.product_desc)
           modal.find('#product_purchase_record_edit').val(row.product_purchase_record)
           modal.find('#product_search_key_edit').val(row.product_key)
+          modal.find('#product_status_edit').val(row.product_status)
+          
 
           var elem = document.createElement("img");
           document.getElementById("active-image").appendChild(elem);

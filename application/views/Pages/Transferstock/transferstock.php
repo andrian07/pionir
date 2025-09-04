@@ -30,13 +30,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
           <div class="card-body">
             <div class="table-responsive">
-              <table id="opname-list" class="display table table-striped table-hover" >
+              <table id="transferstock-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
-                    <th>Kode Opname</th>
+                    <th>Kode Transfer</th>
                     <th>Tanggal</th>
-                    <th>Diopname Oleh</th>
-                    <th>Total Opname</th>
+                    <th>Item</th>
+                    <th>Total Qty</th>
+                    <th>Dari Gudang</th>
+                    <th>Ke Gudang</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -65,14 +68,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   });
 
   function transferlist_table(){
-    $('#opname-list').DataTable( {
+    $('#transferstock-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Opname/opname_list',
+        url: '<?php echo base_url(); ?>Transferstock/transfer_stock_list',
         type: 'POST',
         data:  {},
       },
@@ -82,9 +85,50 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 1},
         {data: 2},
         {data: 3},
-        {data: 4}
+        {data: 4},
+        {data: 5},
+        {data: 6},
+        {data: 7}
       ]
     });
+  }
+
+
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data Transfer Stock ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Transferstock/delete_transfer_stock",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+              $('#transferstock-list').DataTable().ajax.reload();
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.msg,
+              })
+            }
+          }
+        });
+      }
+    })
   }
   
 </script>

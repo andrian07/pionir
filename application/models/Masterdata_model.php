@@ -374,6 +374,7 @@ class masterdata_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('ms_product');
         $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
         $this->db->where('ms_product.is_active', 'y');
         if($search != null){
@@ -403,7 +404,9 @@ class masterdata_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('ms_product');
         $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        $this->db->join('dt_po', 'ms_product.product_id = dt_po.dt_product_id', 'left');
         $this->db->where('ms_product.is_active', 'y');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');

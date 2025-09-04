@@ -1289,8 +1289,12 @@ class Purchase extends CI_Controller {
 					$product_supplier_tag    = $product_supplier_tag.','.$supplier_name;
 
 					$update_product_tag = $this->purchase_model->update_product_tag($product_supplier_id_tag, $product_supplier_tag, $dt_product_id);
-
 				}
+
+				$last_product_po_status = $this->purchase_model->last_product_po_status($dt_product_id);
+				$last_product_po_status_number = $last_product_po_status[0]->product_po_status;
+				$new_product_po_status_number  = $last_product_po_status_number + 1;
+				$update_product_po_status = $this->purchase_model->update_product_po_status($dt_product_id, $new_product_po_status_number);
 
 				if($row['temp_submission_id'] > 0 || $row['temp_submission_id'] != ''){
 					$submission_id_val = $row['temp_submission_id'];
@@ -1358,6 +1362,17 @@ class Purchase extends CI_Controller {
 			$user_id 		= $_SESSION['user_id'];
 			$get_po_code 	= $this->purchase_model->get_po_code($po_id);
 			$hd_po_invoice 	= $get_po_code[0]->hd_po_invoice;
+
+			$get_detail_po = $this->purchase_model->detail_po($po_id);
+			foreach($get_detail_po as $row)
+			{
+				$dt_product_id 				 	= $row->dt_product_id;
+				$last_product_po_status 		= $this->purchase_model->last_product_po_status($dt_product_id);
+				$last_product_po_status_number  = $last_product_po_status[0]->product_po_status;
+				$new_product_po_status_number   = $last_product_po_status_number - 1;
+				$update_product_po_status 		= $this->purchase_model->update_product_po_status($dt_product_id, $new_product_po_status_number);
+			}
+
 			$this->purchase_model->delete_po($po_id);
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Batalkan PO Ref: '.$hd_po_invoice,
