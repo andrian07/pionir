@@ -84,6 +84,10 @@
                   <td colspan="4"><?php echo $row->product_supplier_name; ?></td>
                 </tr>
                 <tr>
+                  <th scope="col" class="productinfo-text-right">Status:</th>
+                  <td colspan="4"><?php echo $row->product_status; ?></td>
+                </tr>
+                <tr>
                   <th scope="col" class="productinfo-text-right">Paket:</th>
                   <td colspan="4">
                     <?php if($row->is_package == 'Y'){
@@ -107,6 +111,11 @@
                 <tr>
                   <th scope="col" class="productinfo-text-right">Min Stock:</th>
                   <td colspan="4"><?php echo $row->product_min_stock; ?></td>
+                </tr>
+                
+                <tr>
+                  <th scope="col" class="productinfo-text-right">Catatan Penting:</th>
+                  <td colspan="4"><?php echo $row->product_purchase_record; ?></td>
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Min Order:</th>

@@ -62,6 +62,7 @@ class Sales extends CI_Controller {
 
 	public function get_rate()
 	{
+
 		$product_id = $this->input->post('product_id');
 		$get_rate   = $this->sales_model->get_rate($product_id);
 		echo json_encode(['code'=>200, 'result'=>$get_rate]);
@@ -138,12 +139,12 @@ class Sales extends CI_Controller {
 
 				if($check_auth[0]->edit == 'Y'){
 					if($field['hd_sales_order_status'] != 'Cancel'){
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_sales_order_id'].'" data-name="'.$field['hd_sales_order_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+						$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
 					}else{
-						$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-bs-toggle="modal" data-bs-target="#exampleModaledit" data-id="'.$field['hd_sales_order_id'].'" data-name="'.$field['hd_sales_order_inv'].'"><i class="fas fa-edit sizing-fa"></i></button> ';
+						$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
 					}
 				}else{
-					$edit = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-edit sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+					$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
 				}
 
 				if($check_auth[0]->delete == 'Y'){
@@ -247,6 +248,40 @@ class Sales extends CI_Controller {
 		}
 	}
 
+	public function editsalesorder()
+	{
+		$modul = 'SalesOrder';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
+			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
+			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
+			$user_list['user_list'] = $this->masterdata_model->user_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
+			$this->load->view('Pages/Sales/editsalesorder', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function get_edit_sales_order_data()
+	{
+		$modul = 'SalesOrder';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$hd_sales_order_id  = $this->input->post('sales_order_id');
+			$header_sales_order = $this->sales_model->header_sales_order($hd_sales_order_id);
+			$detail_sales_order = $this->sales_model->detail_sales_order($hd_sales_order_id); 
+			echo json_encode(['code'=>200, 'header'=>$header_sales_order, 'detail'=>$detail_sales_order]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	public function save_salesorder()
 	{
 		$modul = 'SalesOrder';
@@ -336,6 +371,11 @@ class Sales extends CI_Controller {
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
 
+			if($sales_order_top_id == 1){
+				$footer_dp_val = $footer_total_invoice_val;
+				$footer_remaining_debt_val = 0;
+			}
+
 			$data_insert = array(
 				'hd_sales_order_inv'				=> $last_code,
 				'hd_sales_order_customer'			=> $sales_order_customer,
@@ -362,7 +402,6 @@ class Sales extends CI_Controller {
 				'hd_sales_order_dp'					=> $footer_dp_val,
 				'hd_sales_order_remaining_debt'		=> $footer_remaining_debt_val,
 				'hd_sales_order_note'				=> $sales_order_remark,
-				'hd_sales_type'						=> $sales_type,
 				'created_by'						=> $user_id
 			);	
 			$save_purchase = $this->sales_model->save_sales_order($data_insert);
@@ -377,7 +416,8 @@ class Sales extends CI_Controller {
 					'dt_so_price'			=> $row['temp_so_price'],
 					'dt_so_qty'				=> $row['temp_so_qty'],
 					'dt_so_discount'		=> $row['temp_so_discount'],
-					'dt_so_total'			=> $row['temp_so_total']
+					'dt_so_total'			=> $row['temp_so_total'],
+					'dt_so_note'			=> $row['temp_so_note']
 				);
 
 				$save_detail_sales_order = $this->sales_model->save_detail_sales_order($data_insert_detail);
@@ -432,6 +472,7 @@ class Sales extends CI_Controller {
 				$row[] 	= 'Rp. '.number_format($field['temp_so_price']);
 				$row[] 	= 'Rp. '.number_format($field['temp_so_discount']);
 				$row[] 	= 'Rp. '.number_format($field['temp_so_total']);
+				$row[] 	= $field['temp_so_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -461,6 +502,7 @@ class Sales extends CI_Controller {
 			$temp_price_val 			= $this->input->post('temp_price_val');
 			$temp_discount_val 			= $this->input->post('temp_discount_val');
 			$temp_total_val 			= $this->input->post('temp_total_val');
+			$temp_note 					= $this->input->post('temp_note');
 			$user_id 					= $_SESSION['user_id'];
 
 			if($warehouse_id == null){
@@ -488,6 +530,7 @@ class Sales extends CI_Controller {
 				'temp_so_qty'			=> $temp_qty,
 				'temp_so_discount'		=> $temp_discount_val,
 				'temp_so_total'			=> $temp_total_val,
+				'temp_so_note'			=> $temp_note,
 				'temp_user_id'			=> $user_id
 			);	
 			$msg = 'Success Tambah';
@@ -961,6 +1004,11 @@ class Sales extends CI_Controller {
 			if($footer_total_invoice_val <= 0){
 				$msg = 'Silahkan Input Data Terlebih Dahulu';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_top_id == 0){
+				$footer_dp_val = $footer_total_invoice_val;
+				$footer_remaining_debt_val = 0;
 			}
 
 			$warehouse_id     = $sales_warehouse;

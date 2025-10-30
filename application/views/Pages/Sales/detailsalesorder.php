@@ -44,156 +44,142 @@
   </div>
 
   <?php foreach($data['header_sales_order'] as $row){ ?>
-  <div class="row header-details">
-    <div class="col-md-3">
-      <p class="detail-company"><b><?php echo company ?> </b></p>
-      <p><?php echo company_address ?></p>
-      <p><?php echo company_phone ?></p>
+    <div class="row header-details">
+      <div class="col-md-3">
+        <p class="detail-company"><b><?php echo company ?> </b></p>
+        <p><?php echo company_address ?></p>
+        <p><?php echo company_phone ?></p>
+      </div>
+      <div class="col-md-3">
+        <p>Customer: <b><?php echo $row->customer_name; ?></b></p>
+        <p>Address: <?php echo $row->customer_address; ?></p>
+        <p>Phone: <?php echo $row->customer_phone; ?></p>
+        
+      </div>
+      <div class="col-md-3">
+        <p>Ekspedisi: <b><?php echo $row->ekspedisi_name; ?></b></p>
+        <p>Disiapkan Oleh: <b><?php echo $row->hd_sales_order_prepare; ?></b></p>
+        <p>Jumlah Colly: <b><?php echo $row->hd_sales_order_colly; ?></b></p>
+      </div>
+      <div class="col-md-3">
+        <p class="detail-invoice"><?php echo $row->hd_sales_order_inv; ?></p>
+        <p>Status: 
+          <b>
+            <?php 
+            if($row->hd_sales_order_status == 'Pending'){
+              echo '<span class="badge badge-primary">Pending</span>';
+            }else if($row->hd_sales_order_status == 'Success'){
+              echo '<span class="badge badge-success">Success</span>';
+            }else{
+              echo '<span class="badge badge-danger">Cancel</span>';
+            }
+            ?>
+          </b>
+        </p>
+        <p>Gudang: <b><?php echo $row->warehouse_name; ?></b></p>
+      </div>
     </div>
-    <div class="col-md-3">
-      <p>Customer: <b><?php echo $row->customer_name; ?></b></p>
-      <p>Address: <?php echo $row->customer_address; ?></p>
-      <p>Phone: <?php echo $row->customer_phone; ?></p>
-      <p>Rate:  
-        <?php if($row->customer_rate == 'Normal'){ ?>
-        <span class="badge badge-primary">
-          <?php }else if($row->customer_rate == 'Toko'){ ?>
-          <span class="badge badge-warning">
-            <?php }else if($row->customer_rate == 'Sales'){ ?>
-            <span class="badge badge-info">
-              <?php }else{ ?>
-              <span class="badge badge-success">
-                <?php } ?>
-                <?php echo $row->customer_rate; ?>
-              </span>
-            </p>
-          </div>
-          <div class="col-md-3">
-            <p>Ekspedisi: <b><?php echo $row->ekspedisi_name; ?></b></p>
-            <p>Disiapkan Oleh: <b><?php echo $row->hd_sales_order_prepare; ?></b></p>
-            <p>Jumlah Colly: <b><?php echo $row->hd_sales_order_colly; ?></b></p>
-          </div>
-          <div class="col-md-3">
-            <p class="detail-invoice"><?php echo $row->hd_sales_order_inv; ?></p>
-            <p>Status: 
-              <b>
-                <?php 
-                  if($row->hd_sales_order_status == 'Pending'){
-                    echo '<span class="badge badge-primary">Pending</span>';
-                  }else if($row->hd_sales_order_status == 'Success'){
-                    echo '<span class="badge badge-success">Success</span>';
-                  }else{
-                    echo '<span class="badge badge-danger">Cancel</span>';
-                  }
-                ?>
-              </b>
-            </p>
-            <p>Gudang: <b><?php echo $row->warehouse_name; ?></b></p>
-          </div>
-        </div>
-        <?php } ?>
+  <?php } ?>
 
-        <div class="row">
-          <div class="col-md-12"> 
-            <table class="table table-striped mt-3" style="border:none !important; font-weight:500;">
-              <thead>
-                <tr>
-                  <th scope="col">SKU</th>
-                  <th scope="col">Porduk</th>
-                  <th scope="col">Rate</th>
-                  <th scope="col">Qty</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Discount</th>
-                  <th scope="col">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach($data['detail_sales_order'] as $row){ ?>
-                <tr>
-                  <td><?php echo $row->product_code; ?></td>
-                  <td><?php echo $row->product_name; ?></td>
-                  <td><?php echo $row->dt_so_rate; ?></td>
-                  <td><?php echo $row->dt_so_qty; ?></td>
-                  <td><?php echo number_format($row->dt_so_price); ?></td>
-                  <td><?php echo number_format($row->dt_so_discount); ?></td>
-                  <td><?php echo number_format($row->dt_so_total); ?></td>
-                </tr>
-                <?php } ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <p style="margin-left: 15px; font-size: 15px;">Logs:</p>
-        <div class="row">
-          <div class="col-md-4">
-            <table class="table table-hover" style="border:none !important;">
-              <tbody>
-                <?php foreach($data['header_sales_order'] as $row){ ?>
-                <tr>
-                  <td scope="col"><b>Action</b></td>
-                  <td scope="col"><b>User</b></td>
-                  <td scope="col"><b>Created At</b></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>Dibuat</b></td>
-                  <td scope="col"><b><?php echo $row->user_name; ?></b></td>
-                  <td scope="col"><b><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y"); ?></b></td>
-                </tr>
-                <tr>
-                  <td style="border-bottom: none;"><b>Catatan:</b></td>
-                  <td style="border-bottom: none;"><?php echo $row->hd_sales_order_note; ?></td>
-                </tr>
-                <?php } ?>
-              </tbody>
-            </table>
-          </div>
+  <div class="row">
+    <div class="col-md-12"> 
+      <table class="table table-striped mt-3" style="border:none !important; font-weight:500;">
+        <thead>
+          <tr>
+            <th scope="col">SKU</th>
+            <th scope="col">produk</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Price</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($data['detail_sales_order'] as $row){ ?>
+            <tr>
+              <td><?php echo $row->product_code; ?></td>
+              <td><?php echo $row->product_name; ?></td>
+              <td><?php echo $row->dt_so_qty; ?></td>
+              <td><?php echo number_format($row->dt_so_price); ?></td>
+              <td><?php echo number_format($row->dt_so_discount); ?></td>
+              <td><?php echo number_format($row->dt_so_total); ?></td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p style="margin-left: 15px; font-size: 15px;">Logs:</p>
+  <div class="row">
+    <div class="col-md-4">
+      <table class="table table-hover" style="border:none !important;">
+        <tbody>
+          <?php foreach($data['header_sales_order'] as $row){ ?>
+            <tr>
+              <td scope="col"><b>Action</b></td>
+              <td scope="col"><b>User</b></td>
+              <td scope="col"><b>Created At</b></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Dibuat</b></td>
+              <td scope="col"><b><?php echo $row->user_name; ?></b></td>
+              <td scope="col"><b><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y"); ?></b></td>
+            </tr>
+            <tr>
+              <td style="border-bottom: none;"><b>Catatan:</b></td>
+              <td style="border-bottom: none;"><?php echo $row->hd_sales_order_note; ?></td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
 
-          <div class="col-md-4">
+    <div class="col-md-4">
 
-          </div>
+    </div>
 
-          <div class="col-md-4">
-            <table class="table" style="border:none !important; text-align:right;">
-              <tbody>
-                <?php foreach($data['header_sales_order'] as $row){ ?>
-                <tr>
-                  <td scope="col"><b>Sub Total: </b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_sub_total); ?></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>Diskon 1: (<?php echo $row->hd_sales_order_percentage1; ?>)</b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc1); ?></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>Diskon 2: (<?php echo $row->hd_sales_order_percentage2; ?>)</b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc2); ?></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>Diskon 3: (<?php echo $row->hd_sales_order_percentage3; ?>)</b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc3); ?></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>PPN 11%: </b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_ppn); ?></td>
-                </tr>
-                <tr>
-                  <td scope="col"><b>Grand Total: </b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_total); ?></td>
-                </tr>
-                 <tr>
-                  <td scope="col"><b>DP: </b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_dp); ?></td>
-                </tr>
-                 <tr>
-                  <td scope="col"><b>Sisa Hutang: </b></td>
-                  <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_total - $row->hd_sales_order_dp); ?></td>
-                </tr>
-                <?php } ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div class="col-md-4">
+      <table class="table" style="border:none !important; text-align:right;">
+        <tbody>
+          <?php foreach($data['header_sales_order'] as $row){ ?>
+            <tr>
+              <td scope="col"><b>Sub Total: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_sub_total); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 1: (<?php echo $row->hd_sales_order_percentage1; ?>)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc1); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 2: (<?php echo $row->hd_sales_order_percentage2; ?>)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc2); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 3: (<?php echo $row->hd_sales_order_percentage3; ?>)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_disc3); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>PPN 11%: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_ppn); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Grand Total: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_total); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>DP: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_dp); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Sisa Hutang: </b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_total - $row->hd_sales_order_dp); ?></td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-      </body>
+</body>
 
-      </html>
+</html>

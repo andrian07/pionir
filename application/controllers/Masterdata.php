@@ -1144,13 +1144,26 @@ class Masterdata extends CI_Controller {
 				}else{
 					$brand_filter = $get_filter_value[0]->brand_filter;
 				}
+				if($get_filter_value[0]->product_status_filter == 0){
+					$product_status_filter = null;
+				}else{
+					$product_status_filter = $get_filter_value[0]->product_status_filter;
+				}
+
+				if($get_filter_value[0]->in_transit_filter == 0){
+					$in_transit_filter = null;
+				}else{
+					$in_transit_filter = $get_filter_value[0]->in_transit_filter;
+				}
 			}else{	
-				$supplier_filter = null;
-				$category_filter = null;
-				$brand_filter    = null;
+				$supplier_filter 			= null;
+				$category_filter 			= null;
+				$brand_filter    			= null;
+				$product_status_filter    	= null;
+				$in_transit_filter    		= null;
 			}
-			$list = $this->masterdata_model->product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter)->result_array();
-			$count_list = $this->masterdata_model->product_list_count($search, $supplier_filter, $category_filter, $brand_filter)->result_array();
+			$list = $this->masterdata_model->product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter,$product_status_filter, $in_transit_filter)->result_array();
+			$count_list = $this->masterdata_model->product_list_count($search, $supplier_filter, $category_filter, $brand_filter,$product_status_filter, $in_transit_filter)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -1561,18 +1574,25 @@ class Masterdata extends CI_Controller {
 
 	public function insert_filter_product()
 	{
-		$filter_supplier = $this->input->post('filter_supplier');
-		$filter_category = $this->input->post('filter_category');
-		$filter_brand    = $this->input->post('filter_brand');
-		$user_id 		 = $_SESSION['user_id'];
+		$filter_supplier 		= $this->input->post('filter_supplier');
+		$filter_category 		= $this->input->post('filter_category');
+		$filter_brand    		= $this->input->post('filter_brand');
+		$filter_product_status  = $this->input->post('filter_product_status');
+		$filter_in_transit    	= $this->input->post('filter_in_transit');
+		$user_id 		 		= $_SESSION['user_id'];
 
 		$this->masterdata_model->delete_filter_product($user_id);
 
+		if($filter_supplier == 'ALL'){
+			$filter_supplier = '';
+		}
 		$data_insert = array(
-			'supplier_filter' 	=> $filter_supplier,
-			'category_filter'	=> $filter_category,
-			'brand_filter'      => $filter_brand,
-			'user_id'			=> $user_id
+			'supplier_filter' 		=> $filter_supplier,
+			'category_filter'		=> $filter_category,
+			'brand_filter'      	=> $filter_brand,
+			'product_status_filter' => $filter_product_status,
+			'in_transit_filter'     => $filter_in_transit,
+			'user_id'				=> $user_id
 		);
 		$this->masterdata_model->insert_filter_product($data_insert);
 		echo json_encode(['code'=>200]);die();
@@ -1680,32 +1700,8 @@ class Masterdata extends CI_Controller {
 				$search = $search['value'];
 			}
 			$user_id = $_SESSION['user_id'];
-			$get_filter_value = $this->masterdata_model->get_filter_value($user_id);
-			if($get_filter_value != null){
-				if($get_filter_value[0]->supplier_filter == 0){
-					$supplier_filter = null;
-				}else{
-					$supplier_filter = $get_filter_value[0]->supplier_filter;
-				}
-
-				if($get_filter_value[0]->category_filter == 0){
-					$category_filter = null;
-				}else{
-					$category_filter = $get_filter_value[0]->category_filter;
-				}
-
-				if($get_filter_value[0]->brand_filter == 0){
-					$brand_filter = null;
-				}else{
-					$brand_filter = $get_filter_value[0]->brand_filter;
-				}
-			}else{	
-				$supplier_filter = null;
-				$category_filter = null;
-				$brand_filter    = null;
-			}
-			$list = $this->masterdata_model->product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter)->result_array();
-			$count_list = $this->masterdata_model->product_list_count($search, $supplier_filter, $category_filter, $brand_filter)->result_array();
+			$list = $this->masterdata_model->payment_list($search, $length, $start)->result_array();
+			$count_list = $this->masterdata_model->payment_list_count($search)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];

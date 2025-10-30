@@ -223,6 +223,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td colspan="4"><?php echo $row->product_supplier_name; ?></td>
                         </tr>
                         <tr>
+                          <th scope="col" class="productinfo-text-right">Status:</th>
+                          <td colspan="4"><?php echo $row->product_status; ?></td>
+                        </tr>
+                        <tr>
                           <th scope="col" class="productinfo-text-right">Paket:</th>
                           <td colspan="4">
                             <?php if($row->is_package == 'Y'){
@@ -247,6 +251,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <td colspan="4"><?php echo $row->product_min_stock; ?></td>
                         </tr>
                         <tr>
+                          <th scope="col" class="productinfo-text-right">Catatan Penting:</th>
+                          <td colspan="4"><?php echo $row->product_purchase_record; ?></td>
+                        </tr>
+                        <tr>
                           <th scope="col" class="productinfo-text-right">Min Order:</th>
                           <td colspan="4"><?php echo $row->product_min_order; ?></td>
                         </tr>
@@ -256,11 +264,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </tr>
                         <tr>
                           <th scope="col" class="productinfo-text-right">HPP:</th>
-                          <td colspan="4"><?php echo number_format($row->product_hpp); ?></td>
+
+                          <td colspan="4"><span class="badge badge-danger"><?php echo number_format($row->product_hpp); ?></span></td>
                         </tr>
                         <tr>
                           <th scope="col" class="productinfo-text-right">Harga Beli:</th>
-                          <td colspan="4"><?php echo number_format($row->product_price); ?></td>
+                          <td colspan="4"><span class="badge badge-danger"><?php echo number_format($row->product_price); ?></span></td>
                         </tr>
                         <tr>
                           <th scope="col" class="productinfo-text-right">Lokasi Stok:</th>
@@ -293,7 +302,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </tr>
                         <tr>
                           <td><?php echo $row->product_sell_percentage_1; ?> %</td>
-                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_1); ?></span></td>
+                          <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_1); ?></span></td>
                           <td><?php echo $row->product_disc_percentage; ?> %</td>
                           <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_1 - ($row->product_sell_price_1 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
@@ -306,7 +315,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </tr>
                         <tr>
                           <td><?php echo $row->product_sell_percentage_2; ?> %</td>
-                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_2); ?></span></td>
+                          <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_2); ?></span></td>
                           <td><?php echo $row->product_disc_percentage; ?> %</td>
                           <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_2 - ($row->product_sell_price_2 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
@@ -319,7 +328,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </tr>
                         <tr>
                           <td><?php echo $row->product_sell_percentage_3; ?> %</td>
-                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_3); ?></span></td>
+                          <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_3); ?></span></td>
                           <td><?php echo $row->product_disc_percentage; ?> %</td>
                           <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_3 - ($row->product_sell_price_3 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>
@@ -332,7 +341,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </tr>
                         <tr>
                           <td><?php echo $row->product_sell_percentage_4; ?> %</td>
-                          <td><span class="badge badge-danger"><?php echo number_format($row->product_sell_price_4); ?></span></td>
+                          <td><span class="badge badge-primary"><?php echo number_format($row->product_sell_price_4); ?></span></td>
                           <td><?php echo $row->product_disc_percentage; ?> %</td>
                           <td><span class="badge badge-warning"><?php echo number_format($row->product_sell_price_4 - ($row->product_sell_price_4 * $row->product_disc_percentage / 100)); ?></span></td>
                         </tr>

@@ -83,7 +83,7 @@
         </p>
         <p>Tanggal: <b><?php $date = date_create($row->hd_po_date);  echo date_format($date,"d-M-Y"); ?></b></p>
         <p>T.O.P: <b><?php echo $row->hd_po_top; ?></b></p>
-        <p>Jth Tempo: <b><?php $date = date_create($row->hd_po_due_date);  echo date_format($date,"d-M-Y"); ?></b></p>
+        <p>Jth Tempo: <b><?php $date_tempo = date_create($row->hd_po_due_date);  echo date_format($date_tempo,"d-M-Y"); ?></b></p>
         <p>Gudang: <b><?php echo $row->warehouse_name; ?></b></p>
       </div>
     </div>
@@ -96,7 +96,7 @@
           <tr>
             <th scope="col">No Pengajuan</th>
             <th scope="col">SKU</th>
-            <th scope="col">Porduk</th>
+            <th scope="col">produk</th>
             <th scope="col">Satuan</th>
             <th scope="col">Qty</th>
             <th scope="col">Ongkir</th>
@@ -133,7 +133,7 @@
             <tr>
               <td scope="col"><b>Dibuat</b></td>
               <td scope="col"><b><?php echo $row->user_name; ?></b></td>
-              <td scope="col"><b><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y"); ?></b></td>
+              <td scope="col"><b><?php $date_created = date_create($row->tanggal_po);  echo date_format($date,"d-M-Y"); ?></b></td>
             </tr>
             <tr>
               <td style="border-bottom: none;"><b>Catatan:</b></td>

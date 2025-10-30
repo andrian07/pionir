@@ -24,6 +24,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id', 'left');
+        $this->db->join('ms_supplier', 'submission.submission_last_supplier = ms_supplier.supplier_id', 'left');
         $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -49,6 +50,7 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_unit', 'ms_unit.unit_id = ms_product.product_unit');
         $this->db->join('ms_warehouse', 'submission.submission_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id');
+        $this->db->join('ms_supplier', 'submission.submission_last_supplier = ms_supplier.supplier_id', 'left');
         $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -176,7 +178,7 @@ class purchase_model extends CI_Model {
 
     public function header_po($po_id)
     {
-        $query = $this->db->query("select * from hd_po a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_po_warehouse = b.warehouse_id and a.hd_po_supplier = c.supplier_id and a.hd_po_payment = f.payment_id and a.created_by = d.user_id and a.hd_po_ekspedisi = e.ekspedisi_id and hd_po_id  = '".$po_id."'");
+        $query = $this->db->query("select *, a.created_at as tanggal_po from hd_po a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_po_warehouse = b.warehouse_id and a.hd_po_supplier = c.supplier_id and a.hd_po_payment = f.payment_id and a.created_by = d.user_id and a.hd_po_ekspedisi = e.ekspedisi_id and hd_po_id  = '".$po_id."'");
         $result = $query->result();
         return $result;
     }
@@ -376,6 +378,12 @@ class purchase_model extends CI_Model {
         $this->db->update('ms_product');
     }
 
+    public function edit_po($data_insert, $purchase_order_id)
+    {
+        $this->db->set($data_insert);
+        $this->db->where('hd_po_id', $purchase_order_id);
+        $this->db->update('hd_po');
+    }
     // end po
 
     // start warehouse input 
@@ -528,7 +536,10 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
         }
         if($search != null){
-            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
             $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
         }
         $this->db->order_by('hd_input_stock.created_at', 'desc');
@@ -555,7 +566,10 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
         }
         if($search != null){
-            $this->db->or_where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->where('ms_product.product_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_supplier_name like "%'.$search.'%"');
+            $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
             $this->db->or_where('hd_input_stock.hd_input_stock_inv like "%'.$search.'%"');
         }
         $query = $this->db->get();
@@ -818,7 +832,7 @@ class purchase_model extends CI_Model {
 
     public function header_purchase($purchase_id)
     {
-        $query = $this->db->query("select * from hd_purchase a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_purchase_warehouse = b.warehouse_id and a.hd_purchase_supplier = c.supplier_id and a.hd_purchase_payment = f.payment_id and a.created_by = d.user_id and a.hd_purchase_ekspedisi = e.ekspedisi_id and hd_purchase_id  = '".$purchase_id."'");
+        $query = $this->db->query("select *, a.created_at as tanggal_purchase from hd_purchase a, ms_warehouse b, ms_supplier c, ms_user d, ms_ekspedisi e, ms_payment f where a.hd_purchase_warehouse = b.warehouse_id and a.hd_purchase_supplier = c.supplier_id and a.hd_purchase_payment = f.payment_id and a.created_by = d.user_id and a.hd_purchase_ekspedisi = e.ekspedisi_id and hd_purchase_id  = '".$purchase_id."'");
         $result = $query->result();
         return $result;
     }

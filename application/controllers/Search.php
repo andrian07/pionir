@@ -39,6 +39,7 @@ class Search extends CI_Controller {
 	}
 
 	public function product_list(){
+		
 		$searchin_key = $this->input->post('key');
 		$product_list = $this->masterdata_model->search_product_list($searchin_key)->result_array();
 		echo json_encode($product_list);
@@ -49,7 +50,12 @@ class Search extends CI_Controller {
 		$get_product_by_id['get_product_by_id'] = $this->masterdata_model->settingproduct($id);
 		$product_stock['product_stock'] = $this->masterdata_model->product_stock($id);
 		$data['data'] = array_merge($get_product_by_id, $product_stock);
-		$this->load->view('Pages/Search/detailsearch', $data);
+		if($get_product_by_id['get_product_by_id'] == null){
+			print_r("Barang Tidak Ada Di Gudang");die();
+		}else{
+			$this->load->view('Pages/Search/detailsearch', $data);
+		}
+		
 	}
 
 }

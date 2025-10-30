@@ -121,7 +121,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="form-group row">
             <label for="tanggal" class="col-sm-1 col-form-label text-right">Jth Tempo :</label>
             <div class="col-sm-3">
-              <input id="sales_order_due_date" name="sales_order_due_date" type="date" class="form-control">
+              <input id="sales_order_due_date" name="sales_order_due_date" type="date" class="form-control" readonly>
             </div>
           </div>
 
@@ -177,7 +177,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
 
-              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label>Catatan</label>
+                  <input id="temp_note" name="temp_note" type="text" class="form-control text-left" >
+                </div>
+              </div>
               <div class="col-sm-7">
 
                 <!-- text input -->
@@ -214,12 +219,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <thead>
                 <tr>
                   <th>SKU</th>
-                  <th>Porduk</th>
+                  <th>produk</th>
                   <th>Rate</th>
                   <th>Qty</th>
                   <th>Harga Satuan</th>
                   <th>Discount</th>
                   <th>Total</th>
+                  <th>Catatan</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -514,7 +520,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();
@@ -623,6 +630,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     let product_id = $("#product_id").val();
     let rate_val   = $(this).val();  
     $.ajax({
+
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/get_rate",
       dataType: "json",
@@ -631,7 +639,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         if (data.code == "200"){
           var row = data.result[0];
           if(rate_val == 'Umum'){
-            temp_price.set(row.Normal);
+            temp_price.set(row.Umum );
             calculation_total_temp();
           }else if(rate_val == 'Toko'){
             temp_price.set(row.Toko);
@@ -692,6 +700,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $('#temp_rate').trigger('change');
           temp_price.set(row.temp_so_price);
           $("#temp_qty").val(row.temp_so_qty);
+          $("#temp_note").val(row.temp_so_note);
           temp_discount.set(row.temp_so_discount);
           temp_total.set(row.temp_so_total);
         }
@@ -737,13 +746,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_qty                = $("#temp_qty").val();
     var temp_discount_val       = parseInt(temp_discount.get());
     var temp_total_val          = parseInt(temp_total.get());
+    var temp_note               = $("#temp_note").val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
         url: "<?php echo base_url(); ?>Sales/add_temp_sales_order",
         dataType: "json",
-        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val},
+        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val, temp_note:temp_note},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -812,173 +822,173 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   });
 
-  $('#edit_footer_discount_percentage1').on('input', function (event) {
-    let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
-    let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
-    edit_footer_discount1.set(edit_footer_discount1_val);
-  })
+$('#edit_footer_discount_percentage1').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
+  let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
+  edit_footer_discount1.set(edit_footer_discount1_val);
+})
 
-  $('#edit_footer_discount_percentage2').on('input', function (event) {
-    let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
-    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
-    let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
-    edit_footer_discount2.set(edit_footer_discount2_val);
-  })
+$('#edit_footer_discount_percentage2').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
+  let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+  let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
+  edit_footer_discount2.set(edit_footer_discount2_val);
+})
 
-  $('#edit_footer_discount_percentage3').on('input', function (event) {
-    let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
-    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
-    let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
-    let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
-    edit_footer_discount3.set(edit_footer_discount3_val);
-  })
+$('#edit_footer_discount_percentage3').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
+  let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+  let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
+  let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
+  edit_footer_discount3.set(edit_footer_discount3_val);
+})
 
-  $('#btneditdisc').click(function(e){
-    e.preventDefault();
-    var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
-    var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
-    var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
-    var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
-    var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
-    var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
-    var footer_sub_total_val                  = parseInt(footer_sub_total.get());
-    var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
-    footer_total_discount.set(total_disc);
-    footer_total_invoice.set(footer_sub_total_val - total_disc);
-    footer_remaining_debt.set(footer_sub_total_val - total_disc);
-    $('#footerdiscount').modal('hide')
+$('#btneditdisc').click(function(e){
+  e.preventDefault();
+  var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
+  var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
+  var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
+  var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
+  var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
+  var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
+  var footer_sub_total_val                  = parseInt(footer_sub_total.get());
+  var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
+  footer_total_discount.set(total_disc);
+  footer_total_invoice.set(footer_sub_total_val - total_disc);
+  footer_remaining_debt.set(footer_sub_total_val - total_disc);
+  $('#footerdiscount').modal('hide')
+});
+
+$('#ppnchecked').on('change', function (event) {
+  const checked = $(this).is(':checked');
+  if (checked == true) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let footer_total_discount_val = parseInt(footer_total_discount.get());
+    let footer_dp_val = parseInt(footer_dp.get());
+    let ppn = (footer_sub_total_val - footer_total_discount_val) * 11 / 100;
+    footer_total_ppn.set(ppn);
+    footer_total_invoice.set(footer_sub_total_val - footer_total_discount_val + ppn);
+    footer_remaining_debt.set(footer_sub_total_val - footer_total_discount_val + ppn - footer_dp_val);
+  }else{
+    footer_total_ppn.set(0);
+  }
+})
+
+$('#footer_dp').on('input', function (event) {
+ let footer_dp_val =  parseInt(footer_dp.get());
+ let footer_total_invoice_val = parseInt(footer_total_invoice.get());
+ footer_remaining_debt.set(footer_total_invoice_val - footer_dp_val);
+})
+
+
+$('#sales_order_customer').on('change', function (event) {
+  let customer_id = this.value;
+  $.ajax({
+    type: "POST",
+    url: "<?php echo base_url(); ?>Sales/get_customer_rate",
+    dataType: "json",
+    data: {customer_id:customer_id},
+    success : function(data){
+      if (data.code == "200"){
+        $('#sales_order_rate_customer').val(data.result[0].customer_rate)
+      }
+    }
   });
+})
 
-  $('#ppnchecked').on('change', function (event) {
-    const checked = $(this).is(':checked');
-    if (checked == true) {
-      let footer_sub_total_val = parseInt(footer_sub_total.get());
-      let footer_total_discount_val = parseInt(footer_total_discount.get());
-      let footer_dp_val = parseInt(footer_dp.get());
-      let ppn = (footer_sub_total_val - footer_total_discount_val) * 11 / 100;
-      footer_total_ppn.set(ppn);
-      footer_total_invoice.set(footer_sub_total_val - footer_total_discount_val + ppn);
-      footer_remaining_debt.set(footer_sub_total_val - footer_total_discount_val + ppn - footer_dp_val);
-    }else{
-      footer_total_ppn.set(0);
+
+
+function check_tempt_data()
+{
+  $.ajax({
+    type: "POST",
+    url: "<?php echo base_url(); ?>Sales/check_temp_so",
+    dataType: "json",
+    data: {},
+    success : function(data){
+      if (data.code == "200"){
+        let sub_total = data.data[0].sub_total;
+        $("#sales_id").val(data.data[0].temp_so_id);
+        footer_sub_total.set(sub_total);
+        footer_total_invoice.set(sub_total);
+        footer_remaining_debt.set(sub_total);
+      }
+    }
+  });
+}
+
+function deletes(id)
+{
+  Swal.fire({
+    title: 'Konfirmasi?',
+    text: "Apakah Anda Yakin Menghapus Data?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Hapus'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Sales/delete_temp_so",
+        dataType: "json",
+        data: {id:id},
+        success : function(data){
+          if (data.code == "200"){
+            $('#temp-salesorder-list').DataTable().ajax.reload();
+            let title = 'Hapus Data';
+            let message = 'Data Berhasil Di Hapus';
+            let state = 'danger';
+            notif_success(title, message, state);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.msg,
+            })
+          }
+        }
+      });
     }
   })
+}
 
-  $('#footer_dp').on('input', function (event) {
-   let footer_dp_val =  parseInt(footer_dp.get());
-   let footer_total_invoice_val = parseInt(footer_total_invoice.get());
-   footer_remaining_debt.set(footer_total_invoice_val - footer_dp_val);
- })
-
-
-  $('#sales_order_customer').on('change', function (event) {
-    let customer_id = this.value;
-    $.ajax({
+$("#btncancel").click(function (e) {
+  Swal.fire({
+    title: 'Konfirmasi?',
+    text: "Apakah Anda Yakin Membatalkan Inputan",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Hapus'
+  }).then((result) => {
+    if (result.isConfirmed) {
+     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/get_customer_rate",
-      dataType: "json",
-      data: {customer_id:customer_id},
-      success : function(data){
-        if (data.code == "200"){
-          $('#sales_order_rate_customer').val(data.result[0].customer_rate)
-        }
-      }
-    });
-  })
-  
-  
-
-  function check_tempt_data()
-  {
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Sales/check_temp_so",
+      url: "<?php echo base_url(); ?>Sales/clear_temp",
       dataType: "json",
       data: {},
       success : function(data){
         if (data.code == "200"){
-          let sub_total = data.data[0].sub_total;
-          $("#sales_id").val(data.data[0].temp_so_id);
-          footer_sub_total.set(sub_total);
-          footer_total_invoice.set(sub_total);
-          footer_remaining_debt.set(sub_total);
-        }
+         window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
+       }else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: data.result,
+        })
       }
-    });
-  }
-
-  function deletes(id)
-  {
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "POST",
-          url: "<?php echo base_url(); ?>Sales/delete_temp_so",
-          dataType: "json",
-          data: {id:id},
-          success : function(data){
-            if (data.code == "200"){
-              $('#temp-salesorder-list').DataTable().ajax.reload();
-              let title = 'Hapus Data';
-              let message = 'Data Berhasil Di Hapus';
-              let state = 'danger';
-              notif_success(title, message, state);
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data.msg,
-              })
-            }
-          }
-        });
-      }
-    })
-  }
-
-  $("#btncancel").click(function (e) {
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Membatalkan Inputan",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-       $.ajax({
-        type: "POST",
-        url: "<?php echo base_url(); ?>Sales/clear_temp",
-        dataType: "json",
-        data: {},
-        success : function(data){
-          if (data.code == "200"){
-           window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
-          }else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
-        }
-      }
-    });
-     }
-   })
+    }
   });
+   }
+ })
+});
 
-  new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
-  
+new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
+
 </script>

@@ -101,6 +101,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Produk</label>
                               <div class="col-md-12 p-0">
                                 <input type="hidden" id="submission_product_id" name="submission_product_id" class="form-control text-right" required="">
+                                <input type="hidden" id="submission_last_supplier" name="submission_last_supplier" class="form-control text-right">
                                 <input id="submission_product_name" name="submission_product_name" type="text" class="form-control input-full ui-autocomplete-input" placeholder="ketikkan nama produk">
                               </div>
                             </div>
@@ -198,6 +199,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Produk</label>
                               <div class="col-md-12 p-0">
                                 <input type="hidden" id="submission_product_id_edit" name="submission_product_id_edit" class="form-control text-right" required="">
+                                <input type="hidden" id="submission_last_supplier_edit" name="submission_last_supplier_edit" class="form-control text-right">
                                 <input id="submission_product_name_edit" name="submission_product_name_edit" type="text" class="form-control input-full ui-autocomplete-input" placeholder="ketikkan nama produk">
                               </div>
                             </div>
@@ -233,6 +235,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Tgl. Pengajuan</th>
                   <th>Diajukan</th>
                   <th>Nama Produk</th>
+                  <th>Supplier</th>
                   <th>Qty</th>
                   <th>Stock On Hand</th>
                   <th>Keterangan</th>
@@ -288,7 +291,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 6},
         {data: 7},
         {data: 8},
-        {data: 9}
+        {data: 9},
+        {data: 10}
       ]
     });
   }
@@ -363,7 +367,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product',
+        url: '<?php echo base_url(); ?>/Purchase/search_product_submission',
+
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -379,6 +384,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     select: function(event, ui) {
       $('#submission_product_id').val(ui.item.id);
       $('#submission_product_code').val(ui.item.product_code);
+      if(ui.item.last_supplier != null){
+        $('#submission_last_supplier').val(ui.item.last_supplier);
+      }else{
+        $('#submission_last_supplier').val('');
+      }
     },
   });
 
@@ -386,7 +396,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product',
+        url: '<?php echo base_url(); ?>/Purchase/search_product_submission',
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -402,6 +412,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     select: function(event, ui) {
       $('#submission_product_id_edit').val(ui.item.id);
       $('#submission_product_code_edit').val(ui.item.product_code);
+      if(ui.item.last_supplier != null){
+        $('#submission_last_supplier_edit').val(ui.item.last_supplier);
+      }else{
+        $('#submission_last_supplier_edit').val('');
+      }
     },
   });
 
@@ -416,12 +431,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var submission_product_id     = $("#submission_product_id").val();
     var submission_product_code   = $("#submission_product_code").val();
     var submission_qty            = $("#submission_qty").val();
+    var submission_last_supplier  = $("#submission_last_supplier").val();
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/save_submission",
       dataType: "json",
-      data: {submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty},
+      data: {submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty, submission_last_supplier:submission_last_supplier},
       success : function(data){
         if (data.code == "200"){
           $('#myModal').modal('hide')
@@ -455,12 +471,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var submission_product_id     = $("#submission_product_id_edit").val();
     var submission_product_code   = $("#submission_product_code_edit").val();
     var submission_qty            = $("#submission_qty_edit").val();
+    var submission_last_supplier  = $("#submission_last_supplier_edit").val();
 
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Purchase/edit_submission",
       dataType: "json",
-      data: {submission_id:submission_id, submission_inv:submission_inv, submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty},
+      data: {submission_id:submission_id, submission_inv:submission_inv, submission_date:submission_date, submission_warehouse:submission_warehouse, submission_warehouse_name:submission_warehouse_name, submission_salesman:submission_salesman, submission_desc:submission_desc, submission_text:submission_text, submission_product_id:submission_product_id, submission_product_code:submission_product_code, submission_qty:submission_qty, submission_last_supplier:submission_last_supplier},
       success : function(data){
         if (data.code == "200"){
          $('#exampleModaledit').modal('hide')
@@ -504,6 +521,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $('#submission_product_id_edit').val(row.product_id);
           $('#submission_product_name_edit').val(row.product_name);
           $('#submission_qty_edit').val(row.submission_qty);
+          $('#submission_last_supplier_edit').val(row.submission_last_supplier);
         } else {
           Swal.fire({
             icon: 'error',

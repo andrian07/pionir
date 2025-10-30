@@ -95,11 +95,12 @@
         <thead>
           <tr>
             <th scope="col">SKU</th>
-            <th scope="col">Porduk</th>
+            <th scope="col">produk</th>
             <th scope="col">Satuan</th>
             <th scope="col">Qty</th>
             <th scope="col">Ongkir</th>
             <th scope="col">Total</th>
+            <th scope="col">Catatan</th>
           </tr>
         </thead>
         <tbody>
@@ -111,6 +112,7 @@
               <td><?php echo $row->dt_purchase_qty; ?></td>
               <td><?php echo number_format($row->dt_purchase_total_ongkir); ?></td>
               <td><?php echo number_format($row->dt_purchase_total); ?></td>
+              <td><?php echo $row->dt_purchase_note; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -131,7 +133,7 @@
             <tr>
               <td scope="col"><b>Dibuat</b></td>
               <td scope="col"><b><?php echo $row->user_name; ?></b></td>
-              <td scope="col"><b><?php $date = date_create($row->created_at);  echo date_format($date,"d-M-Y"); ?></b></td>
+              <td scope="col"><b><?php $date = date_create($row->tanggal_purchase);  echo date_format($date,"d-M-Y"); ?></b></td>
             </tr>
             <tr>
               <td style="border-bottom: none;"><b>Catatan:</b></td>

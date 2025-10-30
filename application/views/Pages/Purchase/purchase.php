@@ -21,51 +21,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="ms-md-auto py-2 py-md-0">
                 <button class="btn btn-info" id="reload"><span class="btn-label"><i class="fas fa-sync"></i></span> Reload</button>
                 <a href="<?php echo base_url(); ?>Purchase/addpurchase"><button class="btn btn-primary"><span class="btn-label"><i class="fa fa-plus"></i></span>Tambah</button></a>
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModaledit"><i class="fas fa-search" ></i> Filter</button>
-                <div class="modal fade editmodal" id="exampleModaledit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Filter PO</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Dari: </label>
-                          <div class="col-md-12 p-0">
-                            <?php $start_date = $_GET["start_date"] ?? ''; ?>
-                            <input id="start_date" name="start_date" type="date" class="form-control" value="<?php echo $start_date; ?>">
-                          </div>
-                        </div>
-
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Sampai: </label>
-                          <div class="col-md-12 p-0">
-                            <?php $end_date = $_GET["end_date"] ?? ''; ?>
-                            <input id="end_date" name="end_date" type="date" class="form-control" value="<?php echo $end_date; ?>">
-                          </div>
-                        </div>
-
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier: </label>
-                          <div class="col-md-12 p-0">
-                            <select class="form-control input-full js-example-basic-single" id="supplier_filter" name="supplier_filter">
-                              <option value="">-- Pilih Supplier --</option>
-                              <?php foreach ($supplier_list as $row) { ?>
-                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </div>
-
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                        <button type="button" id="btnsearch" class="btn btn-warning"><i class="fas fa-search"></i> Cari</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -81,11 +36,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Supplier</th>
                   <th>Tanggal</th>
                   <th>Barang</th>
-                  <th>Golongan</th>
-                  <th>Payment Status</th>
+                  <th>Satuan</th>
                   <th>Qty</th>
                   <th>Harga</th>
                   <th>Total</th>
+                  <th>Golongan</th>
+                  <th>Payment Status</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -108,7 +64,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 <script>
 
   $(document).ready(function() {
-    new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) ;
     purchaseorder_table();
   });
 
@@ -140,7 +95,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 6},
         {data: 7},
         {data: 8},
-        {data: 9}
+        {data: 9},
+        {data: 10}
       ]
     });
   }

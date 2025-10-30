@@ -31,7 +31,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <label for="inlineinput" class="col-md-3 col-form-label">Supplier</label>
                           <div class="col-md-12 p-0">
                             <select class="form-control input-full js-example-basic-single" id="filter_supplier" name="filter_supplier">
-                              <option value="">-- Pilih Supplier --</option>
+                              <option value="0">ALL</option>
                               <?php foreach ($data['supplier_list'] as $row) { ?>
                                 <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
                               <?php } ?>
@@ -43,7 +43,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <label for="inlineinput" class="col-md-3 col-form-label">Kategori</label>
                           <div class="col-md-12 p-0">
                             <select class="form-control input-full js-example-basic-single" id="filter_category" name="filter_category">
-                              <option value="">-- Pilih Kategori --</option>
+                              <option value="0">ALL</option>
                               <?php foreach ($data['category_list'] as $row) { ?>
                                 <option value="<?php echo $row->category_id; ?>"><?php echo $row->category_name; ?></option>  
                               <?php } ?>
@@ -55,13 +55,38 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <label for="inlineinput" class="col-md-3 col-form-label">Brand</label>
                           <div class="col-md-12 p-0">
                             <select class="form-control input-full js-example-basic-single" id="filter_brand" name="filter_brand">
-                              <option value="">-- Pilih Brand --</option>
+                              <option value="0">ALL</option>
                               <?php foreach ($data['brand_list'] as $row) { ?>
                                 <option value="<?php echo $row->brand_id; ?>"><?php echo $row->brand_name; ?></option>  
                               <?php } ?>
                             </select>
                           </div>
                         </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Product Status</label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="filter_product_status" name="filter_product_status">
+                              <option value="0">ALL</option>
+                              <option value="Aktif">Aktif</option>
+                              <option value="Tidak Aktif">Tidak Aktif</option>
+                              <option value="Discontinue">Discontinue</option>
+                              
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">In Transit</label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="filter_in_transit" name="filter_in_transit">
+                              <option value="0">ALL</option>
+                              <option value="1">None</option>
+                              <option value="2">In Transit</option>
+                            </select>
+                          </div>
+                        </div>
+
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
@@ -609,14 +634,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#filter').click(function(e){
     e.preventDefault();
-    var filter_supplier = $("#filter_supplier option:selected").text();
-    var filter_category = $("#filter_category").val();
-    var filter_brand    = $("#filter_brand").val();
+    var filter_supplier           = $("#filter_supplier option:selected").text();
+    var filter_category           = $("#filter_category").val();
+    var filter_brand              = $("#filter_brand").val();
+    var filter_product_status     = $("#filter_product_status").val();
+    var filter_in_transit         = $("#filter_in_transit").val();
+
     $.ajax({
       type: "POST",
       url: "<?php echo base_url(); ?>Masterdata/insert_filter_product",
       dataType: "json",
-      data: {filter_supplier:filter_supplier, filter_category:filter_category, filter_brand:filter_brand},
+      data: {filter_supplier:filter_supplier, filter_category:filter_category, filter_brand:filter_brand, filter_product_status:filter_product_status, filter_in_transit:filter_in_transit},
       success : function(data){
         if (data.code == "200"){
           $('#product-list').DataTable().ajax.reload();

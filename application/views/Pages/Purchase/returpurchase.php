@@ -57,6 +57,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <select class="form-select form-control" id="payment_type">
                             <option value="PN">Potong Nota</option>
                             <option value="Cash">Cash</option>
+                            <option value="Garansi">Garansi</option>
                           </select>
                         </div>
                       </div>
@@ -88,6 +89,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Supplier</th>
                   <th>Total Transaksi</th>
                   <th>Status</th>
+                  <th>Jenis Retur</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -144,7 +146,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       {data: 4},
       {data: 5},
       {data: 6},
-      {data: 7}
+      {data: 7},
+      {data: 8}
       ]
     });
   }

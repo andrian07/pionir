@@ -114,7 +114,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <thead>
                   <tr>
                     <th>SKU</th>
-                    <th>Porduk</th>
+                    <th>produk</th>
                     <th>Satuan</th>
                     <th>Qty</th>
                     <th>Dari</th>

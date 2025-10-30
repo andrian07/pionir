@@ -222,7 +222,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <thead>
                 <tr>
                   <th>SKU</th>
-                  <th>Porduk</th>
+                  <th>produk</th>
                   <th>Rate</th>
                   <th>Qty</th>
                   <th>Harga Satuan</th>

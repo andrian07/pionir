@@ -78,7 +78,7 @@
           <tr>
             <th scope="col">Kode Pembelian</th>
             <th scope="col">SKU</th>
-            <th scope="col">Porduk</th>
+            <th scope="col">produk</th>
             <th scope="col">Satuan</th>
             <th scope="col">Qty</th>
             <th scope="col">Ongkir</th>

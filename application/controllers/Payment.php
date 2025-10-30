@@ -703,7 +703,7 @@ class Payment extends CI_Controller {
 			$receivable_desc 				= $this->input->post('receivable_desc');
 			$receivable_payment_val 		= $this->input->post('receivable_payment_val');
 			$receivable_disc_val 			= $this->input->post('receivable_disc_val');
-			$new_remaining_receivable_val 	= $this->input->post('new_remaining_receivablet_val');
+			$new_remaining_receivable_val 	= $this->input->post('new_remaining_receivable_val');
 			$user_id 						= $_SESSION['user_id'];
 
 			$data_update = array(

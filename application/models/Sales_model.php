@@ -216,6 +216,13 @@ class sales_model extends CI_Model {
         $this->db->delete('temp_sales_order');
     }
 
+    public function get_edit_sales_order($hd_sales_order_id)
+    {
+        $query = $this->db->query("select * from hd_sales_order where hd_sales_order_id  = '".$hd_sales_order_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     //end sales order
 
 
@@ -729,10 +736,10 @@ class sales_model extends CI_Model {
     
     public function get_sales_id_inv($sales_id)
     {
-       $query = $this->db->query("select hd_sales_inv from hd_sales where hd_sales_id  = '".$sales_id."'");
-       $result = $query->result();
-       return $result;
-    }
+     $query = $this->db->query("select hd_sales_inv from hd_sales where hd_sales_id  = '".$sales_id."'");
+     $result = $query->result();
+     return $result;
+ }
     // end revisi sales
 }   
 

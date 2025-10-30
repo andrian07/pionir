@@ -10,7 +10,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
     </div>
     <div class="row">
-      <h3 class="fw-bold mb-3">Tambah Revisi Pembelian </h3>
+      <h3 class="fw-bold mb-3">Tambah PO </h3>
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
@@ -18,43 +18,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Invoice :</label>
               <div class="col-sm-3">
                 <input id="purchase_order_invoice" name="purchase_order_invoice" type="text" class="form-control" value="AUTO" readonly="">
-                <input id="purchase_order_id" name="purchase_order_id" type="hidden" class="form-control">
-              </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">No Faktur :</label>
+                <input id="purchase_order_id" name="purchase_order_id" type="hidden" class="form-control" value="<?php echo $_GET['id']; ?>">
+              </div> 
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">T.O.P :</label>
               <div class="col-sm-3">
-                <input id="no_faktur_supplier" name="no_faktur_supplier" type="text" class="form-control">
-              </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
-              <div class="col-sm-3">
-                <input id="purchase_date" name="purchase_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Pembelian:</label>
-              <div class="col-sm-3">
-                <input id="purchase_inv" name="purchase_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pembelian">
-                <input id="purchase_id" type="hidden" name="purchase_id">
-              </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Tgl Faktur :</label>
-              <div class="col-sm-3">
-                <input id="faktur_date" name="faktur_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
-              </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
-              <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="purchase_warehouse" name="purchase_warehouse">
-                  <option value="">-- Pilih Gudang --</option>
-                  <?php foreach ($data['warehouse_list'] as $row) { ?>
-                    <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">T.O.P:</label>
-              <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="purchase_top" name="purchase_top">
+                <select class="form-control input-full js-example-basic-single" onchange="duedate_cal()" id="po_top" name="po_top">
                   <option value="">-- Pilih T.O.P --</option>
                   <option value="0">CBD</option>
                   <option value="7">JT7</option>
@@ -65,58 +33,72 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <option value="90">JT90</option>
                 </select>
               </div>
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Tanggal :</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="purchase_ekspedisi" name="purchase_ekspedisi">
-                  <option value="">-- Pilih Ekspedisi --</option>
-                  <?php foreach ($data['ekspedisi_list'] as $row) { ?>
-                    <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>  
-                  <?php } ?>
-                </select>
-              </div>
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
-              <div class="col-sm-3">
-                <input id="purchase_due_date" name="purchase_due_date" type="date" class="form-control" value="" readonly="">
+                <input id="po_date" name="po_date" type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly="">
               </div>
             </div>
 
             <div class="form-group row">
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Supplier Baru:</label>
+              <div class="col-sm-3">
+                <select class="form-control input-full js-example-basic-single" id="po_supplier" name="po_supplier">
+                  <option value="">-- Pilih Supplier --</option>
+                  <?php foreach ($data['supplier_list'] as $row) { ?>
+                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                  <?php } ?>
+                </select>
+                <input id="po_supplier_code" name="po_supplier_code" type="hidden" class="form-control" value="" readonly="">
+              </div>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Jatuh Tempo :</label>
+              <div class="col-sm-3">
+                <input id="purchase_order_due_date" name="purchase_order_due_date" type="date" class="form-control" value="" readonly="">
+              </div>
+              <label for="tanggal" class="col-sm-1 col-form-label text-right">Gudang :</label>
+              <div class="col-sm-3">
+                <select class="form-control input-full js-example-basic-single" id="po_warehouse" name="po_warehouse">
+                  <option value="">-- Pilih Gudang --</option>
+                  <?php foreach ($data['warehouse_list'] as $row) { ?>
+                    <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Golongan :</label>
+              <div class="col-sm-3">
+                <select class="form-control" id="po_tax" name="po_tax">
+                  <option value="PPN">BKP</option>
+                  <option value="NON PPN">NON BKP</option>
+                </select>
+              </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">Metode Bayar :</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="purchase_payment_method" name="purchase_payment_method">
+                <select class="form-control input-full js-example-basic-single" id="po_payment_method" name="po_payment_method">
                   <option value="">-- Pilih Metode Bayar --</option>
                   <?php foreach ($data['payment_list'] as $row) { ?>
                     <option value="<?php echo $row->payment_id; ?>"><?php echo $row->payment_name; ?></option>  
                   <?php } ?>
                 </select>
               </div>
-
-              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Golongan :</label>
-              <div class="col-sm-3">
-                <select class="form-control" id="purchase_tax" name="purchase_tax">
-                  <option value="PPN">BKP</option>
-                  <option value="NON PPN">NON BKP</option>
-                </select>
-              </div>
-
               <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
               <div class="col-sm-3">
                 <input id="po_user_id" name="po_user_id" type="text" class="form-control" value="<?php echo $_SESSION['user_name']; ?>" readonly="">
               </div>
             </div>
 
-
             <div class="form-group row">
-              <label for="tanggal" class="col-sm-1 col-form-label text-right">Supplier :</label>
+              <label for="noinvoice" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
               <div class="col-sm-3">
-                <select class="form-control input-full js-example-basic-single" id="purchase_supplier" name="purchase_supplier">
-                  <option value="">-- Pilih Supplier --</option>
-                  <?php foreach ($data['supplier_list'] as $row) { ?>
-                    <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                <select class="form-control input-full js-example-basic-single" id="po_ekspedisi" name="po_ekspedisi">
+                  <option value="">-- Pilih Ekspedisi --</option>
+                  <?php foreach ($data['ekspedisi_list'] as $row) { ?>
+                    <option value="<?php echo $row->ekspedisi_id; ?>"><?php echo $row->ekspedisi_name; ?></option>  
                   <?php } ?>
                 </select>
               </div>
-
+              <div class="col-sm-8"></div>
             </div>
 
 
@@ -129,11 +111,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
           <div class="card-body">
             <form id="formaddtemp">
               <div class="row well well-sm input-temp">
+                <input id="temp_po_id" name="temp_po_id" type="hidden" value="">
+                <input id="item_id" name="item_id" type="hidden" value="">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>No Pengajuan:</label>
+                    <input id="submission_inv" name="submission_inv" type="text" class="form-control ui-autocomplete-input" placeholder="Pilih Pengajuan">
+                    <input id="submission_id" type="hidden" name="submission_id">
+                    <input id="submission_code" type="hidden" name="submission_code">
+                  </div>
+                </div>
+
 
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Produk</label>
-                    <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk" readonly>
+                    <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk"required="">
                     <input id="product_id" type="hidden" name="product_id">
                   </div>
                 </div>
@@ -171,7 +164,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
 
-                <div class="col-sm-4"></div>
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Total Berat</label>
@@ -187,7 +179,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
 
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
 
                   <!-- text input -->
 
@@ -196,26 +188,6 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <label>Total</label>
 
                     <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
-
-                  </div>
-
-                </div>
-
-                <div class="col-sm-4">
-
-
-
-                </div>
-
-                <div class="col-sm-7">
-
-                  <!-- text input -->
-
-                  <div class="form-group">
-
-                    <label>Catatan</label>
-
-                    <input id="temp_note" name="temp_note" type="text" class="form-control">
 
                   </div>
 
@@ -239,16 +211,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </form>
 
             <div class="table-responsive">
-              <table id="temp-purchase-list" class="display table table-striped table-hover" >
+              <table id="temp-po-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
+                    <th>No Pengajuan</th>
                     <th>SKU</th>
-                    <th>produk</th>
+                    <th>Produk</th>
                     <th>Satuan</th>
                     <th>Qty</th>
                     <th>Ongkir</th>
                     <th>Total</th>
-                    <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -261,7 +233,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <div class="col-lg-6">
                 <div class="form-group">
                   <div class="col-sm-12">
-                    <textarea id="purchase_order_remark" name="purchase_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+                    <textarea id="purchase_remark" name="purchase_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
                   </div>
                 </div>
               </div>
@@ -387,16 +359,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  //$('#purchase_top').prop('disabled', true);
-  //$('#purchase_payment_method').prop('disabled', true);
-  //$('#purchase_ekspedisi').prop('disabled', true);
-  $('#purchase_tax').prop('disabled', true);
-  //$('#purchase_warehouse').prop('disabled', true);
-  $('#purchase_due_date').prop('disabled', true);
-  $('#po_user_id').prop('disabled', true);
-  //$('#purchase_supplier').prop('disabled', true);
-  
-
   let temp_price = new AutoNumeric('#temp_price', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
@@ -429,7 +391,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
-  
   let footer_sub_total = new AutoNumeric('#footer_sub_total', {
     currencySymbol : 'Rp. ',
     decimalCharacter : ',',
@@ -522,20 +483,20 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     suffixText: "%"
   });
 
-
   $(document).ready(function() {
-    temppurchase_table();
+    temppo_table();
+    get_header_edit();
   });
 
-  function temppurchase_table(){
-    $('#temp-purchase-list').DataTable( {
+  function temppo_table(){
+    $('#temp-po-list').DataTable( {
       serverSide: true,
       search: true,
       processing: true,
       ordering: false,
       retrieve: true,
       ajax: {
-        url: '<?php echo base_url(); ?>Purchase/temp_purchase_list',
+        url: '<?php echo base_url(); ?>Purchase/temp_po_list',
         type: 'POST',
         data:  {},
       },
@@ -554,70 +515,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     check_tempt_data();
   }
 
-
-  $('#purchase_inv').autocomplete({ 
+  $('#submission_inv').autocomplete({ 
     minLength: 2,
     source: function(req, add) {
       $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_purchase',
-        dataType: 'json',
-        type: 'GET',
-        data: req,
-        success: function(res) {
-          if (res.success == true) {
-            add(res.data);
-          }else{
-            $('#po_inv').val('');
-          }
-        },
-      });
-    },
-    select: function(event, ui) {
-      var purchase_id = ui.item.id;
-      $.ajax({
-        type: "POST",
-        url: "<?php echo base_url(); ?>Purchase/copy_purchase_to_temp_purchase",
-        dataType: "json",
-        data: {purchase_id:purchase_id},
-        success : function(data){
-          if (data.code == "200"){
-            var row = data.data[0];
-            $('#purchase_top').val(row.hd_purchase_top_id);
-            $('#purchase_top').trigger('change');
-            $('#purchase_payment_method').val(row.hd_purchase_payment);
-            $('#purchase_payment_method').trigger('change');
-            $('#purchase_supplier').val(row.hd_purchase_supplier);
-            $('#purchase_supplier').trigger('change');
-            $('#purchase_ekspedisi').val(row.hd_purchase_ekspedisi);
-            $('#purchase_ekspedisi').trigger('change');
-            $('#no_faktur_supplier').val(row.hd_purchase_faktur);
-            $('#faktur_date').val(row.hd_purchase_faktur_date);
-            $('#purchase_warehouse').val(row.hd_purchase_warehouse);
-            $('#purchase_warehouse').trigger('change');
-            
-            let title = 'Tambah Data';
-            let message = 'Berhasil Pilih Pembelian';
-            let state = 'info';
-            notif_success(title, message, state);
-            $('#temp-purchase-list').DataTable().ajax.reload();
-            check_tempt_data();
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: data.result,
-            })
-          }
-        }
-      });
-    },
-  });
-
-  $('#product_name').autocomplete({ 
-    minLength: 2,
-    source: function(req, add) {
-      $.ajax({
-        url: '<?php echo base_url(); ?>/Purchase/search_product_po?sup_id='+$('#po_supplier').val(),
+        url: '<?php echo base_url(); ?>/Purchase/search_submission',
         dataType: 'json',
         type: 'GET',
         data: req,
@@ -636,13 +538,58 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
+      let qty = ui.item.qty;
+      let code = ui.item.code;
+      $('#submission_id').val(id);
+      $('#submission_code').val(code);
       $('#product_name').val(product_name);
       $('#product_id').val(product_id);
+      $('#temp_qty').val(qty);
+      temp_price.set(product_price);
+      $('#temp_weight').val(product_weight);
+      let temp_qty_val = $('#temp_qty').val();
+      let temp_weight_val = $('#temp_weight').val();
+      let temp_total_weight_val = temp_qty_val * temp_weight_val;
+      $('#temp_total_weight').val(temp_total_weight_val);
+      let temp_total_val = product_price * qty;
+      temp_total.set(temp_total_val);
+    },
+  });
+
+
+  $('#product_name').autocomplete({ 
+    minLength: 2,
+    source: function(req, add) {
+      $.ajax({
+        url: '<?php echo base_url(); ?>/Purchase/search_product',
+        dataType: 'json',
+        type: 'GET',
+        data: req,
+        success: function(res) {
+          if (res.success == true) {
+            add(res.data);
+          }else{
+            $('#submission_inv').val('');
+          }
+        },
+      });
+    },
+    select: function(event, ui) {
+      let id = ui.item.id;
+      let product_name = ui.item.product_name;
+      let product_id = ui.item.product_id;
+      let product_price = ui.item.product_price;
+      let product_weight = ui.item.product_weight;
+      //$('#submission_id').val(id);
+      //$('#submission_code').val('');
+      //$('#product_name').val(product_name);
+      $('#product_id').val(id);
       temp_price.set(product_price);
       $('#temp_weight').val(product_weight);
     },
   });
 
+  
 
   $('#temp_price').on('input', function (event) {
     let temp_price_val = parseInt(temp_price.get());
@@ -688,69 +635,37 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   })
 
-  function edit_temp(id)
-  {
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_purchase",
-      dataType: "json",
-      data: {id:id},
-      success : function(data){
-        if (data.code == "200"){
-          var row = data.result[0];
-          $("#product_name").val(row.product_name);
-          $("#product_id").val(row.temp_product_id);
-          temp_price.set(row.temp_purchase_price);
-          $("#temp_qty").val(row.temp_purchase_qty);
-          $("#temp_weight").val(row.temp_purchase_weight);
-          temp_delivery_price.set(row.temp_purchase_ongkir);
-          $("#temp_total_weight").val(row.temp_purchase_total_weight);
-          temp_ongkir.set(row.temp_purchase_total_ongkir);
-          temp_total.set(row.temp_purchase_total);
-          $("#temp_note").val(row.temp_purchase_note);
-        }
-      }
-    });  
-  }
+  $('#edit_footer_discount_percentage1').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
+    let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
+    edit_footer_discount1.set(edit_footer_discount1_val);
+  })
 
+  $('#edit_footer_discount_percentage2').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
+    edit_footer_discount2.set(edit_footer_discount2_val);
+  })
+
+  $('#edit_footer_discount_percentage3').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
+    let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
+    edit_footer_discount3.set(edit_footer_discount3_val);
+  })
   
-  function check_tempt_data()
-  {
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/check_temp_purchase_revisi",
-      dataType: "json",
-      data: {},
-      success : function(data){
-        if (data.code == "200"){
-          let rows = data.data[0];
-          footer_sub_total.set(rows.sub_total);
-          footer_total_invoice.set(rows.sub_total);
-        }
-      }
-    });
-  }
-
-  function duedate_cal()
-  {
-    var purchase_top = document.getElementById("purchase_top").value;
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/cal_due_date",
-      dataType: "json",
-      data: {po_top:purchase_top},
-      success : function(data){
-        if (data.code == "200"){
-          $('#purchase_due_date').val(data.result);
-          $('#purchase_due_date').trigger('change');
-        }
-      }
-    });
-  }
 
   $('#btnadd_temp').click(function(e){
     e.preventDefault();
+    var submission_id           = $("#submission_id").val();
+    var submission_code         = $("#submission_code").val();
     var product_id              = $("#product_id").val();
+    var po_supplier             = $("#po_supplier").val();
     var temp_price_val          = parseInt(temp_price.get());
     var temp_qty                = $("#temp_qty").val();
     var temp_weight             = $("#temp_weight").val();
@@ -758,23 +673,22 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_total_weight       = $("#temp_total_weight").val();
     var temp_ongkir_val         = parseInt(temp_ongkir.get());
     var temp_total_val          = parseInt(temp_total.get());
-    var temp_note               = $("#temp_note").val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Purchase/add_temp_purchase",
+        url: "<?php echo base_url(); ?>Purchase/add_temp_po",
         dataType: "json",
-        data: {product_id:product_id, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val, temp_note:temp_note},
+        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, po_supplier:po_supplier, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
             let message = 'Data Berhasil Di Tambah';
             let state = 'info';
             notif_success(title, message, state);
-            $('#temp-purchase-list').DataTable().ajax.reload();
-            clear_input();
+            $('#temp-po-list').DataTable().ajax.reload();
             check_tempt_data();
+            clear_input();
           } else {
             Swal.fire({
               icon: 'error',
@@ -789,18 +703,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
-    var po_inv                                   = $("#po_inv").val();
-    var po_id                                    = $("#po_id").val();
-    var purchase_top                             = $("#purchase_top option:selected" ).text();
-    var purchase_payment_method                  = $("#purchase_payment_method").val();
-    var purchase_supplier                        = $("#purchase_supplier").val();
-    var no_faktur_supplier                       = $("#no_faktur_supplier").val();
-    var faktur_date                              = $("#faktur_date").val();
-    var purchase_ekspedisi                       = $("#purchase_ekspedisi").val();
-    var purchase_tax                             = $("#purchase_tax").val();
-    var purchase_date                            = $("#purchase_date").val();
-    var purchase_warehouse                       = $("#purchase_warehouse").val();
-    var purchase_due_date                        = $("#purchase_due_date").val();
+    var purchase_order_id                        = $("#purchase_order_id").val();
+    var purchase_order_invoice                   = $("#purchase_order_invoice").val();
+    var po_supplier                              = $("#po_supplier").val();
+    var po_date                                  = $("#po_date").val();
+    var po_tax                                   = $("#po_tax").val();
+    var po_ekspedisi                             = $("#po_ekspedisi").val();
+    var po_top                                   = $("#po_top option:selected" ).text();
+    var purchase_order_due_date                  = $("#purchase_order_due_date").val();
+    var po_payment_method                        = $("#po_payment_method").val();
+    var po_warehouse                             = $("#po_warehouse").val();
     var footer_sub_total_submit                  = parseInt(footer_sub_total.get());
     var footer_total_discount_submit             = parseInt(footer_total_discount.get());
     var edit_footer_discount_percentage1_submit  = parseInt(edit_footer_discount_percentage1.get());
@@ -813,15 +725,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var footer_total_ppn_val                     = parseInt(footer_total_ppn.get());
     var footer_total_ongkir_val                  = parseInt(footer_total_ongkir.get());
     var footer_total_invoice_val                 = parseInt(footer_total_invoice.get());
-    var purchase_remark                         = $("#purchase_remark").val();
+    var purchase_order_remark                    = $("#purchase_order_remark").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Purchase/save_purchase",
+      url: "<?php echo base_url(); ?>Purchase/save_edit",
       dataType: "json",
-      data: {po_inv:po_inv, po_id:po_id, purchase_top:purchase_top, purchase_payment_method:purchase_payment_method, purchase_supplier:purchase_supplier, no_faktur_supplier:no_faktur_supplier, faktur_date:faktur_date, purchase_ekspedisi:purchase_ekspedisi, purchase_tax:purchase_tax, purchase_date:purchase_date, purchase_warehouse:purchase_warehouse, purchase_due_date:purchase_due_date, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_remark:purchase_remark},
+      data: {purchase_order_id:purchase_order_id, purchase_order_invoice:purchase_order_invoice, po_supplier:po_supplier, po_date:po_date, po_tax:po_tax, po_ekspedisi:po_ekspedisi, po_top:po_top, purchase_order_due_date:purchase_order_due_date, po_payment_method:po_payment_method, po_warehouse:po_warehouse, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_dpp_val:footer_dpp_val, footer_total_ppn_val:footer_total_ppn_val, footer_total_ongkir_val:footer_total_ongkir_val, footer_total_invoice_val:footer_total_invoice_val, purchase_order_remark:purchase_order_remark},
       success : function(data){
         if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>/Purchase";
+          window.location.href = "<?php echo base_url(); ?>/Purchase/po";
         } else {
           Swal.fire({
             icon: 'error',
@@ -832,6 +744,208 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   });
+
+
+  function deletes(id)
+  {
+    Swal.fire({
+      title: 'Konfirmasi?',
+      text: "Apakah Anda Yakin Menghapus Data ?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Hapus'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>Purchase/delete_temp_po",
+          dataType: "json",
+          data: {id:id},
+          success : function(data){
+            if (data.code == "200"){
+
+              let title = 'Hapus Data';
+              let message = 'Data Berhasil Di Hapus';
+              let state = 'danger';
+              notif_success(title, message, state);
+              check_tempt_data();
+              $('#temp-po-list').DataTable().ajax.reload();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.result,
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
+  function get_header_edit()
+  {
+
+    let purchase_order_id =  $("#purchase_order_id").val();
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/get_header_edit",
+      dataType: "json",
+      data: {purchase_order_id:purchase_order_id},
+      success : function(data){
+        if (data.code == "200"){
+          var row = data.data[0];
+          
+          $("#purchase_order_invoice").val(row.hd_po_invoice);
+          $("#purchase_order_id").val(row.hd_po_id);
+          $("#po_supplier").val(row.supplier_id);
+          $('#po_supplier').trigger('change');
+          $("#po_ekspedisi").val(row.ekspedisi_id);  
+          $('#po_ekspedisi').trigger('change');  
+          $("#po_payment_method").val(row.hd_po_payment); 
+          $('#po_payment_method').trigger('change');
+          $("#po_warehouse").val(row.hd_po_warehouse); 
+          $('#po_warehouse').trigger('change');
+        }
+      }
+    });  
+  }
+
+  function edit_temp(id)
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/get_edit_temp_po",
+      dataType: "json",
+      data: {id:id},
+      success : function(data){
+        if (data.code == "200"){
+          var row = data.result[0];
+          if(row.temp_submission_id != 0){
+            $("#submission_inv").val(row.product_name+'('+row.submission_invoice +')');
+            $("#submission_code").val(row.submission_invoice );
+            $("#submission_id").val(row.submission_id);
+          }else{
+            $("#submission_inv").val("");
+            $("#submission_code").val("");
+            $("#submission_id").val(0);
+          }
+          $("#product_name").val(row.product_name);
+          $("#product_id").val(row.submission_product_id);
+          temp_price.set(row.temp_po_price);
+          $("#temp_qty").val(row.temp_po_qty);
+          $("#temp_weight").val(row.temp_po_weight);
+          temp_delivery_price.set(row.temp_po_ongkir);
+          $("#temp_total_weight").val(row.temp_po_total_weight);
+          temp_ongkir.set(row.temp_po_total_ongkir);
+          temp_total.set(row.temp_po_total);
+        }
+      }
+    });  
+  }
+
+
+  function check_tempt_data()
+  {
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/check_temp_po",
+      dataType: "json",
+      data: {},
+      success : function(data){
+        if (data.code == "200"){
+          if(data.supplier == 0){
+            $('#po_tax').val('');
+            $('#po_tax').prop('disabled', false);
+            footer_sub_total.set(0);
+            footer_dpp.set(0); 
+            footer_total_ppn.set(0);
+            footer_total_ongkir.set(0);
+            footer_total_invoice.set(0);
+          }else{
+            $("#po_supplier").val(data.supplier_id);
+            $('#po_supplier').trigger('change');
+            $("#po_supplier_code").val(data.supplier_code);
+            $('#po_tax').val(data.product_tax);
+            $('#po_tax').prop('disabled', true);
+            footer_sub_total.set(data.sub_total);
+            footer_dpp.set(data.sub_total); 
+            if(data.product_tax == 'PPN'){
+              var ppn_cal = data.sub_total * 11 / 100;
+              footer_total_ppn.set(ppn_cal);
+            }else{
+              var ppn_cal = 0;
+              footer_total_ppn.set(ppn_cal);
+            }
+            footer_total_ongkir.set(data.ongkir);
+            var data_ongkir = parseInt(data.ongkir, 0);
+            var data_sub_total = parseInt(data.sub_total, 0);
+            var data_ppn_cal = parseInt(ppn_cal, 0);
+            var footer_total_invoice_cal = (data_ongkir + data_sub_total + data_ppn_cal);
+            footer_total_invoice.set(footer_total_invoice_cal);
+          }
+        }
+      }
+    });
+  }
+
+  function clear_input()
+  {
+    $('#submission_inv').val('');
+    $("#submission_code").val('');
+    $('#submission_id').val('');
+    $('#product_name').val('');
+    $('#product_id').val('');
+    temp_price.set(0);
+    $('#temp_qty').val('');
+    $('#temp_weight').val('');
+    temp_delivery_price.set(0);
+    $('#temp_total_weight').val(0);
+    temp_ongkir.set(0);
+    temp_total.set(0);
+  }
+
+  function duedate_cal()
+  {
+    var po_top = document.getElementById("po_top").value;
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Purchase/cal_due_date",
+      dataType: "json",
+      data: {po_top:po_top},
+      success : function(data){
+        if (data.code == "200"){
+          $('#purchase_order_due_date').val(data.result);
+        }
+      }
+    });
+  }
+
+
+  $('#btneditdisc').click(function(e){
+    e.preventDefault();
+    var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
+    var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
+    var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
+    var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
+    var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
+    var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
+    var footer_sub_total_val                  = parseInt(footer_sub_total.get());
+    var footer_total_ongkir_val               = parseInt(footer_total_ongkir.get());
+    var po_tax                                = $('#po_tax').val();
+    var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
+    footer_total_discount.set(total_disc);
+    footer_dpp.set(footer_sub_total_val - total_disc);
+    if(po_tax == 'PPN'){
+      footer_total_ppn.set((footer_sub_total_val - total_disc) * 11 / 100);
+    }
+    footer_total_invoice.set(((footer_sub_total_val - total_disc) + (footer_sub_total_val - total_disc) * 11 / 100) + footer_total_ongkir_val);
+    $('#footerdiscount').modal('hide')
+  });
+
+  
 
   new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
   

@@ -369,7 +369,7 @@ class masterdata_model extends CI_Model {
         $this->db->insert('ms_product_supplier', $insert_supplier);
     }
 
-    public function product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter)
+    public function product_list($search, $length, $start, $supplier_filter, $category_filter, $brand_filter,$product_status_filter, $in_transit_filter)
     {
         $this->db->select('*');
         $this->db->from('ms_product');
@@ -390,8 +390,18 @@ class masterdata_model extends CI_Model {
         if($category_filter != null){
             $this->db->where('ms_product.product_category like "%'.$category_filter.'%"');
         }
-        if($category_filter != null){
+        if($brand_filter != null){
             $this->db->where('ms_product.product_brand like "%'.$brand_filter.'%"');
+        }
+        if($product_status_filter != null){
+            $this->db->where('ms_product.product_status like "%'.$product_status_filter.'%"');
+        }
+        if($in_transit_filter != null){
+            if($in_transit_filter == 1){
+                $this->db->where('ms_product.product_po_status = 0');
+            }else{
+                $this->db->where('ms_product.product_po_status > 0');
+            }
         }
         $this->db->limit($length);
         $this->db->offset($start);
@@ -399,7 +409,7 @@ class masterdata_model extends CI_Model {
         return $query;
     }
 
-    public function product_list_count($search, $supplier_filter, $category_filter, $brand_filter)
+    public function product_list_count($search, $supplier_filter, $category_filter, $brand_filter, $product_status_filter, $in_transit_filter)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('ms_product');
@@ -421,8 +431,18 @@ class masterdata_model extends CI_Model {
         if($category_filter != null){
             $this->db->where('ms_product.product_category like "%'.$category_filter.'%"');
         }
-        if($category_filter != null){
+        if($brand_filter != null){
             $this->db->where('ms_product.product_brand like "%'.$brand_filter.'%"');
+        }
+        if($product_status_filter != null){
+            $this->db->where('ms_product.product_status like "%'.$product_status_filter.'%"');
+        }
+        if($in_transit_filter != null){
+            if($in_transit_filter == 1){
+                $this->db->where('ms_product.product_po_status = 0');
+            }else{
+                $this->db->where('ms_product.product_po_status > 1');
+            }
         }
         $query = $this->db->get();
         return $query;
@@ -498,6 +518,7 @@ class masterdata_model extends CI_Model {
         $this->db->update('ms_product');
     }
 
+
     public function delete_filter_product($user_id)
     {
         $this->db->where('user_id ', $user_id);
@@ -526,7 +547,7 @@ class masterdata_model extends CI_Model {
         $this->db->from('ms_product');
         $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
         $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
-        $this->db->join('ms_product_stock', 'ms_product.product_id = ms_product_stock.product_id');
+        $this->db->join('ms_product_stock', 'ms_product.product_id = ms_product_stock.product_id', 'left');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
         $this->db->where('ms_product.is_active', 'y');
         if($searchin_key != null){

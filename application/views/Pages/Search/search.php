@@ -73,6 +73,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   minimumFractionDigits: 0
 });
 
+
  function product_list_table(key = '') {
   $.ajax({
     type: "POST",
@@ -80,9 +81,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     dataType: "json",
     data: {key:key},
     success : function(data){
+
       let text = "";
       for (let i = 0; i < data.length; i++) {
-        text+= '<tr onclick="popupOpen('+data[i].product_id+')"><td class="image-td"><img src="<?php echo base_url(); ?>assets/products/'+data[i].product_image+'" width="100%"></img></td><td>'+data[i].product_name+'<br /> <span class="badge badge-primary">'+formatter.format(data[i].product_sell_price_1)+'</span></td><td>'+data[i].total_stock+' '+data[i].unit_name+'</td></tr>';
+        if(data[i].total_stock == null){
+          var stocks = 0;
+        }else{
+          var stocks = data[i].total_stock;
+        }
+        text+= '<tr onclick="popupOpen('+data[i].product_id+')"><td class="image-td"><img src="<?php echo base_url(); ?>assets/products/'+data[i].product_image+'" width="100%"></img></td><td>'+data[i].product_name+'<br /> <span class="badge badge-primary">'+formatter.format(data[i].product_sell_price_1)+'</span></td><td>'+stocks+' '+data[i].unit_name+'</td></tr>';
       }       
       document.getElementById("product_list").innerHTML = text;
     }

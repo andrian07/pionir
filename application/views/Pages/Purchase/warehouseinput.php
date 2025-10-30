@@ -82,9 +82,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Tanggal</th>
                   <th>Nama Barang</th>
                   <th>Nama Supplier</th>
-                  <th>No Faktur Supplier</th>
                   <th>Qty Pesan</th>
                   <th>Qty Terima</th>
+                  <th>Catatan</th>
                   <th>Status</th>
                   <th>Aksi</th>
                 </tr>

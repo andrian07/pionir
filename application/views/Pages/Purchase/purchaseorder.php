@@ -183,6 +183,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     })
   }
 
+
+  function edit(id)
+  {
+    window.location.href = "<?php echo base_url(); ?>Purchase/editpo?id="+id;
+  }
+
   $("#btnsearch").click(function (e) {
     var start_date      = $("#start_date").val();
     var end_date        = $("#end_date").val();

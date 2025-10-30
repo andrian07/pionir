@@ -152,34 +152,28 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <label>Berat</label>
+                    <label>Berat(GR)</label>
                     <input id="temp_weight" name="temp_weight" type="text" class="form-control text-right" value="0">
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <label>Ongkir</label>
+                    <label>Ongkir / KG</label>
                     <input id="temp_delivery_price" name="temp_delivery_price" type="text" class="form-control text-right" value="0">
+                    <input id="temp_total_weight" name="temp_total_weight" type="hidden" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <label>Total Berat</label>
-                    <input id="temp_total_weight" name="temp_total_weight" type="text" class="form-control text-right" value="0" readonly>
-                  </div>
-                </div>
-
-                <div class="col-sm-2">
-                  <div class="form-group">
-                    <label>Total Ongkir</label>
+                    <label>Ongkir Per PCS</label>
                     <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
 
-                <div class="col-sm-3">
+                <div class="col-sm-5">
 
                   <!-- text input -->
 
@@ -218,8 +212,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>SKU</th>
                     <th>Produk</th>
                     <th>Satuan</th>
+                    <th>Harga Beli</th>
                     <th>Qty</th>
-                    <th>Ongkir</th>
+                    <th>Ongkir Per Pcs</th>
                     <th>Total</th>
                     <th>Aksi</th>
                   </tr>
@@ -508,7 +503,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();
@@ -613,6 +609,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   })
 
 
+  $('#temp_weight').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_weight = $('#temp_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
+  })
+
 
   $('#temp_delivery_price').on('input', function (event) {
     let temp_qty_val = $('#temp_qty').val();
@@ -626,8 +642,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }else{
       let temp_price_val = parseInt(temp_price.get());
       let temp_delivery_price_val = parseInt(temp_delivery_price.get());
-      let temp_total_weight_val = $('#temp_total_weight').val();
-      let temp_ongkir_val = temp_delivery_price_val * temp_total_weight_val;
+      let temp_weight = $('#temp_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
       temp_ongkir.set(temp_ongkir_val);
       let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
       temp_total.set(temp_total_val);
