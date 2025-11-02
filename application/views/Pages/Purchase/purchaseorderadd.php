@@ -496,15 +496,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8}
       ]
     });
     check_tempt_data();
@@ -533,6 +533,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       let product_weight = ui.item.product_weight;
+      let supplier_id = ui.item.last_supplier;
       let qty = ui.item.qty;
       let code = ui.item.code;
       $('#submission_id').val(id);
@@ -548,6 +549,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $('#temp_total_weight').val(temp_total_weight_val);
       let temp_total_val = product_price * qty;
       temp_total.set(temp_total_val);
+      console.log(supplier_id);
+      if(supplier_id != null){
+        $('#po_supplier').val(supplier_id);
+        $('#po_supplier').trigger('change');
+      }
     },
   });
 

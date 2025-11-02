@@ -262,8 +262,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-   new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
-   new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('myModal'), {backdrop: 'static', keyboard: false})  
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false})  
   $(document ).ready(function() {
     submission_table();
   });
@@ -282,17 +282,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8},
-        {data: 9},
-        {data: 10}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8},
+      {data: 9},
+      {data: 10}
       ]
     });
   }
@@ -382,13 +382,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       });
     },
     select: function(event, ui) {
-      $('#submission_product_id').val(ui.item.id);
+      let product_id = ui.item.id;
+      $('#submission_product_id').val(product_id);
       $('#submission_product_code').val(ui.item.product_code);
-      if(ui.item.last_supplier != null){
-        $('#submission_last_supplier').val(ui.item.last_supplier);
-      }else{
-        $('#submission_last_supplier').val('');
-      }
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Purchase/get_last_supplier_po",
+        dataType: "json",
+        data: {product_id:product_id},
+        success: function(data) {
+          if (data.code == 200) {
+            if(data.result.length >= 1){
+              $('#submission_last_supplier').val(data.result[0].hd_po_supplier);
+            }else{
+              $('#submission_last_supplier').val('');
+            }
+          }else{
+            $('#submission_product_name_edit').val('');
+          }
+        },
+      });
     },
   });
 

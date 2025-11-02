@@ -20,11 +20,7 @@ class global_model extends CI_Model {
         $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->where('ms_product.is_active', 'y');
         if($keyword != null){
-            $this->db->where('ms_product.product_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_code like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_supplier_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_key like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_desc like "%'.$keyword.'%"');
+              $this->db->where('(ms_product.product_name like "%'.$keyword.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") ');
         }
         $this->db->limit(50);
         $query = $this->db->get();
@@ -40,13 +36,9 @@ class global_model extends CI_Model {
         $this->db->join('hd_po', 'dt_po.hd_po_id = hd_po.hd_po_id', 'left');
         $this->db->where('ms_product.is_active', 'y');
         if($keyword != null){
-            $this->db->where('ms_product.product_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_code like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_supplier_name like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_key like "%'.$keyword.'%"');
-            $this->db->or_where('ms_product.product_desc like "%'.$keyword.'%"');
+              $this->db->where('(ms_product.product_name like "%'.$keyword.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%")');
         }
-        $this->db->limit(50);
+        $this->db->limit(1);
         $query = $this->db->get();
         return $query;
     }
@@ -127,6 +119,18 @@ class global_model extends CI_Model {
         $query = $this->db->query("select * from ms_product a, ms_product_supplier b, ms_unit c  where a.product_id = b.product_id and a.product_unit = b.unit_id and(product_name like '%".$keyword."%' or product_code like '%".$keyword."%') and  a.is_active = 'Y' group by a.product_id" );
         $result = $query->result();
         return $result;
+    }
+
+    public function get_last_supplier_po($product_id)
+    {
+        $this->db->select('*');
+        $this->db->from('dt_po');
+        $this->db->join('hd_po', 'dt_po.hd_po_id = hd_po.hd_po_id');
+        $this->db->where('dt_product_id', $product_id);
+        $this->db->order_by('hd_po.hd_po_id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query;
     }
 
     public function update_stock($product_id, $warehouse_id, $new_stock)

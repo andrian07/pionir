@@ -18,8 +18,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Produk</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target=".filter" type="button"><span class="btn-label"><i class="fas fa-search"></i></span> Filter </button>
-                <div class="modal fade filter" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+                <button class="btn btn-warning" data-bs-toggle="myModalsearch" data-bs-target=".filter" type="button"><span class="btn-label"><i class="fas fa-search"></i></span> Filter </button>
+                <div class="modal fade filter" id="myModalsearch" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                   <div class="modal-dialog modal-md">
                     <div class="modal-content">
                       <div class="modal-header">

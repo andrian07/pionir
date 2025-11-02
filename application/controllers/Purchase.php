@@ -564,7 +564,6 @@ class Purchase extends CI_Controller {
 
 	public function search_product_submission()
 	{	
-
 		$supplier_id = $this->input->get('id');
 		$keyword = $this->input->get('term');
 		$result = ['success' => FALSE, 'num_product' => 0, 'data' => [], 'message' => ''];
@@ -586,6 +585,14 @@ class Purchase extends CI_Controller {
 		}
 		echo json_encode($result);
 	} 
+
+	public function get_last_supplier_po()
+	{
+		$product_id = $this->input->post('product_id');
+		$get_last_supplier_po = $this->global_model->get_last_supplier_po($product_id)->result_array();
+		echo json_encode(['code'=>200, 'result'=>$get_last_supplier_po]);
+		die();
+	}
 
 	public function submission_list()
 	{
@@ -1070,6 +1077,7 @@ class Purchase extends CI_Controller {
 					'product_id'          => $row['product_id'],
 					'product_price'       => $row['product_price'],
 					'product_weight'      => $row['product_weight'],
+					'last_supplier'       => $row['submission_last_supplier'],
 					'qty'      			  => $row['submission_qty'],
 				];
 			}
