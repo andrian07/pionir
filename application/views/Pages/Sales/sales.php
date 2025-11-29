@@ -57,13 +57,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </select>
                         </div>
 
-                         <label for="inlineinput" class="col-md-3 col-form-label">Status Pembayaran: </label>
+                         <label for="inlineinput" class="col-md-8 col-form-label">Status Pembayaran: </label>
                         <div class="col-md-12 p-0">
                           <select class="form-control input-full js-example-basic-single" id="customer_filter" name="customer_filter">
-                            <option value="">-- Pilih Customer --</option>
-                            <?php foreach ($data['customer_list'] as $row) { ?>
-                              <option value="<?php echo $row->customer_id; ?>"><?php echo $row->customer_name; ?></option>  
-                            <?php } ?>
+                            <option value="">-- Pilih Status Pembayaran --</option>
+                              <option value="Lunas">Lunas</option> 
+                              <option value="Belum Lunas">Belum Lunas</option>   
                           </select>
                         </div>
 
@@ -118,6 +117,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+   new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) 
+   
   $(document).ready(function() {
     purchaseorder_table();
   });
