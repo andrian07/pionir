@@ -90,6 +90,7 @@
             <th scope="col">produk</th>
             <th scope="col">Qty</th>
             <th scope="col">Price</th>
+            <th scope="col">Catatan</th>
             <th scope="col">Discount</th>
             <th scope="col">Total</th>
           </tr>
@@ -101,6 +102,7 @@
               <td><?php echo $row->product_name; ?></td>
               <td><?php echo $row->dt_so_qty; ?></td>
               <td><?php echo number_format($row->dt_so_price); ?></td>
+              <td><?php echo $row->dt_so_note; ?></td>
               <td><?php echo number_format($row->dt_so_discount); ?></td>
               <td><?php echo number_format($row->dt_so_total); ?></td>
             </tr>

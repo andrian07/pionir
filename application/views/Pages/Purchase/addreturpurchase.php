@@ -88,6 +88,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
 
+
                 <div class="col-sm-1">
                   <div class="form-group">
                     <label>Qty Retur</label>
@@ -104,8 +105,23 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <label>Ongkir</label>
-                    <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" required="">
+                    <label>Berat(GR)</label>
+                    <input id="temp_weight" name="temp_weight" type="text" class="form-control text-right" value="0">
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Ongkir / KG</label>
+                    <input id="temp_delivery_price" name="temp_delivery_price" type="text" class="form-control text-right" value="0">
+                    <input id="temp_total_weight" name="temp_total_weight" type="hidden" class="form-control text-right" value="0" readonly>
+                  </div>
+                </div>
+
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label>Ongkir / PCS</label>
+                    <input id="temp_ongkir" name="temp_ongkir" type="text" class="form-control text-right" value="0" readonly>
                   </div>
                 </div>
 
@@ -196,8 +212,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  
-  
+
+
   $('#purchase_warehouse').prop('disabled', true);
 
   let temp_price = new AutoNumeric('#temp_price', {
@@ -208,6 +224,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     digitGroupSeparator : '.',
   });
 
+  let temp_delivery_price = new AutoNumeric('#temp_delivery_price', {
+    currencySymbol : 'Rp. ',
+    decimalCharacter : ',',
+    decimalPlaces: 0,
+    decimalPlacesShownOnFocus: 0,
+    digitGroupSeparator : '.',
+  });
+
+  
 
   let temp_ongkir = new AutoNumeric('#temp_ongkir', {
     currencySymbol : 'Rp. ',
@@ -290,30 +315,89 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
     select: function(event, ui) {
       let id = ui.item.id;
-      purchase_warehouse = ui.item.warehouse;
-      purchase_price     = ui.item.purchase_price;
-      purchase_qty_buy   = ui.item.purchase_qty;
-      purchase_ongkir    = ui.item.purchase_ongkir;
+      purchase_warehouse        = ui.item.warehouse;
+      purchase_price            = ui.item.purchase_price;
+      purchase_qty_buy          = ui.item.purchase_qty;
+      purchase_ongkir           = ui.item.purchase_ongkir;
+      purchase_weight           = ui.item.purchase_weight;
+      purchase_total_weight     = ui.item.purchase_total_weight;
+      purchase_total_ongkir     = ui.item.purchase_total_ongkir;
       $("#product_id").val(id);
       $('#purchase_warehouse').val(purchase_warehouse);
       $('#purchase_warehouse').trigger('change');
       temp_price.set(purchase_price);
       $('#temp_qty_buy').val(purchase_qty_buy);
-      temp_ongkir.set(purchase_ongkir);
+      $('#temp_weight').val(purchase_weight);
+      temp_delivery_price.set(purchase_ongkir);
+      temp_ongkir.set(purchase_total_ongkir);
     },
   });
 
 
   $('#temp_qty').on('input', function (event) {
-    calculation_temp();
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val)
   })
 
   $('#temp_price').on('input', function (event) {
-    calculation_temp();
+    let temp_price_val = parseInt(temp_price.get());
+    let temp_qty_val = $('#temp_qty').val();
+    let temp_weight_val = $('#temp_weight').val();
+    let temp_total_weight_val = temp_qty_val * temp_weight_val;
+    $('#temp_total_weight').val(temp_total_weight_val);
+    let temp_ongkir_val = parseInt(temp_ongkir.get());
+    let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+    temp_total.set(temp_total_val);
   })
 
-  $('#temp_ongkir').on('input', function (event) {
+  /*$('#temp_ongkir').on('input', function (event) {
     calculation_temp();
+  })*/
+
+  $('#temp_weight').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_weight = $('#temp_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
+  })
+
+  $('#temp_delivery_price').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_weight = $('#temp_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
   })
 
   function calculation_temp()
@@ -491,6 +575,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     })
   }
+
+  
 
   $('#btnsave').click(function(e){
     e.preventDefault();

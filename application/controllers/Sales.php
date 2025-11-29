@@ -47,12 +47,15 @@ class Sales extends CI_Controller {
 			$find_result = [];
 			foreach ($find as $row) {
 				$diplay_text = $row['product_code'].' - '.$row['product_name'].' - '.$row['unit_name'];
+				$product_id = $row['product_id'];
+				$stock = $this->global_model->total_stock_search($product_id)->result_array();
 				$find_result[] = [
 					'id'                  => $row['product_id'],
 					'value'               => $diplay_text,
 					'product_code'        => $row['product_code'],
 					'product_price'       => $row['product_price'],
 					'product_weight'      => $row['product_weight'],
+					'curent_stock'        => $stock[0]['curent_stock']
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
@@ -106,11 +109,17 @@ class Sales extends CI_Controller {
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
 
+			$start_date         = $this->input->post('start_date');
+			$end_date         	= $this->input->post('end_date');
+			$customer_filter 	= $this->input->post('customer_filter');
+
+
+
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->sales_model->sales_order_list($search, $length, $start)->result_array();
-			$count_list = $this->sales_model->sales_order_list_count($search)->result_array();
+			$list = $this->sales_model->sales_order_list($search, $length, $start, $start_date, $end_date, $customer_filter)->result_array();
+			$count_list = $this->sales_model->sales_order_list_count($search, $start_date, $end_date, $customer_filter)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -294,7 +303,7 @@ class Sales extends CI_Controller {
 			$sales_order_top_id 						= $this->input->post('sales_order_top_id');
 			$sales_order_salesman 						= $this->input->post('sales_order_salesman');
 			$sales_order_prepare 						= $this->input->post('sales_order_prepare');
-			$sales_order_prepare_id 					= $this->input->post('sales_order_prepare_id');
+			//$sales_order_prepare_id 					= $this->input->post('sales_order_prepare_id');
 			$sales_order_colly 							= $this->input->post('sales_order_colly');
 			$sales_order_warehouse 						= $this->input->post('sales_order_warehouse');
 			$sales_order_ekspedisi 						= $this->input->post('sales_order_ekspedisi');
@@ -385,7 +394,7 @@ class Sales extends CI_Controller {
 				'hd_sales_order_top_id'				=> $sales_order_top_id,
 				'hd_sales_order_salesman'			=> $sales_order_salesman,
 				'hd_sales_order_prepare'			=> $sales_order_prepare,
-				'hd_sales_order_prepare_id'			=> $sales_order_prepare_id,
+				//'hd_sales_order_prepare_id'			=> $sales_order_prepare_id,
 				'hd_sales_order_colly'				=> $sales_order_colly,
 				'hd_sales_order_date'				=> $sales_order_date,
 				'hd_sales_order_warehouse'			=> $sales_order_warehouse,
@@ -404,13 +413,13 @@ class Sales extends CI_Controller {
 				'hd_sales_order_note'				=> $sales_order_remark,
 				'created_by'						=> $user_id
 			);	
-			$save_purchase = $this->sales_model->save_sales_order($data_insert);
+			$save_sales_order = $this->sales_model->save_sales_order($data_insert);
 
 
 			$get_temp_sales_order = $this->sales_model->get_temp_sales_order($user_id)->result_array();
 			foreach($get_temp_sales_order  as $row){
 				$data_insert_detail = array(
-					'hd_sales_order_id'		=> $save_purchase,
+					'hd_sales_order_id'		=> $save_sales_order,
 					'dt_so_product_id'		=> $row['temp_product_id'],
 					'dt_so_rate'			=> $row['temp_so_rate'],
 					'dt_so_price'			=> $row['temp_so_price'],
@@ -1121,6 +1130,12 @@ class Sales extends CI_Controller {
 					$this->global_model->insert_movement_stock($movement_stock);
 				}
 			}
+
+			if($sales_order_id != null)
+			{
+				$this->sales_model->update_sales_order_status($sales_order_id);
+			}
+
 
 			$data_insert_act = array(
 				'activity_table_desc'        => 'Tambah Penjualan Cabang '.$warehouse_name.' '.$last_code.'',

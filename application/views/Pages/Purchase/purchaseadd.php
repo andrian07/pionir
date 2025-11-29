@@ -700,6 +700,26 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   })*/
 
+   $('#temp_delivery_price').on('input', function (event) {
+    let temp_qty_val = $('#temp_qty').val();
+    if(temp_qty_val == 0){
+      temp_delivery_price.set(0);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "Silahakn Isi Qty Terlebih Dahulu",
+      })
+    }else{
+      let temp_price_val = parseInt(temp_price.get());
+      let temp_delivery_price_val = parseInt(temp_delivery_price.get());
+      let temp_weight = $('#temp_weight').val();
+      let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
+      temp_ongkir.set(temp_ongkir_val);
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      temp_total.set(temp_total_val);
+    }
+  })
+   
   $('#temp_weight').on('input', function (event) {
     let temp_qty_val = $('#temp_qty').val();
     if(temp_qty_val == 0){

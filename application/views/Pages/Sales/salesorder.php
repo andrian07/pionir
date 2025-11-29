@@ -26,7 +26,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Filter PO</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Filter Sales Order</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -46,18 +46,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </div>
                         </div>
 
-                        <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier: </label>
-                          <div class="col-md-12 p-0">
-                            <select class="form-control input-full js-example-basic-single" id="supplier_filter" name="supplier_filter">
-                              <option value="">-- Pilih Supplier --</option>
-                              <?php foreach ($supplier_list as $row) { ?>
-                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </div>
 
+                        <label for="inlineinput" class="col-md-3 col-form-label">Customer: </label>
+                        <div class="col-md-12 p-0">
+                          <select class="form-control input-full js-example-basic-single" id="customer_filter" name="customer_filter">
+                            <option value="">-- Pilih Customer --</option>
+                            <?php foreach ($data['customer_list'] as $row) { ?>
+                              <option value="<?php echo $row->customer_id; ?>"><?php echo $row->customer_name; ?></option>  
+                            <?php } ?>
+                          </select>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
@@ -109,12 +107,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) 
+
   $(document).ready(function() {
     purchaseorder_table();
   });
 
-
   function purchaseorder_table(){
+
+
     $('#po-list').DataTable( {
       serverSide: true,
       search: true,
@@ -124,7 +125,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ajax: {
         url: '<?php echo base_url(); ?>Sales/sales_order_list',
         type: 'POST',
-        data:  {},
+        data: function(d){
+          d.start_date      = $('#start_date').val();
+          d.end_date        = $('#end_date').val();
+          d.customer_filter = $('#customer_filter').val();
+        }
       },
       columns: 
       [
@@ -184,9 +189,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   $("#btnsearch").click(function (e) {
     var start_date      = $("#start_date").val();
     var end_date        = $("#end_date").val();
-    var supplier_filter = $("#supplier_filter").val();
-    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&supplier_filter="+supplier_filter;
-    Swal.fire('Saved!', '', 'success');
+    var customer_filter = $("#customer_filter").val();
+    $('#po-list').DataTable().ajax.reload();
+    $('#exampleModaledit').modal('hide');
   });
 
   

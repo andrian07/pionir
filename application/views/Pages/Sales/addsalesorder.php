@@ -77,12 +77,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_prepare" name="sales_order_prepare">
-                <option value="">-- Pilih User --</option>
-                <?php foreach ($data['user_list'] as $row) { ?>
-                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
-                <?php } ?>
-              </select>
+              <input id="sales_order_prepare" name="sales_order_prepare" type="text" class="form-control">
             </div>
             <label for="tanggal" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
             <div class="col-sm-3">
@@ -159,6 +154,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <div class="form-group">
                   <label>Harga Jual Per Unit</label>
                   <input id="temp_price" name="temp_price" class="form-control text-right" value="0"  required="">
+                </div>
+              </div>
+
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Curent Stock</label>
+                  <input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
                 </div>
               </div>
 
@@ -594,10 +597,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
+      let curent_stock = ui.item.curent_stock;
       $('#product_name').val(product_name);
       $('#product_id').val(id);
       $('#temp_rate').val('Umum');
       $('#temp_rate').trigger('change');
+      if(curent_stock == null){
+        $('#curent_stock').val(0);
+      }else{
+        $('#curent_stock').val(curent_stock);
+      }
       temp_price.set(product_price);
     },
   });
@@ -783,8 +792,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_order_top                          = $("#sales_order_top option:selected").text();
     var sales_order_top_id                       = $("#sales_order_top").val()
     var sales_order_salesman                     = $("#sales_order_salesman").val();
-    var sales_order_prepare                      = $("#sales_order_prepare option:selected").text();
-    var sales_order_prepare_id                   = $("#sales_order_prepare").val();
+    var sales_order_prepare                      = $("#sales_order_prepare").val();
+    //var sales_order_prepare_id                   = $("#sales_order_prepare").val();
     var sales_order_colly                        = $("#sales_order_colly").val();
     var sales_order_warehouse                    = $("#sales_order_warehouse").val();
     var sales_order_ekspedisi                    = $("#sales_order_ekspedisi").val();
@@ -807,7 +816,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/save_salesorder",
       dataType: "json",
-      data: {sales_order_customer:sales_order_customer, sales_order_rate_customer:sales_order_rate_customer, sales_order_payment:sales_order_payment, sales_order_top:sales_order_top, sales_order_top_id:sales_order_top_id, sales_order_salesman:sales_order_salesman, sales_order_prepare:sales_order_prepare, sales_order_prepare_id:sales_order_prepare_id, sales_order_colly:sales_order_colly, sales_order_warehouse:sales_order_warehouse, sales_order_ekspedisi:sales_order_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_order_remark:sales_order_remark, sales_order_due_date:sales_order_due_date, sales_order_date:sales_order_date},
+      data: {sales_order_customer:sales_order_customer, sales_order_rate_customer:sales_order_rate_customer, sales_order_payment:sales_order_payment, sales_order_top:sales_order_top, sales_order_top_id:sales_order_top_id, sales_order_salesman:sales_order_salesman, sales_order_prepare:sales_order_prepare, sales_order_colly:sales_order_colly, sales_order_warehouse:sales_order_warehouse, sales_order_ekspedisi:sales_order_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_order_remark:sales_order_remark, sales_order_due_date:sales_order_due_date, sales_order_date:sales_order_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";

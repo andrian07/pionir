@@ -38,7 +38,7 @@ class sales_model extends CI_Model {
         $this->db->insert('dt_sales_order', $data_insert_detail);
     }
 
-    public function sales_order_list($search, $length, $start)
+    public function sales_order_list($search, $length, $start, $start_date, $end_date, $customer_filter)
     {
         $this->db->select('*');
         $this->db->from('hd_sales_order');
@@ -49,6 +49,12 @@ class sales_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_sales_order.hd_sales_order_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'hd_sales_order.hd_sales_order_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_user', 'hd_sales_order.created_by = ms_user.user_id');
+        if($start_date != null){
+            $this->db->where('hd_sales_order_date between "'.$start_date.'" and "'.$end_date.'"');
+        }
+        if($customer_filter != null){
+            $this->db->where('hd_sales_order_customer', $customer_filter);
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -63,7 +69,7 @@ class sales_model extends CI_Model {
         return $query;
     }
 
-    public function sales_order_list_count($search)
+    public function sales_order_list_count($search, $start_date, $end_date, $customer_filter)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_sales_order');
@@ -74,6 +80,12 @@ class sales_model extends CI_Model {
         $this->db->join('ms_warehouse', 'hd_sales_order.hd_sales_order_warehouse = ms_warehouse.warehouse_id');
         $this->db->join('ms_salesman', 'hd_sales_order.hd_sales_order_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_user', 'hd_sales_order.created_by = ms_user.user_id');
+        if($start_date != null){
+            $this->db->where('hd_sales_order_date between "'.$start_date.'" and "'.$end_date.'"');
+        }
+        if($customer_filter != null){
+            $this->db->where('hd_sales_order_customer', $customer_filter);
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$search.'%"');
@@ -438,6 +450,13 @@ class sales_model extends CI_Model {
         $this->db->set('hd_sales_status', 'Cancel');
         $this->db->where('hd_sales_id', $sales_id);
         $this->db->update('hd_sales');
+    }
+
+    public function  update_sales_order_status($sales_order_id)
+    {
+        $this->db->set('hd_sales_order_status', 'Success');
+        $this->db->where('hd_sales_order_id', $sales_order_id);
+        $this->db->update('hd_sales_order');
     }
     // end sales
 

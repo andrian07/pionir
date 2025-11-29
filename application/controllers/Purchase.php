@@ -2280,12 +2280,15 @@ class Purchase extends CI_Controller {
 			foreach ($find as $row) {
 				$diplay_text = $row['product_name'];
 				$find_result[] = [
-					'id'                  => $row['dt_product_id'],
-					'value'               => $diplay_text,
-					'warehouse'           => $row['hd_purchase_warehouse'],
-					'purchase_price'      => $row['dt_purchase_price'],
-					'purchase_qty'        => $row['dt_purchase_qty'],
-					'purchase_ongkir'     => $row['dt_purchase_ongkir'],
+					'id'                  		=> $row['dt_product_id'],
+					'value'               		=> $diplay_text,
+					'warehouse'           		=> $row['hd_purchase_warehouse'],
+					'purchase_price'      		=> $row['dt_purchase_price'],
+					'purchase_qty'        		=> $row['dt_purchase_qty'],
+					'purchase_weight'     		=> $row['dt_purchase_weight'],
+					'purchase_ongkir'     		=> $row['dt_purchase_ongkir'],
+					'purchase_total_weight'     => $row['dt_purchase_weight'],
+					'purchase_total_ongkir'     => $row['dt_purchase_total_ongkir'],
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];

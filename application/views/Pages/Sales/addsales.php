@@ -169,7 +169,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <input id="temp_price" name="temp_price" class="form-control text-right" value="0"  required="">
                 </div>
               </div>
-
+              
 
               <div class="col-sm-2">
                 <div class="form-group">
@@ -629,7 +629,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         success : function(data){
           if (data.code == "200"){
             var row = data.data[0];
-            $('#sales_id').val(row.hd_sales_order_id );
+            $('#sales_order_id').val(row.hd_sales_order_id );
             $('#sales_customer').val(row.hd_sales_order_customer);
             $('#sales_customer').trigger('change');
             $('#sales_rate_customer').val(row.customer_rate);
