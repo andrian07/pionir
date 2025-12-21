@@ -100,12 +100,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_prepare" name="sales_prepare">
-                <option value="">-- Pilih User --</option>
-                <?php foreach ($data['user_list'] as $row) { ?>
-                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
-                <?php } ?>
-              </select>
+              <input id="sales_order_prepare" name="sales_prepare" type="text" class="form-control">
             </div>
 
             <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
@@ -170,6 +165,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
 
 
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label>Curent Stock</label>
+                  <input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
+                </div>
+              </div>
+
               <div class="col-sm-2">
                 <div class="form-group">
                   <label>Qty</label>
@@ -184,7 +187,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
 
-              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label>Keterangan:</label>
+                  <input id="desc_item" name="desc_item" class="form-control text-left" required="">
+                </div>
+              </div>
               <div class="col-sm-7">
 
                 <!-- text input -->
@@ -226,6 +234,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Qty</th>
                   <th>Harga Satuan</th>
                   <th>Discount</th>
+                  <th>Ket</th>
                   <th>Total</th>
                   <th>Aksi</th>
                 </tr>
@@ -522,7 +531,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();
@@ -598,6 +608,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       $('#product_name').val(product_name);
       $('#product_id').val(id);
       $('#temp_rate').val('Umum');
+      /*if(curent_stock == null){
+        $('#curent_stock').val(0);
+      }else{
+        $('#curent_stock').val(curent_stock);
+      }*/
       $('#temp_rate').trigger('change');
       temp_price.set(product_price);
     },
@@ -639,8 +654,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             //$('#sales_due_date').val(row.hd_sales_top);
             $('#sales_salesman').val(row.hd_sales_salesman);
             $('#sales_salesman').trigger('change');
-            $('#sales_prepare').val(row.hd_sales_prepare_id);
-            $('#sales_prepare').trigger('change');
+            $('#sales_prepare').val(row.hd_sales_prepare);
             $('#sales_colly').val(row.hd_sales_colly);
             $('#sales_warehouse').val(row.hd_sales_warehouse);
             $('#sales_warehouse').trigger('change');
@@ -774,12 +788,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           var row = data.result[0];
+          console.log(data);
           $("#product_name").val(row.product_name);
           $("#product_id").val(row.temp_product_id);
           $('#temp_rate').val(row.temp_sales_rate);
           $('#temp_rate').trigger('change');
           temp_price.set(row.temp_sales_price);
           $("#temp_qty").val(row.temp_sales_qty);
+          $("#desc_item").val(row.temp_desc_item);
           temp_discount.set(row.temp_sales_discount);
           temp_total.set(row.temp_sales_total);
         }
@@ -825,13 +841,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_qty                = $("#temp_qty").val();
     var temp_discount_val       = parseInt(temp_discount.get());
     var temp_total_val          = parseInt(temp_total.get());
+    var desc_item               = $("#desc_item").val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
         url: "<?php echo base_url(); ?>Sales/add_temp_sales",
         dataType: "json",
-        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val},
+        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val, desc_item:desc_item},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -864,8 +881,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_top_id                             = $("#sales_top").val();
     var sales_top                                = $("#sales_top option:selected").text();
     var sales_salesman                           = $("#sales_salesman").val();
-    var sales_prepare                            = $("#sales_prepare option:selected").text();
-    var sales_prepare_id                         = $("#sales_prepare").val();
+    var sales_prepare                            = $("#sales_prepare").val();
     var sales_colly                              = $("#sales_colly").val();
     var sales_warehouse                          = $("#sales_warehouse").val();
     var sales_ekspedisi                          = $("#sales_ekspedisi").val();
@@ -888,7 +904,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/save_sales_revisi",
       dataType: "json",
-      data: {sales_customer:sales_customer, sales_type:sales_type, sales_inv_sales:sales_inv_sales, sales_inv_id:sales_inv_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_prepare_id:sales_prepare_id, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
+      data: {sales_customer:sales_customer, sales_type:sales_type, sales_inv_sales:sales_inv_sales, sales_inv_id:sales_inv_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/revisisalespage";
@@ -903,102 +919,102 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   });
 
-  $('#edit_footer_discount_percentage1').on('input', function (event) {
+$('#edit_footer_discount_percentage1').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
+  let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
+  edit_footer_discount1.set(edit_footer_discount1_val);
+})
+
+$('#edit_footer_discount_percentage2').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
+  let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+  let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
+  edit_footer_discount2.set(edit_footer_discount2_val);
+})
+
+$('#edit_footer_discount_percentage3').on('input', function (event) {
+  let footer_sub_total_val = parseInt(footer_sub_total.get());
+  let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
+  let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+  let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
+  let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
+  edit_footer_discount3.set(edit_footer_discount3_val);
+})
+
+$('#btneditdisc').click(function(e){
+  e.preventDefault();
+  var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
+  var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
+  var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
+  var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
+  var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
+  var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
+  var footer_sub_total_val                  = parseInt(footer_sub_total.get());
+  var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
+  footer_total_discount.set(total_disc);
+  footer_total_invoice.set(footer_sub_total_val - total_disc);
+  footer_remaining_debt.set(footer_sub_total_val - total_disc);
+  $('#footerdiscount').modal('hide')
+});
+
+$('#ppnchecked').on('change', function (event) {
+  const checked = $(this).is(':checked');
+  if (checked == true) {
     let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
-    let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
-    edit_footer_discount1.set(edit_footer_discount1_val);
-  })
-
-  $('#edit_footer_discount_percentage2').on('input', function (event) {
-    let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
-    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
-    let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
-    edit_footer_discount2.set(edit_footer_discount2_val);
-  })
-
-  $('#edit_footer_discount_percentage3').on('input', function (event) {
-    let footer_sub_total_val = parseInt(footer_sub_total.get());
-    let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
-    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
-    let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
-    let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
-    edit_footer_discount3.set(edit_footer_discount3_val);
-  })
-
-  $('#btneditdisc').click(function(e){
-    e.preventDefault();
-    var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
-    var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
-    var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
-    var edit_footer_discount1_pop             = parseInt(edit_footer_discount1.get());
-    var edit_footer_discount2_pop             = parseInt(edit_footer_discount2.get());
-    var edit_footer_discount3_pop             = parseInt(edit_footer_discount3.get());
-    var footer_sub_total_val                  = parseInt(footer_sub_total.get());
-    var total_disc = parseInt(edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop);
-    footer_total_discount.set(total_disc);
-    footer_total_invoice.set(footer_sub_total_val - total_disc);
-    footer_remaining_debt.set(footer_sub_total_val - total_disc);
-    $('#footerdiscount').modal('hide')
-  });
-
-  $('#ppnchecked').on('change', function (event) {
-    const checked = $(this).is(':checked');
-    if (checked == true) {
-      let footer_sub_total_val = parseInt(footer_sub_total.get());
-      let footer_total_discount_val = parseInt(footer_total_discount.get());
-      let footer_dp_val = parseInt(footer_dp.get());
-      let ppn = (footer_sub_total_val - footer_total_discount_val) * 11 / 100;
-      footer_total_ppn.set(ppn);
-      footer_total_invoice.set(footer_sub_total_val - footer_total_discount_val + ppn);
-      footer_remaining_debt.set(footer_sub_total_val - footer_total_discount_val + ppn - footer_dp_val);
-    }else{
-      footer_total_ppn.set(0);
-    }
-  })
-
-  $('#footer_dp').on('input', function (event) {
-   let footer_dp_val =  parseInt(footer_dp.get());
-   let footer_total_invoice_val = parseInt(footer_total_invoice.get());
-   footer_remaining_debt.set(footer_total_invoice_val - footer_dp_val);
- })
-
-
-  $('#sales_customer').on('change', function (event) {
-    let customer_id = this.value;
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Sales/get_customer_rate",
-      dataType: "json",
-      data: {customer_id:customer_id},
-      success : function(data){
-        if (data.code == "200"){
-          $('#sales_rate_customer').val(data.result[0].customer_rate)
-        }
-      }
-    });
-  })
-  
-  
-
-  function check_tempt_data()
-  {
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Sales/check_temp_sales",
-      dataType: "json",
-      data: {},
-      success : function(data){
-        if (data.code == "200"){
-          let sub_total = data.data[0].sub_total;
-          footer_sub_total.set(sub_total);
-          footer_total_invoice.set(sub_total);
-          footer_remaining_debt.set(sub_total);
-        }
-      }
-    });
+    let footer_total_discount_val = parseInt(footer_total_discount.get());
+    let footer_dp_val = parseInt(footer_dp.get());
+    let ppn = (footer_sub_total_val - footer_total_discount_val) * 11 / 100;
+    footer_total_ppn.set(ppn);
+    footer_total_invoice.set(footer_sub_total_val - footer_total_discount_val + ppn);
+    footer_remaining_debt.set(footer_sub_total_val - footer_total_discount_val + ppn - footer_dp_val);
+  }else{
+    footer_total_ppn.set(0);
   }
+})
+
+$('#footer_dp').on('input', function (event) {
+ let footer_dp_val =  parseInt(footer_dp.get());
+ let footer_total_invoice_val = parseInt(footer_total_invoice.get());
+ footer_remaining_debt.set(footer_total_invoice_val - footer_dp_val);
+})
+
+
+$('#sales_customer').on('change', function (event) {
+  let customer_id = this.value;
+  $.ajax({
+    type: "POST",
+    url: "<?php echo base_url(); ?>Sales/get_customer_rate",
+    dataType: "json",
+    data: {customer_id:customer_id},
+    success : function(data){
+      if (data.code == "200"){
+        $('#sales_rate_customer').val(data.result[0].customer_rate)
+      }
+    }
+  });
+})
+
+
+
+function check_tempt_data()
+{
+  $.ajax({
+    type: "POST",
+    url: "<?php echo base_url(); ?>Sales/check_temp_sales",
+    dataType: "json",
+    data: {},
+    success : function(data){
+      if (data.code == "200"){
+        let sub_total = data.data[0].sub_total;
+        footer_sub_total.set(sub_total);
+        footer_total_invoice.set(sub_total);
+        footer_remaining_debt.set(sub_total);
+      }
+    }
+  });
+}
 
  /* function check_So_data()
   {
@@ -1063,75 +1079,75 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     }
   }*/
 
-  function deletes(id)
-  {
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Menghapus Data?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "POST",
-          url: "<?php echo base_url(); ?>Sales/delete_temp_sales",
-          dataType: "json",
-          data: {id:id},
-          success : function(data){
-            if (data.code == "200"){
-              $('#temp-sales-list').DataTable().ajax.reload();
-              let title = 'Hapus Data';
-              let message = 'Data Berhasil Di Hapus';
-              let state = 'danger';
-              notif_success(title, message, state);
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: data.msg,
-              })
-            }
-          }
-        });
-      }
-    })
-  }
-
-  $("#btncancel").click(function (e) {
-    Swal.fire({
-      title: 'Konfirmasi?',
-      text: "Apakah Anda Yakin Membatalkan Inputan",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Hapus'
-    }).then((result) => {
-      if (result.isConfirmed) {
-       $.ajax({
+function deletes(id)
+{
+  Swal.fire({
+    title: 'Konfirmasi?',
+    text: "Apakah Anda Yakin Menghapus Data?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Hapus'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Sales/clear_temp",
+        url: "<?php echo base_url(); ?>Sales/delete_temp_sales",
         dataType: "json",
-        data: {},
+        data: {id:id},
         success : function(data){
           if (data.code == "200"){
-           window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
-         }else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.result,
-          })
+            $('#temp-sales-list').DataTable().ajax.reload();
+            let title = 'Hapus Data';
+            let message = 'Data Berhasil Di Hapus';
+            let state = 'danger';
+            notif_success(title, message, state);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.msg,
+            })
+          }
         }
-      }
-    });
-     }
-   })
-  });
+      });
+    }
+  })
+}
 
-  new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
+$("#btncancel").click(function (e) {
+  Swal.fire({
+    title: 'Konfirmasi?',
+    text: "Apakah Anda Yakin Membatalkan Inputan",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Hapus'
+  }).then((result) => {
+    if (result.isConfirmed) {
+     $.ajax({
+      type: "POST",
+      url: "<?php echo base_url(); ?>Sales/clear_temp",
+      dataType: "json",
+      data: {},
+      success : function(data){
+        if (data.code == "200"){
+         window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
+       }else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: data.result,
+        })
+      }
+    }
+  });
+   }
+ })
+});
+
+new bootstrap.Modal(document.getElementById('footerdiscount'), {backdrop: 'static', keyboard: false})  
 
 </script>

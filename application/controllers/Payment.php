@@ -64,7 +64,11 @@ class Payment extends CI_Controller {
 
 			$list = $this->payment_model->debt_list($search, $length, $start)->result_array();
 			$count_list = $this->payment_model->debt_list_count($search)->result_array();
-			$total_row = $count_list[0]['total_row'];
+			if($count_list != null){
+				$total_row = $count_list[0]['total_row'];
+			}else{
+				$total_row = 0;
+			}
 			$data = array();
 			$no = $_POST['start'];
 			foreach ($list as $field) {
@@ -461,7 +465,12 @@ class Payment extends CI_Controller {
 
 			$list = $this->payment_model->receivable_list($search, $length, $start)->result_array();
 			$count_list = $this->payment_model->receivable_list_count($search)->result_array();
-			$total_row = $count_list[0]['total_row'];
+			if($count_list != null){
+				$total_row = $count_list[0]['total_row'];
+			}else{
+				$total_row = 0;
+			}
+			
 			$data = array();
 			$no = $_POST['start'];
 			foreach ($list as $field) {

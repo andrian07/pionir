@@ -57,12 +57,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </select>
                         </div>
 
-                         <label for="inlineinput" class="col-md-8 col-form-label">Status Pembayaran: </label>
+                        <label for="inlineinput" class="col-md-8 col-form-label">Status Pembayaran: </label>
                         <div class="col-md-12 p-0">
-                          <select class="form-control input-full js-example-basic-single" id="customer_filter" name="customer_filter">
+                          <select class="form-control input-full js-example-basic-single" id="payment_status_filter" name="payment_status_filter">
                             <option value="">-- Pilih Status Pembayaran --</option>
-                              <option value="Lunas">Lunas</option> 
-                              <option value="Belum Lunas">Belum Lunas</option>   
+                            <option value="Lunas">Lunas</option> 
+                            <option value="Belum Lunas">Belum Lunas</option>   
                           </select>
                         </div>
 
@@ -89,12 +89,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Tanggal</th>
                   <th>Customer</th>
                   <th>Produk</th>
+                  <th>Qty</th>
                   <th>Rate</th>
                   <th>Total Harga</th>
                   <th>Status Pembayaran</th>
-                  <th>Status Pesanan</th>
                   <th>Sisa Pembayaran</th>
-                  <th>Salesman</th>
+                  <th>Ekspedisi</th>
                   <th>Status</th>
                   <th>Aksi</th>
                 </tr>
@@ -117,8 +117,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-   new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) 
-   
+  new bootstrap.Modal(document.getElementById('exampleModaledit'), {backdrop: 'static', keyboard: false}) 
+
   $(document).ready(function() {
     purchaseorder_table();
   });
@@ -134,7 +134,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ajax: {
         url: '<?php echo base_url(); ?>Sales/sales_list',
         type: 'POST',
-        data:  {cat:'SALES'},
+        data: function(d){
+          d.start_date             = $('#start_date').val();
+          d.end_date               = $('#end_date').val();
+          d.customer_filter        = $('#customer_filter').val();
+          d.status_payment_filter  = $('#payment_status_filter').val();
+          d.cat                    = 'Sales';
+        }
       },
       columns: 
       [
@@ -178,7 +184,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               let message = 'Data Berhasil Di Hapus';
               let state = 'danger';
               notif_success(title, message, state);
-              
+
             } else {
               Swal.fire({
                 icon: 'error',
@@ -193,12 +199,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   }
 
   $("#btnsearch").click(function (e) {
-    var start_date      = $("#start_date").val();
-    var end_date        = $("#end_date").val();
-    var supplier_filter = $("#supplier_filter").val();
-    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&supplier_filter="+supplier_filter;
-    Swal.fire('Saved!', '', 'success');
+    var start_date            = $("#start_date").val();
+    var end_date              = $("#end_date").val();
+    var customer_filter       = $("#customer_filter").val();
+    var payment_status_filter = $("#payment_status_filter").val();
+
+    $('#sales-list').DataTable().ajax.reload();
+    $('#exampleModaledit').modal('hide');
   });
 
-  
+
 </script>

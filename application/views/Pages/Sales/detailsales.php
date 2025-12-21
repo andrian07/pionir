@@ -90,6 +90,7 @@
             <th scope="col">Qty</th>
             <th scope="col">Price</th>
             <th scope="col">Discount</th>
+            <th scope="col">Ket</th>
             <th scope="col">Total</th>
           </tr>
         </thead>
@@ -102,6 +103,7 @@
               <td><?php echo $row->dt_sales_qty; ?></td>
               <td><?php echo number_format($row->dt_sales_price); ?></td>
               <td><?php echo number_format($row->dt_sales_discount); ?></td>
+              <td><?php echo $row->dt_sales_desc; ?></td>
               <td><?php echo number_format($row->dt_sales_total); ?></td>
             </tr>
           <?php } ?>

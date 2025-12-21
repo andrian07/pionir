@@ -10,6 +10,7 @@ class payment_model extends CI_Model {
         $this->db->select('*, count(*) as total_nota, sum(hd_purchase_remaining_debt) as total_hutang');
         $this->db->from('hd_purchase');
         $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
+        $this->db->where('hd_purchase_status NOT Like "Cancel"');
         if($search != null){
             $this->db->or_where('ms_supplier.supplier_name like "%'.$search.'%"');
             $this->db->or_where('ms_supplier.supplier_code like "%'.$search.'%"');
@@ -27,6 +28,7 @@ class payment_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_purchase');
         $this->db->join('ms_supplier', 'hd_purchase.hd_purchase_supplier = ms_supplier.supplier_id');
+        $this->db->where('hd_purchase_status NOT Like "Cancel"');
         if($search != null){
             $this->db->or_where('ms_supplier.supplier_name like "%'.$search.'%"');
             $this->db->or_where('ms_supplier.supplier_code like "%'.$search.'%"');
@@ -238,6 +240,7 @@ class payment_model extends CI_Model {
         $this->db->select('*, count(*) as total_nota, sum(hd_sales_remaining_debt) as total_hutang');
         $this->db->from('hd_sales');
         $this->db->join('ms_customer', 'hd_sales.hd_sales_customer = ms_customer.customer_id');
+        $this->db->where('hd_sales_status NOT Like "Cancel"');
         if($search != null){
             $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
             $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');
@@ -255,6 +258,7 @@ class payment_model extends CI_Model {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_sales');
         $this->db->join('ms_customer', 'hd_sales.hd_sales_customer = ms_customer.customer_id');
+        $this->db->where('hd_sales_status NOT Like "Cancel"');
         if($search != null){
             $this->db->or_where('ms_customer.customer_name like "%'.$search.'%"');
             $this->db->or_where('ms_customer.customer_code like "%'.$search.'%"');

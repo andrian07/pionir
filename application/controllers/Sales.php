@@ -579,6 +579,13 @@ class Sales extends CI_Controller {
 		echo json_encode(['code'=>200, 'data'=>"Cler Success"]);
 	}
 
+	public function clear_temp_sales()
+	{
+		$user_id 		= $_SESSION['user_id'];
+		$this->sales_model->clear_temp_sales($user_id);
+		echo json_encode(['code'=>200, 'data'=>"Cler Success"]);
+	} 
+
 	public function delete_temp_so()
 	{
 		$modul = 'SalesOrder';
@@ -624,16 +631,20 @@ class Sales extends CI_Controller {
 		$modul = 'Sales';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$search 			= $this->input->post('search');
-			$length 			= $this->input->post('length');
-			$start 			  	= $this->input->post('start');
-			$cat 			  	= $this->input->post('cat');
+			$search 				= $this->input->post('search');
+			$length 				= $this->input->post('length');
+			$start 			  		= $this->input->post('start');
+			$cat 			  		= $this->input->post('cat');
+			$start_date 			= $this->input->post('start_date');
+			$end_date 			  	= $this->input->post('end_date');
+			$customer_filter 		= $this->input->post('customer_filter');
+			$payment_status_filter	= $this->input->post('status_payment_filter');
 
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->sales_model->sales_list($search, $cat, $length, $start,)->result_array();
-			$count_list = $this->sales_model->sales_list_count($search,$cat)->result_array();
+			$list = $this->sales_model->sales_list($search, $cat, $length, $start, $start_date, $end_date, $customer_filter, $payment_status_filter)->result_array();
+			$count_list = $this->sales_model->sales_list_count($search, $cat, $start_date, $end_date, $customer_filter, $payment_status_filter)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -678,12 +689,12 @@ class Sales extends CI_Controller {
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['customer_name'];
 				$row[] 	= $field['product_name'];
+				$row[] 	= $field['dt_sales_qty'];
 				$row[] 	= $field['dt_sales_rate'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_total']);
 				$row[] 	= $hd_sales_remaining_debt;
-				$row[] 	= $field['hd_sales_status'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_remaining_debt']);
-				$row[] 	= $field['salesman_name'];
+				$row[] 	= $field['ekspedisi_name'];
 				$row[]  = $hd_sales_status;
 				$row[] 	= $detail.$delete;
 				$data[] = $row;
@@ -801,6 +812,7 @@ class Sales extends CI_Controller {
 				$row[] 	= $field['temp_sales_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_sales_price']);
 				$row[] 	= 'Rp. '.number_format($field['temp_sales_discount']);
+				$row[] 	= $field['temp_desc_item'];
 				$row[] 	= 'Rp. '.number_format($field['temp_sales_total']);
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
@@ -831,6 +843,7 @@ class Sales extends CI_Controller {
 			$temp_price_val 			= $this->input->post('temp_price_val');
 			$temp_discount_val 			= $this->input->post('temp_discount_val');
 			$temp_total_val 			= $this->input->post('temp_total_val');
+			$desc_item 					= $this->input->post('desc_item');
 			$user_id 					= $_SESSION['user_id'];
 
 			if($warehouse_id == null){
@@ -859,6 +872,7 @@ class Sales extends CI_Controller {
 				'temp_sales_qty'			=> $temp_qty,
 				'temp_sales_discount'		=> $temp_discount_val,
 				'temp_sales_total'			=> $temp_total_val,
+				'temp_desc_item'			=> $desc_item,
 				'temp_user_id'				=> $user_id
 			);	
 			$msg = 'Success Tambah';
@@ -1103,7 +1117,8 @@ class Sales extends CI_Controller {
 					'dt_sales_price'         => $row['temp_sales_price'],
 					'dt_sales_qty'           => $row['temp_sales_qty'],
 					'dt_sales_discount'      => $row['temp_sales_discount'],
-					'dt_sales_total'         => $row['temp_sales_total']
+					'dt_sales_total'         => $row['temp_sales_total'],
+					'dt_sales_desc'          => $row['temp_desc_item']
 				);
 				$save_detail_sales = $this->sales_model->save_detail_sales($data_insert_detail);
 
@@ -1780,7 +1795,8 @@ class Sales extends CI_Controller {
 				'temp_sales_qty'			=> $row->dt_sales_qty,
 				'temp_sales_discount'		=> $row->dt_sales_discount,
 				'temp_sales_total'			=> $row->dt_sales_total,
-				'temp_user_id'				=> $user_id
+				'temp_desc_item'			=> $row->dt_sales_desc,
+				'temp_user_id'				=> $user_id,
 			);
 			$this->sales_model->add_temp_sales($data_insert);
 		}

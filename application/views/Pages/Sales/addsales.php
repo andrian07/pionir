@@ -101,12 +101,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_prepare" name="sales_prepare">
-                <option value="">-- Pilih User --</option>
-                <?php foreach ($data['user_list'] as $row) { ?>
-                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
-                <?php } ?>
-              </select>
+              <input id="sales_order_prepare" name="sales_prepare" type="text" class="form-control">
             </div>
 
             <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
@@ -173,6 +168,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
               <div class="col-sm-2">
                 <div class="form-group">
+                  <label>Curent Stock</label>
+                  <input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
+                </div>
+              </div>
+
+              <div class="col-sm-2">
+                <div class="form-group">
                   <label>Qty</label>
                   <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" required="">
                 </div>
@@ -185,7 +187,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
 
-              <div class="col-sm-4"></div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label>Keterangan:</label>
+                  <input id="desc_item" name="desc_item" class="form-control text-left" required="">
+                </div>
+              </div>
               <div class="col-sm-7">
 
                 <!-- text input -->
@@ -227,6 +234,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Qty</th>
                   <th>Harga Satuan</th>
                   <th>Discount</th>
+                  <th>Ket</th>
                   <th>Total</th>
                   <th>Aksi</th>
                 </tr>
@@ -523,7 +531,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();
@@ -596,10 +605,16 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
+      let curent_stock = ui.item.curent_stock;
       $('#product_name').val(product_name);
       $('#product_id').val(id);
       $('#temp_rate').val('Umum');
       $('#temp_rate').trigger('change');
+      if(curent_stock == null){
+        $('#curent_stock').val(0);
+      }else{
+        $('#curent_stock').val(curent_stock);
+      }
       temp_price.set(product_price);
     },
   });
@@ -640,8 +655,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             //$('#sales_due_date').val(row.hd_sales_order_top);
             $('#sales_salesman').val(row.hd_sales_order_salesman);
             $('#sales_salesman').trigger('change');
-            $('#sales_prepare').val(row.hd_sales_order_prepare_id);
-            $('#sales_prepare').trigger('change');
+            $('#sales_prepare').val(row.hd_sales_prepare);
             $('#sales_colly').val(row.hd_sales_order_colly);
             $('#sales_warehouse').val(row.hd_sales_order_warehouse);
             $('#sales_warehouse').trigger('change');
@@ -669,7 +683,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             let state = 'info';
             notif_success(title, message, state);
             $('#temp-sales-list').DataTable().ajax.reload();
-            check_tempt_data();
+            //check_tempt_data();
             clear_input();
           }else{
             Swal.fire({
@@ -772,6 +786,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       data: {id:id},
       success : function(data){
         if (data.code == "200"){
+          console.log(data);
           var row = data.result[0];
           $("#product_name").val(row.product_name);
           $("#product_id").val(row.temp_product_id);
@@ -779,6 +794,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $('#temp_rate').trigger('change');
           temp_price.set(row.temp_sales_price);
           $("#temp_qty").val(row.temp_sales_qty);
+          $("#desc_item").val(row.temp_desc_item);
           temp_discount.set(row.temp_sales_discount);
           temp_total.set(row.temp_sales_total);
         }
@@ -824,13 +840,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_qty                = $("#temp_qty").val();
     var temp_discount_val       = parseInt(temp_discount.get());
     var temp_total_val          = parseInt(temp_total.get());
+    var desc_item               = $("#desc_item").val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
         url: "<?php echo base_url(); ?>Sales/add_temp_sales",
         dataType: "json",
-        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val},
+        data: {warehouse_id:warehouse_id, product_id:product_id, temp_rate:temp_rate, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_discount_val:temp_discount_val, temp_total_val:temp_total_val, desc_item:desc_item},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -862,8 +879,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_top_id                             = $("#sales_top").val();
     var sales_top                                = $("#sales_top option:selected").text();
     var sales_salesman                           = $("#sales_salesman").val();
-    var sales_prepare                            = $("#sales_prepare option:selected").text();
-    var sales_prepare_id                         = $("#sales_prepare").val();
+    var sales_prepare                            = $("#sales_prepare").text();
     var sales_colly                              = $("#sales_colly").val();
     var sales_warehouse                          = $("#sales_warehouse").val();
     var sales_ekspedisi                          = $("#sales_ekspedisi").val();
@@ -886,7 +902,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/save_sales",
       dataType: "json",
-      data: {sales_customer:sales_customer, sales_type:sales_type, sales_order_id:sales_order_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_prepare_id:sales_prepare_id, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
+      data: {sales_customer:sales_customer, sales_type:sales_type, sales_order_id:sales_order_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/salespage";
@@ -977,8 +993,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   })
-  
-  
+
+
 
   function check_tempt_data()
   {
@@ -1111,12 +1127,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       if (result.isConfirmed) {
        $.ajax({
         type: "POST",
-        url: "<?php echo base_url(); ?>Sales/clear_temp",
+        url: "<?php echo base_url(); ?>Sales/clear_temp_sales",
         dataType: "json",
         data: {},
         success : function(data){
           if (data.code == "200"){
-           window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
+           window.location.href = "<?php echo base_url(); ?>/Sales/salespage";
          }else {
           Swal.fire({
             icon: 'error',
