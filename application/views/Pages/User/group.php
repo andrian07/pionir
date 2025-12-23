@@ -117,7 +117,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($group_role as $row) { ?>
+                <?php foreach ($data['group_role'] as $row) { ?>
                   <tr>
                     <td><?php echo $row->role_name; ?></td>
                     <td>
@@ -256,75 +256,101 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       dataType: "json",
       data: {id:id},
       success : function(data){
-
-
         let text_temp = "";
         for (let i = 0; i < data.length; i++) {
-
           if(data[i].view == 'Y'){var view = 'Lihat, ';}else{var view = 'No Access';}
           if(data[i].add == 'Y'){var add = 'Tambah, ';}else{var add = '';}
           if(data[i].edit == 'Y'){var edit = 'Edit, ';}else{var edit = '';}
           if(data[i].delete == 'Y'){var deletes = 'Hapus';}else{var deletes = '';}
-
           text_temp += 
           '<tr><td>'+data[i].module_title+'</td><td class="'+data[i].module_name+'" onclick="tdclick(this)"><a href="#" id="'+data[i].module_name+'title" class"'+data[i].module_name+'-title">'+view+''+add+''+edit+''+deletes+'</a><div id="'+data[i].module_name+'" class="hide-permission">';
           if(data[i].view == 'Y'){
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaulta'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
+            '<input class="form-check-input" type="checkbox" name="flexCheckDefaulta'+data[i].module_name+'" id="flexCheckDefaulta'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')" checked><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
           }else{
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaulta'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
+            '<input class="form-check-input" type="checkbox" name="flexCheckDefaulta'+data[i].module_name+'" id="flexCheckDefaulta'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')"><label class="form-check-label" for="flexCheckDefault">Lihat</label> <br />';
           }
 
           if(data[i].add == 'Y'){
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')" checked><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
           }else{
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultb'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')"><label class="form-check-label" for="flexCheckDefault">Tambah</label> <br />';
           }
 
           if(data[i].edit == 'Y'){
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')" checked><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
           }else{
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultc'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')""><label class="form-check-label" for="flexCheckDefault">Edit</label> <br />';
           }
           if(data[i].delete == 'Y'){
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'" checked><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')" checked><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
           }else{
             text_temp += 
-            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'"><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
+            '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultd'+data[i].module_name+'" onclick="editcheck(\''+data[i].role_permision+'-'+data[i].module_name+'\')"><label class="form-check-label" for="flexCheckDefault">Hapus</label> <br />';
           }
           text_temp += '</div></td>'+
-          '<td><a href="#" class="'+data[i].module_name+'" id="'+data[i].module_name+'cancel" onclick="hide(this)" style="display:none;">Batal</a></td>'+
+          '<td><a href="#" class="'+data[i].module_name+'" id="'+data[i].module_name+'cancel" onclick="hide(this)" style="display:none;">Tutup</a></td>'+
           '</tr>';
         }
         document.getElementById("temp").innerHTML = text_temp;
-
       }
     });
   })
 
 
-  function tdclick(id){
-    var name = id.className;
-    var title = name+'title';
-    var cancel = name+'cancel';
-    document.getElementById(name).style.display = "block";
-    document.getElementById(title).style.display = "none";
-    document.getElementById(cancel).style.display = "block";
-  };
+function editcheck(stringname)
+{
+  var data = stringname.split("-");
+  var role_permission   = data[0];
+  var module_name       = data[1];
+  var checkboxView = 'flexCheckDefaulta' + module_name;
+  var checkboxAdd = 'flexCheckDefaultb' + module_name;
+  var checkboxEdit = 'flexCheckDefaultc' + module_name;
+  var checkboxDelete = 'flexCheckDefaultd' + module_name;
+  var checkedView = document.getElementById(checkboxView);
+  var checkedAdd = document.getElementById(checkboxAdd);
+  var checkedEdit = document.getElementById(checkboxEdit);
+  var checkedDelete = document.getElementById(checkboxDelete);
+  var value_permission_view = checkedView.checked;
+  var value_permission_add = checkedAdd.checked;
+  var value_permission_edit = checkedEdit.checked;
+  var value_permission_delete = checkedDelete.checked;
 
-  function hide(id){
-    var name = id.className;
-    var title = name+'title';
-    var cancel = name+'cancel';
-    document.getElementById(title).style.display = "block";
-    document.getElementById(name).style.display = "none";
-    document.getElementById(cancel).style.display = "none";
-  };
+  $.ajax({
+    type: "POST",
+    url: "<?php echo base_url(); ?>User/updatepermision",
+    dataType: "json",
+    data: {role_permission:role_permission, value_permission_view:value_permission_view, value_permission_add:value_permission_add, value_permission_edit:value_permission_edit, value_permission_delete:value_permission_delete},
+    success : function(data){
+      console.log("sucess");
+    }
+  });
+}
+
+
+
+function tdclick(id){
+  var name = id.className;
+  var title = name+'title';
+  var cancel = name+'cancel';
+  document.getElementById(name).style.display = "block";
+  document.getElementById(title).style.display = "none";
+  document.getElementById(cancel).style.display = "block";
+};
+
+function hide(id){
+  var name = id.className;
+  var title = name+'title';
+  var cancel = name+'cancel';
+  document.getElementById(title).style.display = "block";
+  document.getElementById(name).style.display = "none";
+  document.getElementById(cancel).style.display = "none";
+};
 
 </script>

@@ -2,10 +2,79 @@
 
 class masterdata_model extends CI_Model {
 
+    // acount
+
+    public function role_list()
+    {
+        $this->db->select('*');
+        $this->db->from('ms_role');
+        $this->db->where('is_active', 'Y');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function account_list($search, $length, $start)
+    {
+        $this->db->select('*');
+        $this->db->from('ms_user');
+        $this->db->join('ms_role', 'ms_user.user_role = ms_role.role_id');
+        $this->db->where('ms_user.is_active', 'Y');
+        $this->db->where('ms_user.user_name not like "System"');
+        if($search != null){
+            $this->db->where('user_name like "%'.$search.'%"');
+        }
+
+        $this->db->limit($length);
+        $this->db->offset($start);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function account_list_count($search)
+    {
+        $this->db->select('count(*) as total_row');
+        $this->db->from('ms_user');
+        $this->db->join('ms_role', 'ms_user.user_role = ms_role.role_id');
+        $this->db->where('ms_user.is_active', 'Y');
+        $this->db->where('ms_user.user_name not like "System"');
+        if($search != null){
+            $this->db->where('user_name like "%'.$search.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function save_user($data_insert)
+    {
+        $this->db->insert('ms_user', $data_insert);
+    }
+
+    public function edit_user($data_insert, $user_id_inp)
+    {
+        $this->db->set($data_insert);
+        $this->db->where('user_id', $user_id_inp);
+        $this->db->update('ms_user');
+    }
+
+    public function delete_account($id)
+    {
+        $this->db->set('is_active', 'N');
+        $this->db->where('user_id', $id);
+        $this->db->update('ms_user');
+    }
+
+    // end account
     //group
     public function save_role($data_insert)
     {
         $this->db->insert('ms_role', $data_insert);
+    }
+
+    public function update_role_permision($data_edit, $role_permission)
+    {
+        $this->db->set($data_edit);
+        $this->db->where('role_permision', $role_permission);
+        $this->db->update('ms_role_permision');
     }
 
     public function get_setting_permission($id){

@@ -267,6 +267,13 @@
             </li>
 
             <li class="nav-item">
+              <a href="<?php echo base_url(); ?>Report">
+                <i class="fas fa-file-pdf"></i>
+                <p>Laporan</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a data-bs-toggle="collapse" href="#user">
                 <i class="fas fa-user"></i>
                 <p>Admin</p>
