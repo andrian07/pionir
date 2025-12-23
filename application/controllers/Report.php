@@ -31,11 +31,7 @@ class Report extends CI_Controller {
 		$modul = 'Report';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
-			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
-			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
-			$data['data'] = array_merge($warehouse_list, $salesman_list, $supplier_list);
-			$this->load->view('Pages/Purchase/purchase', $data);
+			$this->load->view('Pages/Report/reportindex');
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
