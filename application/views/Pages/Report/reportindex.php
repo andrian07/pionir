@@ -2,6 +2,17 @@
 define('DOC_ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 require DOC_ROOT_PATH . $this->config->item('header');
 ?>
+<style type="text/css">
+  .card-pricing .specification-list li {
+    font-size: 13px;
+  }
+  .card.card-pricing {
+    height: 602px;
+  }
+  .card-pricing .specification-list li {
+    border-bottom: 1px solid #000 !important;
+  }
+</style>
 </div>
 
 <div class="container">
@@ -14,171 +25,179 @@ require DOC_ROOT_PATH . $this->config->item('header');
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-            <div class="row justify-content-center">
-
+            <div class="row">
               <div class="col-md-3 ps-md-0">
-                <div class="card card-pricing">
+                <div class="card card-pricing" style="background-color: antiquewhite;">
                   <div class="card-header">
                     <h4 class="card-title">Laporan Master Data</h4>
                   </div>
                   <div class="card-body">
                     <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Laporan Brand</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Customer</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Ekspedisi</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Gudang</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Kategori</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Produk</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Pembayaran</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Salesman</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Satuan</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Supplier</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3 ps-md-0">
-                <div class="card card-pricing">
-                  <div class="card-header">
-                    <h4 class="card-title">Laporan Pembelian</h4>
-                  </div>
-                  <div class="card-body">
-                    <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Customizer</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Chat History</span>
-                        <span class="status-specification">3 Month</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Statistics</span>
-                        <span class="status-specification">3 Month</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Live Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-footer">
-                    <button class="btn btn-light w-100"><b>Get Started</b></button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3 pe-md-0">
-                <div class="card card-pricing">
-                  <div class="card-header">
-                    <h4 class="card-title">Team</h4>
-                    <div class="card-price">
-                      <span class="price">$75</span>
-                      <span class="text">/mo</span>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportbrand">
+                        <li>
+                          <span class="name-specification">Laporan Brand</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportcustomer">
+                        <li>
+                          <span class="name-specification">Laporan Customer</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportekspedisi">
+                        <li>
+                          <span class="name-specification">Laporan Ekspedisi</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportwarehouse">
+                        <li>
+                          <span class="name-specification">Laporan Gudang</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportcategory">
+                        <li>
+                          <span class="name-specification">Laporan Kategori</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportproduct">
+                        <li>
+                          <span class="name-specification">Laporan Produk</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportpayment">
+                        <li>
+                          <span class="name-specification">Laporan Pembayaran</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportsalesman">
+                        <li>
+                          <span class="name-specification">Laporan Salesman</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportunit">
+                        <li>
+                          <span class="name-specification">Laporan Satuan</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportmaster/reportsupplier">
+                        <li>
+                          <span class="name-specification">Laporan Supplier</span>
+                        </li>
+                      </a>
+                      </ul>
                     </div>
                   </div>
-                  <div class="card-body">
-                    <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Customizer</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Chat History</span>
-                        <span class="status-specification">1 Year</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Statistics</span>
-                        <span class="status-specification">1 Year</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Live Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-footer">
-                    <button class="btn btn-secondary w-100"><b>Get Started</b></button>
-                  </div>
                 </div>
-              </div>
 
-              <div class="col-md-3 pe-md-0">
-                <div class="card card-pricing">
-                  <div class="card-header">
-                    <h4 class="card-title">Team</h4>
-                    <div class="card-price">
-                      <span class="price">$75</span>
-                      <span class="text">/mo</span>
+                <div class="col-md-3 ps-md-0">
+                  <div class="card card-pricing" style="background-color: aliceblue;">
+                    <div class="card-header">
+                      <h4 class="card-title">Laporan Pembelian</h4>
+                    </div>
+                    <div class="card-body">
+                      <ul class="specification-list">
+                        <li>
+                          <span class="name-specification">Laporan Pengajuan</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan PO</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Penginputan Gudang</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Pembelian</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Retur Pembelian</span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
-                  <div class="card-body">
-                    <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Customizer</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Chat History</span>
-                        <span class="status-specification">1 Year</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Statistics</span>
-                        <span class="status-specification">1 Year</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Live Support</span>
-                        <span class="status-specification">Yes</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-footer">
-                    <button class="btn btn-secondary w-100"><b>Get Started</b></button>
+                </div>
+
+                <div class="col-md-3 ps-md-0">
+                  <div class="card card-pricing" style="background-color: lavenderblush;">
+                    <div class="card-header">
+                      <h4 class="card-title">Laporan Penjualan</h4>
+                    </div>
+                    <div class="card-body">
+                      <ul class="specification-list">
+                        <li>
+                          <span class="name-specification">Laporan Sales Order</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Penjualan</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Revisi Penjualan</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Retur Penjualan</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
 
+                <div class="col-md-3 ps-md-0">
+                  <div class="card card-pricing" style="background-color: seashell;">
+                    <div class="card-header">
+                      <h4 class="card-title">Laporan Hutang / Piutang</h4>
+                    </div>
+                    <div class="card-body">
+                      <ul class="specification-list">
+                        <li>
+                          <span class="name-specification">Laporan Hutang Jatuh Tempo</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Piutang Jatuh Tempo</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Pelunasan Hutang</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Pelunasan Piutang</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-md-3 ps-md-0">
+                  <div class="card card-pricing" style="background-color:powderblue;">
+                    <div class="card-header">
+                      <h4 class="card-title">Laporan Utility</h4>
+                    </div>
+                    <div class="card-body">
+                      <ul class="specification-list">
+                        <li>
+                          <span class="name-specification">Laporan Hutang Jatuh Tempo</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Piutang Jatuh Tempo</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Pelunasan Hutang</span>
+                        </li>
+                        <li>
+                          <span class="name-specification">Laporan Pelunasan Piutang</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<?php 
-require DOC_ROOT_PATH . $this->config->item('footer');
+  <?php 
+  require DOC_ROOT_PATH . $this->config->item('footer');
 ?>
