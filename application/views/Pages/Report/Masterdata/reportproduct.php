@@ -60,9 +60,22 @@ require DOC_ROOT_PATH . $this->config->item('header');
                       <select class="form-control input-full js-example-basic-single" id="Supplier_report" name="Supplier_report">
                         <option value="">-- Pilih Supplier --</option>
                         <?php foreach ($data['supplier_list'] as $row) { ?>
-                          <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                          <option value="<?php echo $row->supplier_name; ?>"><?php echo $row->supplier_name; ?></option>  
                         <?php } ?>
                       </select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-2">
+                    <!-- text input -->
+                    <div class="form-group">
+                      <label>&nbsp;</label>
+                      <div class="form-group">
+                        <div class="btn-group">
+                          <button id="btnsearch" type="button" class="btn btn-primary">Cari</button>
+                          <button id="btndownloadexcell" type="button" class="btn btn-warning" style="margin-left: 10px;">Excell</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -90,14 +103,14 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
     $('#btnsearch').click(function(e) {
       e.preventDefault();
-      let start_date = $('#start_date').val();
-      let end_date = $('#end_date').val();
-      let customer_id = $('#customer_id').val();
+      let brand_report = $('#brand_report').val();
+      let category_report = $('#category_report').val();
+      let Supplier_report = $('#Supplier_report').val();
 
-      let url = '<?php echo base_url(); ?>Reportpayment/repayment_pdf?';
-      url += '&start_date=' + start_date;
-      url += '&end_date=' + end_date;
-      url += '&customer_id=' + customer_id;
+      let url = '<?php echo base_url(); ?>Reportmaster/reportproductpdf?';
+      url += '&brand_report=' + brand_report;
+      url += '&category_report=' + category_report;
+      url += '&Supplier_report=' + Supplier_report;
       $('#preview').attr('src', url);
     })
 
@@ -105,14 +118,15 @@ require DOC_ROOT_PATH . $this->config->item('header');
     $('#btndownloadexcell').click(function(e) {
       e.preventDefault();
 
-      let start_date = $('#start_date').val();
-      let end_date = $('#end_date').val();
-      let customer_id = $('#customer_id').val();
+      let brand_report = $('#brand_report').val();
+      let category_report = $('#category_report').val();
+      let Supplier_report = $('#Supplier_report').val();
 
-      let url = '<?php echo base_url(); ?>Reportpayment/repayment_excell?';
-      url += '&start_date=' + start_date;
-      url += '&end_date=' + end_date;
-      url += '&customer_id=' + customer_id;
+
+      let url = '<?php echo base_url(); ?>Reportmaster/reportproduct_excell?';
+      url += '&brand_report=' + brand_report;
+      url += '&category_report=' + category_report;
+      url += '&Supplier_report=' + Supplier_report;
 
       window.open(url, '_blank');
     })

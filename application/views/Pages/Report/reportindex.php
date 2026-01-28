@@ -63,19 +63,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           <span class="name-specification">Laporan Produk</span>
                         </li>
                       </a>
-                      <a href="<?php echo base_url(); ?>Reportmaster/reportpayment">
-                        <li>
-                          <span class="name-specification">Laporan Pembayaran</span>
-                        </li>
-                      </a>
                       <a href="<?php echo base_url(); ?>Reportmaster/reportsalesman">
                         <li>
                           <span class="name-specification">Laporan Salesman</span>
-                        </li>
-                      </a>
-                      <a href="<?php echo base_url(); ?>Reportmaster/reportunit">
-                        <li>
-                          <span class="name-specification">Laporan Satuan</span>
                         </li>
                       </a>
                       <a href="<?php echo base_url(); ?>Reportmaster/reportsupplier">

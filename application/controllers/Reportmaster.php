@@ -333,8 +333,8 @@ class Reportmaster extends CI_Controller {
 		$category_report = $this->input->get('category_report');
 		$Supplier_report = $this->input->get('Supplier_report');
 
-		$data['data'] = $this->reportmaster_model->get_report_product($brand_report, $category_report, $Supplier_report);
-		$htmlView   = $this->load->view('Pages/Report/reportproductpdf', $data, true);
+		$data['data'] = $this->reportmaster_model->get_report_product($brand_report, $category_report, $Supplier_report)->result_array();
+		$htmlView   = $this->load->view('Pages/Report/masterdata/reportproductpdf', $data, true);
 		$dompdf = new Dompdf();
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
@@ -343,9 +343,300 @@ class Reportmaster extends CI_Controller {
 		exit();
 	}
 
+	public function reportproduct_excell()
+	{
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$brand_report 	 = $this->input->get('brand_report');
+			$category_report = $this->input->get('category_report');
+			$Supplier_report = $this->input->get('Supplier_report');
+
+			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+			$sheet = $excel->getActiveSheet();
+			$sheet->setCellValue('A1', "List Produk"); 
+			$sheet->mergeCells('A1:C1');
+			$sheet->mergeCells('R3:S3');
+			$sheet->mergeCells('T3:U3');
+			$sheet->mergeCells('V3:W3');
+			$sheet->mergeCells('X3:Y3');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->getStyle('A3:Y3')->getFont()->setBold(true);
+			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('A3:Y3')->getAlignment()->setHorizontal('center');
+			$sheet->setCellValue('A3', "Kode Produk"); 
+			$sheet->setCellValue('B3', "Nama Produk"); 
+			$sheet->setCellValue('C3', "Satuan");
+			$sheet->setCellValue('D3', "Kategori");
+			$sheet->setCellValue('E3', "Brand");
+			$sheet->setCellValue('F3', "Supplier");
+			$sheet->setCellValue('G3', "Item Supplier");
+			$sheet->setCellValue('H3', "Status");
+			$sheet->setCellValue('I3', "Paket");
+			$sheet->setCellValue('J3', "PPN");
+			$sheet->setCellValue('K3', "Min Stock");
+			$sheet->setCellValue('L3', "Catatan Penting");
+			$sheet->setCellValue('M3', "Min Order");
+			$sheet->setCellValue('N3', "Berat");
+			$sheet->setCellValue('O3', "HPP");
+			$sheet->setCellValue('P3', "Harga Beli");
+			$sheet->setCellValue('Q3', "Lokasi Stok");
+			$sheet->setCellValue('R3', "Umum");
+			$sheet->setCellValue('T3', "Toko");
+			$sheet->setCellValue('V3', "Sales");
+			$sheet->setCellValue('X3', "Khusus");
+
+
+			$sheet->setCellValue('R4', "Harga Jual");
+			$sheet->setCellValue('S4', "Harga Diskon");
+			$sheet->setCellValue('T4', "Harga Jual");
+			$sheet->setCellValue('U4', "Harga Diskon");
+			$sheet->setCellValue('V4', "Harga Jual");
+			$sheet->setCellValue('W4', "Harga Diskon");
+			$sheet->setCellValue('X4', "Harga Jual");
+			$sheet->setCellValue('Y4', "Harga Diskon");
+
+			$data = $this->reportmaster_model->get_report_product($brand_report, $category_report, $Supplier_report)->result_array();
+			$i = 5;
+			foreach($data as $row){
+
+				if($row['is_active'] == 'Y'){
+					$active = 'Aktif';
+				}else{
+					$active = 'Tidak Aktif';
+				}	
+
+				if($row['is_package'] == 'Y'){
+					$package = 'Paket';
+				}else{
+					$package = 'Non Paket';
+				}
+
+				$sheet->setCellValue('A'.$i, $row['product_code']); 
+				$sheet->setCellValue('B'.$i, $row['product_name']); 
+				$sheet->setCellValue('C'.$i, $row['unit_name']);
+				$sheet->setCellValue('D'.$i, $row['category_name']);
+				$sheet->setCellValue('E'.$i, $row['brand_name']);
+				$sheet->setCellValue('F'.$i, $row['product_supplier_tag']);
+				$sheet->setCellValue('G'.$i, $row['product_supplier_name']);
+				$sheet->setCellValue('H'.$i, $active);
+				$sheet->setCellValue('I'.$i, $package);
+				$sheet->setCellValue('J'.$i, $row['is_ppn']);
+				$sheet->setCellValue('K'.$i, $row['product_min_stock']);
+				$sheet->setCellValue('L'.$i, $row['product_desc']);
+				$sheet->setCellValue('M'.$i, $row['product_min_order']);
+				$sheet->setCellValue('N'.$i, $row['product_weight']);
+				$sheet->setCellValue('O'.$i, $row['product_hpp']);
+				$sheet->setCellValue('P'.$i, $row['product_price']);
+				$sheet->setCellValue('Q'.$i, $row['product_location']);
+				$sheet->setCellValue('R'.$i, $row['product_sell_price_1']);
+				$sheet->setCellValue('S'.$i, $row['product_sell_percentage_1'].'%');
+				$sheet->setCellValue('T'.$i, $row['product_sell_price_2']);
+				$sheet->setCellValue('U'.$i, $row['product_sell_percentage_2'].'%');
+				$sheet->setCellValue('V'.$i, $row['product_sell_price_3']);
+				$sheet->setCellValue('W'.$i, $row['product_sell_percentage_3'].'%');
+				$sheet->setCellValue('X'.$i, $row['product_sell_price_4']);
+				$sheet->setCellValue('Y'.$i, $row['product_sell_percentage_4'].'%');
+				$i++;
+			}
+
+			$sheet->getStyle('O')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('P')->getNumberFormat()->setFormatCode('#,##0');
+			$sheet->getStyle('R')->getNumberFormat()->setFormatCode('#,##0');
+			$sheet->getStyle('T')->getNumberFormat()->setFormatCode('#,##0');
+			$sheet->getStyle('V')->getNumberFormat()->setFormatCode('#,##0');
+			$sheet->getStyle('X')->getNumberFormat()->setFormatCode('#,##0');
+
+			$sheet->getColumnDimension('A')->setWidth(25); 
+			$sheet->getColumnDimension('B')->setWidth(45); 
+			$sheet->getColumnDimension('C')->setWidth(10);
+			$sheet->getColumnDimension('D')->setWidth(15);
+			$sheet->getColumnDimension('E')->setWidth(15);
+			$sheet->getColumnDimension('F')->setWidth(30);
+			$sheet->getColumnDimension('G')->setWidth(40);
+			$sheet->getColumnDimension('H')->setWidth(10);
+			$sheet->getColumnDimension('I')->setWidth(10);
+			$sheet->getColumnDimension('J')->setWidth(10);
+			$sheet->getColumnDimension('K')->setWidth(10);
+			$sheet->getColumnDimension('L')->setWidth(60);
+			$sheet->getColumnDimension('M')->setWidth(10);
+			$sheet->getColumnDimension('N')->setWidth(10);
+			$sheet->getColumnDimension('O')->setWidth(10);
+			$sheet->getColumnDimension('P')->setWidth(10);
+			$sheet->getColumnDimension('Q')->setWidth(60);
+			$sheet->getColumnDimension('R')->setWidth(10);
+			$sheet->getColumnDimension('S')->setWidth(10);
+			$sheet->getColumnDimension('T')->setWidth(10);
+			$sheet->getColumnDimension('U')->setWidth(10);
+			$sheet->getColumnDimension('V')->setWidth(10);
+			$sheet->getColumnDimension('W')->setWidth(10);
+			$sheet->getColumnDimension('X')->setWidth(10);
+
+
+			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+			$sheet->setTitle("Excell");
+			ob_end_clean();
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment;filename="produk_' .date('Y-m-d') . '.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
+			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+			exit($xlsxWriter->save('php://output'));
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
 	// End Report Product
 
 	
+	// laporan salesman //
+
+	public function reportsalesman(){
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+			$sheet = $excel->getActiveSheet();
+			$sheet->setCellValue('A1', "List Kategori"); 
+			$sheet->mergeCells('A1:D1');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->getStyle('A3:D3')->getFont()->setBold(true);
+			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('A3:D3')->getAlignment()->setHorizontal('center');
+			$sheet->setCellValue('A3', "Nama Sales"); 
+			$sheet->setCellValue('B3', "Alamat"); 
+			$sheet->setCellValue('C3', "No HP");
+			$sheet->setCellValue('D3', "Cabang");  
+			$data = $this->reportmaster_model->salesman_list()->result_array();
+			$i = 4;
+			foreach($data as $row){
+				$sheet->setCellValue('A'.$i, $row['salesman_name']); 
+				$sheet->setCellValue('B'.$i, $row['salesman_address']); 
+				$sheet->setCellValue('C'.$i, $row['salesman_phone']);
+				$sheet->setCellValue('D'.$i, $row['warehouse_name']);
+				$i++;
+			}
+			$sheet->getColumnDimension('A')->setWidth(35); 
+			$sheet->getColumnDimension('B')->setWidth(35); 
+			$sheet->getColumnDimension('C')->setWidth(60); 
+			$sheet->getColumnDimension('D')->setWidth(35);
+			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+			$sheet->setTitle("Excell");
+			ob_end_clean();
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment;filename="saelsman_' .date('Y-m-d') . '.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
+			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+			exit($xlsxWriter->save('php://output'));
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+	// end laporan salsesman
+
+
+	// laporan salsesman //
+
+	public function reportsalesman(){
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+			$sheet = $excel->getActiveSheet();
+			$sheet->setCellValue('A1', "List Kategori"); 
+			$sheet->mergeCells('A1:D1');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->getStyle('A3:D3')->getFont()->setBold(true);
+			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('A3:D3')->getAlignment()->setHorizontal('center');
+			$sheet->setCellValue('A3', "Nama Sales"); 
+			$sheet->setCellValue('B3', "Alamat"); 
+			$sheet->setCellValue('C3', "No HP");
+			$sheet->setCellValue('D3', "Cabang");  
+			$data = $this->reportmaster_model->salesman_list()->result_array();
+			$i = 4;
+			foreach($data as $row){
+				$sheet->setCellValue('A'.$i, $row['salesman_name']); 
+				$sheet->setCellValue('B'.$i, $row['salesman_address']); 
+				$sheet->setCellValue('C'.$i, $row['salesman_phone']);
+				$sheet->setCellValue('D'.$i, $row['warehouse_name']);
+				$i++;
+			}
+			$sheet->getColumnDimension('A')->setWidth(35); 
+			$sheet->getColumnDimension('B')->setWidth(35); 
+			$sheet->getColumnDimension('C')->setWidth(60); 
+			$sheet->getColumnDimension('D')->setWidth(35);
+			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+			$sheet->setTitle("Excell");
+			ob_end_clean();
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment;filename="saelsman_' .date('Y-m-d') . '.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
+			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+			exit($xlsxWriter->save('php://output'));
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+	// end laporan salsesman
+
+
+	// laporan salsesman //
+
+	public function reportsalesman(){
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+			$sheet = $excel->getActiveSheet();
+			$sheet->setCellValue('A1', "List Kategori"); 
+			$sheet->mergeCells('A1:D1');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->getStyle('A3:D3')->getFont()->setBold(true);
+			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('A3:D3')->getAlignment()->setHorizontal('center');
+			$sheet->setCellValue('A3', "Nama Sales"); 
+			$sheet->setCellValue('B3', "Alamat"); 
+			$sheet->setCellValue('C3', "No HP");
+			$sheet->setCellValue('D3', "Cabang");  
+			$data = $this->reportmaster_model->salesman_list()->result_array();
+			$i = 4;
+			foreach($data as $row){
+				$sheet->setCellValue('A'.$i, $row['salesman_name']); 
+				$sheet->setCellValue('B'.$i, $row['salesman_address']); 
+				$sheet->setCellValue('C'.$i, $row['salesman_phone']);
+				$sheet->setCellValue('D'.$i, $row['warehouse_name']);
+				$i++;
+			}
+			$sheet->getColumnDimension('A')->setWidth(35); 
+			$sheet->getColumnDimension('B')->setWidth(35); 
+			$sheet->getColumnDimension('C')->setWidth(60); 
+			$sheet->getColumnDimension('D')->setWidth(35);
+			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+			$sheet->setTitle("Excell");
+			ob_end_clean();
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment;filename="saelsman_' .date('Y-m-d') . '.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
+			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+			exit($xlsxWriter->save('php://output'));
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+	// end laporan salsesman
 
 }
 

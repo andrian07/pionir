@@ -50,8 +50,29 @@ class Reportmaster_model extends CI_Model {
     public function get_report_product($brand_report, $category_report, $Supplier_report)
     {
         $this->db->select('*');
-        $this->db->from('ms_category');
-        $this->db->where('is_active', 'Y');
+        $this->db->from('ms_product');
+        $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
+        $this->db->join('ms_product_stock', 'ms_product.product_id = ms_product_stock.product_id', 'left');
+        $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
+        if($brand_report != null){
+            $this->db->where('ms_product.product_brand = "'.$brand_report.'"');
+        }
+        if($category_report != null){
+            $this->db->where('ms_product.product_brand = "'.$category_report.'"');
+        }
+        if(!$Supplier_report != null){
+            $this->db->where('ms_product.product_brand like "%'.$Supplier_report.'%"');
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function salesman_list()
+    {
+        $this->db->select('*');
+        $this->db->from('ms_salesman');
+        $this->db->join('ms_warehouse', 'ms_salesman.salesman_branch = ms_warehouse.warehouse_id');
         $query = $this->db->get();
         return $query;
     }
