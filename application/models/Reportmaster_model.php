@@ -77,6 +77,14 @@ class Reportmaster_model extends CI_Model {
         return $query;
     }
 
+    public function supplier_list()
+    {
+        $this->db->select('*');
+        $this->db->from('ms_supplier');
+        $query = $this->db->get();
+        return $query;
+    }
+
 }
 
 ?>

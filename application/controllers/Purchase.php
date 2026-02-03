@@ -427,7 +427,7 @@ class Purchase extends CI_Controller {
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
 			} else {
-				$maxCode   = $maxCode[0]->hd_po_invoice;
+				$maxCode   = $maxCode[0]->hd_purchase_invoice;
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}	

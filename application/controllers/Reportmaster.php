@@ -334,7 +334,7 @@ class Reportmaster extends CI_Controller {
 		$Supplier_report = $this->input->get('Supplier_report');
 
 		$data['data'] = $this->reportmaster_model->get_report_product($brand_report, $category_report, $Supplier_report)->result_array();
-		$htmlView   = $this->load->view('Pages/Report/masterdata/reportproductpdf', $data, true);
+		$htmlView   = $this->load->view('Pages/Report/Masterdata/reportproductpdf', $data, true);
 		$dompdf = new Dompdf();
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
@@ -541,36 +541,35 @@ class Reportmaster extends CI_Controller {
 	// end laporan salsesman
 
 
-	// laporan salsesman //
-
-	public function reportsalesman(){
+	// laporan supplier //
+	public function reportsupplier(){
 		$modul = 'Report';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
 			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 			$sheet = $excel->getActiveSheet();
-			$sheet->setCellValue('A1', "List Kategori"); 
+			$sheet->setCellValue('A1', "List Supplier"); 
 			$sheet->mergeCells('A1:D1');
 			$sheet->getStyle('A1')->getFont()->setBold(true);
 			$sheet->getStyle('A3:D3')->getFont()->setBold(true);
 			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
 			$sheet->getStyle('A3:D3')->getAlignment()->setHorizontal('center');
-			$sheet->setCellValue('A3', "Nama Sales"); 
-			$sheet->setCellValue('B3', "Alamat"); 
-			$sheet->setCellValue('C3', "No HP");
-			$sheet->setCellValue('D3', "Cabang");  
-			$data = $this->reportmaster_model->salesman_list()->result_array();
+			$sheet->setCellValue('A3', "Supplier Code"); 
+			$sheet->setCellValue('B3', "Nama"); 
+			$sheet->setCellValue('C3', "Alamat");
+			$sheet->setCellValue('D3', "No HP");  
+			$data = $this->reportmaster_model->supplier_list()->result_array();
 			$i = 4;
 			foreach($data as $row){
-				$sheet->setCellValue('A'.$i, $row['salesman_name']); 
-				$sheet->setCellValue('B'.$i, $row['salesman_address']); 
-				$sheet->setCellValue('C'.$i, $row['salesman_phone']);
-				$sheet->setCellValue('D'.$i, $row['warehouse_name']);
+				$sheet->setCellValue('A'.$i, $row['supplier_code']); 
+				$sheet->setCellValue('B'.$i, $row['supplier_name']); 
+				$sheet->setCellValue('C'.$i, $row['supplier_address']);
+				$sheet->setCellValue('D'.$i, $row['supplier_phone']);
 				$i++;
 			}
 			$sheet->getColumnDimension('A')->setWidth(35); 
 			$sheet->getColumnDimension('B')->setWidth(35); 
-			$sheet->getColumnDimension('C')->setWidth(60); 
+			$sheet->getColumnDimension('C')->setWidth(70); 
 			$sheet->getColumnDimension('D')->setWidth(35);
 			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
 			$sheet->setTitle("Excell");
@@ -587,56 +586,7 @@ class Reportmaster extends CI_Controller {
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
 	}
-	// end laporan salsesman
-
-
-	// laporan salsesman //
-
-	public function reportsalesman(){
-		$modul = 'Report';
-		$check_auth = $this->check_auth($modul);
-		if($check_auth[0]->view == 'Y'){
-			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-			$sheet = $excel->getActiveSheet();
-			$sheet->setCellValue('A1', "List Kategori"); 
-			$sheet->mergeCells('A1:D1');
-			$sheet->getStyle('A1')->getFont()->setBold(true);
-			$sheet->getStyle('A3:D3')->getFont()->setBold(true);
-			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
-			$sheet->getStyle('A3:D3')->getAlignment()->setHorizontal('center');
-			$sheet->setCellValue('A3', "Nama Sales"); 
-			$sheet->setCellValue('B3', "Alamat"); 
-			$sheet->setCellValue('C3', "No HP");
-			$sheet->setCellValue('D3', "Cabang");  
-			$data = $this->reportmaster_model->salesman_list()->result_array();
-			$i = 4;
-			foreach($data as $row){
-				$sheet->setCellValue('A'.$i, $row['salesman_name']); 
-				$sheet->setCellValue('B'.$i, $row['salesman_address']); 
-				$sheet->setCellValue('C'.$i, $row['salesman_phone']);
-				$sheet->setCellValue('D'.$i, $row['warehouse_name']);
-				$i++;
-			}
-			$sheet->getColumnDimension('A')->setWidth(35); 
-			$sheet->getColumnDimension('B')->setWidth(35); 
-			$sheet->getColumnDimension('C')->setWidth(60); 
-			$sheet->getColumnDimension('D')->setWidth(35);
-			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-			$sheet->setTitle("Excell");
-			ob_end_clean();
-			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-			header('Content-Disposition: attachment;filename="saelsman_' .date('Y-m-d') . '.xlsx"');
-			header('Cache-Control: max-age=0');
-
-			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
-			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
-			exit($xlsxWriter->save('php://output'));
-		}else{
-			$msg = "No Access";
-			echo json_encode(['code'=>0, 'result'=>$msg]);die();
-		}
-	}
-	// end laporan salsesman
+	// end laporan supplier
 
 }
 
