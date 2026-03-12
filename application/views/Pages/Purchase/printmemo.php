@@ -2,221 +2,299 @@
 <html>
 <head>
     <title>Memo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     <style>
+
         @page{
             size: 21.59cm 13.97cm;
-            margin:0.5cm;
+            margin:0;
         }
 
-        hr {
-            border: none;
-            border-top: 1px solid #000;
-            margin: 10px 0;
-        }
-        body {
+        body{
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            margin: 0;
-            padding: 0;
-            color: #000;
-            background-color: #808080;
-        }
-        .nota-container {
-            width:21.59cm;
-            height:13.97cm;
-            margin: auto;
-            padding: 5mm;
-            box-sizing: border-box;
-            background-color: #fff;
+            font-size:12px;
+            margin:0;
+            padding:30px;
+            background:#808080;
         }
 
-        .nota-header h2 {
-            margin: 0;
-            font-size: 18px;
-        }
+/* halaman tengah */
+.page{
+    display:flex;
+    justify-content:center;
+    margin-bottom:30px;
+}
 
-        .nota-header p {
-            margin: 2px 0;
-            font-size: 12px;
-        }
+.container{
+    width:21.59cm;
+    min-height:13.97cm;
+    background:#fff;
+    border:2px solid #000;
+    padding:15px;
+    box-sizing:border-box;
 
-        .nota-info {
-            width: 100%;
-            margin-bottom: 15px;
-            border-collapse: collapse;
-            border: 1px solid #777; /* border luar */
-        }
+    display:flex;
+    flex-direction:column;
+}
 
-        .nota-info td {
-            border: 1px solid #999; /* border dalam */
-            padding: 3px 6px;      /* kecilkan padding atas bawah */
-            line-height: 14px;     /* kecilkan jarak teks */
-        }
+/* isi utama */
+.content{
+    flex:1;
+}
 
-        .table-item {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+.footer-wrapper{
+    margin-top:auto;
+}
 
-        .table-item th,
-        .table-item td {
-            border: 1px solid #000;
-            padding: 6px;
-        }
+table{
+    border-collapse:collapse;
+    width:100%;
+}
 
-        .table-item th {
-            background: #f2f2f2;
-            text-align: center;
-        }
+td,th{
+    padding:4px;
+}
 
-        .text-left {
-            text-align: left;
-        }
+.header-table td{
+    vertical-align:top;
+}
 
-        .text-right {
-            text-align: right;
-        }
+.info-table{
+    border:1px solid #000;
+}
 
-        .text-center {
-            text-align: center;
-        }
+.info-table td{
+    border:1px solid #000;
+    text-align:center;
+}
 
-        .nota-total {
-            width: 100%;
-            margin-top: 15px;
-        }
+.item-table th,
+.item-table td{
+    border:1px solid #000;
+}
 
-        .nota-total td {
-            padding: 5px;
-        }
+.item-table th{
+    background:#f2f2f2;
+}
 
-        .label {
-            text-align: right;
-            font-weight: bold;
-        }
+.text-center{
+    text-align:center;
+}
 
-        .value {
-            text-align: right;
-            width: 150px;
-        }
+.text-left{
+    text-align:left;
+}
 
-        .nota-footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 11px;
-        }
+.footer-table{
+    border:1px solid #000;
+}
 
-        .no-print {
-            margin: 20px;
-        }
+.footer-table td{
+    border:1px solid #000;
+    text-align:center;
+}
 
-    </style>
+.page-break{
+    page-break-before: always;
+}
+
+@media print{
+
+    body{
+        background:none;
+        padding:0;
+    }
+
+    .page{
+        margin:0;
+    }
+
+    .container{
+        border:none;
+        padding:0;
+    }
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<div class="nota-container">
+    <?php
+        $limit = 5;
+        $total = count($data['detail_po']);
+        $pages = ceil($total / $limit);
+        $number = 1;
+    ?>
 
-    <div class="nota-header">
-        <div class="row">
-            <div class="col-md-3" style="text-align:center;">
-                <img src="<?php echo base_url(); ?>assets/logo.png" style="width:50%;" />
-            </div>
-            <div class="col-md-9">
-                <h2 style="color:#FE0000; font-size:2em;">TOKO PIONIR</h2>
-                <p style="font-size:1em;">Jl. Sungai Raya Dalam 1. No A2 <br />
-                Kabupaten Kubu Raya. Kalimantan Barat, Indonesia <br />
-                Telp: 0812-3456-7890 Email:pionir.toko@gmail.com</p>
-            </div>
-        </div>
-    </div>
+    <?php for($p=0; $p<$pages; $p++){ ?>
 
-    <hr />
+        <div class="page">
 
-    <div class="row">
-        <div class="col-md-7"></div>
-        <div class="col-md-5">
-            <table class="nota-info" style="text-align:center;">
+            <div class="container">
+
+                <div class="content">
+
+<!-- HEADER -->
+<table class="header-table">
+    <tr>
+
+        <td width="20%" align="center">
+            <img src="<?php echo base_url(); ?>assets/logo.png" width="100">
+        </td>
+
+        <td width="40%">
+            <span style="color:#FE0000;font-size:24px;font-weight:bold;">TOKO PIONIR</span><br>
+            Jl. Sungai Raya Dalam 1 No A2<br>
+            Kabupaten Kubu Raya, Kalimantan Barat<br>
+            Telp: 0812-3456-7890 Email: pionir.toko@gmail.com
+        </td>
+
+        <td width="40%">
+            <table class="info-table">
                 <tr>
-                    <td colspan="2">Pionir <?php echo $data['header_po'][0]->hd_po_invoice; ?></td>
+                    <td colspan="2">
+                        Pionir <?php echo $data['header_po'][0]->hd_po_invoice; ?>
+                    </td>
                 </tr>
+
                 <tr>
-                    <td width="20%">Tgl</td>
-                    <td width="80%"><?php $date = $data['header_po'][0]->hd_po_date; echo date('d F Y', strtotime($date)); ?></td>
+                    <td width="30%">Tgl</td>
+                    <td width="70%">
+                        <?php 
+                            $date = $data['header_po'][0]->hd_po_date;
+                            echo date('d F Y', strtotime($date)); 
+                        ?>
+                    </td>
                 </tr>
-                 <tr>
-                    <td colspan="2" style="font-weight:800;">PIONIR</td>
+
+                <tr>
+                    <td colspan="2"><b>PIONIR</b></td>
                 </tr>
             </table>
-        </div>
-    </div>
+        </td>
 
-    <div class="row">
-        <div class="col-md-12" style="text-align:center; ">
-            <h4 style="font-size:15px; font-weight:800;">MEMO PENGAMBILAN BARANG</h4>
-        </div>
-    </div>
-    <div class="row" style="margin-top:20px;">
-        <div class="col-md-6">
-            <h3 style="font-size:13px; font-weight:800;">Kepada <br /> <?php echo $data['header_po'][0]->supplier_name; ?></h3>
-        </div>
-        <div class="col-md-6">
-            <h3 style="font-size:13px; font-weight:800;">Dari <br /> Toko Pionir</h3>
-            <p style="margin-top:-10px;">Jl. Sungai Raya Dalam 1. No A2 <br />
-                Kabupaten Kubu Raya. Kalimantan Barat, Indonesia <br />
-            </p>
-        </div>
-    </div>
-    
+    </tr>
+</table>
 
-    <table class="table-item">
-        <thead>
-            <tr>
-                <th width="5%">No</th>
-                <th width="60%">Nama Barang</th>
-                <th width="10%">Qty</th>
-                <th width="20%">Satuan</th>
-                <th width="20%">Catatan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php  $number = 1; ?>
-            <?php foreach($data['detail_po'] as $row){ ?>
-            <tr>
-                <td class="text-center"><?php echo $number ?></td>
-                <td class="text-left"><?php echo $row->product_name; ?></td>
-                <td class="text-center"><?php echo $row->dt_po_qty; ?></td>
-                <td class="text-center"><?php echo $row->unit_name; ?></td>
-                <td class="text-center"><?php echo $row->dt_po_note; ?></td>
-            </tr>
-            <?php  $number++; ?>
-            <?php } ?>
-        </tbody>
-    </table>
+<hr>
 
-    <div class="nota-footer">
-        <div class="row">
-            <div class="col-md-5"></div>
-            <div class="col-md-7">
-                 <table class="nota-info" style="text-align:center;">
-                    <tr>
-                        <td width="50%">Dibuat Oleh,</td>
-                        <td width="50%">Memo Diterima Oleh,</td>
-                    </tr>
-                    <tr>
-                        <td style="height:70px;"></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Bag.Pembelian</td>
-                        <td>Jaya Ar</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+<!-- TITLE -->
+<table>
+    <tr>
+        <td align="center">
+            <b style="font-size:15px;">MEMO PENGAMBILAN BARANG</b>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<!-- FROM TO -->
+<table>
+    <tr>
+
+        <td width="50%">
+            <b>Kepada</b><br>
+            <?php echo $data['header_po'][0]->supplier_name; ?>
+        </td>
+
+        <td width="50%">
+            <b>Dari</b><br>
+            Toko Pionir<br>
+            Jl. Sungai Raya Dalam 1 No A2<br>
+            Kabupaten Kubu Raya
+        </td>
+
+    </tr>
+</table>
+
+<br>
+
+<!-- ITEM -->
+<table class="item-table">
+
+    <tr class="text-center">
+        <th width="5%">No</th>
+        <th width="45%">Nama Barang</th>
+        <th width="10%">Qty</th>
+        <th width="15%">Satuan</th>
+        <th width="25%">Catatan</th>
+    </tr>
+
+    <?php
+        $start = $p * $limit;
+        $end = min($start + $limit, $total);
+
+        for($i=$start; $i<$end; $i++){
+            $row = $data['detail_po'][$i];
+        ?>
+
+        <tr>
+            <td class="text-center"><?php echo $number ?></td>
+            <td class="text-left"><?php echo $row->product_name ?></td>
+            <td class="text-center"><?php echo $row->dt_po_qty ?></td>
+            <td class="text-center"><?php echo $row->unit_name ?></td>
+            <td class="text-center"><?php echo $row->dt_po_note ?></td>
+        </tr>
+
+        <?php 
+            $number++;
+        }
+    ?>
+
+</table>
 
 </div>
+
+<?php if($p == $pages-1){ ?>
+
+<div class="footer-wrapper">
+
+    <table>
+        <tr>
+            <td width="50%"></td>
+
+            <td width="50%">
+
+                <table class="footer-table">
+
+                    <tr>
+                        <td>Dibuat Oleh</td>
+                        <td>Memo Diterima</td>
+                    </tr>
+
+                    <tr>
+                        <td height="40"></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>Bag. Pembelian</td>
+                        <td>Jaya Ar</td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<?php } ?>
+
+</div>
+
+</div>
+
+<?php if($p < $pages-1){ ?>
+<div class="page-break"></div>
+<?php } ?>
+
+<?php } ?>
+
 </body>
 </html>

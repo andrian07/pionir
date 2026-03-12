@@ -159,7 +159,7 @@ class Payment extends CI_Controller {
 				$row[] 	= $field['payment_debt_total_nota'];
 				$row[] 	= number_format($field['payment_debt_total_pay']);
 				$row[] 	= $status;
-				$row[] 	= $detail.$delete;
+				$row[] 	= $detail;
 				$data[] = $row;
 			}
 
@@ -554,14 +554,14 @@ class Payment extends CI_Controller {
 
 				$no++;
 				$row = array();
-				$row[] 	= $field['customer_code'];
+				$row[] 	= $field['payment_receivable_invoice'];
 				$row[] 	= $field['customer_name'];
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['payment_name'];
 				$row[] 	= $field['payment_receivable_total_nota'];
 				$row[] 	= number_format($field['payment_receivable_total_pay']);
 				$row[] 	= $status;
-				$row[] 	= $detail.$delete;
+				$row[] 	= $detail;
 				$data[] = $row;
 			}
 
@@ -819,12 +819,12 @@ class Payment extends CI_Controller {
 		$modul = 'ReceivablePayment';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$payment_debt_id  = $this->input->get('id');
+			$payment_receivable_id  = $this->input->get('id');
 
-			$header_debt_payment['header_debt_payment'] = $this->payment_model->header_debt_payment($payment_debt_id);
-			$detail_debt_payment['detail_debt_payment'] = $this->payment_model->detail_debt_payment($payment_debt_id); 
-			$data['data'] = array_merge($header_debt_payment, $detail_debt_payment);
-			$this->load->view('Pages/Payment/detailpaymentdebt', $data);
+			$header_receivable_payment['header_receivable_payment'] = $this->payment_model->header_receivable_payment($payment_receivable_id);
+			$detail_receivable_payment['detail_receivable_payment'] = $this->payment_model->detail_receivable_payment($payment_receivable_id); 
+			$data['data'] = array_merge($header_receivable_payment, $detail_receivable_payment);
+			$this->load->view('Pages/Payment/detailpaymentreceivable', $data);
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();

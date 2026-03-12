@@ -102,7 +102,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                               <label for="inlineinput" class="col-md-3 col-form-label">Produk</label>
                               <div class="col-md-12 p-0">
                                 <input type="hidden" id="submission_product_id" name="submission_product_id" class="form-control text-right" required="">
-                                <input type="hidden" id="submission_last_supplier" name="submission_last_supplier" class="form-control text-right">
+                                <input type="text" id="submission_last_supplier" name="submission_last_supplier" class="form-control text-right">
                                 <input id="submission_product_name" name="submission_product_name" type="text" class="form-control input-full ui-autocomplete-input" placeholder="ketikkan nama produk">
                               </div>
                             </div>
@@ -307,8 +307,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Tgl. Pengajuan</th>
                   <th>Diajukan</th>
                   <th>Nama Produk</th>
-                  <th>Supplier</th>
                   <th>Qty</th>
+                  <th>Supplier</th>
                   <th>Stock On Hand</th>
                   <th>Keterangan</th>
                   <th>Status</th>

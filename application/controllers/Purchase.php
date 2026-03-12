@@ -678,8 +678,8 @@ class Purchase extends CI_Controller {
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['user_name'];
 				$row[] 	= $field['product_name'];
-				$row[] 	= $supplier_last;
 				$row[] 	= $field['submission_qty'].' '.$field['unit_name'];
+				$row[] 	= $supplier_last;
 				$row[] 	= $field['last_stock'];
 				$row[] 	= $field['submission_desc'];
 				$row[] 	= $submission_status;

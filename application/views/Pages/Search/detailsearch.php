@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Item Supplier:</th>
-                  <td colspan="4"><?php echo $row->product_supplier_name; ?></td>
+                  <td colspan="4"><?php echo nl2br($row->product_supplier_name); ?></td>
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Status:</th>

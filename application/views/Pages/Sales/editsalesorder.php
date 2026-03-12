@@ -9,6 +9,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
     <div class="page-header">
 
     </div>
+
     <div class="row">
       <h3 class="fw-bold mb-3">Edit Sales Order </h3>
       <div class="col-md-12">
@@ -17,7 +18,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="form-group row">
               <label for="noinvoice" class="col-sm-1 col-form-label text-right">No Invoice :</label>
               <div class="col-sm-3">
-                <input id="sales_order_invoice" name="purchase_order_invoice" type="text" class="form-control" value="AUTO" readonly="">
+                <input id="sales_order_invoice" name="sales_order_invoice" type="text" class="form-control"  readonly="">
                 <input id="sales_order_id" name="sales_order_id" type="hidden" class="form-control" value="<?php echo $_GET['id']; ?>">
               </div>
               <label for="tanggal" class="col-sm-1 col-form-label text-right">T.O.P :</label>
@@ -75,7 +76,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <input id="sales_order_rate_customer" name="sales_order_rate_customer" type="text" class="form-control" readonly="">
             </div>
 
-            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
+            <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan:</label>
             <div class="col-sm-3">
               <select class="form-control input-full js-example-basic-single" id="sales_order_prepare" name="sales_order_prepare">
                 <option value="">-- Pilih User --</option>
@@ -374,14 +375,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
 <script>
 
-  $('#purchase_top').prop('disabled', true);
-  $('#purchase_payment_method').prop('disabled', true);
-  $('#purchase_ekspedisi').prop('disabled', true);
-  $('#purchase_tax').prop('disabled', true);
-  $('#purchase_warehouse').prop('disabled', true);
-  $('#purchase_due_date').prop('disabled', true);
-  $('#po_user_id').prop('disabled', true);
-  $('#purchase_supplier').prop('disabled', true);
+
   
 
   let temp_price = new AutoNumeric('#temp_price', {
@@ -928,6 +922,18 @@ function get_edit_data()
       if (data.code == "200"){
         let header = data.header[0];
         let detail = data.detail[0];
+          $("#sales_order_invoice").val(header.hd_sales_order_inv);
+          $("#sales_order_top").val(header.hd_sales_order_top_id);
+          $('#sales_order_top').trigger('change');
+          $("#sales_order_customer").val(header.hd_sales_order_customer);
+          $('#sales_order_customer').trigger('change');
+          $("#sales_order_payment").val(header.hd_sales_order_payment);
+          $('#sales_order_payment').trigger('change');
+          $("#sales_order_salesman").val(header.hd_sales_order_salesman);
+          $('#sales_order_salesman').trigger('change');
+          
+          
+        console.log(header);
       }
     }
   });

@@ -447,6 +447,19 @@ class payment_model extends CI_Model {
         return $result;
     }
 
+    public function header_receivable_payment($payment_receivable_id)
+    {
+        $query = $this->db->query("select * from hd_payment_receivable a, ms_customer b, ms_payment c, ms_user d where a.payment_receivable_customer_id = b.customer_id and  a.payment_receivable_method_id = c.payment_id and a.user_id = d.user_id and payment_receivable_id   = '".$payment_receivable_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_receivable_payment($payment_receivable_id)
+    {
+        $query = $this->db->query("select * from dt_payment_receivable a, hd_sales b where a.dt_payment_receivable_sales_id = b.hd_sales_id and payment_receivable_id  = '".$payment_receivable_id."'");
+        $result = $query->result();
+        return $result;
+    }
     // end receivable
 
 }

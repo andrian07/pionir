@@ -260,14 +260,55 @@ class Sales extends CI_Controller {
 	{
 		$modul = 'SalesOrder';
 		$check_auth = $this->check_auth($modul);
-		if($check_auth[0]->view == 'Y'){
+		if($check_auth[0]->edit == 'Y'){
+
+			$so_id 		= $this->input->get('id');
+			$header_so  = $this->sales_model->header_so($so_id);
+			$detail_so  = $this->sales_model->detail_so($so_id);
+			$user_id   	= $_SESSION['user_id'];
+			$this->sales_model->clear_temp_sales_order($user_id);
+			foreach($detail_so as $row){
+				/*$submission_id 	 			= $row->submission_id;
+				$submission_code 			= $row->submission_inv;
+				$po_supplier     			= $header_so[0]->hd_po_supplier;
+				$product_id      			= $row->dt_product_id;
+				$temp_price_val 			= $row->dt_po_price;
+				$temp_qty  					= $row->dt_po_qty;
+				$temp_weight 				= $row->dt_po_weight;
+				$temp_delivery_price_val  	= $row->dt_po_ongkir;
+				$temp_total_weight			= $row->dt_po_total_weight;
+				$temp_ongkir_val			= $row->dt_po_total_ongkir;
+				$temp_total_val				= $row->dt_po_total;
+				$temp_note_val				= $row->dt_po_note;
+
+				$data_insert = array(
+					'temp_submission_id'	=> $submission_id,
+					'temp_submission_inv'	=> $submission_code,
+					'temp_supplier_id'		=> $po_supplier,
+					'temp_product_id'		=> $product_id,
+					'temp_po_price'			=> $temp_price_val,
+					'temp_po_qty'			=> $temp_qty,
+					'temp_po_weight'		=> $temp_weight,
+					'temp_po_ongkir'		=> $temp_delivery_price_val,
+					'temp_po_total_weight'	=> $temp_total_weight,
+					'temp_po_total_ongkir'	=> $temp_ongkir_val,
+					'temp_po_total'			=> $temp_total_val,
+					'temp_po_note'			=> $temp_note_val,
+					'temp_user_id'			=> $user_id,
+				);
+
+				$this->purchase_model->insert_temp_po($data_insert);*/
+			}
+
+			$header_so_data['header_so_data']  = $this->sales_model->header_so($so_id);
 			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
 			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
 			$customer_list['customer_list'] = $this->masterdata_model->customer_list();
 			$payment_list['payment_list'] = $this->masterdata_model->payment_list();
 			$ekspedisi_list['ekspedisi_list'] = $this->masterdata_model->ekspedisi_list();
 			$user_list['user_list'] = $this->masterdata_model->user_list();
-			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
+
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list, $header_so_data);
 			$this->load->view('Pages/Sales/editsalesorder', $data);
 		}else{
 			$msg = "No Access";

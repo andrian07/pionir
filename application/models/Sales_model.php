@@ -229,6 +229,20 @@ class sales_model extends CI_Model {
         return $result;
     }
 
+    public function header_so($so_id)
+    {
+        $query = $this->db->query("select * from hd_sales_order where hd_sales_order_id  = '".$so_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
+    public function detail_so($so_id)
+    {
+        $query = $this->db->query("select * from dt_sales_order where hd_sales_order_id  = '".$so_id."'");
+        $result = $query->result();
+        return $result;
+    }
+
     //end sales order
 
 
