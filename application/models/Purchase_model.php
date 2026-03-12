@@ -16,7 +16,7 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
-    public function submission_list($search, $length, $start)
+    public function submission_list($search, $length, $start, $start_date, $end_date, $supplier_filter, $keterangan_filter, $status_filter)
     {
         $this->db->select('*');
         $this->db->from('submission');
@@ -26,6 +26,21 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id', 'left');
         $this->db->join('ms_supplier', 'submission.submission_last_supplier = ms_supplier.supplier_id', 'left');
         $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
+        if($start_date != ''){
+            $this->db->where('submission_date >=', $start_date);
+        }
+        if($end_date != ''){
+            $this->db->where('submission_date <=', $end_date);
+        }
+        if($supplier_filter != ''){
+            $this->db->where('submission_last_supplier', $supplier_filter);
+        }
+        if($keterangan_filter != ''){
+            $this->db->like('submission_desc', $keterangan_filter);
+        }
+        if($status_filter != ''){
+            $this->db->where('submission_status', $status_filter);
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('submission.submission_invoice like "%'.$search.'%"');
@@ -35,6 +50,7 @@ class purchase_model extends CI_Model {
             $this->db->or_where('ms_product.product_key like "%'.$search.'%"');
             $this->db->or_where('ms_product.product_desc like "%'.$search.'%"');
         }
+
         $this->db->order_by('submission.created_at', 'desc');
         $this->db->limit($length);
         $this->db->offset($start);
@@ -42,7 +58,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function submission_list_count($search)
+    public function submission_list_count($search, $start_date, $end_date, $supplier_filter, $keterangan_filter, $status_filter)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('submission');
@@ -52,6 +68,21 @@ class purchase_model extends CI_Model {
         $this->db->join('ms_salesman', 'submission.submission_salesman = ms_salesman.salesman_id');
         $this->db->join('ms_supplier', 'submission.submission_last_supplier = ms_supplier.supplier_id', 'left');
         $this->db->join('ms_user', 'submission.created_by = ms_user.user_id');
+        if($start_date != ''){
+            $this->db->where('submission_date >=', $start_date);
+        }
+        if($end_date != ''){
+            $this->db->where('submission_date <=', $end_date);
+        }
+        if($supplier_filter != ''){
+            $this->db->where('submission_last_supplier', $supplier_filter);
+        }
+        if($keterangan_filter != ''){
+            $this->db->where('submission_desc', $keterangan_filter);
+        }
+        if($status_filter != ''){
+            $this->db->where('submission_status', $status_filter);
+        }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
             $this->db->or_where('submission.submission_invoice like "%'.$search.'%"');
@@ -243,8 +274,8 @@ class purchase_model extends CI_Model {
     public function edit_temp_po($product_id, $user_id, $data_insert)
     {
         $this->db->set($data_insert);
-        $this->db->where('temp_product_id ', $product_id);
-        $this->db->where('temp_user_id ', $user_id);
+        $this->db->where('temp_product_id', $product_id);
+        $this->db->where('temp_user_id', $user_id);
         $this->db->update('temp_po');
     }
 
@@ -519,8 +550,9 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
-    public function warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $warehouse_filter_val)
+    public function warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $warehouse_filter_val, $supplier_filter_val)
     {
+   
         $this->db->select('*');
         $this->db->from('hd_input_stock');
         $this->db->join('dt_input_stock', 'hd_input_stock.hd_input_stock_id   = dt_input_stock.hd_is_id ');
@@ -533,7 +565,10 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
         }
         if($warehouse_filter_val != null){
-            $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
+            $this->db->where('hd_input_stock_warehouse', $warehouse_filter_val);
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_po.hd_po_supplier', $supplier_filter_val);
         }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -549,7 +584,7 @@ class purchase_model extends CI_Model {
         return $query;
     }
 
-    public function warehouseinput_list_count($search, $start_date_val, $end_date_val, $warehouse_filter_val)
+    public function warehouseinput_list_count($search, $start_date_val, $end_date_val, $warehouse_filter_val, $supplier_filter_val)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_input_stock');
@@ -563,7 +598,10 @@ class purchase_model extends CI_Model {
             $this->db->where('hd_input_stock_date between "'.$start_date_val.'" and "'.$end_date_val.'" ');
         }
         if($warehouse_filter_val != null){
-            $this->db->where('hd_input_stock_warehouse','"'.$warehouse_filter_val.'"');
+            $this->db->where('hd_input_stock_warehouse', $warehouse_filter_val);
+        }
+        if($supplier_filter_val != null){
+            $this->db->where('hd_po.hd_po_supplier', $supplier_filter_val);
         }
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -602,6 +640,13 @@ class purchase_model extends CI_Model {
         $this->db->set('hd_po_status', 'Success');
         $this->db->where('hd_po_id ', $po_inv_id);
         $this->db->update('hd_po');
+    }
+
+    public function update_purchase_input_stock($po_id)
+    {
+        $this->db->set('hd_input_stock_status', 'Success');
+        $this->db->where('hd_po_id ', $po_id);
+        $this->db->update('hd_input_stock');
     }
 
     public function search_po_purchase($search)
@@ -1006,6 +1051,12 @@ class purchase_model extends CI_Model {
         $query = $this->db->query("select hd_retur_purchase_inv from hd_retur_purchase order by hd_retur_purchase_id  desc limit 1");
         $result = $query->result();
         return $result;
+    }
+
+    public function clear_detail_po($purchase_order_id)
+    {
+        $this->db->where('hd_po_id', $purchase_order_id);
+        $this->db->delete('dt_po');
     }
 
     public function save_retur_purchase($data_insert)

@@ -278,6 +278,37 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     },
   });
 
+  $("#btncancel").click(function (e) {
+		Swal.fire({
+			title: 'Konfirmasi?',
+			text: "Apakah Anda Yakin Membatalkan Inputan",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Hapus'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					type: "POST",
+					url: "<?php echo base_url(); ?>Purchase/clear_temp_input_stock",
+					dataType: "json",
+					data: {},
+					success : function(data){
+						if (data.code == "200"){
+							window.location.href = "<?php echo base_url(); ?>/Purchase/warehouseinput";
+						}else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: data.result,
+							})
+						}
+					}
+				});
+			}
+		})
+	});
 
   function check_tempt_data()
   {
@@ -330,6 +361,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
           $("#product_id").val(row.temp_is_product_id);
           $("#temp_qty_po").val(row.temp_is_qty_order);
           $("#temp_qty_recive").val(row.temp_is_qty);
+          $("#input_stock_detail_remark").val(row.temp_is_note);
         }
       }
     });  

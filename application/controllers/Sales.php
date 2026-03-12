@@ -175,8 +175,7 @@ class Sales extends CI_Controller {
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['dt_so_rate'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_order_total']);
-				$row[] 	= $hd_sales_remaining_debt;
-				$row[] 	= $field['hd_sales_order_status'];
+				$row[] 	= $field['hd_sales_order_top'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_order_remaining_debt']);
 				$row[] 	= $field['salesman_name'];
 				$row[]  = $hd_sales_order_status;
@@ -309,6 +308,10 @@ class Sales extends CI_Controller {
 			$sales_order_ekspedisi 						= $this->input->post('sales_order_ekspedisi');
 			$footer_sub_total_submit 					= $this->input->post('footer_sub_total_submit');
 			$sales_order_due_date 						= $this->input->post('sales_order_due_date');
+			$drop_ship									= $this->input->post('drop_ship');
+			$dropship_name							    = $this->input->post('dropship_name');
+			$dropship_phone							    = $this->input->post('dropship_phone');
+			$dropship_address							= $this->input->post('dropship_address');
 			$sales_order_date 							= $this->input->post('sales_order_date');
 			$footer_total_discount_submit 				= $this->input->post('footer_total_discount_submit');
 			$edit_footer_discount_percentage1_submit 	= $this->input->post('edit_footer_discount_percentage1_submit');
@@ -392,6 +395,13 @@ class Sales extends CI_Controller {
 				'hd_sales_order_ekspedisi'			=> $sales_order_ekspedisi,
 				'hd_sales_order_top'				=> $sales_order_top,
 				'hd_sales_order_top_id'				=> $sales_order_top_id,
+				'hd_sales_order_due_date'			=> $sales_order_due_date,
+
+				'hd_sales_order_dropship'			=> $drop_ship,
+				'hd_sales_order_dropship_name'		=> $dropship_name,
+				'hd_sales_order_dropship_phone'		=> $dropship_phone,
+				'hd_sales_order_dropship_address'	=> $dropship_address,
+
 				'hd_sales_order_salesman'			=> $sales_order_salesman,
 				'hd_sales_order_prepare'			=> $sales_order_prepare,
 				//'hd_sales_order_prepare_id'			=> $sales_order_prepare_id,
@@ -682,6 +692,8 @@ class Sales extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				$print = '<button type="button" class="btn btn-icon btn-warning delete btn-sm mb-2-btn" data-id="'.$field['hd_sales_id'].'" data-bs-toggle="modal" data-bs-target="#print"><i class="fas fa-print sizing-fa"></i></button> ';
+
 				$date = date_create($field['hd_sales_date']); 
 				$no++;
 				$row = array();
@@ -696,7 +708,7 @@ class Sales extends CI_Controller {
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_remaining_debt']);
 				$row[] 	= $field['ekspedisi_name'];
 				$row[]  = $hd_sales_status;
-				$row[] 	= $detail.$delete;
+				$row[] 	= $detail.$delete.$print;
 				$data[] = $row;
 			}
 
@@ -775,6 +787,33 @@ class Sales extends CI_Controller {
 			$user_list['user_list'] = $this->masterdata_model->user_list();
 			$data['data'] = array_merge($warehouse_list, $salesman_list, $customer_list, $payment_list, $ekspedisi_list, $user_list);
 			$this->load->view('Pages/Sales/addsales', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function printnota()
+	{
+		$modul = 'Sales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id  	      = $this->input->get('print_type');
+			$hd_sales_id  = $this->input->get('sales_id');
+			$header_sales['header_sales'] = $this->sales_model->header_sales($hd_sales_id);
+			$detail_sales['detail_sales'] = $this->sales_model->detail_sales($hd_sales_id);
+			$data['data'] = array_merge($header_sales, $detail_sales);
+			if($id == 1){
+				$this->load->view('Pages/Sales/printnota', $data);
+			}else if($id == 2){
+				$this->load->view('Pages/Sales/printnotapengambilan', $data);
+			}else if($id == 3){
+				$this->load->view('Pages/Sales/printnotalunas', $data);
+			}else if($id == 4){
+				$this->load->view('Pages/Sales/printnotanormal', $data);
+			}else{
+				$this->load->view('Pages/Sales/printdispatch', $data);
+			}
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -971,6 +1010,10 @@ class Sales extends CI_Controller {
 			$sales_payment            				  = $this->input->post('sales_payment');
 			$sales_top              				  = $this->input->post('sales_top');
 			$sales_top_id             				  = $this->input->post('sales_top_id');
+			$drop_ship						  		  = $this->input->post('drop_ship');
+			$dropship_name						  	  = $this->input->post('dropship_name');
+			$dropship_phone						      = $this->input->post('dropship_phone');
+			$dropship_address						  = $this->input->post('dropship_address');
 			$sales_salesman             			  = $this->input->post('sales_salesman');
 			$sales_prepare            				  = $this->input->post('sales_prepare');
 			$sales_prepare_id           			  = $this->input->post('sales_prepare_id');
@@ -1046,7 +1089,7 @@ class Sales extends CI_Controller {
 
 
 			$maxCode  = $this->sales_model->last_sales_inv();
-
+			
 			$inv_code = 'PJ/'.$customer_code.'/'.$warehouse_code.'/'.date("d/m/Y").'/';
 			if ($maxCode == NULL) {
 				$last_code = $inv_code.'000001';
@@ -1055,7 +1098,6 @@ class Sales extends CI_Controller {
 				$last_code = substr($maxCode, -6);
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}
-
 			$get_temp_sales_check_stock = $this->sales_model->get_temp_sales($user_id)->result_array();
 			if($warehouse_id != 1){
 				foreach($get_temp_sales_check_stock as $row){
@@ -1085,6 +1127,11 @@ class Sales extends CI_Controller {
 				'hd_sales_ekspedisi'      	=> $sales_ekspedisi,
 				'hd_sales_top'        		=> $sales_top,
 				'hd_sales_top_id'			=> $sales_top_id,
+				'hd_sales_due_date'			=> $sales_due_date,
+				'hd_sales_dropship'			=> $drop_ship,
+				'hd_sales_dropship_name'    => $dropship_name,
+				'hd_sales_dropship_phone'   => $dropship_phone,
+				'hd_sales_dropship_address' => $dropship_address,
 				'hd_sales_salesman'     	=> $sales_salesman,
 				'hd_sales_prepare'      	=> $sales_prepare,
 				'hd_sales_prepare_id'      	=> $sales_prepare_id,
@@ -1815,6 +1862,12 @@ class Sales extends CI_Controller {
 			$sales_payment            				  = $this->input->post('sales_payment');
 			$sales_top              				  = $this->input->post('sales_top');
 			$sales_top_id             				  = $this->input->post('sales_top_id');
+
+			$drop_ship						  		  = $this->input->post('drop_ship');
+			$dropship_name						  	  = $this->input->post('dropship_name');
+			$dropship_phone						      = $this->input->post('dropship_phone');
+			$dropship_address						  = $this->input->post('dropship_address');
+
 			$sales_salesman             			  = $this->input->post('sales_salesman');
 			$sales_prepare            				  = $this->input->post('sales_prepare');
 			$sales_prepare_id           			  = $this->input->post('sales_prepare_id');
@@ -1837,7 +1890,7 @@ class Sales extends CI_Controller {
 			$footer_remaining_debt_val          	  = $this->input->post('footer_remaining_debt_val');
 			$sales_remark             				  = $this->input->post('sales_remark');
 			$user_id                  			      = $_SESSION['user_id'];
-
+			
 			if($sales_customer == null){
 				$msg = 'Silahkan Masukan Customer';
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -1917,6 +1970,11 @@ class Sales extends CI_Controller {
 				'hd_sales_ekspedisi'      	=> $sales_ekspedisi,
 				'hd_sales_top'        		=> $sales_top,
 				'hd_sales_top_id'			=> $sales_top_id,
+				'hd_sales_dropship'			=> $drop_ship,
+				'hd_sales_dropship_name'    => $dropship_name,
+				'hd_sales_dropship_phone'   => $dropship_phone,
+				'hd_sales_dropship_address' => $dropship_address,
+				'hd_sales_due_date' 		=> $sales_due_date,
 				'hd_sales_salesman'     	=> $sales_salesman,
 				'hd_sales_prepare'      	=> $sales_prepare,
 				'hd_sales_prepare_id'      	=> $sales_prepare_id,

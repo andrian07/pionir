@@ -115,7 +115,7 @@
                 
                 <tr>
                   <th scope="col" class="productinfo-text-right">Catatan Penting:</th>
-                  <td colspan="4"><?php echo $row->product_purchase_record; ?></td>
+                  <td colspan="4"><?php echo nl2br($row->product_purchase_record); ?></td>
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Min Order:</th>
@@ -139,7 +139,7 @@
                 </tr>
                 <tr>
                   <th scope="col" class="productinfo-text-right">Deskripsi:</th>
-                  <td colspan="4"><?php echo $row->product_desc; ?></td>
+                  <td colspan="4"><?php echo nl2br($row->product_desc); ?></td>
                 </tr>
 
               </tbody>

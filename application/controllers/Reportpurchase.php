@@ -225,12 +225,8 @@ class Reportpurchase extends CI_Controller {
 
 			foreach($data as $row){
 
-				$ccode          = $last_po_invoice == $row['hd_po_invoice'] ? '' : $row['hd_po_invoice'];
-				$date           = $last_date == $row['hd_po_invoice'] ? '' : $row['hd_po_date'];
-				$total_po       = $last_total_po == $row['hd_po_invoice'] ? '' : $row['hd_po_grand_total'];
-
-				$sheet->setCellValue('A'.$i, $ccode); 
-				$sheet->setCellValue('B'.$i, $date); 
+				$sheet->setCellValue('A'.$i, $row['hd_po_invoice']); 
+				$sheet->setCellValue('B'.$i, $row['hd_po_date']); 
 				$sheet->setCellValue('C'.$i, $row['warehouse_name']);
 				$sheet->setCellValue('D'.$i, $row['supplier_name']); 
 				$sheet->setCellValue('E'.$i, $row['hd_po_tax']); 
@@ -252,12 +248,8 @@ class Reportpurchase extends CI_Controller {
 				$sheet->setCellValue('U'.$i, $row['dt_po_qty']); 
 				$sheet->setCellValue('V'.$i, $row['dt_po_ongkir']); 
 				$sheet->setCellValue('W'.$i, $row['dt_po_total']);
-				$sheet->setCellValue('X'.$i, $total_po);
+				$sheet->setCellValue('X'.$i, $row['hd_po_grand_total']);
 				$i++;
-
-				$last_po_invoice 	  = $row['hd_po_invoice'];
-				$last_date  		  = $row['hd_po_invoice'];
-				$last_total_po        = $row['hd_po_invoice'];
 			};
 
 			$sheet->getColumnDimension('A')->setWidth(35); 
@@ -466,7 +458,7 @@ class Reportpurchase extends CI_Controller {
 
 			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 			$sheet = $excel->getActiveSheet();
-			$sheet->setCellValue('A1', "Laporan PO"); 
+			$sheet->setCellValue('A1', "Laporan Pembelian"); 
 			$sheet->mergeCells('A1:X1');
 			$sheet->getStyle('A1')->getFont()->setBold(true);
 			$sheet->getStyle('A3:X3')->getFont()->setBold(true);
@@ -569,6 +561,118 @@ class Reportpurchase extends CI_Controller {
 	}
 
 	// End Report Purchases
+
+	// start Report Retur Purchase
+	public function reportreturpurchase()
+	{
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$data['data'] = array_merge($warehouse_list, $supplier_list);
+			$this->load->view('Pages/Report/Purchase/reportreturpurchase', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function reportreturpurchasespdf()
+	{
+		$start_date       = $this->input->get('start_date');
+		$end_date 	      = $this->input->get('end_date');
+		$supplier_report  = $this->input->get('supplier_report');
+
+		$data['data'] = $this->reportpurchase_model->get_report_retur_purchases($start_date, $end_date, $supplier_report)->result_array();
+		$htmlView   = $this->load->view('Pages/Report/Purchase/reportreturpurchasespdf', $data, true);
+		$dompdf = new Dompdf();
+		$dompdf->loadHtml($htmlView);
+		$dompdf->setPaper('A4', 'landscape');
+		$dompdf->render();
+		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		exit();
+	}
+
+	public function reportreturpurchases_excell()
+	{
+		$modul = 'Report';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$start_date       = $this->input->get('start_date');
+			$end_date 	      = $this->input->get('end_date');
+			$warehouse_report = $this->input->get('warehouse_report');
+			$supplier_report  = $this->input->get('supplier_report');;
+
+			$excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+			$sheet = $excel->getActiveSheet();
+			$sheet->setCellValue('A1', "Laporan Retur Pembelian"); 
+			$sheet->mergeCells('A1:J1');
+			$sheet->getStyle('A1')->getFont()->setBold(true);
+			$sheet->getStyle('A3:J3')->getFont()->setBold(true);
+			$sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('A3:J3')->getAlignment()->setHorizontal('center');
+			$sheet->setCellValue('A3', "Invoice"); 
+			$sheet->setCellValue('B3', "Tanggal"); 
+			$sheet->setCellValue('C3', "Gudang"); 
+			$sheet->setCellValue('D3', "Barang"); 
+			$sheet->setCellValue('E3', "Qty Retur");
+			$sheet->setCellValue('F3', "Sub Total");
+			$sheet->setCellValue('G3', "Catatan");
+			$sheet->setCellValue('H3', "Supplier");
+			$sheet->setCellValue('I3', "Total Nota");
+			$sheet->setCellValue('J3', "Jensi Retur");
+
+			$data = $this->reportpurchase_model->get_report_retur_purchases($start_date, $end_date, $supplier_report)->result_array();
+			$i = 4;
+
+			foreach($data as $row){
+				$sheet->setCellValue('A'.$i, $row['hd_retur_purchase_inv']); 
+				$sheet->setCellValue('B'.$i, $row['hd_retur_purchase_date']); 
+				$sheet->setCellValue('C'.$i, $row['warehouse_name']);
+				$sheet->setCellValue('D'.$i, $row['product_name']); 
+				$sheet->setCellValue('E'.$i, $row['dt_retur_purchase_qty']); 
+				$sheet->setCellValue('F'.$i, $row['dt_retur_purchase_total']);
+				$sheet->setCellValue('G'.$i, $row['dt_retur_purchase_note']);
+				$sheet->setCellValue('H'.$i, $row['supplier_name']); 
+				$sheet->setCellValue('I'.$i, $row['hd_retur_purchase_total']); 
+				$sheet->setCellValue('J'.$i, $row['retur_type']); 
+				$i++;
+			};
+
+			$sheet->getColumnDimension('A')->setWidth(35); 
+			$sheet->getColumnDimension('B')->setWidth(25); 
+			$sheet->getColumnDimension('C')->setWidth(25);
+			$sheet->getColumnDimension('D')->setWidth(50);
+			$sheet->getColumnDimension('E')->setWidth(10);
+			$sheet->getColumnDimension('F')->setWidth(10);
+			$sheet->getColumnDimension('G')->setWidth(50);
+			$sheet->getColumnDimension('H')->setWidth(30);
+			$sheet->getColumnDimension('I')->setWidth(30);
+			$sheet->getColumnDimension('J')->setWidth(30);
+
+
+			$sheet->getStyle('F')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('I')->getNumberFormat()->setFormatCode('#,##0');	
+
+
+			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+			$sheet->setTitle("Excell");
+			ob_end_clean();
+			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			header('Content-Disposition: attachment;filename="retur_pembelian_' .date('Y-m-d') . '.xlsx"');
+			header('Cache-Control: max-age=0');
+
+			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
+			$xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
+			exit($xlsxWriter->save('php://output'));
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	// End Report Retur Purchase
 
 }
 

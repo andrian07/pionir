@@ -192,6 +192,8 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['product_code'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
+				$row[] 	= 'Rp. '.number_format($field['temp_purchase_price']);
+				$row[] 	= 'Rp. '.number_format($field['product_sell_price_2']);
 				$row[] 	= $field['temp_purchase_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_purchase_total_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_purchase_total']);
@@ -272,6 +274,7 @@ class Purchase extends CI_Controller {
 					'temp_purchase_total_ongkir' => $row->dt_po_total_ongkir,
 					'temp_purchase_total'		 => $row->dt_po_total,
 					'temp_purchase_po_id' 		 => $po_id,
+					'temp_purchase_note' 		 => $row->dt_po_note,
 					'temp_user_id'				 => $user_id
 				);	
 
@@ -432,7 +435,13 @@ class Purchase extends CI_Controller {
 				$last_code = $inv_code.substr('000000' . strval(floatval($last_code) + 1), -6);
 			}	
 
-			
+			if($purchase_top == 'CBD'){
+				$hd_purchase_dp = $footer_total_invoice_val;
+				$remaingin_debt = 0;
+			}else{
+				$hd_purchase_dp = 0;
+				$remaingin_debt = $footer_total_invoice_val;
+			}
 
 			$data_insert = array(
 				'hd_purchase_invoice'			=> $last_code,
@@ -456,12 +465,12 @@ class Purchase extends CI_Controller {
 				'hd_purchase_disc_2'			=> $edit_footer_discount2_submit,
 				'hd_purchase_disc_3'			=> $edit_footer_discount3_submit,
 				'hd_purchase_total_discount'	=> $footer_total_discount_submit,
-				'hd_purchase_dpp'				=> $footer_dpp_val,
+				'hd_purchase_dpp'				=> $hd_purchase_dp,
 				'hd_purchase_ppn'			    => $footer_total_ppn_val,
 				'hd_purchase_ongkir'			=> $footer_total_ongkir_val,
 				'hd_purchase_dp'				=> 0,
 				'hd_purchase_grand_total'		=> $footer_total_invoice_val,
-				'hd_purchase_remaining_debt'	=> $footer_total_invoice_val,
+				'hd_purchase_remaining_debt'	=> $remaingin_debt,
 				'hd_purchase_note'				=> $purchase_remark,
 				'created_by'					=> $user_id
 			);	
@@ -486,6 +495,7 @@ class Purchase extends CI_Controller {
 			}
 
 			$this->purchase_model->update_purchase_po($po_id);
+			$this->purchase_model->update_purchase_input_stock($po_id);
 
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Pembelian Cabang '.$warehouse_name.' Ref: '.$last_code,
@@ -603,12 +613,17 @@ class Purchase extends CI_Controller {
 			$search 			= $this->input->post('search');
 			$length 			= $this->input->post('length');
 			$start 			  	= $this->input->post('start');
+			$start_date        = $this->input->post('start_date');
+			$end_date          = $this->input->post('end_date');
+			$supplier_filter   = $this->input->post('supplier_filter');
+			$keterangan_filter = $this->input->post('keterangan_filter');
+			$status_filter     = $this->input->post('status_filter');
 
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->submission_list($search, $length, $start)->result_array();
-			$count_list = $this->purchase_model->submission_list_count($search)->result_array();
+			$list = $this->purchase_model->submission_list($search, $length, $start, $start_date, $end_date, $supplier_filter, $keterangan_filter, $status_filter)->result_array();
+			$count_list = $this->purchase_model->submission_list_count($search, $start_date, $end_date, $supplier_filter, $keterangan_filter, $status_filter)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -909,6 +924,14 @@ class Purchase extends CI_Controller {
 					$hd_po_status = '<span class="badge badge-danger">Batal</span>';
 				}
 
+				if($field['hd_po_status'] == 'Pending'){
+					$hd_po_status_input = '<span class="badge badge-primary">Pending</span>';
+				}else if($field['hd_po_status'] == 'Success'){
+					$hd_po_status_input = '<span class="badge badge-success">Selesai</span>';
+				}else{
+					$hd_po_status_input = '<span class="badge badge-danger">Batal</span>';
+				}
+
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
 					$detail = '<a href="'.base_url().'Purchase/detailpo?id='.$field['hd_po_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_po_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
@@ -936,6 +959,12 @@ class Purchase extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				if($check_auth[0]->view == 'Y'){
+					$note = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" onclick="note('.$field['hd_po_id'].')" data-toggle="tooltip" title="Print Memo"><i class="fas fa-sticky-note sizing-fa"></i></button> ';
+				}else{
+					$note = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" onclick="edit('.$field['hd_po_id'].')"><i class="fas fa-sticky-note sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
+				}
+
 				$date = date_create($field['hd_po_date']); 
 
 				$no++;
@@ -949,8 +978,9 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['dt_po_qty'];
 				$row[] 	= 'Rp. '.number_format($field['hd_po_grand_total']);
 				$row[] 	= $hd_po_status;
+				$row[] 	= $hd_po_status_input;
 				$row[] 	= $field['hd_po_status_delivery'];
-				$row[] 	= $detail.$edit.$delete;
+				$row[] 	= $detail.$edit.$delete.$note;
 				$data[] = $row;
 			}
 
@@ -968,6 +998,30 @@ class Purchase extends CI_Controller {
 
 	}
 
+	public function printponote()
+	{
+		$modul = 'PO';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$po_id = $this->input->get('id');
+			$header_po['header_po'] = $this->purchase_model->header_po($po_id);
+			$detail_po['detail_po'] = $this->purchase_model->detail_po($po_id);
+			$data['data'] = array_merge($header_po, $detail_po);
+			$this->load->view('Pages/Purchase/printmemo', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function clear_temp_po()
+	{
+		$user_id   					= $_SESSION['user_id'];
+		$this->purchase_model->clear_temp_po($user_id);
+		echo json_encode(['code'=>200, 'result'=>'Success Clear Temp']);
+		die();
+	}
+	
 	public function editpo()
 	{
 		$modul = 'PO';
@@ -991,6 +1045,7 @@ class Purchase extends CI_Controller {
 				$temp_total_weight			= $row->dt_po_total_weight;
 				$temp_ongkir_val			= $row->dt_po_total_ongkir;
 				$temp_total_val				= $row->dt_po_total;
+				$temp_note_val				= $row->dt_po_note;
 
 				$data_insert = array(
 					'temp_submission_id'	=> $submission_id,
@@ -1004,6 +1059,7 @@ class Purchase extends CI_Controller {
 					'temp_po_total_weight'	=> $temp_total_weight,
 					'temp_po_total_ongkir'	=> $temp_ongkir_val,
 					'temp_po_total'			=> $temp_total_val,
+					'temp_po_note'			=> $temp_note_val,
 					'temp_user_id'			=> $user_id,
 				);
 
@@ -1111,6 +1167,7 @@ class Purchase extends CI_Controller {
 			$temp_total_weight 			= $this->input->post('temp_total_weight');
 			$temp_ongkir_val 			= $this->input->post('temp_ongkir_val');
 			$temp_total_val 			= $this->input->post('temp_total_val');
+			$temp_note 					= $this->input->post('temp_note');
 			$user_id 					= $_SESSION['user_id'];
 
 			$check_temp_po_input = $this->purchase_model->check_temp_po_input($product_id, $user_id);
@@ -1126,9 +1183,11 @@ class Purchase extends CI_Controller {
 				'temp_po_total_weight'	=> $temp_total_weight,
 				'temp_po_total_ongkir'	=> $temp_ongkir_val,
 				'temp_po_total'			=> $temp_total_val,
+				'temp_po_note'			=> $temp_note,
 				'temp_user_id'			=> $user_id,
 			);	
 			$msg = 'Success Tambah';
+
 			if($check_temp_po_input != null){
 				$this->purchase_model->edit_temp_po($product_id, $user_id, $data_insert);
 			}else{
@@ -1173,6 +1232,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['temp_po_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_po_total']);
+				$row[] 	= $field['temp_po_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
 			}
@@ -1242,10 +1302,17 @@ class Purchase extends CI_Controller {
 			$due_date = null;
 		}else{
 			if($po_top != 0){
-				$po_top = $po_top - 1;
-				$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
+				if($po_top == 'CBD'){
+					$due_date = date('Y-m-d');
+				}else{
+					$po_top = $po_top - 1;
+					$due_date = date('Y-m-d', strtotime("+".$po_top." day"));
+				}
+			}else{
+				$due_date = date('Y-m-d');
 			}
 		}
+	
 		echo json_encode(['code'=>200, 'result'=>$due_date]);
 		die();
 	}
@@ -1368,6 +1435,7 @@ class Purchase extends CI_Controller {
 					'dt_po_total_weight'	=> $row['temp_po_total_weight'],
 					'dt_po_total_ongkir'	=> $row['temp_po_total_ongkir'],
 					'dt_po_total'			=> $row['temp_po_total'],
+					'dt_po_note'			=> $row['temp_po_note'],
 				);	
 
 				$dt_product_id = $row['temp_product_id'];
@@ -1525,7 +1593,7 @@ class Purchase extends CI_Controller {
 			$get_temp_po = $this->purchase_model->get_temp_po($user_id)->result_array();
 			foreach($get_temp_po  as $row){
 				$data_insert_detail = array(
-					'hd_po_id'				=> $save_po,
+					'hd_po_id'				=> $purchase_order_id,
 					'submission_id'			=> $row['temp_submission_id'],
 					'submission_inv'		=> $row['temp_submission_inv'],
 					'dt_product_id'			=> $row['temp_product_id'],
@@ -1536,9 +1604,11 @@ class Purchase extends CI_Controller {
 					'dt_po_total_weight'	=> $row['temp_po_total_weight'],
 					'dt_po_total_ongkir'	=> $row['temp_po_total_ongkir'],
 					'dt_po_total'			=> $row['temp_po_total'],
+					'dt_po_note'			=> $row['temp_po_note'],
 				);	
 
 				$dt_product_id = $row['temp_product_id'];
+				$clear_detail_po = $this->purchase_model->clear_detail_po($purchase_order_id);
 				$save_detail_po = $this->purchase_model->save_detail_po($data_insert_detail);
 
 				$check_supplier_stock = $this->purchase_model->check_supplier_stock($dt_product_id, $supplier_id);
@@ -1668,25 +1738,19 @@ class Purchase extends CI_Controller {
 		$modul = 'WarehouseInput';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$search 			= $this->input->post('search');
-			$length 			= $this->input->post('length');
-			$start 			  	= $this->input->post('start');
-
-			if($this->input->post('start_date_val') != null){
-				$start_date_val 	 = $this->input->post('start_date_val');
-				$end_date_val 		 = $this->input->post('end_date_val');
-				$supplier_filter_val = $this->input->post('supplier_filter_val');
-			}else{
-				$start_date_val 	 = "";
-				$end_date_val 		 = "";
-				$supplier_filter_val = "";
-			}
+			$search 			 = $this->input->post('search');
+			$length 			 = $this->input->post('length');
+			$start 			  	 = $this->input->post('start');
+			$start_date_val 	 = $this->input->post('start_date');
+			$end_date_val 		 = $this->input->post('end_date');
+			$warehouse_filter_val = $this->input->post('warehouse_filter');
+			$supplier_filter_val 	 = $this->input->post('supplier_filter');
 
 			if($search != null){
 				$search = $search['value'];
 			}
-			$list = $this->purchase_model->warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
-			$count_list = $this->purchase_model->warehouseinput_list_count($search, $start_date_val, $end_date_val, $supplier_filter_val)->result_array();
+			$list = $this->purchase_model->warehouseinput_list($search, $length, $start, $start_date_val, $end_date_val, $warehouse_filter_val, $supplier_filter_val)->result_array();
+			$count_list = $this->purchase_model->warehouseinput_list_count($search, $start_date_val, $end_date_val, $warehouse_filter_val, $supplier_filter_val)->result_array();
 			$total_row = $count_list[0]['total_row'];
 			$data = array();
 			$no = $_POST['start'];
@@ -1753,8 +1817,9 @@ class Purchase extends CI_Controller {
 		$modul = 'WarehouseInput';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
 			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
-			$this->load->view('Pages/Purchase/warehouseinput', $supplier_list);
+			$this->load->view('Pages/Purchase/warehouseinput', array_merge($warehouse_list, $supplier_list));
 		}else{
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -1844,6 +1909,12 @@ class Purchase extends CI_Controller {
 		}
 	}
 
+	public function clear_temp_input_stock()
+	{
+		$user_id = $_SESSION['user_id'];
+		$this->purchase_model->clear_temp_input_stock($user_id);
+		echo json_encode(['code'=>200]);die();
+	}
 	public function copy_po_to_temp()
 	{
 		$modul = 'WarehouseInput';
@@ -1864,6 +1935,7 @@ class Purchase extends CI_Controller {
 					'temp_is_po_code'			=> $row->hd_po_invoice,
 					'temp_is_warehouse'			=> $row->hd_po_warehouse,
 					'temp_is_ekspedisi'			=> $row->hd_po_ekspedisi,
+					'temp_is_note'				=> $row->dt_po_note,
 					'temp_is_user_id'			=> $user_id,
 				);	
 

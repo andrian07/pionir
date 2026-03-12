@@ -234,6 +234,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>SKU</th>
                     <th>produk</th>
                     <th>Satuan</th>
+                    <th>Harga</th>
+                    <th>Harga Jual (Toko)</th>
                     <th>Qty</th>
                     <th>Ongkir</th>
                     <th>Total</th>
@@ -537,7 +539,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8},
+        {data: 9}
       ]
     });
     check_tempt_data();
@@ -715,10 +719,71 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let temp_weight = $('#temp_weight').val();
       let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
       temp_ongkir.set(temp_ongkir_val);
-      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val * temp_qty_val;
       temp_total.set(temp_total_val);
     }
   })
+
+  $('#edit_footer_discount_percentage1').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage1_val = parseInt(edit_footer_discount_percentage1.get());
+    let edit_footer_discount1_val = footer_sub_total_val * edit_footer_discount_percentage1_val / 100;
+    edit_footer_discount1.set(edit_footer_discount1_val);
+  })
+
+  $('#edit_footer_discount_percentage2').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage2_val = parseInt(edit_footer_discount_percentage2.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = (footer_sub_total_val - edit_footer_discount1_val) * edit_footer_discount_percentage2_val / 100;
+    edit_footer_discount2.set(edit_footer_discount2_val);
+  })
+
+  $('#edit_footer_discount_percentage3').on('input', function (event) {
+    let footer_sub_total_val = parseInt(footer_sub_total.get());
+    let edit_footer_discount_percentage3_val = parseInt(edit_footer_discount_percentage3.get());
+    let edit_footer_discount1_val = parseInt(edit_footer_discount1.get());
+    let edit_footer_discount2_val = parseInt(edit_footer_discount2.get());
+    let edit_footer_discount3_val = (footer_sub_total_val - edit_footer_discount1_val - edit_footer_discount2_val) * edit_footer_discount_percentage3_val / 100;
+    edit_footer_discount3.set(edit_footer_discount3_val);
+  })
+
+   $('#btneditdisc').click(function(e){
+      e.preventDefault();
+
+      var edit_footer_discount_percentage1_pop  = parseInt(edit_footer_discount_percentage1.get());
+      var edit_footer_discount_percentage2_pop  = parseInt(edit_footer_discount_percentage2.get());
+      var edit_footer_discount_percentage3_pop  = parseInt(edit_footer_discount_percentage3.get());
+
+      var edit_footer_discount1_pop  = parseInt(edit_footer_discount1.get());
+      var edit_footer_discount2_pop  = parseInt(edit_footer_discount2.get());
+      var edit_footer_discount3_pop  = parseInt(edit_footer_discount3.get());
+
+      var footer_sub_total_val  = parseInt(footer_sub_total.get());
+      var footer_total_ongkir_val = parseInt(footer_total_ongkir.get());
+      var purchase_tax = $('#purchase_tax').val();
+
+      var total_disc = edit_footer_discount1_pop + edit_footer_discount2_pop + edit_footer_discount3_pop;
+      footer_total_discount.set(total_disc);
+
+      let dpp = footer_sub_total_val - total_disc;
+      footer_dpp.set(dpp);
+
+      console.log(purchase_tax);
+
+      let ppn = 0; // deklarasi di luar if
+
+      if(purchase_tax == 'PPN'){
+          ppn = dpp * 11 / 100;
+      }
+
+      footer_total_ppn.set(ppn);
+
+      let total_all_invoice = dpp + ppn + footer_total_ongkir_val;
+      footer_total_invoice.set(total_all_invoice);
+
+      $('#footerdiscount').modal('hide');
+  });
    
   $('#temp_weight').on('input', function (event) {
     let temp_qty_val = $('#temp_qty').val();
@@ -735,7 +800,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let temp_weight = $('#temp_weight').val();
       let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
       temp_ongkir.set(temp_ongkir_val);
-      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val * temp_qty_val;
       temp_total.set(temp_total_val);
     }
   })

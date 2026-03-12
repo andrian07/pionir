@@ -75,6 +75,39 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                 </div>
               </div>
+
+              <div class="modal fade" id="print" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">PRINT</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                      <label for="inlineinput" class="col-md-8 col-form-label">Jenis Print: </label>
+                      <div class="col-md-12 p-0">
+                        <select class="form-control input-full" id="print_type" name="print_type">
+                          <option value="">-- Pilih Jenis Print --</option>
+                          <option value="1">Nota Item</option>
+                          <option value="2">Alamat Pengambilan</option>
+                          <option value="3">Nota Lunas</option> 
+                          <option value="4">Nota Piutang</option>
+                          <option value="5">Surat Jalan</option> 
+                        </select>
+
+                        <input type="hidden" id="sales_id" name="sales_id" value="">
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                      <button type="button" id="btnprint" class="btn btn-primary"><i class="fas fa-search"></i> Print</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="card-body">
@@ -144,18 +177,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8},
-        {data: 9},
-        {data: 10},
-        {data: 11}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8},
+      {data: 9},
+      {data: 10},
+      {data: 11}
       ]
     });
   }
@@ -208,5 +241,31 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     $('#exampleModaledit').modal('hide');
   });
 
+  $('#btnprint').on('click', function () {
+
+    var print_type = $('#print_type').val(); // ambil dari id yang benar
+    if(print_type != '') {
+      let print_type       = $('#print_type').val();
+      let sales_id         = $('#sales_id').val();
+      let url = '<?php echo base_url(); ?>Sales/printnota?';
+      url += '&print_type=' + print_type;
+      url += '&sales_id=' + sales_id;
+      window.open(url, '_blank');
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Silakan pilih Jenis Print terlebih dahulu',
+      })
+    }
+  });
+
+
+  $('#print').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var id   = button.data('id')
+    var modal = $(this)
+    modal.find('#sales_id').val(id)
+  })
 
 </script>

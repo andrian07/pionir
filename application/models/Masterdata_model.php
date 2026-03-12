@@ -463,7 +463,7 @@ class masterdata_model extends CI_Model {
             $this->db->where('ms_product.product_brand like "%'.$brand_filter.'%"');
         }
         if($product_status_filter != null){
-            $this->db->where('ms_product.product_status like "%'.$product_status_filter.'%"');
+            $this->db->where('ms_product.product_status', $product_status_filter);
         }
         if($in_transit_filter != null){
             if($in_transit_filter == 1){
@@ -504,7 +504,7 @@ class masterdata_model extends CI_Model {
             $this->db->where('ms_product.product_brand like "%'.$brand_filter.'%"');
         }
         if($product_status_filter != null){
-            $this->db->where('ms_product.product_status like "%'.$product_status_filter.'%"');
+            $this->db->where('ms_product.product_status', $product_status_filter);
         }
         if($in_transit_filter != null){
             if($in_transit_filter == 1){

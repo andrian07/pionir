@@ -120,6 +120,19 @@
     });
   });
 
+  
+  $('body').on('shown.bs.modal', '.filter', function() {
+    $(this).find('.js-example-basic-single').each(function() {
+      var dropdownParent = $(document.body);
+      if ($(this).parents('#myModalsearch').length !== 0)
+        dropdownParent = $("#myModalsearch");
+      $(this).select2({
+        dropdownParent: $("#myModalsearch")
+      // ...
+      });
+    });
+  });
+
   $('#reload').click(function(e){
     e.preventDefault();
     location.reload();

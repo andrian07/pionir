@@ -27,7 +27,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Filter PO</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Filter Input Gudang</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -48,10 +48,10 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         </div>
 
                         <div class="form-group form-inline">
-                          <label for="inlineinput" class="col-md-3 col-form-label">Warehouse: </label>
+                          <label for="inlineinput" class="col-md-3 col-form-label">Gudang: </label>
                           <div class="col-md-12 p-0">
                             <select class="form-control input-full js-example-basic-single" id="warehouse_filter" name="warehouse_filter">
-                              <option value="">-- Pilih Supplier --</option>
+                              <option value="">-- Pilih Gudang --</option>
                               <?php foreach ($warehouse_list as $row) { ?>
                                 <option value="<?php echo $row->warehouse_id; ?>"><?php echo $row->warehouse_name; ?></option>  
                               <?php } ?>
@@ -59,9 +59,21 @@ require DOC_ROOT_PATH . $this->config->item('header');
                           </div>
                         </div>
 
+                        <div class="form-group form-inline">
+                          <label for="inlineinput" class="col-md-3 col-form-label">Supplier: </label>
+                          <div class="col-md-12 p-0">
+                            <select class="form-control input-full js-example-basic-single" id="supplier_filter" name="supplier_filter">
+                              <option value="">-- Pilih Supplier --</option>
+                              <?php foreach ($supplier_list as $row) { ?>
+                                <option value="<?php echo $row->supplier_id; ?>"><?php echo $row->supplier_name; ?></option>  
+                              <?php } ?>
+                            </select>
+                          </div>
+                        </div>
+
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+                        <button id="btnreset" class="btn btn-danger"><i class="fas fa-times-circle"></i> Reset</button>
                         <button type="button" id="btnsearch" class="btn btn-warning"><i class="fas fa-search"></i> Cari</button>
                       </div>
                     </div>
@@ -112,9 +124,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     purchaseorder_table();
   });
 
-  var start_date_val      = $("#start_date").val();
-  var end_date_val        = $("#end_date").val();
-  var supplier_filter_val = $("#supplier_filter").val();
 
   function purchaseorder_table(){
     $('#warehouse-input-list').DataTable( {
@@ -126,7 +135,12 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       ajax: {
         url: '<?php echo base_url(); ?>Purchase/warehouseinput_list',
         type: 'POST',
-        data:  {start_date_val:start_date_val, end_date_val:end_date_val, supplier_filter_val:supplier_filter_val},
+         data: function(d){
+          d.start_date        = $('#start_date').val();
+          d.end_date          = $('#end_date').val();
+          d.warehouse_filter   = $('#warehouse_filter').val();
+          d.supplier_filter    = $('#supplier_filter').val();
+        }
       },
       columns: 
       [
@@ -180,13 +194,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     })
   }
 
-  $("#btnsearch").click(function (e) {
-    var start_date      = $("#start_date").val();
-    var end_date        = $("#end_date").val();
-    var warehouse_filter = $("#warehouse_filter").val();
-    window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&warehouse_filter="+warehouse_filter;
-    Swal.fire('Saved!', '', 'success');
+  $('#btnreset').click(function(){
+    $('#start_date').val('');
+    $('#end_date').val('');
+    $('#warehouse_filter').val('');
+    $('#warehouse-input-list').DataTable().ajax.reload();
+    $('#exampleModaledit').modal('hide');
   });
 
-  
+  $('#btnsearch').click(function(){
+    $('#warehouse-input-list').DataTable().ajax.reload();
+      var modal = bootstrap.Modal.getInstance(document.getElementById('myModalsearch'));
+      $('#exampleModaledit').modal('hide');
+  });
+    
 </script>

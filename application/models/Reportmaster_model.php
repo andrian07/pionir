@@ -59,10 +59,10 @@ class Reportmaster_model extends CI_Model {
             $this->db->where('ms_product.product_brand = "'.$brand_report.'"');
         }
         if($category_report != null){
-            $this->db->where('ms_product.product_brand = "'.$category_report.'"');
+            $this->db->where('ms_product.product_category = "'.$category_report.'"');
         }
-        if(!$Supplier_report != null){
-            $this->db->where('ms_product.product_brand like "%'.$Supplier_report.'%"');
+        if($Supplier_report != null){
+            $this->db->where('ms_product.product_supplier_tag like "%'.$Supplier_report.'%"');
         }
         $query = $this->db->get();
         return $query;

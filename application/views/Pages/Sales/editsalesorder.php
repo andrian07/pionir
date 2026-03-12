@@ -162,6 +162,13 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 </div>
               </div>
 
+              
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label>Curent Stock</label>
+										<input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
+									</div>
+								</div>
 
               <div class="col-sm-2">
                 <div class="form-group">
@@ -183,7 +190,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <input id="temp_note" name="temp_note" type="text" class="form-control text-left" >
                 </div>
               </div>
-              <div class="col-sm-7">
+              <div class="col-sm-5">
 
                 <!-- text input -->
 
@@ -595,10 +602,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_name = ui.item.product_name;
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
+      
+			let curent_stock = ui.item.curent_stock;
       $('#product_name').val(product_name);
       $('#product_id').val(id);
       $('#temp_rate').val('Umum');
       $('#temp_rate').trigger('change');
+      
+			if(curent_stock == null){
+				$('#curent_stock').val(0);
+			}else{
+				$('#curent_stock').val(curent_stock);
+			}
       temp_price.set(product_price);
     },
   });

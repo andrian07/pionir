@@ -527,7 +527,7 @@ class Reportmaster extends CI_Controller {
 			$sheet->setTitle("Excell");
 			ob_end_clean();
 			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-			header('Content-Disposition: attachment;filename="saelsman_' .date('Y-m-d') . '.xlsx"');
+			header('Content-Disposition: attachment;filename="salesman_' .date('Y-m-d') . '.xlsx"');
 			header('Cache-Control: max-age=0');
 
 			$xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');

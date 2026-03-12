@@ -550,12 +550,14 @@ class Payment extends CI_Controller {
 					$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 				}
 
+				$date = date_create($field['payment_receivable_date']); 
+
 				$no++;
 				$row = array();
 				$row[] 	= $field['customer_code'];
 				$row[] 	= $field['customer_name'];
-				$row[] 	= $field['customer_address'];
-				$row[] 	= $field['customer_phone'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['payment_name'];
 				$row[] 	= $field['payment_receivable_total_nota'];
 				$row[] 	= number_format($field['payment_receivable_total_pay']);
 				$row[] 	= $status;

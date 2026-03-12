@@ -18,7 +18,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <h3 class="fw-bold mb-3">Daftar Produk</h3>
               </div>
               <div class="ms-md-auto py-2 py-md-0">
-                <button class="btn btn-warning" data-bs-toggle="myModalsearch" data-bs-target=".filter" type="button"><span class="btn-label"><i class="fas fa-search"></i></span> Filter </button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModalsearch" type="button">
+                  <span class="btn-label"><i class="fas fa-search"></i></span> Filter
+                </button>
                 <div class="modal fade filter" id="myModalsearch" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
                   <div class="modal-dialog modal-md">
                     <div class="modal-content">
@@ -648,7 +650,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           $('#product-list').DataTable().ajax.reload();
-          $('#myModal').modal('toggle');
+          $('#myModalsearch').modal('hide');
         }
       }
     });
@@ -902,5 +904,6 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     e.preventDefault();
     location.reload();
   });
+  
 
 </script>

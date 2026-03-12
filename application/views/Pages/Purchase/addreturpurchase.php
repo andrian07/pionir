@@ -375,7 +375,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let temp_weight = $('#temp_weight').val();
       let temp_ongkir_val = temp_delivery_price_val / 1000 * temp_weight;
       temp_ongkir.set(temp_ongkir_val);
-      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val;
+      let temp_total_val = temp_price_val * temp_qty_val + temp_ongkir_val * temp_qty_val;
       temp_total.set(temp_total_val);
     }
   })

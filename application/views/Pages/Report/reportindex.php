@@ -122,18 +122,26 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                   <div class="card-body">
                     <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Laporan Sales Order</span>
-                      </li>
-                      <li>
-                        <span class="name-specification">Laporan Penjualan</span>
-                      </li>
+                      <a href="<?php echo base_url(); ?>Reportsales/reportsalesorder">
+                        <li>
+                          <span class="name-specification">Laporan Sales Order</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportsales/reportsaless">
+                        <li>
+                          <span class="name-specification">Laporan Penjualan</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportsales/reportrevisisales">
                       <li>
                         <span class="name-specification">Laporan Revisi Penjualan</span>
                       </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportsales/reportretursales">
                       <li>
                         <span class="name-specification">Laporan Retur Penjualan</span>
                       </li>
+                      </a>
                     </ul>
                   </div>
                 </div>
@@ -146,18 +154,26 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                   <div class="card-body">
                     <ul class="specification-list">
-                      <li>
-                        <span class="name-specification">Laporan Hutang Jatuh Tempo</span>
-                      </li>
+                      <a href="<?php echo base_url(); ?>Reportpayment/reportdebtduedate">
+                        <li>
+                          <span class="name-specification">Laporan Hutang Jatuh Tempo</span>
+                        </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportpayment/reportrepaymentduedate">
                       <li>
                         <span class="name-specification">Laporan Piutang Jatuh Tempo</span>
                       </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportpayment/reportrepayments">
                       <li>
                         <span class="name-specification">Laporan Pelunasan Hutang</span>
                       </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportpayment/reportpiutang">
                       <li>
                         <span class="name-specification">Laporan Pelunasan Piutang</span>
                       </li>
+                      </a>
                     </ul>
                   </div>
                 </div>
@@ -171,9 +187,16 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   </div>
                   <div class="card-body">
                     <ul class="specification-list">
+                      <a href="<?php echo base_url(); ?>Reportstock/stockist">
                       <li>
                         <span class="name-specification">Laporan Stok</span>
                       </li>
+                      </a>
+                      <a href="<?php echo base_url(); ?>Reportstock/stockcard">
+                      <li>
+                        <span class="name-specification">Laporan Kartu Stok</span>
+                      </li>
+                      </a>
                     </ul>
                   </div>
                 </div>

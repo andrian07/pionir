@@ -100,7 +100,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan Oleh :</label>
             <div class="col-sm-3">
-              <input id="sales_order_prepare" name="sales_prepare" type="text" class="form-control">
+              <input id="sales_prepare" name="sales_prepare" type="text" class="form-control">
             </div>
 
             <label for="tanggal" class="col-sm-1 col-form-label text-right">User :</label>
@@ -127,9 +127,38 @@ require DOC_ROOT_PATH . $this->config->item('header');
             </div>
           </div>
 
+          <div class="form-group row">
+							<label for="noinvoice" class="col-sm-1 col-form-label text-right">Dropship :</label>
+							<div class="col-sm-3">
+								<select class="form-control input-full js-example-basic-single" id="drop_ship" name="drop_ship">
+									<option value="N">Tidak</option>
+									<option value="Y">Ya</option>
+								</select>
+							</div>
+						</div>
+
         </div>
       </div>
     </div>
+
+    	<div class="row" style="display:none;" id="dropship-container">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6">
+								<label>Nama:</label>
+								<input id="dropship_name" name="dropship_name" type="text" class="form-control" placeholder="Nama Dropship Pelanggan">
+								<label style="margin-top:10px;">No Telp:</label>
+								<input id="dropship_phone" name="dropship_phone" type="text" class="form-control" placeholder="Telp Dropship Pelanggan">
+							</div>
+							<div class="col-md-6">
+                <label>Alamat:</label>
+								<textarea id="dropship_address" name="dropship_address" class="form-control" placeholder="Alamat Dropship" maxlength="500" rows="4"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
     <div class="col-md-12">
       <div class="card">
@@ -656,6 +685,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             $('#sales_salesman').trigger('change');
             $('#sales_prepare').val(row.hd_sales_prepare);
             $('#sales_colly').val(row.hd_sales_colly);
+            $('#drop_ship').val(row.hd_sales_dropship);
+            $('#drop_ship').trigger('change');
+            if(row.hd_sales_dropship == 'Y'){
+              $('#dropship_name').val(row.hd_sales_dropship_name);
+              $('#dropship_phone').val(row.hd_sales_dropship_phone);
+            	$('#dropship_address').val(row.hd_sales_dropship_address);
+            }else{
+              $('#dropship_name').val("");
+              $('#dropship_phone').val("");
+            	$('#dropship_address').val("");
+            }
+
             $('#sales_warehouse').val(row.hd_sales_warehouse);
             $('#sales_warehouse').trigger('change');
             $('#sales_ekspedisi').val(row.hd_sales_ekspedisi);
@@ -768,6 +809,18 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     calculation_total_temp();
   })
 
+  $('#drop_ship').on('change', function() {
+		var value = $(this).val();
+		if (value == 'Y') {
+			$('#dropship-container').show();
+		}else{
+			$('#dropship-container').hide();
+      $('#dropship_name').val("");
+      $('#dropship_phone').val("");
+			$('#dropship_address').val("");
+		}
+	});
+
   function calculation_total_temp()
   {
     let temp_price_val     = parseInt(temp_price.get());
@@ -879,6 +932,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_rate_customer                      = $("#sales_rate_customer").val();
     var sales_payment                            = $("#sales_payment").val();
     var sales_top_id                             = $("#sales_top").val();
+    var drop_ship                                = $("#drop_ship").val();
+    var dropship_name                            = $("#dropship_name").val();
+    var dropship_phone                           = $("#dropship_phone").val();
+    var dropship_address                         = $("#dropship_address").val();
     var sales_top                                = $("#sales_top option:selected").text();
     var sales_salesman                           = $("#sales_salesman").val();
     var sales_prepare                            = $("#sales_prepare").val();
@@ -904,7 +961,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       type: "POST",
       url: "<?php echo base_url(); ?>Sales/save_sales_revisi",
       dataType: "json",
-      data: {sales_customer:sales_customer, sales_type:sales_type, sales_inv_sales:sales_inv_sales, sales_inv_id:sales_inv_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
+      data: {sales_customer:sales_customer, sales_type:sales_type, sales_inv_sales:sales_inv_sales, sales_inv_id:sales_inv_id, sales_rate_customer:sales_rate_customer, sales_payment:sales_payment, sales_top_id:sales_top_id, sales_top:sales_top, drop_ship:drop_ship, dropship_name:dropship_name, dropship_phone:dropship_phone, dropship_address:dropship_address, sales_salesman:sales_salesman, sales_prepare:sales_prepare, sales_colly:sales_colly, sales_warehouse:sales_warehouse, sales_ekspedisi:sales_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_remark:sales_remark, sales_due_date:sales_due_date, sales_date:sales_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/revisisalespage";

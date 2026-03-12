@@ -97,8 +97,9 @@
             <th scope="col">SKU</th>
             <th scope="col">produk</th>
             <th scope="col">Satuan</th>
+            <th scope="col">Harga Beli</th>
             <th scope="col">Qty</th>
-            <th scope="col">Ongkir</th>
+            <th scope="col">Ongkir / PCS</th>
             <th scope="col">Total</th>
             <th scope="col">Catatan</th>
           </tr>
@@ -109,8 +110,9 @@
               <td><?php echo $row->product_code; ?></td>
               <td><?php echo $row->product_name; ?></td>
               <td><?php echo $row->unit_name; ?></td>
+              <td><?php echo 'Rp. '.number_format($row->dt_purchase_price); ?></td>
               <td><?php echo $row->dt_purchase_qty; ?></td>
-              <td><?php echo number_format($row->dt_purchase_total_ongkir); ?></td>
+              <td><?php echo 'Rp. '.number_format($row->dt_purchase_ongkir); ?></td>
               <td><?php echo number_format($row->dt_purchase_total); ?></td>
               <td><?php echo $row->dt_purchase_note; ?></td>
             </tr>
@@ -156,9 +158,17 @@
               <td scope="col"><b>Sub Total: </b></td>
               <td scope="col">Rp. <?php echo number_format($row->hd_purchase_sub_total); ?></td>
             </tr>
+             <tr>
+              <td scope="col"><b>Diskon 1: (<?php echo $row->hd_purchase_disc_percentage1; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_disc_1); ?></td>
+            </tr>
             <tr>
-              <td scope="col"><b>Diskon: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_total_discount); ?></td>
+              <td scope="col"><b>Diskon 2: (<?php echo $row->hd_purchase_disc_percentage2; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_disc_2); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 3: (<?php echo $row->hd_purchase_disc_percentage3; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_purchase_disc_3); ?></td>
             </tr>
             <tr>
               <td scope="col"><b>DPP: </b></td>

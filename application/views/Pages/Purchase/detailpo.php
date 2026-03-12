@@ -98,8 +98,9 @@
             <th scope="col">SKU</th>
             <th scope="col">produk</th>
             <th scope="col">Satuan</th>
+            <th scope="col">Harga Beli</th>
             <th scope="col">Qty</th>
-            <th scope="col">Ongkir</th>
+            <th scope="col">Ongkir Per Pcs</th>
             <th scope="col">Total</th>
           </tr>
         </thead>
@@ -110,8 +111,9 @@
               <td><?php echo $row->product_code; ?></td>
               <td><?php echo $row->product_name; ?></td>
               <td><?php echo $row->unit_name; ?></td>
+              <td><?php echo number_format($row->dt_po_price); ?></td>
               <td><?php echo $row->dt_po_qty; ?></td>
-              <td><?php echo number_format($row->dt_po_total_ongkir); ?></td>
+              <td><?php echo number_format($row->dt_po_ongkir); ?></td>
               <td><?php echo number_format($row->dt_po_total); ?></td>
             </tr>
           <?php } ?>
@@ -157,8 +159,16 @@
               <td scope="col">Rp. <?php echo number_format($row->hd_po_sub_total); ?></td>
             </tr>
             <tr>
-              <td scope="col"><b>Diskon: </b></td>
-              <td scope="col">Rp. <?php echo number_format($row->hd_po_total_discount); ?></td>
+              <td scope="col"><b>Diskon 1: (<?php echo $row->hd_po_disc_percentage1; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_po_disc_1); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 2: (<?php echo $row->hd_po_disc_percentage2; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_po_disc_2); ?></td>
+            </tr>
+            <tr>
+              <td scope="col"><b>Diskon 3: (<?php echo $row->hd_po_disc_percentage3; ?> %)</b></td>
+              <td scope="col">Rp. <?php echo number_format($row->hd_po_disc_3); ?></td>
             </tr>
             <tr>
               <td scope="col"><b>DPP: </b></td>

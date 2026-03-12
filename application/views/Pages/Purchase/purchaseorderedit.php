@@ -193,6 +193,20 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
                 </div>
 
+                  <div class="col-sm-11">
+
+                  <!-- text input -->
+
+                  <div class="form-group">
+
+                    <label>Catatan</label>
+
+                    <input id="temp_note" name="temp_note" type="text" class="form-control">
+
+                  </div>
+
+                </div>
+
                 <div class="col-sm-1" style="padding-right: 62px;">
 
                   <!-- text input -->
@@ -218,9 +232,11 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>SKU</th>
                     <th>Produk</th>
                     <th>Satuan</th>
+                    <th>Harga Beli</th>
                     <th>Qty</th>
-                    <th>Ongkir</th>
+                    <th>Ongkir per pcs</th>
                     <th>Total</th>
+                    <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -509,7 +525,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8},
+        {data: 9},
       ]
     });
     check_tempt_data();
@@ -673,13 +691,14 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var temp_total_weight       = $("#temp_total_weight").val();
     var temp_ongkir_val         = parseInt(temp_ongkir.get());
     var temp_total_val          = parseInt(temp_total.get());
+    var temp_po_note            = $("#temp_note").val();
 
     if($('#formaddtemp').parsley().validate({force: true})){
       $.ajax({
         type: "POST",
         url: "<?php echo base_url(); ?>Purchase/add_temp_po",
         dataType: "json",
-        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, po_supplier:po_supplier, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val},
+        data: {submission_id:submission_id, submission_code:submission_code, product_id:product_id, po_supplier:po_supplier, temp_price_val:temp_price_val, temp_qty:temp_qty, temp_weight:temp_weight, temp_delivery_price_val:temp_delivery_price_val, temp_total_weight:temp_total_weight, temp_ongkir_val:temp_ongkir_val, temp_total_val:temp_total_val, temp_note:temp_po_note},
         success : function(data){
           if (data.code == "200"){
             let title = 'Tambah Data';
@@ -833,12 +852,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             $("#submission_id").val(0);
           }
           $("#product_name").val(row.product_name);
-          $("#product_id").val(row.submission_product_id);
+          $("#product_id").val(row.product_id);
           temp_price.set(row.temp_po_price);
           $("#temp_qty").val(row.temp_po_qty);
           $("#temp_weight").val(row.temp_po_weight);
           temp_delivery_price.set(row.temp_po_ongkir);
           $("#temp_total_weight").val(row.temp_po_total_weight);
+           $("#temp_note").val(row.temp_po_note);
           temp_ongkir.set(row.temp_po_total_ongkir);
           temp_total.set(row.temp_po_total);
         }
@@ -903,6 +923,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     $('#temp_weight').val('');
     temp_delivery_price.set(0);
     $('#temp_total_weight').val(0);
+    $('#temp_note').val('');
     temp_ongkir.set(0);
     temp_total.set(0);
   }

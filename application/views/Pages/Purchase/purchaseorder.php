@@ -85,7 +85,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Harga Satuan</th>
                   <th>Qty</th>
                   <th>Total Harga</th>
-                  <th>Status</th>
+                  <th>Status Input Pembelian</th>
+                  <th>Status Input Gudang</th>
                   <th>Status Pengiriman</th>
                   <th>Aksi</th>
                 </tr>
@@ -141,7 +142,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 7},
         {data: 8},
         {data: 9},
-        {data: 10}
+        {data: 10},
+        {data: 11}
       ]
     });
   }
@@ -196,6 +198,11 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     window.location.href = "<?php echo base_url(); ?>Purchase/po?start_date="+start_date+"&end_date="+end_date+"&supplier_filter="+supplier_filter;
     Swal.fire('Saved!', '', 'success');
   });
+
+  function note(id)
+  {
+    window.location.href = "<?php echo base_url(); ?>Purchase/printponote?id="+id;
+  }
 
   
 </script>
