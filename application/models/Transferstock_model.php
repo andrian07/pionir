@@ -9,6 +9,7 @@ class transferstock_model extends CI_Model {
         $this->db->from('hd_transfer_stock');
         $this->db->join('dt_transfer_stock', 'hd_transfer_stock.hd_transfer_stock_id = dt_transfer_stock.hd_transfer_stock_id');
         $this->db->join('ms_product', 'dt_transfer_stock.dt_transfer_stock_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->join('ms_warehouse AS from', 'dt_transfer_stock.dt_transfer_stock_warehouse_from = from.warehouse_id');
         $this->db->join('ms_warehouse AS to', 'dt_transfer_stock.dt_transfer_stock_warehouse_to = to.warehouse_id');
         $this->db->join('ms_user', 'hd_transfer_stock.user_id = ms_user.user_id');
@@ -27,12 +28,33 @@ class transferstock_model extends CI_Model {
         return $query;
     }
 
+    public function last_stock_from($product_id_check, $from_check)
+    {
+        $this->db->select('*');
+        $this->db->from('ms_product_stock');
+        $this->db->where('product_id', $product_id_check);
+        $this->db->where('warehouse_id', $from_check);
+        $query = $this->db->get();
+        return $query;
+    }
+
+     public function last_stock_to($product_id_check, $to_check)
+    {
+        $this->db->select('*');
+        $this->db->from('ms_product_stock');
+        $this->db->where('product_id', $product_id_check);
+        $this->db->where('warehouse_id', $to_check);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function transferstock_list_count($search)
     {
         $this->db->select('count(*) as total_row');
         $this->db->from('hd_transfer_stock');
         $this->db->join('dt_transfer_stock', 'hd_transfer_stock.hd_transfer_stock_id = dt_transfer_stock.hd_transfer_stock_id');
         $this->db->join('ms_product', 'dt_transfer_stock.dt_transfer_stock_product_id = ms_product.product_id');
+        $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->join('ms_warehouse AS from', 'dt_transfer_stock.dt_transfer_stock_warehouse_from = from.warehouse_id');
         $this->db->join('ms_warehouse AS to', 'dt_transfer_stock.dt_transfer_stock_warehouse_to = to.warehouse_id');
         $this->db->join('ms_user', 'hd_transfer_stock.user_id = ms_user.user_id');

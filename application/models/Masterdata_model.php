@@ -481,11 +481,10 @@ class masterdata_model extends CI_Model {
     public function product_list_count($search, $supplier_filter, $category_filter, $brand_filter, $product_status_filter, $in_transit_filter)
     {
         $this->db->select('count(*) as total_row');
-        $this->db->from('ms_product');
+         $this->db->from('ms_product');
         $this->db->join('ms_brand', 'ms_product.product_brand = ms_brand.brand_id');
         $this->db->join('ms_unit', 'ms_product.product_unit = ms_unit.unit_id');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
-        $this->db->join('dt_po', 'ms_product.product_id = dt_po.dt_product_id', 'left');
         $this->db->where('ms_product.is_active', 'y');
         if($search != null){
             $this->db->where('ms_product.product_name like "%'.$search.'%"');
@@ -510,7 +509,7 @@ class masterdata_model extends CI_Model {
             if($in_transit_filter == 1){
                 $this->db->where('ms_product.product_po_status = 0');
             }else{
-                $this->db->where('ms_product.product_po_status > 1');
+                $this->db->where('ms_product.product_po_status > 0');
             }
         }
         $query = $this->db->get();
@@ -610,7 +609,7 @@ class masterdata_model extends CI_Model {
 
     // search product //
 
-    public function search_product_list($searchin_key)
+    public function search_product_list($searchin_key, $unit, $category, $brand, $supplier, $status, $paket, $ppn)
     {
         $this->db->select('*, sum(stock) as total_stock');
         $this->db->from('ms_product');
@@ -619,6 +618,27 @@ class masterdata_model extends CI_Model {
         $this->db->join('ms_product_stock', 'ms_product.product_id = ms_product_stock.product_id', 'left');
         $this->db->join('ms_category', 'ms_product.product_category = ms_category.category_id');
         $this->db->where('ms_product.is_active', 'y');
+        if($unit != null) {
+            $this->db->where('ms_product.product_unit', $unit);
+        }
+        if($category != null) {
+            $this->db->where('ms_product.product_category', $category);
+        }
+        if($brand != null) {
+            $this->db->where('ms_product.product_brand', $brand);
+        }
+        if($supplier != null) {
+            $this->db->where('ms_product.product_supplier_tag like "%'.$supplier.'%"');
+        }
+        if($status != null) {
+            $this->db->where('ms_product.product_status', $status);
+        }
+        if($paket != null) {
+            $this->db->where('ms_product.is_package', $paket);
+        }
+        if($ppn != null) {
+            $this->db->where('ms_product.is_ppn', $ppn);
+        }   
         if($searchin_key != null){
             $this->db->where('ms_product.product_name like "%'.$searchin_key.'%"');
             $this->db->or_where('ms_product.product_code like "%'.$searchin_key.'%"');

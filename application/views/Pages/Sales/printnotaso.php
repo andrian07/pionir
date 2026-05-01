@@ -58,7 +58,7 @@
 <body>
 
 <div class="receipt">
-    <?php foreach($data['header_sales'] as $header){ ?>
+    <?php foreach($data['header_sales_so'] as $header){ ?>
     <p>
         <?php 
             date_default_timezone_set('Asia/Jakarta');
@@ -67,7 +67,7 @@
                 'Wednesday'=>'Rabu','Thursday'=>'Kamis',
                 'Friday'=>'Jumat','Saturday'=>'Sabtu'
             ];
-            if($header->hd_sales_remaining_debt == 0){
+            if($header->hd_sales_order_remaining_debt == 0){
                 $status_sales = 'Lunas';
             }else{
                 $status_sales = 'Belum Lunas';
@@ -78,7 +78,7 @@
     
     <div class="line"></div>
 
-    <p><?php echo $header->hd_sales_inv; ?></p>
+    <p><?php echo $header->hd_sales_order_inv; ?></p>
     <p><?php echo $header->customer_name; ?></p>
     <p><?php echo $header->customer_address; ?></p>
     <div class="line"></div>
@@ -91,11 +91,11 @@
         </tr>
         <?php 
             $no = 1;
-            foreach($data['detail_sales'] as $detail){ 
+            foreach($data['detail_sales_so'] as $detail){ 
         ?>
         <tr>
             <td><?php echo $no++; ?></td>
-            <td><?php echo $detail->dt_sales_qty ?> x</td>
+            <td><?php echo $detail->dt_so_qty ?> x</td>
             <td><?php echo $detail->product_name ?></td>
         </tr>
         <?php } ?>

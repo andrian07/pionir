@@ -219,7 +219,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label>Keterangan:</label>
-										<input id="desc_item" name="desc_item" class="form-control text-left" required="">
+										<input id="desc_item" name="desc_item" class="form-control text-left">
 									</div>
 								</div>
 								<div class="col-sm-7">
@@ -867,6 +867,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 			success : function(data){
 				if (data.code == "200"){
 					$('#sales_due_date').val(data.result);
+					check_tempt_data();
 				}
 			}
 		});
@@ -1066,6 +1067,13 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 					footer_sub_total.set(sub_total);
 					footer_total_invoice.set(sub_total);
 					footer_remaining_debt.set(sub_total);
+					if($('#sales_order_top').val() == '0'){
+						footer_dp.set(sub_total);
+						footer_remaining_debt.set(0);
+					}else{
+						footer_dp.set(0);
+						footer_remaining_debt.set(sub_total);
+					}
 				}
 			}
 		});

@@ -228,6 +228,13 @@ class purchase_model extends CI_Model {
         return $result;
     }
 
+    public function update_submission_pending($submission_id_val)
+    {
+        $this->db->set('submission_status', 'Pending');
+        $this->db->where('submission_id  ', $submission_id_val);
+        $this->db->update('submission');
+    }
+    
     public function search_submission($search)
     {
         $this->db->select('*');

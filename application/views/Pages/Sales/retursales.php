@@ -55,8 +55,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <label for="inlineinput" class="col-md-3 col-form-label">Jenis Bayar</label>
                         <div class="col-md-12 p-0">
                           <select class="form-select form-control" id="payment_type">
-                            <option value="PN">Potong Nota</option>
-                            <option value="Cash">Cash</option>
+                            <option value="PN">Potong Nota (Jika Belum Lunas)</option>
+                            <option value="Cash">Refund Cash (Jika Sudah Lunas)</option>
+                            <option value="Garansi">Garansi (Tukar Stok)</option>
                           </select>
                         </div>
                       </div>
@@ -88,6 +89,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
                   <th>Customer</th>
                   <th>Total Transaksi</th>
                   <th>Status</th>
+                  <th>Tipe</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
@@ -144,7 +146,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       {data: 4},
       {data: 5},
       {data: 6},
-      {data: 7}
+      {data: 7},
+      {data: 8}
       ]
     });
   }
@@ -226,6 +229,4 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       }
     });
   });
-
-  
 </script>

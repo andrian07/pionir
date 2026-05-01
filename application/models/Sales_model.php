@@ -56,7 +56,7 @@ class sales_model extends CI_Model {
             $this->db->where('hd_sales_order_customer', $customer_filter);
         }
         if($search != null){
-            $this->db->where('(ms_product.product_name like "%'.$keyword.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") ');
+            $this->db->where('(ms_product.product_name like "%'.$search.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") ');
         }
         $this->db->order_by('hd_sales_order.created_at', 'desc');
         $this->db->limit($length);
@@ -83,7 +83,7 @@ class sales_model extends CI_Model {
             $this->db->where('hd_sales_order_customer', $customer_filter);
         }
         if($search != null){
-            $this->db->where('(ms_product.product_name like "%'.$keyword.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") ');
+            $this->db->where('(ms_product.product_name like "%'.$search.'%" OR ms_product.product_code like "%'.$keyword.'%" OR ms_product.product_supplier_name like "%'.$keyword.'%" OR ms_product.product_key like "%'.$keyword.'%" OR ms_product.product_desc like "%'.$keyword.'%") ');
         }
         $query = $this->db->get();
         return $query;
@@ -242,7 +242,7 @@ class sales_model extends CI_Model {
         $result = $query->result();
         return $result;
     }
-
+    
     //end sales order
 
 
@@ -320,6 +320,19 @@ class sales_model extends CI_Model {
         }
         $query = $this->db->get();
         return $query;
+    }
+    
+    public function edit_sales_order($data_insert, $sales_order_id)
+    {
+        $this->db->set($data_insert);
+        $this->db->where('hd_sales_order_id ', $sales_order_id);
+        $this->db->update('hd_sales_order');
+    }
+
+    public function delete_detail_sales_order($sales_order_id)
+    {
+        $this->db->where('hd_sales_order_id', $sales_order_id);
+        $this->db->delete('dt_sales_order');
     }
 
     public function temp_sales_list($search, $length, $start, $user)
@@ -672,7 +685,7 @@ class sales_model extends CI_Model {
 
     public function detail_retur_sales($retur_sales_id)
     {
-        $query = $this->db->query("select * from dt_retur_sales a,  hd_sales b, ms_product c, ms_unit d where  b.hd_sales_id and a.dt_retur_sales_product_id = c.product_id and c.product_unit = d.unit_id and hd_retur_sales_id = '".$retur_sales_id."'");
+        $query = $this->db->query("select * from dt_retur_sales a,  hd_sales b, ms_product c, ms_unit d, hd_retur_sales e where  a.hd_retur_sales_id = e.hd_retur_sales_id and a.dt_retur_sales_product_id = c.product_id and c.product_unit = d.unit_id where a.hd_retur_sales_id = '".$retur_sales_id."'");
         $result = $query->result();
         return $result;
     }
@@ -790,6 +803,15 @@ class sales_model extends CI_Model {
        $query = $this->db->query("select hd_sales_inv from hd_sales where hd_sales_id  = '".$sales_id."'");
        $result = $query->result();
        return $result;
+   }
+
+   public function check_payment_receivable($sales_id)
+   {
+        $this->db->select('*');
+        $this->db->from('dt_payment_receivable');
+        $this->db->where('dt_payment_receivable_sales_id ', $sales_id);
+        $query = $this->db->get();
+        return $query;
    }
     // end revisi sales
 }   

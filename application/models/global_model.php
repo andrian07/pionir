@@ -103,6 +103,7 @@ class global_model extends CI_Model {
         if($keyword != null){
             $this->db->where('hd_sales.hd_sales_inv like "%'.$keyword.'%"');
         }
+        $this->db->where('hd_sales_status', 'Success');
         $this->db->group_by('hd_sales_inv');
         $this->db->limit(50);
         $query = $this->db->get();

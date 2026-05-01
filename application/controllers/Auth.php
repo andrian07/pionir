@@ -33,7 +33,8 @@ class Auth extends CI_Controller {
 	public function processlogin(){
 		$username = $this->input->post('username');
 		$password = md5($this->input->post('password'));
-		
+		$remember = $this->input->post('remember');
+
 		$login = $this->auth_model->get_login_data($username, $password);
 		if($login != null){
 			$user_name 		= $login[0]->user_name;
@@ -51,6 +52,13 @@ class Auth extends CI_Controller {
 				'logged_in' 	=> TRUE,
 			];
 			$this->session->set_userdata($newdata);
+			if($remember == 1){
+				// session lebih lama (misal 30 hari)
+				$this->session->sess_expiration = 60 * 60 * 24 * 30;
+				}else{
+				// default (misal 2 jam)
+				$this->session->sess_expiration = 60 * 60 * 2;
+				}
 			$msg = 'Sukses login';
 			echo json_encode(['code'=>'200', 'msg'=>$msg]); 
 		}else{

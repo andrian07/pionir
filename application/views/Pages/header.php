@@ -217,6 +217,11 @@
                     </a>
                   </li>
                   <li>
+                    <a href="<?php echo base_url(); ?>Sales/salesdropship">
+                      <span class="sub-item">Penjualan Dropship</span>
+                    </a>
+                  </li>
+                  <li>
                     <a href="<?php echo base_url(); ?>Sales/revisisalespage">
                       <span class="sub-item">Revisi Penjualan</span>
                     </a>

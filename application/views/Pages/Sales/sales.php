@@ -90,9 +90,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                         <select class="form-control input-full" id="print_type" name="print_type">
                           <option value="">-- Pilih Jenis Print --</option>
                           <option value="1">Nota Item</option>
-                          <option value="2">Alamat Pengambilan</option>
-                          <option value="3">Nota Lunas</option> 
-                          <option value="4">Nota Piutang</option>
+                          <option value="2">Alamat Konsumen</option>
+                          <option value="3">Nota Lunas 1(Ply)</option> 
+                          <option value="4">Nota Piutang 2(ply)</option>
                           <option value="5">Surat Jalan</option> 
                         </select>
 
@@ -120,12 +120,12 @@ require DOC_ROOT_PATH . $this->config->item('header');
                 <tr>
                   <th>No Invoice</th>
                   <th>Tanggal</th>
-                  <th>Customer</th>
+                  <th>Pelanggan</th>
+                  <th>Rate</th>
                   <th>Produk</th>
                   <th>Qty</th>
-                  <th>Rate</th>
                   <th>Total Harga</th>
-                  <th>Status Pembayaran</th>
+                  <th>T.O.P</th>
                   <th>Sisa Pembayaran</th>
                   <th>Ekspedisi</th>
                   <th>Status</th>
@@ -222,7 +222,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: data.msg,
+                text: data.result,
               })
             }
           }

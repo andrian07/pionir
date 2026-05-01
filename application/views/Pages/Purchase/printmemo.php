@@ -142,7 +142,7 @@ td,th{
     <tr>
 
         <td width="20%" align="center">
-            <img src="<?php echo base_url(); ?>assets/logo.png" width="100">
+            <img src="<?php echo base_url(); ?>assets/logo.png" width="80">
         </td>
 
         <td width="40%">

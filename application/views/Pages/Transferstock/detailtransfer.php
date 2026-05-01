@@ -81,6 +81,8 @@
             <th scope="col">Qty</th>
             <th scope="col">Dari</th>
             <th scope="col">Tujuan</th>
+             <th scope="col">Stok Akhir Dari</th>
+            <th scope="col">Stok Akhir Ke</th>
             <th scope="col">Catatan</th>
           </tr>
         </thead>
@@ -93,6 +95,8 @@
               <td><?php echo $row['dt_transfer_stock_qty']; ?></td>
               <td><?php echo $row['from']; ?></td>
               <td><?php echo $row['to']; ?></td>
+              <td><?php echo $row['dt_transfer_stock_from_qty']; ?></td>
+              <td><?php echo $row['dt_transfer_stock_to_qty']; ?></td>
               <td><?php echo $row['dt_transfer_stock_note']; ?></td>
             </tr>
           <?php } ?>

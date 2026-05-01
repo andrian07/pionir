@@ -60,9 +60,11 @@
         <p>Ekspedisi: <b><?php echo $row->ekspedisi_name; ?></b></p>
         <p>Disiapkan Oleh: <b><?php echo $row->hd_sales_order_prepare; ?></b></p>
         <p>Jumlah Colly: <b><?php echo $row->hd_sales_order_colly; ?></b></p>
+        <p>Metode Pembayaran: <b><?php echo $row->payment_name; ?></b></p>
       </div>
       <div class="col-md-3">
         <p class="detail-invoice"><?php echo $row->hd_sales_order_inv; ?></p>
+        <p>T.O.P: <b><?php echo $row->hd_sales_order_top; ?></b></p>
         <p>Status: 
           <b>
             <?php 
@@ -90,9 +92,9 @@
             <th scope="col">produk</th>
             <th scope="col">Qty</th>
             <th scope="col">Price</th>
-            <th scope="col">Catatan</th>
             <th scope="col">Discount</th>
             <th scope="col">Total</th>
+            <th scope="col">Catatan</th>
           </tr>
         </thead>
         <tbody>
@@ -102,9 +104,9 @@
               <td><?php echo $row->product_name; ?></td>
               <td><?php echo $row->dt_so_qty; ?></td>
               <td><?php echo number_format($row->dt_so_price); ?></td>
-              <td><?php echo $row->dt_so_note; ?></td>
               <td><?php echo number_format($row->dt_so_discount); ?></td>
               <td><?php echo number_format($row->dt_so_total); ?></td>
+              <td><?php echo $row->dt_so_note; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -173,7 +175,7 @@
               <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_dp); ?></td>
             </tr>
             <tr>
-              <td scope="col"><b>Sisa Hutang: </b></td>
+              <td scope="col"><b>Sisa Piutang: </b></td>
               <td scope="col">Rp. <?php echo number_format($row->hd_sales_order_total - $row->hd_sales_order_dp); ?></td>
             </tr>
           <?php } ?>

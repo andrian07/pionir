@@ -23,6 +23,7 @@ class Dashboard extends CI_Controller {
 	}
 
 	private function check_auth(){
+		
 		if(isset($_SESSION['user_name']) == null){
 			redirect('Dashboard', 'refresh');
 		}

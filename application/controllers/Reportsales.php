@@ -65,7 +65,7 @@ class Reportsales extends CI_Controller {
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
 		$dompdf->render();
-		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		$dompdf->stream('salesorder.pdf', array("Attachment" => false));
 		exit();
     }
 
@@ -90,25 +90,26 @@ class Reportsales extends CI_Controller {
 			$sheet->getStyle('A3:S3')->getAlignment()->setHorizontal('center');
 			$sheet->setCellValue('A3', "Invoice"); 
 			$sheet->setCellValue('B3', "Tanggal"); 
-			$sheet->setCellValue('C3', "Pelanggan"); 
-			$sheet->setCellValue('D3', "Pembayaran"); 
-			$sheet->setCellValue('E3', "Ekspedisi");
-            $sheet->setCellValue('F3', "Nama Barang");
-            $sheet->setCellValue('G3', "Satuan");
-            $sheet->setCellValue('H3', "Qty");
-            $sheet->setCellValue('I3', "Harga");
-            $sheet->setCellValue('J3', "Total Harga Barang");
-			$sheet->setCellValue('K3', "TOP");
-			$sheet->setCellValue('L3', "Salsesman");
-			$sheet->setCellValue('M3', "Prepare By");
-			$sheet->setCellValue('N3', "Koli");
-			$sheet->setCellValue('O3', "Cabang");
-            $sheet->setCellValue('P3', "Subtotal");
-            $sheet->setCellValue('Q3', "Diskon");
-            $sheet->setCellValue('R3', "PPN");
-            $sheet->setCellValue('S3', "Total");
-            $sheet->setCellValue('T3', "Catatan");
-             $sheet->setCellValue('U3', "Di Buat Oleh");
+			$sheet->setCellValue('C3', "Pelanggan");
+			$sheet->setCellValue('D3', "Rate"); 
+			$sheet->setCellValue('E3', "Pembayaran"); 
+			$sheet->setCellValue('F3', "Ekspedisi");
+            $sheet->setCellValue('G3', "Nama Barang");
+            $sheet->setCellValue('H3', "Satuan");
+            $sheet->setCellValue('I3', "Qty");
+            $sheet->setCellValue('J3', "Harga");
+            $sheet->setCellValue('K3', "Total Harga Barang");
+			$sheet->setCellValue('L3', "TOP");
+			$sheet->setCellValue('M3', "Salsesman");
+			$sheet->setCellValue('N3', "Prepare By");
+			$sheet->setCellValue('O3', "Koli");
+			$sheet->setCellValue('P3', "Cabang");
+            $sheet->setCellValue('Q3', "Subtotal");
+            $sheet->setCellValue('R3', "Diskon");
+            $sheet->setCellValue('S3', "PPN");
+            $sheet->setCellValue('T3', "Total");
+            $sheet->setCellValue('U3', "Catatan");
+             $sheet->setCellValue('V3', "Di Buat Oleh");
 
 			$data = $this->reportsales_model->get_report_sales_order($start_date, $end_date, $customer_report, $salesman_report, $warehouse_report)->result_array();
 			$i = 4;
@@ -117,24 +118,25 @@ class Reportsales extends CI_Controller {
 				$sheet->setCellValue('A'.$i, $row['hd_sales_order_inv']); 
 				$sheet->setCellValue('B'.$i, $row['hd_sales_order_date']); 
 				$sheet->setCellValue('C'.$i, $row['customer_name']);
-				$sheet->setCellValue('D'.$i, $row['payment_name']); 
-				$sheet->setCellValue('E'.$i, $row['ekspedisi_name']); 
-				$sheet->setCellValue('F'.$i, $row['product_name']);
-				$sheet->setCellValue('G'.$i, $row['unit_name']);
-				$sheet->setCellValue('H'.$i, $row['dt_so_qty']); 
-				$sheet->setCellValue('I'.$i, $row['dt_so_price']); 
-				$sheet->setCellValue('J'.$i, $row['dt_so_total']); 
-                $sheet->setCellValue('K'.$i, $row['hd_sales_order_top']); 
-                $sheet->setCellValue('L'.$i, $row['salesman_name']); 
-                $sheet->setCellValue('M'.$i, $row['hd_sales_order_prepare']); 
-                $sheet->setCellValue('N'.$i, $row['hd_sales_order_colly']); 
-                $sheet->setCellValue('O'.$i, $row['warehouse_name']); 
-                $sheet->setCellValue('P'.$i, $row['hd_sales_order_sub_total']); 
-                $sheet->setCellValue('Q'.$i, $row['hd_sales_order_total_discount']); 
-                $sheet->setCellValue('R'.$i, $row['hd_sales_order_ppn']); 
-                $sheet->setCellValue('S'.$i, $row['hd_sales_order_total']); 
-                $sheet->setCellValue('T'.$i, $row['hd_sales_order_note']); 
-                $sheet->setCellValue('U'.$i, $row['user_name']); 
+				$sheet->setCellValue('D'.$i, $row['customer_rate']);
+				$sheet->setCellValue('E'.$i, $row['payment_name']); 
+				$sheet->setCellValue('F'.$i, $row['ekspedisi_name']); 
+				$sheet->setCellValue('G'.$i, $row['product_name']);
+				$sheet->setCellValue('H'.$i, $row['unit_name']);
+				$sheet->setCellValue('I'.$i, $row['dt_so_qty']); 
+				$sheet->setCellValue('J'.$i, $row['dt_so_price']); 
+				$sheet->setCellValue('K'.$i, $row['dt_so_total']); 
+                $sheet->setCellValue('L'.$i, $row['hd_sales_order_top']); 
+                $sheet->setCellValue('M'.$i, $row['salesman_name']); 
+                $sheet->setCellValue('N'.$i, $row['hd_sales_order_prepare']); 
+                $sheet->setCellValue('O'.$i, $row['hd_sales_order_colly']); 
+                $sheet->setCellValue('P'.$i, $row['warehouse_name']); 
+                $sheet->setCellValue('Q'.$i, $row['hd_sales_order_sub_total']); 
+                $sheet->setCellValue('R'.$i, $row['hd_sales_order_total_discount']); 
+                $sheet->setCellValue('S'.$i, $row['hd_sales_order_ppn']); 
+                $sheet->setCellValue('T'.$i, $row['hd_sales_order_total']); 
+                $sheet->setCellValue('U'.$i, $row['hd_sales_order_note']); 
+                $sheet->setCellValue('V'.$i, $row['user_name']); 
 				$i++;
 			};
 
@@ -143,8 +145,8 @@ class Reportsales extends CI_Controller {
 			$sheet->getColumnDimension('C')->setWidth(25);
 			$sheet->getColumnDimension('D')->setWidth(25);
 			$sheet->getColumnDimension('E')->setWidth(25);
-			$sheet->getColumnDimension('F')->setWidth(40);
-			$sheet->getColumnDimension('G')->setWidth(25);
+			$sheet->getColumnDimension('F')->setWidth(25);
+			$sheet->getColumnDimension('G')->setWidth(65);
 			$sheet->getColumnDimension('H')->setWidth(20);
 			$sheet->getColumnDimension('I')->setWidth(20);
 			$sheet->getColumnDimension('J')->setWidth(20);
@@ -159,15 +161,15 @@ class Reportsales extends CI_Controller {
             $sheet->getColumnDimension('S')->setWidth(30);
             $sheet->getColumnDimension('T')->setWidth(30);
             $sheet->getColumnDimension('U')->setWidth(50);
-            $sheet->getColumnDimension('U')->setWidth(30);
+            $sheet->getColumnDimension('V')->setWidth(30);
 
 
-            $sheet->getStyle('I')->getNumberFormat()->setFormatCode('#,##0');	
             $sheet->getStyle('J')->getNumberFormat()->setFormatCode('#,##0');	
-			$sheet->getStyle('P')->getNumberFormat()->setFormatCode('#,##0');	
+            $sheet->getStyle('K')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('Q')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('R')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('S')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('T')->getNumberFormat()->setFormatCode('#,##0');	
 
 
 			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -215,12 +217,12 @@ class Reportsales extends CI_Controller {
         $warehouse_report = $this->input->get('warehouse_report');
 
 		$data['data'] = $this->reportsales_model->get_report_sales($start_date, $end_date, $customer_report, $salesman_report, $warehouse_report)->result_array();
-		$htmlView   = $this->load->view('Pages/Report/Sales/reportsalesorderpdf', $data, true);
+		$htmlView   = $this->load->view('Pages/Report/Sales/reportsalespdf', $data, true);
 		$dompdf = new Dompdf();
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
 		$dompdf->render();
-		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		$dompdf->stream('penjualan.pdf', array("Attachment" => false));
 		exit();
     }
 
@@ -245,25 +247,26 @@ class Reportsales extends CI_Controller {
 			$sheet->getStyle('A3:S3')->getAlignment()->setHorizontal('center');
 			$sheet->setCellValue('A3', "Invoice"); 
 			$sheet->setCellValue('B3', "Tanggal"); 
-			$sheet->setCellValue('C3', "Pelanggan"); 
-			$sheet->setCellValue('D3', "Pembayaran"); 
-			$sheet->setCellValue('E3', "Ekspedisi");
-            $sheet->setCellValue('F3', "Nama Barang");
-            $sheet->setCellValue('G3', "Satuan");
-            $sheet->setCellValue('H3', "Qty");
-            $sheet->setCellValue('I3', "Harga");
-            $sheet->setCellValue('J3', "Total Harga Barang");
-			$sheet->setCellValue('K3', "TOP");
-			$sheet->setCellValue('L3', "Salsesman");
-			$sheet->setCellValue('M3', "Prepare By");
-			$sheet->setCellValue('N3', "Koli");
-			$sheet->setCellValue('O3', "Cabang");
-            $sheet->setCellValue('P3', "Subtotal");
-            $sheet->setCellValue('Q3', "Diskon");
-            $sheet->setCellValue('R3', "PPN");
-            $sheet->setCellValue('S3', "Total");
-            $sheet->setCellValue('T3', "Catatan");
-             $sheet->setCellValue('U3', "Di Buat Oleh");
+			$sheet->setCellValue('C3', "Pelanggan");
+			$sheet->setCellValue('D3', "Rate");  
+			$sheet->setCellValue('E3', "Pembayaran"); 
+			$sheet->setCellValue('F3', "Ekspedisi");
+            $sheet->setCellValue('G3', "Nama Barang");
+            $sheet->setCellValue('H3', "Satuan");
+            $sheet->setCellValue('I3', "Qty");
+            $sheet->setCellValue('J3', "Harga");
+            $sheet->setCellValue('K3', "Total Harga Barang");
+			$sheet->setCellValue('L3', "TOP");
+			$sheet->setCellValue('M3', "Salsesman");
+			$sheet->setCellValue('N3', "Prepare By");
+			$sheet->setCellValue('O3', "Koli");
+			$sheet->setCellValue('P3', "Cabang");
+            $sheet->setCellValue('Q3', "Subtotal");
+            $sheet->setCellValue('R3', "Diskon");
+            $sheet->setCellValue('S3', "PPN");
+            $sheet->setCellValue('T3', "Total");
+            $sheet->setCellValue('U3', "Catatan");
+            $sheet->setCellValue('V3', "Di Buat Oleh");
 
 			$data = $this->reportsales_model->get_report_sales($start_date, $end_date, $customer_report, $salesman_report, $warehouse_report)->result_array();
 			$i = 4;
@@ -272,24 +275,25 @@ class Reportsales extends CI_Controller {
 				$sheet->setCellValue('A'.$i, $row['hd_sales_inv']); 
 				$sheet->setCellValue('B'.$i, $row['hd_sales_date']); 
 				$sheet->setCellValue('C'.$i, $row['customer_name']);
-				$sheet->setCellValue('D'.$i, $row['payment_name']); 
-				$sheet->setCellValue('E'.$i, $row['ekspedisi_name']); 
-				$sheet->setCellValue('F'.$i, $row['product_name']);
-				$sheet->setCellValue('G'.$i, $row['unit_name']);
-				$sheet->setCellValue('H'.$i, $row['dt_sales_qty']); 
-				$sheet->setCellValue('I'.$i, $row['dt_sales_price']); 
-				$sheet->setCellValue('J'.$i, $row['dt_sales_total']); 
-                $sheet->setCellValue('K'.$i, $row['hd_sales_top']); 
-                $sheet->setCellValue('L'.$i, $row['salesman_name']); 
-                $sheet->setCellValue('M'.$i, $row['hd_sales_prepare']); 
-                $sheet->setCellValue('N'.$i, $row['hd_sales_colly']); 
-                $sheet->setCellValue('O'.$i, $row['warehouse_name']); 
-                $sheet->setCellValue('P'.$i, $row['hd_sales_sub_total']); 
-                $sheet->setCellValue('Q'.$i, $row['hd_sales_total_discount']); 
-                $sheet->setCellValue('R'.$i, $row['hd_sales_ppn']); 
-                $sheet->setCellValue('S'.$i, $row['hd_sales_total']); 
-                $sheet->setCellValue('T'.$i, $row['hd_sales_note']); 
-                $sheet->setCellValue('U'.$i, $row['user_name']); 
+				$sheet->setCellValue('D'.$i, $row['customer_rate']);
+				$sheet->setCellValue('E'.$i, $row['payment_name']); 
+				$sheet->setCellValue('F'.$i, $row['ekspedisi_name']); 
+				$sheet->setCellValue('G'.$i, $row['product_name']);
+				$sheet->setCellValue('H'.$i, $row['unit_name']);
+				$sheet->setCellValue('I'.$i, $row['dt_sales_qty']); 
+				$sheet->setCellValue('J'.$i, $row['dt_sales_price']); 
+				$sheet->setCellValue('K'.$i, $row['dt_sales_total']); 
+                $sheet->setCellValue('L'.$i, $row['hd_sales_top']); 
+                $sheet->setCellValue('M'.$i, $row['salesman_name']); 
+                $sheet->setCellValue('N'.$i, $row['hd_sales_prepare']); 
+                $sheet->setCellValue('O'.$i, $row['hd_sales_colly']); 
+                $sheet->setCellValue('P'.$i, $row['warehouse_name']); 
+                $sheet->setCellValue('Q'.$i, $row['hd_sales_sub_total']); 
+                $sheet->setCellValue('R'.$i, $row['hd_sales_total_discount']); 
+                $sheet->setCellValue('S'.$i, $row['hd_sales_ppn']); 
+                $sheet->setCellValue('T'.$i, $row['hd_sales_total']); 
+                $sheet->setCellValue('U'.$i, $row['hd_sales_note']); 
+                $sheet->setCellValue('V'.$i, $row['user_name']); 
 				$i++;
 			};
 
@@ -298,8 +302,8 @@ class Reportsales extends CI_Controller {
 			$sheet->getColumnDimension('C')->setWidth(25);
 			$sheet->getColumnDimension('D')->setWidth(25);
 			$sheet->getColumnDimension('E')->setWidth(25);
-			$sheet->getColumnDimension('F')->setWidth(40);
-			$sheet->getColumnDimension('G')->setWidth(25);
+			$sheet->getColumnDimension('F')->setWidth(30);
+			$sheet->getColumnDimension('G')->setWidth(65);
 			$sheet->getColumnDimension('H')->setWidth(20);
 			$sheet->getColumnDimension('I')->setWidth(20);
 			$sheet->getColumnDimension('J')->setWidth(20);
@@ -313,16 +317,17 @@ class Reportsales extends CI_Controller {
             $sheet->getColumnDimension('R')->setWidth(30);
             $sheet->getColumnDimension('S')->setWidth(30);
             $sheet->getColumnDimension('T')->setWidth(30);
-            $sheet->getColumnDimension('U')->setWidth(50);
             $sheet->getColumnDimension('U')->setWidth(30);
+            $sheet->getColumnDimension('U')->setWidth(50);
+			$sheet->getColumnDimension('V')->setWidth(30);
 
 
-            $sheet->getStyle('I')->getNumberFormat()->setFormatCode('#,##0');	
             $sheet->getStyle('J')->getNumberFormat()->setFormatCode('#,##0');	
-			$sheet->getStyle('P')->getNumberFormat()->setFormatCode('#,##0');	
+            $sheet->getStyle('K')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('Q')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('R')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('S')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('T')->getNumberFormat()->setFormatCode('#,##0');	
 
 
 			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -374,7 +379,7 @@ class Reportsales extends CI_Controller {
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
 		$dompdf->render();
-		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		$dompdf->stream('revisisales.pdf', array("Attachment" => false));
 		exit();
     }
 
@@ -400,24 +405,25 @@ class Reportsales extends CI_Controller {
 			$sheet->setCellValue('A3', "Invoice"); 
 			$sheet->setCellValue('B3', "Tanggal"); 
 			$sheet->setCellValue('C3', "Pelanggan"); 
-			$sheet->setCellValue('D3', "Pembayaran"); 
-			$sheet->setCellValue('E3', "Ekspedisi");
-            $sheet->setCellValue('F3', "Nama Barang");
-            $sheet->setCellValue('G3', "Satuan");
-            $sheet->setCellValue('H3', "Qty");
-            $sheet->setCellValue('I3', "Harga");
-            $sheet->setCellValue('J3', "Total Harga Barang");
-			$sheet->setCellValue('K3', "TOP");
-			$sheet->setCellValue('L3', "Salsesman");
-			$sheet->setCellValue('M3', "Prepare By");
-			$sheet->setCellValue('N3', "Koli");
-			$sheet->setCellValue('O3', "Cabang");
-            $sheet->setCellValue('P3', "Subtotal");
-            $sheet->setCellValue('Q3', "Diskon");
-            $sheet->setCellValue('R3', "PPN");
-            $sheet->setCellValue('S3', "Total");
-            $sheet->setCellValue('T3', "Catatan");
-             $sheet->setCellValue('U3', "Di Buat Oleh");
+			$sheet->setCellValue('D3', "Rate");
+			$sheet->setCellValue('E3', "Pembayaran"); 
+			$sheet->setCellValue('F3', "Ekspedisi");
+            $sheet->setCellValue('G3', "Nama Barang");
+            $sheet->setCellValue('H3', "Satuan");
+            $sheet->setCellValue('I3', "Qty");
+            $sheet->setCellValue('J3', "Harga");
+            $sheet->setCellValue('K3', "Total Harga Barang");
+			$sheet->setCellValue('L3', "TOP");
+			$sheet->setCellValue('M3', "Salsesman");
+			$sheet->setCellValue('N3', "Prepare By");
+			$sheet->setCellValue('O3', "Koli");
+			$sheet->setCellValue('P3', "Cabang");
+            $sheet->setCellValue('Q3', "Subtotal");
+            $sheet->setCellValue('R3', "Diskon");
+            $sheet->setCellValue('S3', "PPN");
+            $sheet->setCellValue('T3', "Total");
+            $sheet->setCellValue('U3', "Catatan");
+            $sheet->setCellValue('V3', "Di Buat Oleh");
 
 			$data = $this->reportsales_model->get_report_revisi_sales($start_date, $end_date, $customer_report, $salesman_report, $warehouse_report)->result_array();
 			$i = 4;
@@ -426,24 +432,25 @@ class Reportsales extends CI_Controller {
 				$sheet->setCellValue('A'.$i, $row['hd_sales_inv']); 
 				$sheet->setCellValue('B'.$i, $row['hd_sales_date']); 
 				$sheet->setCellValue('C'.$i, $row['customer_name']);
-				$sheet->setCellValue('D'.$i, $row['payment_name']); 
-				$sheet->setCellValue('E'.$i, $row['ekspedisi_name']); 
-				$sheet->setCellValue('F'.$i, $row['product_name']);
-				$sheet->setCellValue('G'.$i, $row['unit_name']);
-				$sheet->setCellValue('H'.$i, $row['dt_sales_qty']); 
-				$sheet->setCellValue('I'.$i, $row['dt_sales_price']); 
-				$sheet->setCellValue('J'.$i, $row['dt_sales_total']); 
-                $sheet->setCellValue('K'.$i, $row['hd_sales_top']); 
-                $sheet->setCellValue('L'.$i, $row['salesman_name']); 
-                $sheet->setCellValue('M'.$i, $row['hd_sales_prepare']); 
-                $sheet->setCellValue('N'.$i, $row['hd_sales_colly']); 
-                $sheet->setCellValue('O'.$i, $row['warehouse_name']); 
-                $sheet->setCellValue('P'.$i, $row['hd_sales_sub_total']); 
-                $sheet->setCellValue('Q'.$i, $row['hd_sales_total_discount']); 
-                $sheet->setCellValue('R'.$i, $row['hd_sales_ppn']); 
-                $sheet->setCellValue('S'.$i, $row['hd_sales_total']); 
-                $sheet->setCellValue('T'.$i, $row['hd_sales_note']); 
-                $sheet->setCellValue('U'.$i, $row['user_name']); 
+				$sheet->setCellValue('D'.$i, $row['customer_rate']);
+				$sheet->setCellValue('E'.$i, $row['payment_name']); 
+				$sheet->setCellValue('F'.$i, $row['ekspedisi_name']); 
+				$sheet->setCellValue('G'.$i, $row['product_name']);
+				$sheet->setCellValue('H'.$i, $row['unit_name']);
+				$sheet->setCellValue('I'.$i, $row['dt_sales_qty']); 
+				$sheet->setCellValue('J'.$i, $row['dt_sales_price']); 
+				$sheet->setCellValue('K'.$i, $row['dt_sales_total']); 
+                $sheet->setCellValue('L'.$i, $row['hd_sales_top']); 
+                $sheet->setCellValue('M'.$i, $row['salesman_name']); 
+                $sheet->setCellValue('N'.$i, $row['hd_sales_prepare']); 
+                $sheet->setCellValue('O'.$i, $row['hd_sales_colly']); 
+                $sheet->setCellValue('P'.$i, $row['warehouse_name']); 
+                $sheet->setCellValue('Q'.$i, $row['hd_sales_sub_total']); 
+                $sheet->setCellValue('R'.$i, $row['hd_sales_total_discount']); 
+                $sheet->setCellValue('S'.$i, $row['hd_sales_ppn']); 
+                $sheet->setCellValue('T'.$i, $row['hd_sales_total']); 
+                $sheet->setCellValue('U'.$i, $row['hd_sales_note']); 
+                $sheet->setCellValue('V'.$i, $row['user_name']); 
 				$i++;
 			};
 
@@ -452,8 +459,8 @@ class Reportsales extends CI_Controller {
 			$sheet->getColumnDimension('C')->setWidth(25);
 			$sheet->getColumnDimension('D')->setWidth(25);
 			$sheet->getColumnDimension('E')->setWidth(25);
-			$sheet->getColumnDimension('F')->setWidth(40);
-			$sheet->getColumnDimension('G')->setWidth(25);
+			$sheet->getColumnDimension('F')->setWidth(30);
+			$sheet->getColumnDimension('G')->setWidth(65);
 			$sheet->getColumnDimension('H')->setWidth(20);
 			$sheet->getColumnDimension('I')->setWidth(20);
 			$sheet->getColumnDimension('J')->setWidth(20);
@@ -468,15 +475,15 @@ class Reportsales extends CI_Controller {
             $sheet->getColumnDimension('S')->setWidth(30);
             $sheet->getColumnDimension('T')->setWidth(30);
             $sheet->getColumnDimension('U')->setWidth(50);
-            $sheet->getColumnDimension('U')->setWidth(30);
+            $sheet->getColumnDimension('v')->setWidth(30);
 
 
-            $sheet->getStyle('I')->getNumberFormat()->setFormatCode('#,##0');	
             $sheet->getStyle('J')->getNumberFormat()->setFormatCode('#,##0');	
-			$sheet->getStyle('P')->getNumberFormat()->setFormatCode('#,##0');	
+            $sheet->getStyle('K')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('Q')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('R')->getNumberFormat()->setFormatCode('#,##0');	
 			$sheet->getStyle('S')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('T')->getNumberFormat()->setFormatCode('#,##0');	
 
 
 			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -526,7 +533,7 @@ class Reportsales extends CI_Controller {
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
 		$dompdf->render();
-		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		$dompdf->stream('retursales.pdf', array("Attachment" => false));
 		exit();
     }
 
@@ -550,17 +557,18 @@ class Reportsales extends CI_Controller {
 			$sheet->setCellValue('A3', "Invoice"); 
 			$sheet->setCellValue('B3', "Tanggal"); 
 			$sheet->setCellValue('C3', "Pelanggan"); 
-            $sheet->setCellValue('D3', "Nama Barang");
-            $sheet->setCellValue('E3', "Satuan");
-            $sheet->setCellValue('F3', "Qty");
-            $sheet->setCellValue('G3', "Harga");
-            $sheet->setCellValue('H3', "Total Harga Barang");
-			$sheet->setCellValue('I3', "Catatan Barang");
-            $sheet->setCellValue('J3', "Total");
-			$sheet->setCellValue('K3', "Status Retur");
-			$sheet->setCellValue('L3', "Jenis Pembayaran");
-            $sheet->setCellValue('M3', "Catatan");
-            $sheet->setCellValue('N3', "Di Buat Oleh");
+			$sheet->setCellValue('D3', "Rate"); 
+            $sheet->setCellValue('E3', "Nama Barang");
+            $sheet->setCellValue('F3', "Satuan");
+            $sheet->setCellValue('G3', "Qty");
+            $sheet->setCellValue('H3', "Harga");
+            $sheet->setCellValue('I3', "Total Harga Barang");
+			$sheet->setCellValue('J3', "Catatan Barang");
+            $sheet->setCellValue('K3', "Total");
+			$sheet->setCellValue('L3', "Status Retur");
+			$sheet->setCellValue('M3', "Jenis Pembayaran");
+            $sheet->setCellValue('N3', "Catatan");
+            $sheet->setCellValue('O3', "Di Buat Oleh");
 
 			$data = $this->reportsales_model->get_report_retur_sales($start_date, $end_date, $customer_report, $salesman_report, $warehouse_report)->result_array();
 			$i = 4;
@@ -569,21 +577,24 @@ class Reportsales extends CI_Controller {
 				$sheet->setCellValue('A'.$i, $row['hd_retur_sales_inv']); 
 				$sheet->setCellValue('B'.$i, $row['hd_retur_sales_date']); 
 				$sheet->setCellValue('C'.$i, $row['customer_name']);
-				$sheet->setCellValue('D'.$i, $row['product_name']); 
-				$sheet->setCellValue('E'.$i, $row['unit_name']); 
-				$sheet->setCellValue('F'.$i, $row['dt_retur_sales_qty']);
-				$sheet->setCellValue('G'.$i, $row['dt_retur_sales_price']);
-				$sheet->setCellValue('H'.$i, $row['dt_retur_sales_total']);
-				$sheet->setCellValue('I'.$i, $row['dt_retur_sales_note']); 
-				$sheet->setCellValue('J'.$i, $row['hd_retur_sales_total']);
-                $sheet->setCellValue('K'.$i, $row['hd_retur_sales_status']); 
+				$sheet->setCellValue('D'.$i, $row['customer_rate']); 
+				$sheet->setCellValue('E'.$i, $row['product_name']); 
+				$sheet->setCellValue('F'.$i, $row['unit_name']); 
+				$sheet->setCellValue('G'.$i, $row['dt_retur_sales_qty']);
+				$sheet->setCellValue('H'.$i, $row['dt_retur_sales_price']);
+				$sheet->setCellValue('I'.$i, $row['dt_retur_sales_total']);
+				$sheet->setCellValue('J'.$i, $row['dt_retur_sales_note']); 
+				$sheet->setCellValue('K'.$i, $row['hd_retur_sales_total']);
+                $sheet->setCellValue('L'.$i, $row['hd_retur_sales_status']); 
 				if($row['hd_retur_sales_payment_type'] == 'PN'){
-                	$sheet->setCellValue('L'.$i, 'Potong Nota'); 
+                	$sheet->setCellValue('M'.$i, 'Potong Nota'); 
+				}else if($row['hd_retur_sales_payment_type'] == 'Cash'){
+                	$sheet->setCellValue('M'.$i, 'Cash'); 
 				}else{
-                	$sheet->setCellValue('L'.$i, 'Cash'); 
+					$sheet->setCellValue('M'.$i, 'Garansi'); 
 				}
-                $sheet->setCellValue('M'.$i, $row['hd_retur_sales_note']); 
-                $sheet->setCellValue('N'.$i, $row['user_name']); 
+                $sheet->setCellValue('N'.$i, $row['hd_retur_sales_note']); 
+                $sheet->setCellValue('O'.$i, $row['user_name']); 
 				$i++;
 			};
 
@@ -591,7 +602,7 @@ class Reportsales extends CI_Controller {
 			$sheet->getColumnDimension('B')->setWidth(25); 
 			$sheet->getColumnDimension('C')->setWidth(35);
 			$sheet->getColumnDimension('D')->setWidth(35);
-			$sheet->getColumnDimension('E')->setWidth(25);
+			$sheet->getColumnDimension('E')->setWidth(65);
 			$sheet->getColumnDimension('F')->setWidth(20);
 			$sheet->getColumnDimension('G')->setWidth(30);
 			$sheet->getColumnDimension('H')->setWidth(30);
@@ -603,9 +614,9 @@ class Reportsales extends CI_Controller {
             $sheet->getColumnDimension('N')->setWidth(30);
 
 
-            $sheet->getStyle('G')->getNumberFormat()->setFormatCode('#,##0');	
             $sheet->getStyle('H')->getNumberFormat()->setFormatCode('#,##0');	
-			$sheet->getStyle('J')->getNumberFormat()->setFormatCode('#,##0');
+            $sheet->getStyle('I')->getNumberFormat()->setFormatCode('#,##0');	
+			$sheet->getStyle('K')->getNumberFormat()->setFormatCode('#,##0');
 
 
 			$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);

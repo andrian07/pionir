@@ -109,6 +109,12 @@
         <input type="password" class="form-control" id="password" placeholder="Password">
       </div>
 
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="remember_me">
+        <label class="form-check-label text-white" for="remember_me">
+          Keep me signed in
+        </label>
+      </div>
       <div class="d-grid mb-4">
         <button type="button" id="login" class="btn uf-btn-primary btn-lg">Login</button>
       </div>
@@ -119,27 +125,34 @@
   <script type="text/javascript" src="<?php echo base_url(); ?>dist/sweetalert2.js"></script>
   <script type="text/javascript">
     $('#login').click(function(e){
-    e.preventDefault();
-    var username  = $("#username").val();
-    var password  = $("#password").val();
-    $.ajax({
-      type: "POST",
-      url: "<?php echo base_url(); ?>Auth/processlogin",
-      dataType: "json",
-      data: {username:username, password:password},
-      success : function(data){
-        if (data.code == "200"){
-          window.location.href = "<?php echo base_url(); ?>Dashboard";
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: data.msg,
-          })
+      e.preventDefault();
+
+      var username  = $("#username").val();
+      var password  = $("#password").val();
+      var remember  = $("#remember_me").is(':checked') ? 1 : 0;
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url(); ?>Auth/processlogin",
+        dataType: "json",
+        data: {
+          username: username,
+          password: password,
+          remember: remember
+        },
+        success : function(data){
+          if (data.code == "200"){
+            window.location.href = "<?php echo base_url(); ?>Dashboard";
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: data.msg,
+            })
+          }
         }
-      }
+      });
     });
-  });
 </script>
 </body>
 </html>

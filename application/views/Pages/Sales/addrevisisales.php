@@ -868,6 +868,7 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       success : function(data){
         if (data.code == "200"){
           $('#sales_due_date').val(data.result);
+          check_tempt_data();
         }
       }
     });
@@ -1068,6 +1069,13 @@ function check_tempt_data()
         footer_sub_total.set(sub_total);
         footer_total_invoice.set(sub_total);
         footer_remaining_debt.set(sub_total);
+        if($('#sales_order_top').val() == '0'){
+						footer_dp.set(sub_total);
+						footer_remaining_debt.set(0);
+					}else{
+						footer_dp.set(0);
+						footer_remaining_debt.set(sub_total);
+					}
       }
     }
   });

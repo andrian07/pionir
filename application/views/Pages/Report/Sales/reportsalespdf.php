@@ -44,7 +44,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="headline">Laporan Revisi Penjualan</h2>
+        <h2 class="headline">Laporan Penjualan</h2>
         <table class="table-bordered">
             <thead>
                 <tr>

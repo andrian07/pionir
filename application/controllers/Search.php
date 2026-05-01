@@ -32,7 +32,12 @@ class Search extends CI_Controller {
 		$modul = 'Search';
 		$check_auth = $this->check_auth($modul);
 		if($check_auth[0]->view == 'Y'){
-			$this->load->view('Pages/Search/search');
+			$unit_list['unit_list'] = $this->masterdata_model->unit_list();
+			$brand_list['brand_list'] = $this->masterdata_model->brand_list();
+			$category_list['category_list'] = $this->masterdata_model->category_list();
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$data['data'] = array_merge($unit_list, $brand_list, $category_list, $supplier_list);	
+			$this->load->view('Pages/Search/search', $data);
 		}else{
 			print_r('Tidak Ada Akses');die();
 		}
@@ -41,7 +46,15 @@ class Search extends CI_Controller {
 	public function product_list(){
 		
 		$searchin_key = $this->input->post('key');
-		$product_list = $this->masterdata_model->search_product_list($searchin_key)->result_array();
+		$unit		  = $this->input->post('unit');
+		$category 	  = $this->input->post('category');
+		$brand 	      = $this->input->post('brand');
+		$supplier 	  = $this->input->post('supplier');
+		$status 	  = $this->input->post('status');
+		$paket 		  = $this->input->post('paket');
+		$ppn 		  = $this->input->post('ppn');
+
+		$product_list = $this->masterdata_model->search_product_list($searchin_key, $unit, $category, $brand, $supplier, $status, $paket, $ppn)->result_array();
 		echo json_encode($product_list);
 	}
 

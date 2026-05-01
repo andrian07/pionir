@@ -33,13 +33,17 @@ require DOC_ROOT_PATH . $this->config->item('header');
               <table id="transferstock-list" class="display table table-striped table-hover" >
                 <thead>
                   <tr>
-                    <th>Kode Transfer</th>
+                    <th>No Transfer</th>
+                    <th>Inisial</th>
+                    <th>Nama Produk</th>
                     <th>Tanggal</th>
-                    <th>Item</th>
-                    <th>Total Qty</th>
-                    <th>Dari Gudang</th>
-                    <th>Ke Gudang</th>
-                    <th>Status</th>
+                    <th>Satuan</th>
+                    <th>Qty</th>
+                    <th>Dari</th>
+                    <th>Ke</th>
+                    <th>Stok Akhir Dari</th>
+                    <th>Stok Akhir Ke</th>
+                    <th>Catatan</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -88,11 +92,21 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8},
+        {data: 9},
+        {data: 10},
+        {data: 11}
       ]
     });
   }
 
+  function dispatch(id)
+  {
+    let url = '<?php echo base_url(); ?>Transferstock/printdispatch?';
+    url += 'transfer_id=' + id;
+     window.open(url, '_blank');
+  }
 
   function deletes(id)
   {

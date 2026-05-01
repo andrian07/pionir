@@ -195,15 +195,11 @@
 
 						<?php 
 							$no = 1;
-							$max_row = 9;
+							$max_row = 10;
 							$current_row = count($data['detail_sales']);
 
 							foreach($data['detail_sales'] as $item){ 
 							?>
-							<tr>
-								<td width="10%"><?php echo $no++; ?></td>
-								<td><?php echo $item->product_name; ?></td>
-							</tr>
 							<?php } ?>
 
 							<?php

@@ -91,18 +91,24 @@ class Transferstock extends CI_Controller {
 					$status = '<span class="badge badge-danger multi-badge">Cancel</span>';
 				}
 
+				$dispatch = '<button type="button" class="btn btn-icon btn-info dispatch btn-sm mb-2-btn" onclick="dispatch('.$field['hd_transfer_stock_id'].')"><i class="fas fa-truck sizing-fa"></i></button> ';
+
 				$date = date_create($field['hd_transfer_stock_date']); 
 
 				$no++;
 				$row = array();
 				$row[] 	= $field['hd_transfer_stock_code'];
-				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['hd_transfer_stock_initial'];
 				$row[] 	= $field['product_name'];
+				$row[] 	= date_format($date,"d-M-Y");
+				$row[] 	= $field['unit_name'];
 				$row[] 	= $field['dt_transfer_stock_qty'];
 				$row[] 	= $field['from'];
 				$row[] 	= $field['to'];
-				$row[] 	= $status;
-				$row[] 	= $detail.$delete;
+				$row[] 	= $field['dt_transfer_stock_from_qty'];
+				$row[] 	= $field['dt_transfer_stock_to_qty'];
+				$row[] 	= $field['dt_transfer_stock_note'];
+				$row[] 	= $detail.$delete.$dispatch;
 				$data[] = $row;
 			}
 
@@ -119,6 +125,24 @@ class Transferstock extends CI_Controller {
 		}
 	}
 
+
+	public function printdispatch()
+	{
+		$modul = 'TransferStock';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id  	      = $this->input->get('print_type');
+			$hd_transfer_id  = $this->input->get('transfer_id');
+			$header_transfer['header_transfer'] = $this->transferstock_model->header_transfer_stock($hd_transfer_id);
+			$detail_transfer['detail_transfer'] = $this->transferstock_model->detail_transfer_stock($hd_transfer_id)->result_array();
+			$data['data'] = array_merge($header_transfer, $detail_transfer);
+			$this->load->view('Pages/Transferstock/printdispatch', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+	
 
 	public function addtransferstock()
 	{
@@ -159,10 +183,16 @@ class Transferstock extends CI_Controller {
 			$find = $this->global_model->search_product($keyword)->result_array(); 
 			$find_result = [];
 			foreach ($find as $row) {
-				$diplay_text = $row['product_name'];
+				$diplay_text = $row['product_code'].' - '.$row['product_name'].' - '.$row['unit_name'];
+				$product_id = $row['product_id'];
+				$stock = $this->global_model->total_stock_search($product_id)->result_array();
 				$find_result[] = [
 					'id'                  => $row['product_id'],
-					'value'               => $diplay_text
+					'value'               => $diplay_text,
+					'product_code'        => $row['product_code'],
+					'product_price'       => $row['product_price'],
+					'product_weight'      => $row['product_weight'],
+					'curent_stock'        => $stock[0]['curent_stock']
 				];
 			}
 			$result = ['success' => TRUE, 'num_product' => count($find_result), 'data' => $find_result, 'message' => ''];
@@ -209,6 +239,8 @@ class Transferstock extends CI_Controller {
 				$row[] 	= $field['temp_transfer_stock_qty'];
 				$row[] 	= $field['from'];
 				$row[] 	= $field['to'];
+				$row[] = '<span class="text-danger">'.$field['temp_transfer_stock_from_qty'].'</span>';
+				$row[] = '<span class="text-primary">'.$field['temp_transfer_stock_to_qty'].'</span>';
 				$row[] 	= $field['temp_transfer_stock_note'];
 				$row[] 	= $edit.$delete;
 				$data[] = $row;
@@ -261,6 +293,13 @@ class Transferstock extends CI_Controller {
 					echo json_encode(['code'=>0, 'result'=>$msg]);die();
 				}
 			}
+
+			$get_last_stock_to = $this->transferstock_model->get_last_stock($product_id, $transfer_to);
+			if($get_last_stock_to == null){
+				$last_stock_to = 0;
+			}else{
+				$last_stock_to 		= $get_last_stock_to[0]->stock;
+			}
 			
 			$check_temp_transfer_stock_input = $this->transferstock_model->check_temp_transfer_stock_input($product_id, $user_id, $transfer_to)->result_array();
 			$data_insert = array(
@@ -268,6 +307,8 @@ class Transferstock extends CI_Controller {
 				'temp_transfer_stock_qty'			 => $temp_qty,
 				'temp_transfer_stock_warehouse_from' => $transfer_from,
 				'temp_transfer_stock_warehouse_to'	 => $transfer_to,
+				'temp_transfer_stock_from_qty'	 	 => $last_stock_from,
+				'temp_transfer_stock_to_qty'	 	 => $last_stock_to,
 				'temp_transfer_stock_note'			 => $temp_note,
 				'user_id'							 => $user_id,
 			);	
@@ -315,8 +356,14 @@ class Transferstock extends CI_Controller {
 			$footer_total  			= $this->input->post('footer_total');
 			$transfer_stock_remark  = $this->input->post('transfer_stock_remark');
 			$transfer_stock_date    = $this->input->post('transfer_stock_date');
+			$transfer_stock_inisial = $this->input->post('transfer_stock_inisial');
 			$user_id 				= $_SESSION['user_id'];
-
+			
+			if($transfer_stock_inisial == ''){
+				$msg = "Silahkan Isi Inisial";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+			
 			if($footer_total < 1){
 				$msg = "Silahkan Isi Data Terlebih Dahulu";
 				echo json_encode(['code'=>0, 'result'=>$msg]);die();
@@ -334,6 +381,7 @@ class Transferstock extends CI_Controller {
 
 			$data_insert = array(
 				'hd_transfer_stock_code'	=> $last_code,
+				'hd_transfer_stock_initial'	=> $transfer_stock_inisial,
 				'hd_transfer_stock_date'	=> $transfer_stock_date,
 				'hd_transfer_stock_qty' 	=> $footer_total,
 				'hd_transfer_stock_desc'	=> $transfer_stock_remark,
@@ -345,12 +393,21 @@ class Transferstock extends CI_Controller {
 
 			foreach($get_temp_transfer_stock as $row)
 			{
+				$product_id_check = $row['temp_transfer_stock_product_id'];
+				$from_check 	  = $row['temp_transfer_stock_warehouse_from'];
+				$to_check 	      = $row['temp_transfer_stock_warehouse_to'];
+				
+				$last_stock_from = $this->transferstock_model->last_stock_from($product_id_check, $from_check)->result_array();
+				$last_stock_to = $this->transferstock_model->last_stock_from($product_id_check, $to_check)->result_array();
+
 				$data_insert_detail = array(
 					'hd_transfer_stock_id'	 			 => $save_transfer_stock,
 					'dt_transfer_stock_product_id'		 => $row['temp_transfer_stock_product_id'],
 					'dt_transfer_stock_qty' 			 => $row['temp_transfer_stock_qty'],
 					'dt_transfer_stock_warehouse_from'	 => $row['temp_transfer_stock_warehouse_from'],
 					'dt_transfer_stock_warehouse_to'	 => $row['temp_transfer_stock_warehouse_to'],
+					'dt_transfer_stock_from_qty'		 => $last_stock_from[0]['stock'],
+					'dt_transfer_stock_to_qty'			 => $last_stock_to[0]['stock'] + $row['temp_transfer_stock_qty'],
 					'dt_transfer_stock_note'			 => $row['temp_transfer_stock_note']
 				);
 
@@ -497,6 +554,20 @@ class Transferstock extends CI_Controller {
 			$msg = "No Access";
 			echo json_encode(['code'=>0, 'result'=>$msg]);die();
 		}
+	}
+
+	public function get_stock_from_warehouse()
+	{
+		$product_id  = $this->input->post('product_id');
+		$warehouse_id = $this->input->post('warehouse_id');
+		$get_last_stock_from = $this->transferstock_model->get_last_stock($product_id, $warehouse_id);
+		if($get_last_stock_from == null){
+			$last_stock_from = 0;
+		}else{
+			$last_stock_from = $get_last_stock_from[0]->stock;
+		}
+		echo json_encode(['code'=>200, 'result'=>$last_stock_from]);
+		die();
 	}
 
 }

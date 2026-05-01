@@ -44,12 +44,13 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="headline">Laporan Penjualan</h2>
+        <h2 class="headline">Laporan Sales Order</h2>
         <table class="table-bordered">
             <thead>
                 <tr>
                     <th>Invoice</th>
                     <th>Pelanggan</th>
+                    <th>Rate</th>
                     <th>Pembayaran</th>
                     <th>Tanggal</th>
                     <th>Nama Barang</th>
@@ -61,14 +62,15 @@
             <tbody>
                 <?php foreach($data as $row){ ?>
                     <tr>
-                        <td><?php echo $row['hd_sales_inv']; ?> </td>
+                        <td><?php echo $row['hd_sales_order_inv']; ?> </td>
                         <td><?php echo $row['customer_name']; ?></td>
+                        <td><?php echo $row['customer_rate']; ?></td>
                         <td><?php echo $row['payment_name']; ?></td>
-                        <td><?php echo $row['hd_sales_date']; ?> </td>
+                        <td><?php echo $row['hd_sales_order_date']; ?> </td>
                         <td><?php echo $row['product_name']; ?></td>
-                        <td><?php echo $row['dt_sales_qty']; ?></td>
-                        <td>Rp. <?php echo number_format($row['dt_sales_price']); ?></td>
-                        <td>Rp. <?php echo number_format($row['hd_sales_total']); ?></td>
+                        <td><?php echo $row['dt_so_qty']; ?></td>
+                        <td>Rp. <?php echo number_format($row['dt_so_price']); ?></td>
+                        <td>Rp. <?php echo number_format($row['hd_sales_order_total']); ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

@@ -163,8 +163,9 @@ require DOC_ROOT_PATH . $this->config->item('header');
                     <th>SKU</th>
                     <th>Produk</th>
                     <th>Satuan</th>
-                    <th>Qty</th>
-                    <th>Ongkir</th>
+                    <th>Harga Beli</th>
+                    <th>Qty Retur</th>
+                    <th>Ongkir Per Pcs</th>
                     <th>Total</th>
                     <th>Catatan</th>
                     <th>Aksi</th>
@@ -532,7 +533,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
         {data: 4},
         {data: 5},
         {data: 6},
-        {data: 7}
+        {data: 7},
+        {data: 8}
       ]
     });
     check_tempt_data();

@@ -86,5 +86,5 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 define('company', 'PIONIR');
-define('company_address', 'Jalan Sungai Raya Dalam 1. Ruko Ceria No. A2 - A4');
-define('company_phone', '0561-2345-2345');
+define('company_address', 'Jl. Nusa Indah 2');
+define('company_phone', '0561-731219');

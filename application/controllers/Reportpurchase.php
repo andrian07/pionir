@@ -590,7 +590,7 @@ class Reportpurchase extends CI_Controller {
 		$dompdf->loadHtml($htmlView);
 		$dompdf->setPaper('A4', 'landscape');
 		$dompdf->render();
-		$dompdf->stream('pembelian.pdf', array("Attachment" => false));
+		$dompdf->stream('returpembelian.pdf', array("Attachment" => false));
 		exit();
 	}
 

@@ -130,7 +130,7 @@
 						</table>
 					</td>
 
-					<td width="40%" rowspan="2">
+					<td width="40%">
 
 						<div class="box">
 
@@ -159,7 +159,14 @@
 
 				<tr>
 					<td style="text-align:right;">No Faktur</td>
-					<td colspan="3">: FJ-PIONIR-SD/ACSU/02/03/26/1828</td>
+					<td>: FJ-PIONIR-SD/ACSU/02/03/26/1828</td>
+					<td style="text-align:left;">
+						Metode Pembayaran: <b><?php echo $header->payment_name; ?></b>
+						
+						<span style="margin-left:40px;">
+							T.O.P : <b><?php echo $header->hd_sales_top; ?></b>
+						</span>
+					</td>
 				</tr>
 
 			</table>

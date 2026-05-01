@@ -24,6 +24,80 @@ require DOC_ROOT_PATH . $this->config->item('header');
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
+            <div class="row" style="margin-top:10px;">
+               <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">Unit:</label>
+                <select id="filter_unit" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua Unit --</option>
+                  <?php foreach($data['unit_list'] as $u){ ?>
+                    <option value="<?= $u->unit_id ?>"><?= $u->unit_name ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">Kategori:</label>
+                <select id="filter_category" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua Kategori --</option>
+                  <?php foreach($data['category_list'] as $c){ ?>
+                    <option value="<?= $c->category_id ?>"><?= $c->category_name ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                
+                <label style="font-weight: 700; margin-bottom: 5px;">Brand:</label>
+                <select id="filter_brand" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua Brand --</option>
+                  <?php foreach($data['brand_list'] as $b){ ?>
+                    <option value="<?= $b->brand_id ?>"><?= $b->brand_name ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">Supplier:</label>
+                <select id="filter_supplier" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua Supplier --</option>
+                  <?php foreach($data['supplier_list'] as $s){ ?>
+                    <option value="<?= $s->supplier_name ?>"><?= $s->supplier_name ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">Status:</label>
+                <select id="filter_status" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua Status --</option>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Discontinue">Discontinue</option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">Paket:</label>
+                <select id="filter_paket" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua --</option>
+                    <option value="N">Bukan Paket</option>
+                    <option value="Y">Paket</option>
+                </select>
+              </div>
+
+               <div class="col-md-3">
+                <label style="font-weight: 700; margin-bottom: 5px;">PPN:</label>
+                <select id="filter_ppn" class="form-control input-full js-example-basic-single">
+                  <option value="">-- Semua --</option>
+                    <option value="N">Bukan PPN</option>
+                    <option value="Y">PPN</option>
+                </select>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div class="card-header">
             <div class="row">
               <div id="info" class="col-12"></div>
 
@@ -38,6 +112,8 @@ require DOC_ROOT_PATH . $this->config->item('header');
               </div>
             </div>
           </div>
+
+          
           <div class="card-body">
             <div class="table-responsive">
 
@@ -73,24 +149,57 @@ require DOC_ROOT_PATH . $this->config->item('footer');
   minimumFractionDigits: 0
 });
 
+$('#filter_unit, #filter_category, #filter_brand, #filter_supplier, #filter_status, #filter_paket, #filter_ppn')
+.on('change', function () {
+  let key = $('#key').val();
+  product_list_table(key);
+});
 
- function product_list_table(key = '') {
+
+function product_list_table(key = '') {
+
+  let unit      = $('#filter_unit').val();
+  let category  = $('#filter_category').val();
+  let brand     = $('#filter_brand').val();
+  let supplier  = $('#filter_supplier').val();
+  let status    = $('#filter_status').val();
+  let paket     = $('#filter_paket').val();
+  let ppn       = $('#filter_ppn').val();
+
   $.ajax({
     type: "POST",
     url: "<?php echo base_url(); ?>Search/product_list",
     dataType: "json",
-    data: {key:key},
+    data: {
+      key: key,
+      unit: unit,
+      category: category,
+      brand: brand,
+      supplier: supplier,
+      status: status,
+      paket: paket,
+      ppn: ppn
+    },
     success : function(data){
 
       let text = "";
       for (let i = 0; i < data.length; i++) {
-        if(data[i].total_stock == null){
-          var stocks = 0;
-        }else{
-          var stocks = data[i].total_stock;
-        }
-        text+= '<tr onclick="popupOpen('+data[i].product_id+')"><td class="image-td"><img src="<?php echo base_url(); ?>assets/products/'+data[i].product_image+'" width="100%"></img></td><td>'+data[i].product_name+'<br /> <span class="badge badge-primary">'+formatter.format(data[i].product_sell_price_1)+'</span></td><td>'+stocks+' '+data[i].unit_name+'</td></tr>';
+
+        let stocks = data[i].total_stock ?? 0;
+
+        text+= `
+        <tr onclick="popupOpen(${data[i].product_id})">
+          <td class="image-td">
+            <img src="<?php echo base_url(); ?>assets/products/${data[i].product_image}" width="100%">
+          </td>
+          <td>
+            ${data[i].product_name}<br>
+            <span class="badge badge-primary">${formatter.format(data[i].product_sell_price_1)}</span>
+          </td>
+          <td>${stocks} ${data[i].unit_name}</td>
+        </tr>`;
       }       
+
       document.getElementById("product_list").innerHTML = text;
     }
   });

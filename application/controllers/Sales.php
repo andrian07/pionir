@@ -146,18 +146,26 @@ class Sales extends CI_Controller {
 					$detail = '<a href="'.base_url().'Sales/detailsalesorder?id='.$field['hd_sales_order_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" disabled="disabled"><i class="fas fa-eye sizing-fa"></i></button></a> ';
 				}
 
-				if($check_auth[0]->edit == 'Y'){
-					if($field['hd_sales_order_status'] != 'Cancel'){
-						$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
-					}else{
-						$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
-					}
+				$disable = ($check_auth[0]->edit != 'Y' || in_array($field['hd_sales_order_status'], ['Cancel', 'Success']));
+
+				$print = '<button type="button" class="btn btn-icon btn-warning delete btn-sm mb-2-btn" data-id="'.$field['hd_sales_order_id'].'" data-bs-toggle="modal" data-bs-target="#print"><i class="fas fa-print sizing-fa"></i></button> ';
+
+				if($disable){
+					$edit = '<a>
+								<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled>
+									<i class="fas fa-edit sizing-fa"></i>
+								</button>
+							</a>';
 				}else{
-					$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'"><button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" data-id="'.$field['hd_sales_order_id'].'"><i class="fas fa-edit sizing-fa"></i></button></a> ';
+					$edit = '<a href="'.base_url().'Sales/editsalesorder?id='.$field['hd_sales_order_id'].'">
+								<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn">
+									<i class="fas fa-edit sizing-fa"></i>
+								</button>
+							</a>';
 				}
 
 				if($check_auth[0]->delete == 'Y'){
-					if($field['hd_sales_order_status'] != 'Cancel'){
+					if($field['hd_sales_order_status'] != 'Success'){
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn" onclick="deletes('.$field['hd_sales_order_id'].')"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
 					}else{
 						$delete = '<button type="button" class="btn btn-icon btn-danger delete btn-sm mb-2-btn"  disabled="disabled"><i class="fas fa-trash-alt sizing-fa"></i></button> ';
@@ -173,13 +181,14 @@ class Sales extends CI_Controller {
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['customer_name'];
 				$row[] 	= $field['product_name'];
+				$row[] 	= $field['dt_so_qty'];
 				$row[] 	= $field['dt_so_rate'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_order_total']);
 				$row[] 	= $field['hd_sales_order_top'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_order_remaining_debt']);
 				$row[] 	= $field['salesman_name'];
 				$row[]  = $hd_sales_order_status;
-				$row[] 	= $detail.$edit.$delete;
+				$row[] 	= $detail.$edit.$delete.$print;
 				$data[] = $row;
 			}
 
@@ -268,36 +277,27 @@ class Sales extends CI_Controller {
 			$user_id   	= $_SESSION['user_id'];
 			$this->sales_model->clear_temp_sales_order($user_id);
 			foreach($detail_so as $row){
-				/*$submission_id 	 			= $row->submission_id;
-				$submission_code 			= $row->submission_inv;
-				$po_supplier     			= $header_so[0]->hd_po_supplier;
-				$product_id      			= $row->dt_product_id;
-				$temp_price_val 			= $row->dt_po_price;
-				$temp_qty  					= $row->dt_po_qty;
-				$temp_weight 				= $row->dt_po_weight;
-				$temp_delivery_price_val  	= $row->dt_po_ongkir;
-				$temp_total_weight			= $row->dt_po_total_weight;
-				$temp_ongkir_val			= $row->dt_po_total_ongkir;
-				$temp_total_val				= $row->dt_po_total;
-				$temp_note_val				= $row->dt_po_note;
+				$temp_product_id 	 	= $row->dt_so_product_id;
+				$temp_so_rate 			= $row->dt_so_rate;
+				$temp_so_price     		= $row->dt_so_price;
+				$temp_so_qty      		= $row->dt_so_qty;
+				$temp_so_discount 		= $row->dt_so_discount;
+				$temp_so_total  		= $row->dt_so_total;
+				$temp_so_note 			= $row->dt_so_note;
+				$temp_user_id  			= $user_id;
 
 				$data_insert = array(
-					'temp_submission_id'	=> $submission_id,
-					'temp_submission_inv'	=> $submission_code,
-					'temp_supplier_id'		=> $po_supplier,
-					'temp_product_id'		=> $product_id,
-					'temp_po_price'			=> $temp_price_val,
-					'temp_po_qty'			=> $temp_qty,
-					'temp_po_weight'		=> $temp_weight,
-					'temp_po_ongkir'		=> $temp_delivery_price_val,
-					'temp_po_total_weight'	=> $temp_total_weight,
-					'temp_po_total_ongkir'	=> $temp_ongkir_val,
-					'temp_po_total'			=> $temp_total_val,
-					'temp_po_note'			=> $temp_note_val,
-					'temp_user_id'			=> $user_id,
+					'temp_product_id'	=> $temp_product_id,
+					'temp_so_rate'		=> $temp_so_rate,
+					'temp_so_price'		=> $temp_so_price,
+					'temp_so_qty'		=> $temp_so_qty,
+					'temp_so_discount'	=> $temp_so_discount,
+					'temp_so_total'		=> $temp_so_total,
+					'temp_so_note'		=> $temp_so_note,
+					'temp_user_id'		=> $temp_user_id,
 				);
 
-				$this->purchase_model->insert_temp_po($data_insert);*/
+				$this->sales_model->add_temp_so($data_insert);
 			}
 
 			$header_so_data['header_so_data']  = $this->sales_model->header_so($so_id);
@@ -483,8 +483,170 @@ class Sales extends CI_Controller {
 				$save_detail_sales_order = $this->sales_model->save_detail_sales_order($data_insert_detail);
 			}
 
+
 			$data_insert_act = array(
 				'activity_table_desc'	       => 'Tambah Sales Order Cabang '.$warehouse_name.' '.$last_code.'',
+				'activity_table_user'	       => $user_id,
+			);
+
+			$this->global_model->save($data_insert_act);
+
+			$this->sales_model->clear_temp_sales_order($user_id);
+
+			$msg = 'Success Tambah';
+			echo json_encode(['code'=>200, 'result'=>$msg]);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function edit_save_salesorder()
+	{
+		$modul = 'SalesOrder';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->edit == 'Y'){
+			$sales_order_id								= $this->input->post('sales_order_id');
+			$sales_order_invoice 						= $this->input->post('sales_order_invoice');
+			$sales_type									= $this->input->post('sales_type');
+			$sales_order_customer 						= $this->input->post('sales_order_customer');
+			$sales_order_payment						= $this->input->post('sales_order_payment');
+			$sales_order_top 							= $this->input->post('sales_order_top');
+			$sales_order_top_id 						= $this->input->post('sales_order_top_id');
+			$sales_order_salesman 						= $this->input->post('sales_order_salesman');
+			$sales_order_prepare 						= $this->input->post('sales_order_prepare');
+			//$sales_order_prepare_id 					= $this->input->post('sales_order_prepare_id');
+			$sales_order_colly 							= $this->input->post('sales_order_colly');
+			$sales_order_warehouse 						= $this->input->post('sales_order_warehouse');
+			$sales_order_ekspedisi 						= $this->input->post('sales_order_ekspedisi');
+			$footer_sub_total_submit 					= $this->input->post('footer_sub_total_submit');
+			$sales_order_due_date 						= $this->input->post('sales_order_due_date');
+			$drop_ship									= $this->input->post('drop_ship');
+			$dropship_name							    = $this->input->post('dropship_name');
+			$dropship_phone							    = $this->input->post('dropship_phone');
+			$dropship_address							= $this->input->post('dropship_address');
+			$sales_order_date 							= $this->input->post('sales_order_date');
+			$footer_total_discount_submit 				= $this->input->post('footer_total_discount_submit');
+			$edit_footer_discount_percentage1_submit 	= $this->input->post('edit_footer_discount_percentage1_submit');
+			$edit_footer_discount_percentage2_submit 	= $this->input->post('edit_footer_discount_percentage2_submit');
+			$edit_footer_discount_percentage3_submit 	= $this->input->post('edit_footer_discount_percentage3_submit');
+			$edit_footer_discount1_submit 				= $this->input->post('edit_footer_discount1_submit');
+			$edit_footer_discount2_submit 				= $this->input->post('edit_footer_discount2_submit');
+			$edit_footer_discount3_submit 				= $this->input->post('edit_footer_discount3_submit');
+			$footer_total_ppn_val 					    = $this->input->post('footer_total_ppn_val');
+			$footer_total_invoice_val 					= $this->input->post('footer_total_invoice_val');
+			$footer_dp_val 					    		= $this->input->post('footer_dp_val');
+			$footer_remaining_debt_val 					= $this->input->post('footer_remaining_debt_val');
+			$sales_order_remark 						= $this->input->post('sales_order_remark');
+			$user_id 									= $_SESSION['user_id'];
+
+			if($sales_order_customer == null){
+				$msg = 'Silahkan Masukan Customer';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_order_top == null){
+				$msg = 'Silahkan Masukan TOP';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_order_salesman == null){
+				$msg = 'Silahkan Masukan Salesman';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_order_payment == null){
+				$msg = 'Silahkan Masukan Jenis Pembayaran';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_order_warehouse == null){
+				$msg = 'Silahkan Masukan Gudang';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($sales_order_ekspedisi == null){
+				$msg = 'Silahkan Masukan Ekspedisi';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			if($footer_total_invoice_val <= 0){
+				$msg = 'Silahkan Input Data Terlebih Dahulu';
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$warehouse_id 		= $sales_order_warehouse;
+			$get_warehouse_code = $this->masterdata_model->get_warehouse_code($warehouse_id);
+			$warehouse_code 	= $get_warehouse_code[0]->warehouse_code;
+			$warehouse_name 	= $get_warehouse_code[0]->warehouse_name;
+
+			$customer_id = $sales_order_customer;
+			$get_customer_code = $this->masterdata_model->get_customer_code($customer_id);
+			$customer_code = $get_customer_code[0]->customer_code;
+			$customer_name = $get_customer_code[0]->customer_name;
+
+			if($sales_order_top_id == 1){
+				$footer_dp_val = $footer_total_invoice_val;
+				$footer_remaining_debt_val = 0;
+			}
+
+			$data_insert = array(
+				'hd_sales_order_inv'				=> $sales_order_invoice,
+				'hd_sales_order_customer'			=> $sales_order_customer,
+				'hd_sales_order_payment'			=> $sales_order_payment,
+				'hd_sales_order_ekspedisi'			=> $sales_order_ekspedisi,
+				'hd_sales_order_top'				=> $sales_order_top,
+				'hd_sales_order_top_id'				=> $sales_order_top_id,
+				'hd_sales_order_due_date'			=> $sales_order_due_date,
+
+				'hd_sales_order_dropship'			=> $drop_ship,
+				'hd_sales_order_dropship_name'		=> $dropship_name,
+				'hd_sales_order_dropship_phone'		=> $dropship_phone,
+				'hd_sales_order_dropship_address'	=> $dropship_address,
+
+				'hd_sales_order_salesman'			=> $sales_order_salesman,
+				'hd_sales_order_prepare'			=> $sales_order_prepare,
+				//'hd_sales_order_prepare_id'			=> $sales_order_prepare_id,
+				'hd_sales_order_colly'				=> $sales_order_colly,
+				'hd_sales_order_date'				=> $sales_order_date,
+				'hd_sales_order_warehouse'			=> $sales_order_warehouse,
+				'hd_sales_order_sub_total'			=> $footer_sub_total_submit,
+				'hd_sales_order_percentage1'		=> $edit_footer_discount_percentage1_submit,
+				'hd_sales_order_percentage2'		=> $edit_footer_discount_percentage2_submit,
+				'hd_sales_order_percentage3'		=> $edit_footer_discount_percentage3_submit,
+				'hd_sales_order_disc1'				=> $edit_footer_discount1_submit,
+				'hd_sales_order_disc2'				=> $edit_footer_discount2_submit,
+				'hd_sales_order_disc3'				=> $edit_footer_discount3_submit,
+				'hd_sales_order_total_discount'		=> $footer_total_discount_submit,
+				'hd_sales_order_ppn'			    => $footer_total_ppn_val,
+				'hd_sales_order_total'				=> $footer_total_invoice_val,
+				'hd_sales_order_dp'					=> $footer_dp_val,
+				'hd_sales_order_remaining_debt'		=> $footer_remaining_debt_val,
+				'hd_sales_order_note'				=> $sales_order_remark,
+				'created_by'						=> $user_id
+			);	
+			$save_sales_order = $this->sales_model->edit_sales_order($data_insert, $sales_order_id);
+
+			$delete_detail_sales_order = $this->sales_model->delete_detail_sales_order($sales_order_id);
+			$get_temp_sales_order = $this->sales_model->get_temp_sales_order($user_id)->result_array();
+			foreach($get_temp_sales_order  as $row){
+				$data_insert_detail = array(
+					'hd_sales_order_id'		=> $sales_order_id,
+					'dt_so_product_id'		=> $row['temp_product_id'],
+					'dt_so_rate'			=> $row['temp_so_rate'],
+					'dt_so_price'			=> $row['temp_so_price'],
+					'dt_so_qty'				=> $row['temp_so_qty'],
+					'dt_so_discount'		=> $row['temp_so_discount'],
+					'dt_so_total'			=> $row['temp_so_total'],
+					'dt_so_note'			=> $row['temp_so_note']
+				);
+
+				$save_detail_sales_order = $this->sales_model->save_detail_sales_order($data_insert_detail);
+			}
+
+			
+			$data_insert_act = array(
+				'activity_table_desc'	       => 'Edit Sales Order Cabang '.$warehouse_name.' '.$sales_order_invoice.'',
 				'activity_table_user'	       => $user_id,
 			);
 
@@ -741,11 +903,11 @@ class Sales extends CI_Controller {
 				$row[] 	= $field['hd_sales_inv'];
 				$row[] 	= date_format($date,"d-M-Y");
 				$row[] 	= $field['customer_name'];
+				$row[] 	= $field['customer_rate'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['dt_sales_qty'];
-				$row[] 	= $field['dt_sales_rate'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_total']);
-				$row[] 	= $hd_sales_remaining_debt;
+				$row[] 	= $field['hd_sales_top'];
 				$row[] 	= 'Rp. '.number_format($field['hd_sales_remaining_debt']);
 				$row[] 	= $field['ekspedisi_name'];
 				$row[]  = $hd_sales_status;
@@ -777,8 +939,15 @@ class Sales extends CI_Controller {
 			$inv 				= $header_sales[0]->hd_sales_inv;
 			$user_id 			= $_SESSION['user_id'];
 
-			$this->sales_model->delete_sales($sales_id);
+		
 
+			$check_payment_status = $this->sales_model->check_payment_receivable($sales_id)->result_array();
+			if($check_payment_status != null){
+				$msg = "Transaksi Ini Sudah Pernah Melakukan Pembayaran Piutang";
+				echo json_encode(['code'=>0, 'result'=>$msg]);die();
+			}
+
+			$this->sales_model->delete_sales($sales_id);
 			foreach($detail_sales as $row)
 			{
 				$product_id = $row->dt_sales_product_id;
@@ -854,6 +1023,27 @@ class Sales extends CI_Controller {
 				$this->load->view('Pages/Sales/printnotanormal', $data);
 			}else{
 				$this->load->view('Pages/Sales/printdispatch', $data);
+			}
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+
+	public function printnota_so()
+	{
+		$modul = 'Sales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$id  	      = $this->input->get('print_type');
+			$hd_sales_order_id  = $this->input->get('sales_order_id');
+			$header_sales_so['header_sales_so'] = $this->sales_model->header_sales_order($hd_sales_order_id);
+			$detail_sales_so['detail_sales_so'] = $this->sales_model->detail_sales_order($hd_sales_order_id);
+			$data['data'] = array_merge($header_sales_so, $detail_sales_so);
+			if($id == 1){
+				$this->load->view('Pages/Sales/printnotaso', $data);
+			}else{
+				$this->load->view('Pages/Sales/printnotapengambilanso', $data);
 			}
 		}else{
 			$msg = "No Access";
@@ -1322,6 +1512,14 @@ class Sales extends CI_Controller {
 					$hd_retur_sales_status = '<span class="badge badge-danger multi-badge">Cancel</span>';
 				}
 
+				if($field['hd_retur_sales_payment_type'] == 'Cash'){
+					$payment_sts = '<span class="badge badge-primary">Cash</span>';
+				}else if($field['hd_retur_sales_payment_type'] == 'PN'){
+					$payment_sts = '<span class="badge badge-primary">Potong Nota</span>';
+				}else{
+					$payment_sts = '<span class="badge badge-primary multi-badge">Garansi</span>';
+				}
+
 				if($check_auth[0]->view == 'Y'){
 					$url = base_url();
 					$detail = '<a href="'.base_url().'Sales/detailretursales?id='.$field['hd_retur_sales_id'].'" data-fancybox="" data-type="iframe"><button type="button" class="btn btn-icon btn-primary btn-sm mb-2-btn" data-id="'.$field['hd_retur_sales_id'].'"><i class="fas fa-eye sizing-fa"></i></button></a> ';
@@ -1362,6 +1560,7 @@ class Sales extends CI_Controller {
 				$row[] 	= $field['customer_name'];
 				$row[] 	= 'Rp. '.number_format($field['hd_retur_sales_total']);
 				$row[]  = $hd_retur_sales_status;
+				$row[] 	= $payment_sts;
 				$row[] 	= $detail.$delete.$payment;
 				$data[] = $row;
 			}
@@ -1692,7 +1891,7 @@ class Sales extends CI_Controller {
 			$payment_type 			    = $this->input->post('payment_type');
 			$retur_sales_invoice     	= $this->input->post('retur_sales_invoice');
 			
-
+	
 			$get_detail_retur_sales_data = $this->sales_model->get_detail_retur_sales_data($retur_sales_id);
 			foreach ($get_detail_retur_sales_data as $row)
 			{
@@ -1706,7 +1905,11 @@ class Sales extends CI_Controller {
 					$get_last_stock = $this->purchase_model->get_last_stock($product_id, $warehouse_id);
 					$last_stock 	= $get_last_stock[0]->stock;
 					$new_stock 		= $last_stock + $qty;
-					$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+					
+					if($payment_type != 'Garansi'){
+						$this->global_model->update_stock($product_id, $warehouse_id, $new_stock);
+					}
+					
 
 					$movement_stock = array(
 						'stock_movement_product_id'		=> $product_id,
@@ -1719,7 +1922,9 @@ class Sales extends CI_Controller {
 						'stock_movement_date'			=> date("Y/m/d"),
 						'stock_movement_creted_by'		=> $user_id,	
 					);	
-					$this->global_model->insert_movement_stock($movement_stock);
+					if($payment_type != 'Garansi'){
+						$this->global_model->insert_movement_stock($movement_stock);
+					}
 				}
 			}
 
@@ -2098,6 +2303,26 @@ class Sales extends CI_Controller {
 	}
 
 	// End Revisi Sales
+
+
+	// start dropship sales
+	public function salesdropship()
+	{
+		
+		$modul = 'Sales';
+		$check_auth = $this->check_auth($modul);
+		if($check_auth[0]->view == 'Y'){
+			$warehouse_list['warehouse_list'] = $this->masterdata_model->warehouse_list();
+			$salesman_list['salesman_list'] = $this->masterdata_model->salesman_list();
+			$supplier_list['supplier_list'] = $this->masterdata_model->supplier_list();
+			$data['data'] = array_merge($warehouse_list, $salesman_list, $supplier_list);
+			$this->load->view('Pages/Sales/retursales', $data);
+		}else{
+			$msg = "No Access";
+			echo json_encode(['code'=>0, 'result'=>$msg]);die();
+		}
+	}
+	// end dropship sales
 }	
 
 ?>

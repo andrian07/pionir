@@ -965,6 +965,8 @@ class Purchase extends CI_Controller {
 					$note = '<button type="button" class="btn btn-icon btn-warning btn-sm mb-2-btn" disabled="disabled" onclick="edit('.$field['hd_po_id'].')"><i class="fas fa-sticky-note sizing-fa"></i></button> <button type="button" class="btn btn-icon btn-info btn-sm mb-2-btn" disabled="disabled"> ';
 				}
 
+				$print = '<button type="button" class="btn btn-icon btn-info delete btn-sm mb-2-btn" data-id="'.$field['hd_po_id'].'" data-bs-toggle="modal" data-bs-target="#print"><i class="fas fa-print sizing-fa"></i></button> ';
+
 				$date = date_create($field['hd_po_date']); 
 
 				$no++;
@@ -980,7 +982,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $hd_po_status;
 				$row[] 	= $hd_po_status_input;
 				$row[] 	= $field['hd_po_status_delivery'];
-				$row[] 	= $detail.$edit.$delete.$note;
+				$row[] 	= $detail.$edit.$delete.$note.$print;
 				$data[] = $row;
 			}
 
@@ -1709,6 +1711,11 @@ class Purchase extends CI_Controller {
 				$last_product_po_status_number  = $last_product_po_status[0]->product_po_status;
 				$new_product_po_status_number   = $last_product_po_status_number - 1;
 				$update_product_po_status 		= $this->purchase_model->update_product_po_status($dt_product_id, $new_product_po_status_number);
+
+				if($row->submission_id > 0 || $row->submission_id != ''){
+					$submission_id_val = $row->submission_id;
+					$update_submission = $this->purchase_model->update_submission_pending($submission_id_val);
+				}
 			}
 
 			$this->purchase_model->delete_po($po_id);
@@ -2456,6 +2463,7 @@ class Purchase extends CI_Controller {
 				$row[] 	= $field['product_code'];
 				$row[] 	= $field['product_name'];
 				$row[] 	= $field['unit_name'];
+				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_price']);
 				$row[] 	= $field['temp_retur_purchase_qty'];
 				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_ongkir']);
 				$row[] 	= 'Rp. '.number_format($field['temp_retur_purchase_total']);

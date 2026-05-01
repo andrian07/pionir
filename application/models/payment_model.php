@@ -309,6 +309,7 @@ class payment_model extends CI_Model {
         $this->db->from('hd_sales');
         $this->db->where('hd_sales.hd_sales_customer', $customer_id);
         $this->db->where('hd_sales.hd_sales_remaining_debt > 0');
+        $this->db->where('hd_sales_status', 'Success');
         $query = $this->db->get();
         return $query;
     }

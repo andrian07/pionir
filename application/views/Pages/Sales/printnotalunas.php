@@ -66,6 +66,8 @@
     
     <?php foreach($data['header_sales'] as $header){ ?>
       <p>INV: <?php echo $header->hd_sales_inv; ?></p>
+      <p>T.O.P: <?php echo $header->hd_sales_top; ?></p>
+      <p>Pembayaran: <?php echo $header->payment_name; ?></p>
       <p><?php echo date('d-m-Y', strtotime($header->hd_sales_date)); ?></p>
     <?php } ?>
 

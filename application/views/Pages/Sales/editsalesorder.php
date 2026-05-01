@@ -78,12 +78,7 @@ require DOC_ROOT_PATH . $this->config->item('header');
 
             <label for="noinvoice" class="col-sm-1 col-form-label text-right">Disiapkan:</label>
             <div class="col-sm-3">
-              <select class="form-control input-full js-example-basic-single" id="sales_order_prepare" name="sales_order_prepare">
-                <option value="">-- Pilih User --</option>
-                <?php foreach ($data['user_list'] as $row) { ?>
-                  <option value="<?php echo $row->user_id; ?>"><?php echo $row->user_name; ?></option>  
-                <?php } ?>
-              </select>
+              <input id="sales_order_prepare" name="sales_order_prepare" type="text" class="form-control">
             </div>
             <label for="tanggal" class="col-sm-1 col-form-label text-right">Ekspedisi :</label>
             <div class="col-sm-3">
@@ -124,248 +119,277 @@ require DOC_ROOT_PATH . $this->config->item('header');
             <div class="col-sm-3">
               <input id="sales_order_due_date" name="sales_order_due_date" type="date" class="form-control" readonly>
             </div>
-          </div>
 
-        </div>
+            <label for="noinvoice" class="col-sm-1 col-form-label text-right">dropship :</label>
+            <div class="col-sm-3">
+             <select class="form-control input-full js-example-basic-single" id="drop_ship" name="drop_ship">
+               <option value="N">Tidak</option>
+               <option value="Y">Ya</option>
+             </select>
+           </div>
+         </div>
+
+         
+
+       </div>
+     </div>
+   </div>
+
+   <div class="row" style="display:none;" id="dropship-container">
+    <div class="card">
+     <div class="card-body">
+      <div class="row">
+       <div class="col-md-6">
+        <label>Nama:</label>
+        <input id="dropship_name" name="dropship_name" type="text" class="form-control" placeholder="Nama Dropship Pelanggan">
+        <label style="margin-top:10px;">No Telp:</label>
+        <input id="dropship_phone" name="dropship_phone" type="text" class="form-control" placeholder="Telp Dropship Pelanggan">
       </div>
-    </div>
-
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <form id="formaddtemp">
-            <div class="row well well-sm input-temp">
-
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label>Produk</label>
-                  <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
-                  <input id="product_id" type="hidden" name="product_id">
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Rate Produk</label>
-                  <select class="form-control input-full js-example-basic-single" id="temp_rate" name="temp_rate">
-                    <option value="Umum">Umum</option>
-                    <option value="Toko">Toko</option>
-                    <option value="Sales">Sales</option>
-                    <option value="Khusus">Khusus</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Harga Jual Per Unit</label>
-                  <input id="temp_price" name="temp_price" class="form-control text-right" value="0"  required="">
-                </div>
-              </div>
-
-              
-								<div class="col-sm-2">
-									<div class="form-group">
-										<label>Curent Stock</label>
-										<input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
-									</div>
-								</div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Qty</label>
-                  <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" required="">
-                </div>
-              </div>
-
-              <div class="col-sm-2">
-                <div class="form-group">
-                  <label>Discount</label>
-                  <input id="temp_discount" name="temp_discount" type="text" class="form-control text-right" value="0">
-                </div>
-              </div>
-
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label>Catatan</label>
-                  <input id="temp_note" name="temp_note" type="text" class="form-control text-left" >
-                </div>
-              </div>
-              <div class="col-sm-5">
-
-                <!-- text input -->
-
-                <div class="form-group">
-
-                  <label>Total</label>
-
-                  <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
-
-                </div>
-
-              </div>
-
-              <div class="col-sm-1" style="padding-right: 62px;">
-
-                <!-- text input -->
-
-                <label>&nbsp;</label>
-
-                <div class="form-group">
-
-                  <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right btn-add-temp"><i class="fas fa-plus"></i></button>
-
-                </div>
-
-              </div>
-
-            </div>
-          </form>
-
-          <div class="table-responsive">
-            <table id="temp-salesorder-list" class="display table table-striped table-hover" >
-              <thead>
-                <tr>
-                  <th>SKU</th>
-                  <th>produk</th>
-                  <th>Rate</th>
-                  <th>Qty</th>
-                  <th>Harga Satuan</th>
-                  <th>Discount</th>
-                  <th>Total</th>
-                  <th>Catatan</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="row form-space">
-            <div class="col-lg-6">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <textarea id="sales_order_remark" name="sales_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-6 text-right">
-              <div class="form-group row">
-                <label for="footer_sub_total" class="col-sm-7 col-form-label text-right:">Sub Total:</label>
-                <div class="col-sm-5">
-                  <input id="footer_sub_total" name="footer_sub_total" type="text" class="form-control text-right" value="0" readonly="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Discount :</label>
-                <div class="col-sm-5">
-                  <input id="footer_discount1" name="footer_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="footer_discount2" name="footer_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="footer_discount3" name="footer_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
-                  <input id="footer_discount_percentage1" name="footer_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="footer_discount_percentage2" name="footer_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="footer_discount_percentage3" name="footer_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
-                  <input id="footer_total_discount" name="footer_total_discount" data-bs-toggle="modal" data-bs-target="#footerdiscount" type="text" class="form-control text-right" value="0" readonly="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="footer_total_ppn" class="col-sm-7 col-form-label text-right:">PPN 11% :</label>
-                <div class="col-sm-4">
-                  <input id="footer_total_ppn" name="footer_total_ppn" type="text" class="form-control text-right" value="0" readonly="">
-                </div>
-                <div class="col-sm-1">
-                  <input class="form-check-input" type="checkbox" id="ppnchecked" style="width: 33px; height: 33px;">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Grand Total :</label>
-                <div class="col-sm-5">
-                  <input id="footer_total_invoice" name="footer_total_invoice" type="text" class="form-control text-right" value="0" readonly="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="footer_dp" class="col-sm-7 col-form-label text-right:">DP :</label>
-                <div class="col-sm-5">
-                  <input id="footer_dp" name="footer_dp" type="text" class="form-control text-right" value="0">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="footer_remaining_debt" class="col-sm-7 col-form-label text-right:">Kredit :</label>
-                <div class="col-sm-5">
-                  <input id="footer_remaining_debt" name="footer_remaining_debt" type="text" class="form-control text-right" value="0" readonly="">
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-12">
-                  <button id="btncancel" class="btn btn-danger"><i class="fas fa-times-circle"></i> Batal</button>
-                  <button id="btnsave" class="btn btn-success button-header-custom-save"><i class="fas fa-save"></i> Simpan</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Footer Modal Discount -->
-          <div class="modal fade" id="footerdiscount" tabindex="-1" aria-labelledby="exampleModaleditLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="title-frmfooterdiscount">Diskon</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="frmfooterdiscount" class="form-horizontal">
-                  <div class="modal-body">
-                    <div class="form-group">
-                      <div class="row">
-                        <label for="edit_footer_discount1_lbl" class="col-sm-12">Diskon 1</label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount_percentage1" name="edit_footer_discount_percentage1" value="0">
-                        </div>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount1" name="edit_footer_discount1" value="0" readonly>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="row">
-                        <label for="edit_footer_discount2_lbl" class="col-sm-12">Diskon 2</label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount_percentage2" name="edit_footer_discount_percentage2" value="0">
-                        </div>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount2" name="edit_footer_discount2" value="0" readonly>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="row">
-                        <label for="edit_footer_discount3_lbl" class="col-sm-12">Diskon 3</label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount_percentage3" name="edit_footer_discount_percentage3" value="0">
-                        </div>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" id="edit_footer_discount3" name="edit_footer_discount3" value="0" readonly>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
-                    <button type="button" id="btneditdisc"  class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
-                  </div>
-                </form>
-              </div>
-              <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-          </div>
-          <!-- Footer Modal Discount -->
-
-        </div>
+      <div class="col-md-6">
+        <label>Alamat:</label>
+        <textarea id="dropship_address" name="dropship_address" class="form-control" placeholder="Alamat Dropship" maxlength="500" rows="4"></textarea>
       </div>
     </div>
   </div>
+</div>
+</div>
+
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-body">
+      <form id="formaddtemp">
+        <div class="row well well-sm input-temp">
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label>Produk</label>
+              <input id="product_name" name="product_name" type="text" class="form-control ui-autocomplete-input" placeholder="ketikkan nama produk" value="" required="" autocomplete="off"  data-parsley-required data-parsley-required-message="*Masukan Nama Produk">
+              <input id="product_id" type="hidden" name="product_id">
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label>Rate Produk</label>
+              <select class="form-control input-full js-example-basic-single" id="temp_rate" name="temp_rate">
+                <option value="Umum">Umum</option>
+                <option value="Toko">Toko</option>
+                <option value="Sales">Sales</option>
+                <option value="Khusus">Khusus</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label>Harga Jual Per Unit</label>
+              <input id="temp_price" name="temp_price" class="form-control text-right" value="0"  required="">
+            </div>
+          </div>
+
+          
+          <div class="col-sm-2">
+           <div class="form-group">
+            <label>Curent Stock</label>
+            <input id="curent_stock" name="curent_stock" class="form-control text-right" value="0"  required="" readonly>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>Qty</label>
+            <input id="temp_qty" name="temp_qty" type="text" class="form-control text-right" value="0" required="">
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>Discount</label>
+            <input id="temp_discount" name="temp_discount" type="text" class="form-control text-right" value="0">
+          </div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Catatan</label>
+            <input id="temp_note" name="temp_note" type="text" class="form-control text-left" >
+          </div>
+        </div>
+        <div class="col-sm-5">
+
+          <!-- text input -->
+
+          <div class="form-group">
+
+            <label>Total</label>
+
+            <input id="temp_total" name="temp_total" type="text" class="form-control text-right" value="0" readonly="">
+
+          </div>
+
+        </div>
+
+        <div class="col-sm-1" style="padding-right: 62px;">
+
+          <!-- text input -->
+
+          <label>&nbsp;</label>
+
+          <div class="form-group">
+
+            <button id="btnadd_temp" class="btn btn-md btn-primary rounded-circle float-right btn-add-temp"><i class="fas fa-plus"></i></button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table id="temp-salesorder-list" class="display table table-striped table-hover" >
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>produk</th>
+            <th>Rate</th>
+            <th>Qty</th>
+            <th>Harga Satuan</th>
+            <th>Discount</th>
+            <th>Total</th>
+            <th>Catatan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row form-space">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <div class="col-sm-12">
+            <textarea id="sales_order_remark" name="sales_order_remark" class="form-control" placeholder="Catatan" maxlength="500" rows="8"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 text-right">
+        <div class="form-group row">
+          <label for="footer_sub_total" class="col-sm-7 col-form-label text-right:">Sub Total:</label>
+          <div class="col-sm-5">
+            <input id="footer_sub_total" name="footer_sub_total" type="text" class="form-control text-right" value="0" readonly="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="footer_total_discount" class="col-sm-7 col-form-label text-right:">Discount :</label>
+          <div class="col-sm-5">
+            <input id="footer_discount1" name="footer_discount1" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+            <input id="footer_discount2" name="footer_discount2" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+            <input id="footer_discount3" name="footer_discount3" type="hidden" class="form-control text-right" value="Rp 0.00" readonly="">
+            <input id="footer_discount_percentage1" name="footer_discount_percentage1" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+            <input id="footer_discount_percentage2" name="footer_discount_percentage2" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+            <input id="footer_discount_percentage3" name="footer_discount_percentage3" type="hidden" class="form-control text-right" value="0.00%" readonly="">
+            <input id="footer_total_discount" name="footer_total_discount" data-bs-toggle="modal" data-bs-target="#footerdiscount" type="text" class="form-control text-right" value="0" readonly="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="footer_total_ppn" class="col-sm-7 col-form-label text-right:">PPN 11% :</label>
+          <div class="col-sm-4">
+            <input id="footer_total_ppn" name="footer_total_ppn" type="text" class="form-control text-right" value="0" readonly="">
+          </div>
+          <div class="col-sm-1">
+            <input class="form-check-input" type="checkbox" id="ppnchecked" style="width: 33px; height: 33px;">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="footer_total_invoice" class="col-sm-7 col-form-label text-right:">Grand Total :</label>
+          <div class="col-sm-5">
+            <input id="footer_total_invoice" name="footer_total_invoice" type="text" class="form-control text-right" value="0" readonly="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="footer_dp" class="col-sm-7 col-form-label text-right:">DP :</label>
+          <div class="col-sm-5">
+            <input id="footer_dp" name="footer_dp" type="text" class="form-control text-right" value="0">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="footer_remaining_debt" class="col-sm-7 col-form-label text-right:">Kredit :</label>
+          <div class="col-sm-5">
+            <input id="footer_remaining_debt" name="footer_remaining_debt" type="text" class="form-control text-right" value="0" readonly="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <button id="btncancel" class="btn btn-danger"><i class="fas fa-times-circle"></i> Batal</button>
+            <button id="btnsave" class="btn btn-success button-header-custom-save"><i class="fas fa-save"></i> Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Modal Discount -->
+    <div class="modal fade" id="footerdiscount" tabindex="-1" aria-labelledby="exampleModaleditLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="title-frmfooterdiscount">Diskon</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="frmfooterdiscount" class="form-horizontal">
+            <div class="modal-body">
+              <div class="form-group">
+                <div class="row">
+                  <label for="edit_footer_discount1_lbl" class="col-sm-12">Diskon 1</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount_percentage1" name="edit_footer_discount_percentage1" value="0">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount1" name="edit_footer_discount1" value="0" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <label for="edit_footer_discount2_lbl" class="col-sm-12">Diskon 2</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount_percentage2" name="edit_footer_discount_percentage2" value="0">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount2" name="edit_footer_discount2" value="0" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <label for="edit_footer_discount3_lbl" class="col-sm-12">Diskon 3</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount_percentage3" name="edit_footer_discount_percentage3" value="0">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" id="edit_footer_discount3" name="edit_footer_discount3" value="0" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Batal</button>
+              <button type="button" id="btneditdisc"  class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+            </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- Footer Modal Discount -->
+
+  </div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -515,15 +539,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       },
       columns: 
       [
-        {data: 0},
-        {data: 1},
-        {data: 2},
-        {data: 3},
-        {data: 4},
-        {data: 5},
-        {data: 6},
-        {data: 7},
-        {data: 8}
+      {data: 0},
+      {data: 1},
+      {data: 2},
+      {data: 3},
+      {data: 4},
+      {data: 5},
+      {data: 6},
+      {data: 7},
+      {data: 8}
       ]
     });
     check_tempt_data();
@@ -597,17 +621,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
       let product_id = ui.item.product_id;
       let product_price = ui.item.product_price;
       
-			let curent_stock = ui.item.curent_stock;
+      let curent_stock = ui.item.curent_stock;
       $('#product_name').val(product_name);
       $('#product_id').val(id);
       $('#temp_rate').val('Umum');
       $('#temp_rate').trigger('change');
       
-			if(curent_stock == null){
-				$('#curent_stock').val(0);
-			}else{
-				$('#curent_stock').val(curent_stock);
-			}
+      if(curent_stock == null){
+        $('#curent_stock').val(0);
+      }else{
+        $('#curent_stock').val(curent_stock);
+      }
       temp_price.set(product_price);
     },
   });
@@ -635,6 +659,17 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     });
   }
 
+  $('#drop_ship').on('change', function() {
+		var value = $(this).val();
+		if (value == 'Y') {
+			$('#dropship-container').show();
+		}else{
+		  $('#dropship-container').hide();
+      $('#dropship_name').val("");
+      $('#dropship_phone').val("");
+			$('#dropship_address').val("");
+		}
+	});
 
   $('#temp_rate').on('change', function (event) {
     let product_id = $("#product_id").val();
@@ -771,6 +806,15 @@ require DOC_ROOT_PATH . $this->config->item('footer');
             let state = 'info';
             notif_success(title, message, state);
             $('#temp-salesorder-list').DataTable().ajax.reload();
+            edit_footer_discount_percentage1.set(0);
+            edit_footer_discount1.set(0);
+            edit_footer_discount_percentage2.set(0);
+            edit_footer_discount2.set(0);
+            edit_footer_discount_percentage3.set(0);
+            edit_footer_discount3.set(0);
+            footer_total_discount.set(0);
+            footer_total_ppn.set(0);
+             $('#ppnchecked').prop('checked', false);
             check_tempt_data();
             clear_input();
           } else {
@@ -787,6 +831,8 @@ require DOC_ROOT_PATH . $this->config->item('footer');
 
   $('#btnsave').click(function(e){
     e.preventDefault();
+    var sales_order_id                           = $("#sales_order_id").val();
+    var sales_order_invoice                      = $("#sales_order_invoice").val();
     var sales_order_customer                     = $("#sales_order_customer").val();
     var sales_order_rate_customer                = $("#sales_order_rate_customer").val();
     var sales_order_payment                      = $("#sales_order_payment").val();
@@ -798,6 +844,10 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_order_colly                        = $("#sales_order_colly").val();
     var sales_order_warehouse                    = $("#sales_order_warehouse").val();
     var sales_order_ekspedisi                    = $("#sales_order_ekspedisi").val();
+    var drop_ship                                = $("#drop_ship").val();
+    var dropship_name                            = $("#dropship_name").val();
+    var dropship_phone                           = $("#dropship_phone").val();
+    var dropship_address                         = $("#dropship_address").val();
     var footer_sub_total_submit                  = parseInt(footer_sub_total.get());
     var footer_total_discount_submit             = parseInt(footer_total_discount.get());
     var edit_footer_discount_percentage1_submit  = parseInt(edit_footer_discount_percentage1.get());
@@ -815,9 +865,9 @@ require DOC_ROOT_PATH . $this->config->item('footer');
     var sales_order_date                         = $("#sales_order_date").val();
     $.ajax({
       type: "POST",
-      url: "<?php echo base_url(); ?>Sales/save_salesorder",
+      url: "<?php echo base_url(); ?>Sales/edit_save_salesorder",
       dataType: "json",
-      data: {sales_order_customer:sales_order_customer, sales_order_rate_customer:sales_order_rate_customer, sales_order_payment:sales_order_payment, sales_order_top:sales_order_top, sales_order_top_id:sales_order_top_id, sales_order_salesman:sales_order_salesman, sales_order_prepare:sales_order_prepare, sales_order_prepare_id:sales_order_prepare_id, sales_order_colly:sales_order_colly, sales_order_warehouse:sales_order_warehouse, sales_order_ekspedisi:sales_order_ekspedisi, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_order_remark:sales_order_remark, sales_order_due_date:sales_order_due_date, sales_order_date:sales_order_date},
+      data: {sales_order_id:sales_order_id, sales_order_invoice:sales_order_invoice, sales_order_customer:sales_order_customer, sales_order_rate_customer:sales_order_rate_customer, sales_order_payment:sales_order_payment, sales_order_top:sales_order_top, sales_order_top_id:sales_order_top_id, sales_order_salesman:sales_order_salesman, sales_order_prepare:sales_order_prepare, sales_order_colly:sales_order_colly, sales_order_warehouse:sales_order_warehouse, sales_order_ekspedisi:sales_order_ekspedisi, drop_ship:drop_ship, dropship_name:dropship_name, dropship_phone:dropship_phone, dropship_address:dropship_address, footer_sub_total_submit:footer_sub_total_submit, footer_total_discount_submit:footer_total_discount_submit, edit_footer_discount_percentage1_submit:edit_footer_discount_percentage1_submit, edit_footer_discount_percentage2_submit:edit_footer_discount_percentage2_submit, edit_footer_discount_percentage3_submit:edit_footer_discount_percentage3_submit, edit_footer_discount1_submit:edit_footer_discount1_submit, edit_footer_discount2_submit:edit_footer_discount2_submit, edit_footer_discount3_submit:edit_footer_discount3_submit, footer_total_ppn_val:footer_total_ppn_val, footer_total_invoice_val:footer_total_invoice_val, footer_dp_val:footer_dp_val, footer_remaining_debt_val:footer_remaining_debt_val, sales_order_remark:sales_order_remark, sales_order_due_date:sales_order_due_date, sales_order_date:sales_order_date},
       success : function(data){
         if (data.code == "200"){
           window.location.href = "<?php echo base_url(); ?>/Sales/salesorder";
@@ -909,10 +959,10 @@ $('#sales_order_customer').on('change', function (event) {
   });
 })
 
-
 function get_edit_data()
 {
   let sales_order_id = $("#sales_order_id").val();
+
   $.ajax({
     type: "POST",
     url: "<?php echo base_url(); ?>Sales/get_edit_sales_order_data",
@@ -922,19 +972,46 @@ function get_edit_data()
       if (data.code == "200"){
         let header = data.header[0];
         let detail = data.detail[0];
-          $("#sales_order_invoice").val(header.hd_sales_order_inv);
-          $("#sales_order_top").val(header.hd_sales_order_top_id);
-          $('#sales_order_top').trigger('change');
-          $("#sales_order_customer").val(header.hd_sales_order_customer);
-          $('#sales_order_customer').trigger('change');
-          $("#sales_order_payment").val(header.hd_sales_order_payment);
-          $('#sales_order_payment').trigger('change');
-          $("#sales_order_salesman").val(header.hd_sales_order_salesman);
-          $('#sales_order_salesman').trigger('change');
-          
-          
-        console.log(header);
+
+        $("#sales_order_invoice").val(header.hd_sales_order_inv);
+
+        $("#sales_order_top").val(header.hd_sales_order_top_id).trigger('change');
+        $("#sales_order_customer").val(header.hd_sales_order_customer).trigger('change');
+        $("#sales_order_payment").val(header.hd_sales_order_payment).trigger('change');
+        $("#sales_order_salesman").val(header.hd_sales_order_salesman).trigger('change');
+
+        $("#sales_order_prepare").val(header.hd_sales_order_prepare);
+        $("#sales_order_colly").val(header.hd_sales_order_colly);
+
+        $("#sales_order_warehouse").val(header.hd_sales_order_warehouse).trigger('change');
+        $("#sales_order_ekspedisi").val(header.hd_sales_order_ekspedisi).trigger('change');
+
+        $('#drop_ship').val(header.hd_sales_order_dropship).trigger('change');
+
+        if(header.hd_sales_order_dropship == 'Y'){
+          $("#dropship_name").val(header.hd_sales_order_dropship_name);
+          $("#dropship_phone").val(header.hd_sales_order_dropship_phone);
+          $("#dropship_address").val(header.hd_sales_order_dropship_address);
+        }
+        edit_footer_discount_percentage1.set(header.hd_sales_order_percentage1);
+        edit_footer_discount1.set(header.hd_sales_order_disc1);
+        edit_footer_discount_percentage2.set(header.hd_sales_order_percentage2);
+        edit_footer_discount2.set(header.hd_sales_order_disc2);
+        edit_footer_discount_percentage3.set(header.hd_sales_order_percentage3);
+        edit_footer_discount3.set(header.hd_sales_order_disc3);
+        footer_total_discount.set(header.hd_sales_order_total_discount);
+        footer_total_ppn.set(header.hd_sales_order_ppn);
+        if(header.hd_sales_order_ppn > 0 ){
+          $('#ppnchecked').prop('checked', true);
+        }else{
+          $('#ppnchecked').prop('checked', false);
+        }
+        
       }
+    },
+    error: function(xhr, status, error){
+      console.log("ERROR AJAX:", error);
+      console.log("RESPONSE:", xhr.responseText);
     }
   });
 }
